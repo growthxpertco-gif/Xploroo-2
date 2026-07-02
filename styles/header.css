@@ -1,0 +1,734 @@
+/* ==========================================================================
+   XPLOROO · Header module
+   header.css — Sticky site header, primary nav, actions, theme toggle,
+                hamburger and fullscreen mobile menu.
+   --------------------------------------------------------------------------
+   Reuses global tokens from variables.css. All header-specific tuning lives
+   in the locally-scoped custom properties below so the component stays
+   self-contained and easy to re-tune without touching the design system.
+   Load AFTER utilities.css.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Local component tokens (matched to the reference proportions)
+   -------------------------------------------------------------------------- */
+.site-header {
+  --header-h: 76px;                 /* navbar height (desktop)         */
+  --header-pad-x: clamp(1rem, 0.4rem + 2.6vw, 3rem);
+  --nav-gap: clamp(1.25rem, 0.6rem + 1.6vw, 2.25rem);
+  --nav-fs: 1.0625rem;              /* 17px nav links                  */
+  --action-h: 46px;                 /* pill button + search diameter   */
+  --action-gap: 0.75rem;
+
+  --hdr-bg-top: #000000;            /* pure black at rest              */
+  --hdr-bg-scrolled: rgba(0, 0, 0, 0.62);
+  --hdr-border-scrolled: rgba(255, 255, 255, 0.10);
+
+  /* Signature Sign-Up gradient: purple → indigo → cyan (travel-inspired) */
+  --signup-gradient: linear-gradient(115deg, #8b3cf0 0%, #5b6bff 48%, #22d3ee 100%);
+  --signup-gradient-hover: linear-gradient(115deg, #9a4dff 0%, #6a79ff 48%, #3ee0f5 100%);
+  --signup-glow: 0 6px 22px rgba(91, 107, 255, 0.45), 0 2px 8px rgba(139, 60, 240, 0.40);
+  --signup-glow-hover: 0 10px 30px rgba(91, 107, 255, 0.60), 0 4px 14px rgba(34, 211, 238, 0.45);
+}
+
+/* --------------------------------------------------------------------------
+   Sticky shell
+   -------------------------------------------------------------------------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header, 200);
+  width: 100%;
+  background-color: var(--hdr-bg-top);
+  /* Blur is declared here but only becomes visible once the bg turns
+     translucent via .is-scrolled — cheaper than toggling the property. */
+  -webkit-backdrop-filter: blur(0);
+  backdrop-filter: blur(0);
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color var(--dur-base, 220ms) var(--ease-standard, ease),
+    border-color var(--dur-base, 220ms) var(--ease-standard, ease),
+    box-shadow var(--dur-base, 220ms) var(--ease-standard, ease),
+    backdrop-filter var(--dur-base, 220ms) var(--ease-standard, ease);
+}
+
+/* Glass effect once the page is scrolled */
+.site-header.is-scrolled {
+  background-color: var(--hdr-bg-scrolled);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
+  border-bottom-color: var(--hdr-border-scrolled);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+}
+
+/* Three-column grid keeps the nav centered on the FULL bar regardless of
+   how wide the left/right clusters get. */
+.site-header__inner {
+  height: var(--header-h);
+  max-width: var(--container-max, 1520px);
+  margin-inline: auto;
+  padding-inline: var(--header-pad-x);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--space-4, 1rem);
+}
+
+.site-header__left    { display: flex; align-items: center; gap: var(--space-4, 1rem); justify-self: start; }
+.site-header__actions { display: flex; align-items: center; gap: var(--action-gap); justify-self: end; }
+
+/* --------------------------------------------------------------------------
+   Brand / logo
+   -------------------------------------------------------------------------- */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  line-height: 1;
+}
+.brand__name {
+  font-family: var(--font-display, "Sora", sans-serif);
+  font-size: 1.6rem;
+  font-weight: var(--fw-extrabold, 800);
+  letter-spacing: -0.02em;
+  color: var(--white, #fff);
+  /* Premium gradient wordmark with a soft glow */
+  background: linear-gradient(120deg, #ffffff 0%, #d6c9ff 45%, #7cc6ff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 14px rgba(124, 92, 255, 0.35));
+  transition: filter var(--dur-base, 220ms) var(--ease-out, ease);
+}
+.brand:hover .brand__name {
+  filter: drop-shadow(0 2px 20px rgba(124, 92, 255, 0.6));
+}
+
+/* --------------------------------------------------------------------------
+   Dark / light toggle (visual only)
+   -------------------------------------------------------------------------- */
+.theme-toggle {
+  --tt-w: 64px;
+  --tt-h: 32px;
+  --tt-thumb: 26px;
+  width: var(--tt-w);
+  height: var(--tt-h);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  flex: none;
+}
+.theme-toggle__track {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-pill, 999px);
+  background: #1a1a22;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.6);
+  transition: background 280ms var(--ease-standard, ease);
+}
+.theme-toggle__thumb {
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  transform: translateY(-50%);
+  width: var(--tt-thumb);
+  height: var(--tt-thumb);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(160deg, #2b2b38, #14141d);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.55);
+  color: #cfcfe6;
+  /* Knob slide animates at 280ms — within the requested 250–300ms range */
+  transition: transform 280ms var(--ease-spring, ease), background 280ms ease;
+}
+.theme-toggle__icon {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  transition: opacity var(--dur-fast, 140ms) var(--ease-standard, ease);
+}
+.theme-toggle__icon--sun { opacity: 0; color: #ffd36b; }
+
+/* Checked = light mode: slide thumb right, swap glyphs, brighten track */
+.theme-toggle[aria-checked="false"] .theme-toggle__track {
+  background: linear-gradient(120deg, #6a79ff, #22d3ee);
+}
+.theme-toggle[aria-checked="false"] .theme-toggle__thumb {
+  transform: translateY(-50%) translateX(calc(var(--tt-w) - var(--tt-thumb) - 8px));
+  background: #ffffff;
+}
+.theme-toggle[aria-checked="false"] .theme-toggle__icon--moon { opacity: 0; }
+.theme-toggle[aria-checked="false"] .theme-toggle__icon--sun  { opacity: 1; }
+.theme-toggle:hover .theme-toggle__track { border-color: rgba(255, 255, 255, 0.24); }
+
+/* --------------------------------------------------------------------------
+   Primary navigation (centered)
+   -------------------------------------------------------------------------- */
+.main-nav { justify-self: center; }
+.main-nav__list {
+  display: flex;
+  align-items: center;
+  gap: var(--nav-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.main-nav__link {
+  position: relative;
+  display: inline-block;
+  padding: 6px 2px;
+  font-family: var(--font-display, "Sora", sans-serif);
+  font-size: var(--nav-fs);
+  font-weight: var(--fw-semibold, 600);
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.92);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--dur-fast, 140ms) var(--ease-standard, ease);
+}
+/* Animated underline micro-interaction */
+.main-nav__link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--signup-gradient);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--dur-base, 220ms) var(--ease-out, ease);
+}
+.main-nav__link:hover,
+.main-nav__link:focus-visible { color: #fff; }
+.main-nav__link:hover::after,
+.main-nav__link:focus-visible::after { transform: scaleX(1); }
+
+/* --------------------------------------------------------------------------
+   Right-side action buttons
+   -------------------------------------------------------------------------- */
+
+/* Search — perfect circle, thin white border */
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: var(--action-h);
+  height: var(--action-h);
+  padding: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  flex: none;
+  transition:
+    background-color var(--dur-fast, 140ms) var(--ease-standard, ease),
+    border-color var(--dur-fast, 140ms) var(--ease-standard, ease),
+    color 300ms ease,
+    transform var(--dur-fast, 140ms) var(--ease-out, ease),
+    box-shadow var(--dur-base, 220ms) var(--ease-out, ease);
+}
+.icon-btn--search { border: 1.5px solid rgba(255, 255, 255, 0.55); }
+.icon-btn__icon { width: 20px; height: 20px; }
+.icon-btn--search:hover {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 6px 18px rgba(255, 255, 255, 0.10);
+}
+.icon-btn--search:active { transform: translateY(0) scale(0.96); }
+
+/* Cart lives only in the mobile header — hidden on desktop & tablet. */
+.icon-btn--cart { display: none; }
+
+/* Shared auth pill base */
+.btn-auth {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--action-h);
+  padding-inline: 1.5rem;
+  border-radius: var(--radius-pill, 999px);
+  font-family: var(--font-body, "Inter", sans-serif);
+  font-size: 0.975rem;
+  font-weight: var(--fw-semibold, 600);
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition:
+    transform var(--dur-fast, 140ms) var(--ease-out, ease),
+    box-shadow var(--dur-base, 220ms) var(--ease-out, ease),
+    background-color 300ms ease,
+    color 300ms ease,
+    filter var(--dur-fast, 140ms) var(--ease-standard, ease);
+}
+
+/* Log In — white with soft shadow */
+.btn-auth--login {
+  background: #ffffff;
+  color: #0c0c12;
+  box-shadow: 0 4px 16px rgba(255, 255, 255, 0.14), 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.btn-auth--login:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.22), 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+.btn-auth--login:active { transform: translateY(0) scale(0.98); }
+
+/* Sign Up — premium blue→purple→cyan gradient with glow */
+.btn-auth--signup {
+  color: #fff;
+  background-image: var(--signup-gradient);
+  box-shadow: var(--signup-glow);
+}
+.btn-auth--signup:hover {
+  transform: translateY(-1px);
+  background-image: var(--signup-gradient-hover);
+  box-shadow: var(--signup-glow-hover);
+  filter: saturate(1.05);
+}
+.btn-auth--signup:active { transform: translateY(0) scale(0.98); }
+
+/* --------------------------------------------------------------------------
+   Hamburger toggle (hidden on desktop)
+   -------------------------------------------------------------------------- */
+.nav-toggle {
+  display: none;               /* shown < lg via media query */
+  place-items: center;
+  width: var(--action-h);
+  height: var(--action-h);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  flex: none;
+}
+.nav-toggle__box {
+  position: relative;
+  display: block;
+  width: 24px;
+  height: 16px;
+}
+.nav-toggle__bar {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: #fff;
+  transition: transform var(--dur-base, 220ms) var(--ease-out, ease),
+              opacity var(--dur-fast, 140ms) var(--ease-standard, ease),
+              top var(--dur-base, 220ms) var(--ease-out, ease),
+              background-color 300ms ease;
+}
+.nav-toggle__bar:nth-child(1) { top: 0; }
+.nav-toggle__bar:nth-child(2) { top: 7px; }
+.nav-toggle__bar:nth-child(3) { top: 14px; }
+
+/* Animate to an X while the menu is open */
+.nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(1) { top: 7px; transform: rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(2) { opacity: 0; }
+.nav-toggle[aria-expanded="true"] .nav-toggle__bar:nth-child(3) { top: 7px; transform: rotate(-45deg); }
+
+/* --------------------------------------------------------------------------
+   Fullscreen mobile menu — slides in from the left over a dark blur
+   -------------------------------------------------------------------------- */
+.mobile-menu {
+  /* The overlay lives outside .site-header, so re-declare the brand gradient
+     tokens here for the Sign Up button, active indicator and accent bars. */
+  --signup-gradient: linear-gradient(115deg, #8b3cf0 0%, #5b6bff 48%, #22d3ee 100%);
+  --signup-gradient-hover: linear-gradient(115deg, #9a4dff 0%, #6a79ff 48%, #3ee0f5 100%);
+  --signup-glow: 0 6px 22px rgba(91, 107, 255, 0.45), 0 2px 8px rgba(139, 60, 240, 0.40);
+  --signup-glow-hover: 0 10px 30px rgba(91, 107, 255, 0.60), 0 4px 14px rgba(34, 211, 238, 0.45);
+
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal, 500);
+  display: flex;                 /* black panel pinned to the left */
+  /* Dim + blurred scrim so the page stays visible on the right */
+  background: rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(6px) saturate(115%);
+  backdrop-filter: blur(6px) saturate(115%);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 300ms var(--ease-out, ease),
+    visibility 360ms linear;
+}
+/* When JS drops [hidden] and adds .is-open */
+.mobile-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+.mobile-menu[hidden] { display: none; }   /* fallback for no-JS */
+
+/* Panel — pure-black left drawer that slides in from the left (≈360ms) */
+.mobile-menu__panel {
+  display: flex;
+  flex-direction: column;
+  width: min(86%, 420px);
+  height: 100%;
+  min-height: 0;
+  background: #000000;
+  box-shadow: 24px 0 60px rgba(0, 0, 0, 0.55);
+  padding:
+    clamp(0.6rem, 0.3rem + 1.4vw, 1rem)
+    1.5rem
+    calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-100%);
+  transition:
+    transform 360ms var(--ease-emphasis, cubic-bezier(0.22, 1, 0.36, 1)),
+    background-color 300ms ease;
+}
+.mobile-menu.is-open .mobile-menu__panel { transform: none; }
+
+/* ---- Top bar --------------------------------------------------------- */
+.mobile-menu__topbar {
+  flex: none;
+  height: var(--header-h, 64px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.mobile-menu__brand-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4, 1rem);
+}
+/* Ensure the overlay's toggle stays visible (header hides it on mobile) */
+.mobile-menu__brand-group .theme-toggle { display: inline-block; }
+
+/* Close button — identical to the header's mobile icon buttons */
+.mobile-menu__close {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: #33333b;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 8px rgba(0, 0, 0, 0.45);
+  transition:
+    background-color 300ms ease,
+    border-color 300ms ease,
+    color 300ms ease,
+    transform var(--dur-fast, 140ms) var(--ease-out, ease),
+    box-shadow var(--dur-base, 220ms) var(--ease-out, ease);
+}
+.mobile-menu__close:hover {
+  background: #43434d;
+  transform: translateY(-1px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 16px rgba(0, 0, 0, 0.5);
+}
+.mobile-menu__close:active { transform: scale(0.95); }
+.mobile-menu__close .icon-btn__icon { width: 18px; height: 18px; }
+
+/* ---- Navigation items ------------------------------------------------ */
+.mobile-menu__nav {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: flex-start;      /* items sit at the top, under the logo */
+  padding-top: clamp(1rem, 0.5rem + 2vw, 1.75rem);
+  overflow-y: auto;
+}
+.mobile-menu__list {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+.mobile-menu__link {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+  padding: 0.28rem 0;
+  font-family: var(--font-display, "Sora", sans-serif);
+  font-size: clamp(1.3125rem, 1.25rem + 0.5vw, 1.5rem);   /* +25% over prior */
+  font-weight: var(--fw-bold, 700);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.92);
+  text-decoration: none;
+  transition:
+    color var(--dur-fast, 140ms) var(--ease-standard, ease),
+    transform var(--dur-base, 220ms) var(--ease-out, ease);
+}
+/* Vertical gradient accent bar in the left gutter — grows on hover / active,
+   positioned absolutely so it never shifts the text (keeps it left-aligned). */
+.mobile-menu__link::before {
+  content: "";
+  position: absolute;
+  left: -0.85rem;
+  top: 50%;
+  width: 3px;
+  height: 0;
+  border-radius: 999px;
+  background: var(--signup-gradient);
+  transform: translateY(-50%);
+  transition: height var(--dur-base, 220ms) var(--ease-out, ease);
+}
+.mobile-menu__link:hover,
+.mobile-menu__link:focus-visible {
+  color: #fff;
+  transform: translateX(6px);
+}
+.mobile-menu__link:hover::before,
+.mobile-menu__link:focus-visible::before { height: 62%; }
+.mobile-menu__link:active { transform: translateX(6px) scale(0.985); }
+
+/* Active page indicator — gradient label + persistent accent bar */
+.mobile-menu__link[aria-current="page"] {
+  color: transparent;
+  background: var(--signup-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.mobile-menu__link[aria-current="page"]::before { height: 62%; }
+
+/* Staggered entrance for each item */
+.mobile-menu__item {
+  margin: 0;                 /* reset base `li` block margin for tight rhythm */
+  opacity: 0;
+  transform: translateX(-14px);
+  transition:
+    opacity var(--dur-slow, 360ms) var(--ease-out, ease),
+    transform var(--dur-slow, 360ms) var(--ease-out, ease);
+}
+.mobile-menu.is-open .mobile-menu__item { opacity: 1; transform: none; }
+.mobile-menu.is-open .mobile-menu__item:nth-child(1) { transition-delay: 0.10s; }
+.mobile-menu.is-open .mobile-menu__item:nth-child(2) { transition-delay: 0.14s; }
+.mobile-menu.is-open .mobile-menu__item:nth-child(3) { transition-delay: 0.18s; }
+.mobile-menu.is-open .mobile-menu__item:nth-child(4) { transition-delay: 0.22s; }
+.mobile-menu.is-open .mobile-menu__item:nth-child(5) { transition-delay: 0.26s; }
+.mobile-menu.is-open .mobile-menu__item:nth-child(6) { transition-delay: 0.30s; }
+.mobile-menu.is-open .mobile-menu__item:nth-child(7) { transition-delay: 0.34s; }
+.mobile-menu.is-open .mobile-menu__item:nth-child(8) { transition-delay: 0.38s; }
+
+/* ---- Bottom actions (pinned) ----------------------------------------- */
+.mobile-menu__actions {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;   /* Log In left · Sign Up right */
+  gap: var(--space-4, 1rem);
+  padding-top: var(--space-5, 1.5rem);
+}
+/* Compact pills; override the header's mobile `.btn-auth { display:none }` */
+.mobile-menu__actions .btn-auth {
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 42px;
+  padding-inline: 1.15rem;
+  font-size: 0.9rem;
+}
+
+/* Lock body scroll while menu is open (class added to <html> by JS) */
+.is-menu-open,
+.is-menu-open body { overflow: hidden; }
+
+/* --------------------------------------------------------------------------
+   Responsive
+     Tablet (≤1024): unchanged — collapse to hamburger (logo left / burger right)
+     Mobile  (≤768): dedicated 3-zone bar (burger · logo · search + cart)
+   -------------------------------------------------------------------------- */
+
+/* ---- TABLET & below: collapse the desktop nav into the hamburger --------- */
+@media (max-width: 1024px) {
+  .site-header__inner {
+    grid-template-columns: auto 1fr auto;    /* logo | spacer | hamburger */
+  }
+
+  /* Hide the centered nav + desktop-only controls */
+  .main-nav,
+  .btn-auth,
+  .icon-btn--search,
+  .icon-btn--cart { display: none; }
+
+  /* The hamburger is now a top-level node; source-order control preserves the
+     existing tablet look (brand stays left, hamburger stays right). */
+  .site-header__left    { order: 1; justify-self: start; }
+  .site-header__actions { order: 2; justify-self: end; }   /* empty on tablet */
+  .nav-toggle           { order: 3; display: grid; justify-self: end; }
+}
+
+/* ---- MOBILE: hamburger (left) · logo (center) · search + cart (right) ---- */
+@media (max-width: 768px) {
+  /* Equal 1fr flanks keep the wordmark mathematically centered no matter how
+     wide the left/right icon groups become. */
+  .site-header__inner {
+    grid-template-columns: 1fr auto 1fr;
+  }
+
+  /* All three mobile icon buttons share ONE identical treatment so they read
+     as a single design-system component: a ~35px dark-glass circle
+     (≈10% larger than the previous 32px, still a comfortable touch target). */
+  .nav-toggle,
+  .icon-btn--search,
+  .icon-btn--cart {
+    width: 35.2px;
+    height: 35.2px;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    color: #fff;
+    background: #33333b;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 2px 8px rgba(0, 0, 0, 0.45);
+    transition:
+      background-color 300ms ease,
+      border-color 300ms ease,
+      color 300ms ease,
+      transform var(--dur-fast, 140ms) var(--ease-out, ease),
+      box-shadow var(--dur-base, 220ms) var(--ease-out, ease);
+  }
+  .nav-toggle:hover,
+  .icon-btn--search:hover,
+  .icon-btn--cart:hover {
+    background: #43434d;
+    transform: translateY(-1px);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 16px rgba(0, 0, 0, 0.5);
+  }
+  .nav-toggle:active,
+  .icon-btn--search:active,
+  .icon-btn--cart:active { transform: scale(0.95); }
+
+  /* Trim the glyphs to keep them proportional inside the circles */
+  .icon-btn__icon { width: 15.4px; height: 15.4px; }
+  .nav-toggle__box { width: 17.6px; }
+
+  /* Left zone */
+  .nav-toggle { order: 1; justify-self: start; }
+
+  /* Center zone — the Xploroo wordmark, kept perfectly centered by the
+     equal 1fr flanks on .site-header__inner above */
+  .site-header__left { order: 2; justify-self: center; }
+  .brand__name { font-size: 2.112rem; }
+  .theme-toggle { display: none; }           /* not part of the mobile header */
+
+  /* Right zone — search + cart grouped, equal spacing */
+  .site-header__actions {
+    order: 3;
+    justify-self: end;
+    gap: 0.625rem;
+  }
+  .icon-btn--search,
+  .icon-btn--cart { display: grid; }
+  .btn-auth { display: none; }
+}
+
+/* ---- Small phones: keep the existing compact height & sizing ------------- */
+@media (max-width: 560px) {
+  .site-header { --header-h: 64px; }
+  .brand__name { font-size: 1.848rem; }
+}
+
+/* ============================================================================
+   LIGHT THEME — this module is self-contained (its own hardcoded palette,
+   not the shared variables.css tokens), so it needs its own explicit
+   overrides when [data-theme="light"] is set on <html>.
+   ============================================================================ */
+:root[data-theme="light"] .site-header {
+  --hdr-bg-top: #ffffff;
+  --hdr-bg-scrolled: rgba(255, 255, 255, 0.75);
+  --hdr-border-scrolled: rgba(17, 17, 23, 0.12);
+}
+:root[data-theme="light"] .site-header.is-scrolled {
+  box-shadow: 0 8px 30px rgba(17, 17, 23, 0.10);
+}
+
+/* Wordmark — darker gradient stops so it stays legible on white */
+:root[data-theme="light"] .brand__name {
+  background: linear-gradient(120deg, #2b1a5c 0%, #5b3fa0 45%, #0e5f96 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 2px 10px rgba(91, 63, 160, 0.20));
+}
+:root[data-theme="light"] .brand:hover .brand__name {
+  filter: drop-shadow(0 2px 16px rgba(91, 63, 160, 0.30));
+}
+
+/* Centered nav links */
+:root[data-theme="light"] .main-nav__link { color: rgba(17, 17, 23, 0.82); }
+:root[data-theme="light"] .main-nav__link:hover,
+:root[data-theme="light"] .main-nav__link:focus-visible { color: #000; }
+
+/* Search icon button */
+:root[data-theme="light"] .icon-btn { color: #17171c; }
+:root[data-theme="light"] .icon-btn--search { border-color: rgba(17, 17, 23, 0.4); }
+:root[data-theme="light"] .icon-btn--search:hover {
+  border-color: #000;
+  background: rgba(17, 17, 23, 0.06);
+  box-shadow: 0 6px 18px rgba(17, 17, 23, 0.10);
+}
+
+/* Log In pill — invert to a dark pill so it still reads clearly on white
+   (a white-on-white pill would otherwise disappear) */
+:root[data-theme="light"] .btn-auth--login {
+  background: #111116;
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(17, 17, 23, 0.12), 0 1px 3px rgba(17, 17, 23, 0.25);
+}
+:root[data-theme="light"] .btn-auth--login:hover {
+  box-shadow: 0 8px 24px rgba(17, 17, 23, 0.18), 0 2px 6px rgba(17, 17, 23, 0.25);
+}
+
+/* Hamburger bars */
+:root[data-theme="light"] .nav-toggle__bar { background: #17171c; }
+
+/* Mobile 3-zone icon circles (hamburger / search / cart) */
+:root[data-theme="light"] .nav-toggle,
+:root[data-theme="light"] .icon-btn--search,
+:root[data-theme="light"] .icon-btn--cart {
+  color: #17171c;
+  background: #eceef1;
+  border-color: rgba(17, 17, 23, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 2px 8px rgba(17, 17, 23, 0.10);
+}
+:root[data-theme="light"] .nav-toggle:hover,
+:root[data-theme="light"] .icon-btn--search:hover,
+:root[data-theme="light"] .icon-btn--cart:hover {
+  background: #e2e4e8;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 6px 16px rgba(17, 17, 23, 0.14);
+}
+
+/* Fullscreen mobile menu */
+:root[data-theme="light"] .mobile-menu__panel {
+  background: #ffffff;
+  box-shadow: 24px 0 60px rgba(17, 17, 23, 0.18);
+}
+:root[data-theme="light"] .mobile-menu__close {
+  color: #17171c;
+  background: #eceef1;
+  border-color: rgba(17, 17, 23, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 2px 8px rgba(17, 17, 23, 0.10);
+}
+:root[data-theme="light"] .mobile-menu__close:hover {
+  background: #e2e4e8;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 6px 16px rgba(17, 17, 23, 0.14);
+}
+:root[data-theme="light"] .mobile-menu__link { color: rgba(17, 17, 23, 0.82); }
+:root[data-theme="light"] .mobile-menu__link:hover,
+:root[data-theme="light"] .mobile-menu__link:focus-visible { color: #000; }
+
+/* Respect reduced-motion: neutralize transforms/animation deltas */
+@media (prefers-reduced-motion: reduce) {
+  .main-nav__link::after,
+  .mobile-menu__item,
+  .btn-auth,
+  .icon-btn,
+  .theme-toggle__thumb { transition-duration: 0.001ms; }
+}

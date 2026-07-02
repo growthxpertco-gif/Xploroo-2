@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="" />
+  <title>Xploroo</title>
+
+  <!-- Apply the stored theme before first paint (avoids a flash of the
+       wrong theme on reload). Dark is the default — this only ever adds
+       the attribute for a stored "light" preference, never for dark. -->
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem("xploroo-theme") === "light") {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      } catch (_) {
+        /* localStorage unavailable (e.g. private browsing) — stay dark */
+      }
+    })();
+  </script>
+
+  <!-- Global design system (load order matters) -->
+  <link rel="stylesheet" href="styles/variables.css" />
+  <link rel="stylesheet" href="styles/reset.css" />
+  <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/utilities.css" />
+
+  <!-- Header module -->
+  <link rel="stylesheet" href="styles/header.css" />
+
+  <!-- Featured Experiences module -->
+  <link rel="stylesheet" href="styles/featured-experiences.css" />
+
+  <!-- Trending Packages module -->
+  <link rel="stylesheet" href="styles/trending-packages.css" />
+
+  <!-- Ending Soon module (reuses the Trending Packages card component) -->
+  <link rel="stylesheet" href="styles/ending-soon.css" />
+
+  <!-- Recent Winners module -->
+  <link rel="stylesheet" href="styles/recent-winners.css" />
+
+  <!-- About Us module -->
+  <link rel="stylesheet" href="styles/about.css" />
+
+  <!-- Travel Stories module -->
+  <link rel="stylesheet" href="styles/travel-stories.css" />
+
+  <!-- Footer module (reusable across every page) -->
+  <link rel="stylesheet" href="styles/footer.css" />
+</head>
+
+<body>
+  <!-- Accessibility: skip to main content -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app-shell">
+
+    <!-- ============================================================= -->
+    <!-- 1. STICKY HEADER                                              -->
+    <!-- ============================================================= -->
+    <header class="site-header" data-header data-sticky>
+      <div class="site-header__inner">
+
+        <!-- Hamburger: hidden on desktop; far-left slot on mobile -->
+        <button
+          class="nav-toggle"
+          type="button"
+          data-nav-toggle
+          aria-label="Open menu"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+        >
+          <span class="nav-toggle__box" aria-hidden="true">
+            <span class="nav-toggle__bar"></span>
+            <span class="nav-toggle__bar"></span>
+            <span class="nav-toggle__bar"></span>
+          </span>
+        </button>
+
+        <!-- Left cluster: logo + theme toggle -->
+        <div class="site-header__left">
+          <a class="brand" href="/" aria-label="Xploroo home">
+            <span class="brand__name">Xploroo</span>
+          </a>
+
+          <!-- Dark / Light toggle (switches the site-wide theme) -->
+          <button
+            class="theme-toggle"
+            type="button"
+            role="switch"
+            aria-checked="true"
+            aria-label="Toggle light and dark theme"
+            data-theme-toggle
+          >
+            <span class="theme-toggle__track" aria-hidden="true">
+              <span class="theme-toggle__thumb">
+                <!-- Moon (dark) -->
+                <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor"/>
+                </svg>
+                <!-- Sun (light) -->
+                <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4"/>
+                  <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+                </svg>
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <!-- Center: primary navigation (stays centered on the full bar) -->
+        <nav class="main-nav" aria-label="Primary">
+          <ul class="main-nav__list" role="list">
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="/travel-quizzes">Travel Quizzes</a>
+            </li>
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="/influencers">Influencers</a>
+            </li>
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="/packages">Packages</a>
+            </li>
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="/about">About Us</a>
+            </li>
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="/contact">Contact Us</a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Right cluster: search + auth actions -->
+        <div class="site-header__actions">
+
+          <!-- Search: perfect circle, thin white border -->
+          <button class="icon-btn icon-btn--search" type="button" aria-label="Search" data-search>
+            <svg class="icon-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" fill="none"/>
+              <path d="m21 21-4.3-4.3" fill="none"/>
+            </svg>
+          </button>
+
+          <a class="btn-auth btn-auth--login" href="/login">Log In</a>
+          <a class="btn-auth btn-auth--signup" href="/signup">Sign Up</a>
+
+          <!-- Cart: shown on mobile (visual only for now) -->
+          <button class="icon-btn icon-btn--cart" type="button" aria-label="Cart" data-cart>
+            <svg class="icon-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="9" cy="20" r="1.5" fill="none"/>
+              <circle cx="18" cy="20" r="1.5" fill="none"/>
+              <path d="M2.5 4h2.2l2.1 11.2a1.6 1.6 0 0 0 1.6 1.3h7.9a1.6 1.6 0 0 0 1.6-1.3L21 7.5H6.2" fill="none"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Fullscreen mobile menu (overlay, controlled by the hamburger) -->
+    <div class="mobile-menu" id="mobile-menu" data-mobile-nav hidden>
+      <div class="mobile-menu__panel">
+
+        <!-- Top bar: logo + theme toggle (left), close (right) -->
+        <div class="mobile-menu__topbar">
+          <div class="mobile-menu__brand-group">
+            <a class="brand" href="/" aria-label="Xploroo home">
+              <span class="brand__name">Xploroo</span>
+            </a>
+
+            <button
+              class="theme-toggle"
+              type="button"
+              role="switch"
+              aria-checked="true"
+              aria-label="Toggle light and dark theme"
+              data-theme-toggle
+            >
+              <span class="theme-toggle__track" aria-hidden="true">
+                <span class="theme-toggle__thumb">
+                  <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor"/>
+                  </svg>
+                  <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+                  </svg>
+                </span>
+              </span>
+            </button>
+          </div>
+
+          <!-- Close: identical styling to the header icon buttons -->
+          <button class="icon-btn mobile-menu__close" type="button" aria-label="Close menu" data-menu-close>
+            <svg class="icon-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M6 6l12 12M18 6 6 18"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Primary navigation items -->
+        <nav class="mobile-menu__nav" aria-label="Mobile">
+          <ul class="mobile-menu__list" role="list">
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="/" aria-current="page">Home</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="/about">About Us</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="/travel-quizzes">Travel Quizzes</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="/influencers">Influencers</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="/packages">Packages</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="/winners">Winners</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="/merch">Merch</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="/contact">Contact Us</a></li>
+          </ul>
+        </nav>
+
+        <!-- Bottom actions: Log In (left) · Sign Up (right) -->
+        <div class="mobile-menu__actions">
+          <a class="btn-auth btn-auth--login" href="/login">Log In</a>
+          <a class="btn-auth btn-auth--signup" href="/signup">Sign Up</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- MAIN                                                          -->
+    <!-- ============================================================= -->
+    <main class="main" id="main">
+
+      <!-- =========================================================== -->
+      <!-- 2. HERO SECTION                                             -->
+      <!-- =========================================================== -->
+      <section class="hero section" aria-labelledby="hero-title" data-section="hero">
+        <div class="hero__inner container">
+
+          <div class="hero__content">
+            <p class="hero__eyebrow"><!-- eyebrow / tagline --></p>
+            <h1 class="hero__title" id="hero-title"><!-- hero headline --></h1>
+            <p class="hero__subtitle"><!-- supporting statement --></p>
+
+            <div class="hero__actions">
+              <a class="btn btn--primary" href="/packages"><!-- primary CTA --></a>
+              <a class="btn btn--outline" href="/travel-quizzes"><!-- secondary CTA --></a>
+            </div>
+
+            <ul class="hero__stats" role="list">
+              <li class="hero-stat">
+                <span class="hero-stat__value"><!-- value --></span>
+                <span class="hero-stat__label"><!-- label --></span>
+              </li>
+              <li class="hero-stat">
+                <span class="hero-stat__value"><!-- value --></span>
+                <span class="hero-stat__label"><!-- label --></span>
+              </li>
+              <li class="hero-stat">
+                <span class="hero-stat__value"><!-- value --></span>
+                <span class="hero-stat__label"><!-- label --></span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Hero media / showcase (images populated later) -->
+          <div class="hero__media" data-hero-media>
+            <figure class="hero__figure"></figure>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =========================================================== -->
+      <!-- 3. FEATURED EXPERIENCES (replaces "Donate to Win")          -->
+      <!-- =========================================================== -->
+      <section class="featured-experiences" aria-labelledby="featured-title" data-section="featured-experiences">
+        <div class="featured-experiences__container">
+          <div class="featured-experiences__panel">
+
+            <header class="featured-experiences__head">
+              <h2 class="featured-experiences__title" id="featured-title">Featured Experiences</h2>
+              <p class="featured-experiences__subtitle">A first look at what's coming to Xploroo.</p>
+            </header>
+
+            <div class="featured-experiences__tickets" data-featured-tickets>
+              <div class="featured-experiences__ticket ticket-1" data-ticket="ticket-1">
+                <article class="ticket" aria-label="Step 1: Discover">
+                  <div class="ticket__left">
+                    <span class="ticket__step-number">01</span>
+                    <span class="ticket__step-label">Step</span>
+                    <div class="ticket__barcode" aria-hidden="true"></div>
+                  </div>
+                  <div class="ticket__right">
+                    <h3 class="ticket__heading">Discover</h3>
+                    <p class="ticket__text">Find curated travel experiences across India and the world with one seamless booking platform.</p>
+                  </div>
+                  <span class="ticket__notch ticket__notch--top" aria-hidden="true"></span>
+                  <span class="ticket__notch ticket__notch--bottom" aria-hidden="true"></span>
+                  <span class="ticket__perforation" aria-hidden="true"></span>
+                </article>
+              </div>
+              <div class="featured-experiences__ticket ticket-2" data-ticket="ticket-2"></div>
+              <div class="featured-experiences__ticket ticket-3" data-ticket="ticket-3"></div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================== -->
+      <!-- 4. TRENDING PACKAGES                                        -->
+      <!-- =========================================================== -->
+      <section class="trending-packages" aria-labelledby="trending-packages-title" data-section="trending-packages">
+        <div class="trending-packages__container">
+
+          <header class="trending-packages__head">
+            <div class="trending-packages__heading">
+              <p class="trending-packages__eyebrow">Handpicked for you</p>
+              <h2 class="trending-packages__title" id="trending-packages-title">Trending Packages</h2>
+              <p class="trending-packages__subtitle">The most-booked getaways travelers are choosing right now.</p>
+            </div>
+            <a class="trending-packages__viewall" href="/packages">View all packages</a>
+          </header>
+
+          <div class="tp-carousel" data-tp-carousel>
+
+            <!-- Navigation arrows (desktop / tablet only) -->
+            <button class="tp-arrow tp-arrow--prev" type="button" data-tp-prev aria-label="Scroll to previous packages">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="tp-arrow tp-arrow--next" type="button" data-tp-next aria-label="Scroll to next packages">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+
+            <!-- Horizontal scroll / swipe / drag track (desktop); becomes a 2-col grid on mobile -->
+            <ul class="tp-track" data-tp-track role="list">
+
+              <li class="tp-slide">
+                <article class="tp-card" data-tp-card>
+                  <div class="tp-card__media tp-card__media--santorini">
+                    <span class="tp-card__wordmark">Santorini</span>
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Santorini &amp; Mykonos package" aria-pressed="false" data-tp-wishlist>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                    </button>
+                  </div>
+                  <div class="tp-card__body">
+                    <span class="tp-card__badge tp-card__badge--luxury">Luxury</span>
+                    <h3 class="tp-card__title">7-Night Aegean Escape to Santorini &amp; Mykonos</h3>
+                    <p class="tp-card__meta">
+                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                      <span>Cyclades, Greece</span>
+                    </p>
+                    <div class="tp-card__footer">
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹42,999</span><span class="tp-card__price-unit">/person</span></span>
+                      <a class="tp-card__cta" href="/packages/santorini-mykonos">Book Now</a>
+                    </div>
+                  </div>
+                </article>
+              </li>
+
+              <li class="tp-slide">
+                <article class="tp-card" data-tp-card>
+                  <div class="tp-card__media tp-card__media--bali">
+                    <span class="tp-card__wordmark">Bali</span>
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Bali villa retreat package" aria-pressed="false" data-tp-wishlist>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                    </button>
+                  </div>
+                  <div class="tp-card__body">
+                    <span class="tp-card__badge tp-card__badge--honeymoon">Honeymoon</span>
+                    <h3 class="tp-card__title">Private Villa Retreat Through Ubud &amp; Uluwatu</h3>
+                    <p class="tp-card__meta">
+                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                      <span>Bali, Indonesia</span>
+                    </p>
+                    <div class="tp-card__footer">
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹34,999</span><span class="tp-card__price-unit">/person</span></span>
+                      <a class="tp-card__cta" href="/packages/bali-villa-retreat">Book Now</a>
+                    </div>
+                  </div>
+                </article>
+              </li>
+
+              <li class="tp-slide">
+                <article class="tp-card" data-tp-card>
+                  <div class="tp-card__media tp-card__media--alps">
+                    <span class="tp-card__wordmark">Swiss&nbsp;Alps</span>
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Swiss Alps rail journey package" aria-pressed="false" data-tp-wishlist>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                    </button>
+                  </div>
+                  <div class="tp-card__body">
+                    <span class="tp-card__badge tp-card__badge--adventure">Adventure</span>
+                    <h3 class="tp-card__title">Alpine Rail Journey Across the Swiss Highlands</h3>
+                    <p class="tp-card__meta">
+                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                      <span>Interlaken, Switzerland</span>
+                    </p>
+                    <div class="tp-card__footer">
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹38,999</span><span class="tp-card__price-unit">/person</span></span>
+                      <a class="tp-card__cta" href="/packages/swiss-alps-rail">Book Now</a>
+                    </div>
+                  </div>
+                </article>
+              </li>
+
+              <li class="tp-slide">
+                <article class="tp-card" data-tp-card>
+                  <div class="tp-card__media tp-card__media--kyoto">
+                    <span class="tp-card__wordmark">Kyoto</span>
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Kyoto cherry blossom package" aria-pressed="false" data-tp-wishlist>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                    </button>
+                  </div>
+                  <div class="tp-card__body">
+                    <span class="tp-card__badge tp-card__badge--family">Family</span>
+                    <h3 class="tp-card__title">Cherry Blossom Trail Through Kyoto &amp; Nara</h3>
+                    <p class="tp-card__meta">
+                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                      <span>Kansai, Japan</span>
+                    </p>
+                    <div class="tp-card__footer">
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹32,999</span><span class="tp-card__price-unit">/person</span></span>
+                      <a class="tp-card__cta" href="/packages/kyoto-cherry-blossom">Book Now</a>
+                    </div>
+                  </div>
+                </article>
+              </li>
+
+              <li class="tp-slide">
+                <article class="tp-card" data-tp-card>
+                  <div class="tp-card__media tp-card__media--maldives">
+                    <span class="tp-card__wordmark">Maldives</span>
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Maldives overwater bungalow package" aria-pressed="false" data-tp-wishlist>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                    </button>
+                  </div>
+                  <div class="tp-card__body">
+                    <span class="tp-card__badge tp-card__badge--luxury">Luxury</span>
+                    <h3 class="tp-card__title">Overwater Bungalow Escape in the Maldives</h3>
+                    <p class="tp-card__meta">
+                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                      <span>South Malé Atoll, Maldives</span>
+                    </p>
+                    <div class="tp-card__footer">
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹49,999</span><span class="tp-card__price-unit">/person</span></span>
+                      <a class="tp-card__cta" href="/packages/maldives-overwater">Book Now</a>
+                    </div>
+                  </div>
+                </article>
+              </li>
+
+              <li class="tp-slide">
+                <article class="tp-card" data-tp-card>
+                  <div class="tp-card__media tp-card__media--patagonia">
+                    <span class="tp-card__wordmark">Patagonia</span>
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Patagonia trekking package" aria-pressed="false" data-tp-wishlist>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                    </button>
+                  </div>
+                  <div class="tp-card__body">
+                    <span class="tp-card__badge tp-card__badge--adventure">Adventure</span>
+                    <h3 class="tp-card__title">Trekking the Iconic Peaks of Torres del Paine</h3>
+                    <p class="tp-card__meta">
+                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                      <span>Patagonia, Chile</span>
+                    </p>
+                    <div class="tp-card__footer">
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹36,999</span><span class="tp-card__price-unit">/person</span></span>
+                      <a class="tp-card__cta" href="/packages/patagonia-trekking">Book Now</a>
+                    </div>
+                  </div>
+                </article>
+              </li>
+
+              <li class="tp-slide">
+                <article class="tp-card" data-tp-card>
+                  <div class="tp-card__media tp-card__media--amalfi">
+                    <span class="tp-card__wordmark">Amalfi</span>
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Amalfi Coast package" aria-pressed="false" data-tp-wishlist>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                    </button>
+                  </div>
+                  <div class="tp-card__body">
+                    <span class="tp-card__badge tp-card__badge--honeymoon">Honeymoon</span>
+                    <h3 class="tp-card__title">Coastal Drive Through Positano &amp; Amalfi</h3>
+                    <p class="tp-card__meta">
+                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                      <span>Amalfi Coast, Italy</span>
+                    </p>
+                    <div class="tp-card__footer">
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹28,999</span><span class="tp-card__price-unit">/person</span></span>
+                      <a class="tp-card__cta" href="/packages/amalfi-coast">Book Now</a>
+                    </div>
+                  </div>
+                </article>
+              </li>
+
+              <li class="tp-slide">
+                <article class="tp-card" data-tp-card>
+                  <div class="tp-card__media tp-card__media--marrakech">
+                    <span class="tp-card__wordmark">Marrakech</span>
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Marrakech package" aria-pressed="false" data-tp-wishlist>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                    </button>
+                  </div>
+                  <div class="tp-card__body">
+                    <span class="tp-card__badge tp-card__badge--family">Family</span>
+                    <h3 class="tp-card__title">Desert Nights &amp; Medina Wonders of Marrakech</h3>
+                    <p class="tp-card__meta">
+                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                      <span>Marrakech, Morocco</span>
+                    </p>
+                    <div class="tp-card__footer">
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹24,999</span><span class="tp-card__price-unit">/person</span></span>
+                      <a class="tp-card__cta" href="/packages/marrakech-desert">Book Now</a>
+                    </div>
+                  </div>
+                </article>
+              </li>
+
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =========================================================== -->
+      <!-- 5. ENDING SOON                                              -->
+      <!-- =========================================================== -->
+      <!-- Reuses the Trending Packages card component (.tp-card and its
+           children, .tp-carousel / .tp-track / .tp-arrow / .tp-slide) from
+           trending-packages.css completely unmodified. Only the section-head
+           chrome and the countdown / seats-left additions are new, and they
+           live entirely in styles/ending-soon.css so nothing here can affect
+           the Trending Packages section. -->
+      <section class="ending-soon" aria-labelledby="ending-soon-title" data-section="ending-soon">
+        <div class="ending-soon__container">
+
+          <header class="ending-soon__head">
+            <div class="ending-soon__heading">
+              <p class="ending-soon__eyebrow">Limited availability</p>
+              <h2 class="ending-soon__title" id="ending-soon-title">Ending Soon</h2>
+              <p class="ending-soon__subtitle">These deals are almost gone — book now before the offer expires.</p>
+            </div>
+            <a class="ending-soon__viewall" href="/packages">View all deals</a>
+          </header>
+
+          <div class="tp-carousel" data-es-carousel>
+
+            <button class="tp-arrow tp-arrow--prev" type="button" data-es-prev aria-label="Scroll to previous deals">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="tp-arrow tp-arrow--next" type="button" data-es-next aria-label="Scroll to next deals">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+
+            <ul class="tp-track" data-es-track role="list">
+
+              <!-- 1. Mumbai -->
+              <li class="tp-slide">
+                <article class="tp-card" data-tp-card>
+                  <div class="tp-card__media tp-card__media--mumbai">
+                    <span class="tp-card__wordmark">Mumbai</span>
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Mumbai heritage package" aria-pressed="false" data-tp-wishlist>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                    </button>
+                  </div>
+                  <div class="tp-card__body">
+                    <span class="tp-card__badge tp-card__badge--urgency">4 Seats Left</span>
+                    <p class="tp-card__meta">
+                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                      <span>Mumbai, India · 3D/2N</span>
+                    </p>
+                    <p class="tp-card__countdown" data-es-countdown data-hours="30">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                      <span data-es-countdown-text>Ends in 1 Day 6 Hours</span>
+                    </p>
+                    <div class="tp-card__footer">
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹8,999</span><span class="tp-card__price-unit">/person</span></span>
+                      <a class="tp-card__cta" href="/packages/mumbai-heritage">Book Now</a>
+                    </div>
+                  </div>
+                </article>
+              </li>
+
+              <!-- 2. Goa -->
+              <li class="tp-slide">
+                <article class="tp-card" data-tp-card>
+                  <div class="tp-card__media tp-card__media--goa">
+                    <span class="tp-card__wordmark">Goa</span>
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Goa beach package" aria-pressed="false" data-tp-wishlist>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                    </button>
+                  </div>
+                  <div class="tp-card__body">
+                    <span class="tp-card__badge tp-card__badge--urgency">6 Seats Left</span>
+                    <p class="tp-card__meta">
+                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                      <span>Goa, India · 4D/3N</span>
+                    </p>
+                    <p class="tp-card__countdown" data-es-countdown data-hours="62">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                      <span data-es-countdown-text>Ends in 2 Days 14 Hours</span>
+                    </p>
+                    <div class="tp-card__footer">
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹9,999</span><span class="tp-card__price-unit">/person</span></span>
+                      <a class="tp-card__cta" href="/packages/goa-beach-getaway">Book Now</a>
+                    </div>
+                  </div>
+                </article>
+              </li>
+
+              <!-- 3. Dubai -->
+              <li class="tp-slide">
+                <article class="tp-card" data-tp-card>
+                  <div class="tp-card__media tp-card__media--dubai">
+                    <span class="tp-card__wordmark">Dubai</span>
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Dubai skyline package" aria-pressed="false" data-tp-wishlist>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                    </button>
+                  </div>
+                  <div class="tp-card__body">
+                    <span class="tp-card__badge tp-card__badge--urgency">2 Seats Left</span>
+                    <p class="tp-card__meta">
+                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                      <span>Dubai, UAE · 5D/4N</span>
+                    </p>
+                    <p class="tp-card__countdown" data-es-countdown data-hours="18">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                      <span data-es-countdown-text>Ends in 18 Hours</span>
+                    </p>
+                    <div class="tp-card__footer">
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹27,999</span><span class="tp-card__price-unit">/person</span></span>
+                      <a class="tp-card__cta" href="/packages/dubai-skyline">Book Now</a>
+                    </div>
+                  </div>
+                </article>
+              </li>
+
+              <!-- 5. Kashmir -->
+              <li class="tp-slide">
+                <article class="tp-card" data-tp-card>
+                  <div class="tp-card__media tp-card__media--kashmir">
+                    <span class="tp-card__wordmark">Kashmir</span>
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Kashmir snow trail package" aria-pressed="false" data-tp-wishlist>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                    </button>
+                  </div>
+                  <div class="tp-card__body">
+                    <span class="tp-card__badge tp-card__badge--urgency">3 Seats Left</span>
+                    <p class="tp-card__meta">
+                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                      <span>Kashmir, India · 6D/5N</span>
+                    </p>
+                    <p class="tp-card__countdown" data-es-countdown data-hours="54">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                      <span data-es-countdown-text>Ends in 2 Days 6 Hours</span>
+                    </p>
+                    <div class="tp-card__footer">
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹18,999</span><span class="tp-card__price-unit">/person</span></span>
+                      <a class="tp-card__cta" href="/packages/kashmir-snow-trail">Book Now</a>
+                    </div>
+                  </div>
+                </article>
+              </li>
+
+              <!-- 9. Thailand -->
+              <li class="tp-slide">
+                <article class="tp-card" data-tp-card>
+                  <div class="tp-card__media tp-card__media--thailand">
+                    <span class="tp-card__wordmark">Thailand</span>
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Thailand island package" aria-pressed="false" data-tp-wishlist>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                    </button>
+                  </div>
+                  <div class="tp-card__body">
+                    <span class="tp-card__badge tp-card__badge--urgency">8 Seats Left</span>
+                    <p class="tp-card__meta">
+                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                      <span>Thailand · 6D/5N</span>
+                    </p>
+                    <p class="tp-card__countdown" data-es-countdown data-hours="58">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                      <span data-es-countdown-text>Ends in 2 Days 10 Hours</span>
+                    </p>
+                    <div class="tp-card__footer">
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹19,999</span><span class="tp-card__price-unit">/person</span></span>
+                      <a class="tp-card__cta" href="/packages/thailand-island-hopper">Book Now</a>
+                    </div>
+                  </div>
+                </article>
+              </li>
+
+              <!-- 10. Paris -->
+              <li class="tp-slide">
+                <article class="tp-card" data-tp-card>
+                  <div class="tp-card__media tp-card__media--paris">
+                    <span class="tp-card__wordmark">Paris</span>
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Paris getaway package" aria-pressed="false" data-tp-wishlist>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                    </button>
+                  </div>
+                  <div class="tp-card__body">
+                    <span class="tp-card__badge tp-card__badge--urgency">5 Seats Left</span>
+                    <p class="tp-card__meta">
+                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                      <span>Paris, France · 4D/3N</span>
+                    </p>
+                    <p class="tp-card__countdown" data-es-countdown data-hours="34">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                      <span data-es-countdown-text>Ends in 1 Day 10 Hours</span>
+                    </p>
+                    <div class="tp-card__footer">
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹32,999</span><span class="tp-card__price-unit">/person</span></span>
+                      <a class="tp-card__cta" href="/packages/paris-city-of-lights">Book Now</a>
+                    </div>
+                  </div>
+                </article>
+              </li>
+
+              <!-- 11. Switzerland -->
+              <li class="tp-slide">
+                <article class="tp-card" data-tp-card>
+                  <div class="tp-card__media tp-card__media--switzerland">
+                    <span class="tp-card__wordmark">Switzerland</span>
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Switzerland alpine package" aria-pressed="false" data-tp-wishlist>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                    </button>
+                  </div>
+                  <div class="tp-card__body">
+                    <span class="tp-card__badge tp-card__badge--urgency">3 Seats Left</span>
+                    <p class="tp-card__meta">
+                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                      <span>Switzerland · 6D/5N</span>
+                    </p>
+                    <p class="tp-card__countdown" data-es-countdown data-hours="66">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                      <span data-es-countdown-text>Ends in 2 Days 18 Hours</span>
+                    </p>
+                    <div class="tp-card__footer">
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹44,999</span><span class="tp-card__price-unit">/person</span></span>
+                      <a class="tp-card__cta" href="/packages/switzerland-alpine-dream">Book Now</a>
+                    </div>
+                  </div>
+                </article>
+              </li>
+
+              <!-- 12. Singapore -->
+              <li class="tp-slide">
+                <article class="tp-card" data-tp-card>
+                  <div class="tp-card__media tp-card__media--singapore">
+                    <span class="tp-card__wordmark">Singapore</span>
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Singapore city package" aria-pressed="false" data-tp-wishlist>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                    </button>
+                  </div>
+                  <div class="tp-card__body">
+                    <span class="tp-card__badge tp-card__badge--urgency">6 Seats Left</span>
+                    <p class="tp-card__meta">
+                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                      <span>Singapore · 4D/3N</span>
+                    </p>
+                    <p class="tp-card__countdown" data-es-countdown data-hours="22">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                      <span data-es-countdown-text>Ends in 22 Hours</span>
+                    </p>
+                    <div class="tp-card__footer">
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹24,999</span><span class="tp-card__price-unit">/person</span></span>
+                      <a class="tp-card__cta" href="/packages/singapore-marina-nights">Book Now</a>
+                    </div>
+                  </div>
+                </article>
+              </li>
+
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =========================================================== -->
+      <!-- 6. RECENT WINNERS                                            -->
+      <!-- =========================================================== -->
+      <section class="recent-winners" aria-labelledby="winners-title" data-section="recent-winners">
+        <div class="recent-winners__container">
+
+          <header class="recent-winners__head">
+            <p class="recent-winners__eyebrow">Recent Winners</p>
+            <h2 class="recent-winners__title" id="winners-title">Real Journeys. Real Winners.</h2>
+          </header>
+
+          <div class="rw-panel">
+            <div class="rw-carousel" data-rw-carousel>
+              <ul class="rw-track" data-rw-track role="list">
+
+                <li class="rw-slide">
+                  <article class="rw-card">
+                    <div class="rw-card__media rw-card__media--1">
+                      <span class="rw-card__monogram">AS</span>
+                    </div>
+                    <div class="rw-card__body">
+                      <h3 class="rw-card__name">Ananya Sharma</h3>
+                      <p class="rw-card__trip">Won: 5-Night Maldives Overwater Villa Escape</p>
+                      <p class="rw-card__experience">"Waking up over turquoise water still feels unreal."</p>
+                      <a class="rw-card__link" href="/winners/ananya-sharma">Read Story <span aria-hidden="true">&rarr;</span></a>
+                    </div>
+                  </article>
+                </li>
+
+                <li class="rw-slide">
+                  <article class="rw-card">
+                    <div class="rw-card__media rw-card__media--2">
+                      <span class="rw-card__monogram">RM</span>
+                    </div>
+                    <div class="rw-card__body">
+                      <h3 class="rw-card__name">Rohan Mehta</h3>
+                      <p class="rw-card__trip">Won: 7-Day Swiss Alps Rail Adventure</p>
+                      <p class="rw-card__experience">"The Jungfrau summit view was worth every mile."</p>
+                      <a class="rw-card__link" href="/winners/rohan-mehta">Read Story <span aria-hidden="true">&rarr;</span></a>
+                    </div>
+                  </article>
+                </li>
+
+                <li class="rw-slide">
+                  <article class="rw-card">
+                    <div class="rw-card__media rw-card__media--3">
+                      <span class="rw-card__monogram">PN</span>
+                    </div>
+                    <div class="rw-card__body">
+                      <h3 class="rw-card__name">Priya Nair</h3>
+                      <p class="rw-card__trip">Won: Santorini Sunset Getaway for Two</p>
+                      <p class="rw-card__experience">"We watched the sunset from Oia and just cried happy tears."</p>
+                      <a class="rw-card__link" href="/winners/priya-nair">Read Story <span aria-hidden="true">&rarr;</span></a>
+                    </div>
+                  </article>
+                </li>
+
+                <li class="rw-slide">
+                  <article class="rw-card">
+                    <div class="rw-card__media rw-card__media--4">
+                      <span class="rw-card__monogram">KV</span>
+                    </div>
+                    <div class="rw-card__body">
+                      <h3 class="rw-card__name">Karan Verma</h3>
+                      <p class="rw-card__trip">Won: Dubai Luxury Desert Safari Package</p>
+                      <p class="rw-card__experience">"Riding the dunes at golden hour was pure adrenaline."</p>
+                      <a class="rw-card__link" href="/winners/karan-verma">Read Story <span aria-hidden="true">&rarr;</span></a>
+                    </div>
+                  </article>
+                </li>
+
+                <li class="rw-slide">
+                  <article class="rw-card">
+                    <div class="rw-card__media rw-card__media--5">
+                      <span class="rw-card__monogram">MI</span>
+                    </div>
+                    <div class="rw-card__body">
+                      <h3 class="rw-card__name">Meera Iyer</h3>
+                      <p class="rw-card__trip">Won: Bali Wellness &amp; Temple Retreat</p>
+                      <p class="rw-card__experience">"I came back lighter, calmer, and completely in love with Ubud."</p>
+                      <a class="rw-card__link" href="/winners/meera-iyer">Read Story <span aria-hidden="true">&rarr;</span></a>
+                    </div>
+                  </article>
+                </li>
+
+                <li class="rw-slide">
+                  <article class="rw-card">
+                    <div class="rw-card__media rw-card__media--6">
+                      <span class="rw-card__monogram">AK</span>
+                    </div>
+                    <div class="rw-card__body">
+                      <h3 class="rw-card__name">Arjun Kapoor</h3>
+                      <p class="rw-card__trip">Won: Kyoto Cherry Blossom Rail Journey</p>
+                      <p class="rw-card__experience">"Standing under falling sakura petals felt like a movie scene."</p>
+                      <a class="rw-card__link" href="/winners/arjun-kapoor">Read Story <span aria-hidden="true">&rarr;</span></a>
+                    </div>
+                  </article>
+                </li>
+
+              </ul>
+            </div>
+
+            <div class="rw-dots" data-rw-dots aria-hidden="true"></div>
+          </div>
+
+          <div class="recent-winners__cta">
+            <a class="btn btn--gradient btn--pill btn--lg" href="/winners">
+              See All Winners <span aria-hidden="true">&rarr;</span>
+            </a>
+            <div class="rw-brandmark">
+              <span class="rw-brandmark__logo">Xploroo</span>
+              <span class="rw-brandmark__tag">Every trip has a story. Yours could be next.</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =========================================================== -->
+      <!-- 7. ABOUT US                                                  -->
+      <!-- =========================================================== -->
+      <section class="about" aria-labelledby="about-title" data-section="about">
+        <div class="about__container">
+          <div class="about__panel">
+
+            <header class="about__head">
+              <h2 class="about__title" id="about-title">About Us</h2>
+            </header>
+
+            <div class="about__video">
+              <div class="about__video-frame" data-about-video>
+                <button class="about__video-play" type="button" aria-label="Play the Xploroo story video" data-about-play>
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <div class="about__partners">
+              <h3 class="about__partners-title">Trusted Partners</h3>
+
+              <div class="marquee marquee--ltr" data-marquee>
+                <div class="marquee__track" data-marquee-track>
+                  <ul class="marquee__set" role="list">
+                    <li class="marquee__logo">Skyscanner</li>
+                    <li class="marquee__logo">Airbnb</li>
+                    <li class="marquee__logo">Booking.com</li>
+                    <li class="marquee__logo">Emirates</li>
+                    <li class="marquee__logo">TripAdvisor</li>
+                    <li class="marquee__logo">Marriott</li>
+                    <li class="marquee__logo">Visa</li>
+                    <li class="marquee__logo">Qatar Airways</li>
+                  </ul>
+                  <ul class="marquee__set" role="list" aria-hidden="true">
+                    <li class="marquee__logo">Skyscanner</li>
+                    <li class="marquee__logo">Airbnb</li>
+                    <li class="marquee__logo">Booking.com</li>
+                    <li class="marquee__logo">Emirates</li>
+                    <li class="marquee__logo">TripAdvisor</li>
+                    <li class="marquee__logo">Marriott</li>
+                    <li class="marquee__logo">Visa</li>
+                    <li class="marquee__logo">Qatar Airways</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="marquee marquee--rtl" data-marquee>
+                <div class="marquee__track" data-marquee-track>
+                  <ul class="marquee__set" role="list">
+                    <li class="marquee__logo">Mastercard</li>
+                    <li class="marquee__logo">Expedia</li>
+                    <li class="marquee__logo">Hilton</li>
+                    <li class="marquee__logo">Etihad</li>
+                    <li class="marquee__logo">Agoda</li>
+                    <li class="marquee__logo">American Express</li>
+                    <li class="marquee__logo">Singapore Airlines</li>
+                    <li class="marquee__logo">Trivago</li>
+                  </ul>
+                  <ul class="marquee__set" role="list" aria-hidden="true">
+                    <li class="marquee__logo">Mastercard</li>
+                    <li class="marquee__logo">Expedia</li>
+                    <li class="marquee__logo">Hilton</li>
+                    <li class="marquee__logo">Etihad</li>
+                    <li class="marquee__logo">Agoda</li>
+                    <li class="marquee__logo">American Express</li>
+                    <li class="marquee__logo">Singapore Airlines</li>
+                    <li class="marquee__logo">Trivago</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="about__stats">
+              <a class="stat-card" href="/creators" data-stat-card>
+                <span class="stat-card__number" data-stat-number data-target="325">0</span>
+                <span class="stat-card__label">Creators Supported</span>
+                <span class="stat-card__link">View All <span aria-hidden="true">&rarr;</span></span>
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- =========================================================== -->
+      <!-- 8. TRAVEL STORIES                                            -->
+      <!-- =========================================================== -->
+      <section class="travel-stories" aria-labelledby="stories-title" data-section="travel-stories">
+        <div class="travel-stories__container">
+
+          <header class="travel-stories__head">
+            <h2 class="travel-stories__title" id="stories-title">Travel Stories</h2>
+          </header>
+
+          <div class="ts-carousel" data-ts-carousel>
+
+            <button class="ts-arrow ts-arrow--prev" type="button" data-ts-prev aria-label="Previous story">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <button class="ts-arrow ts-arrow--next" type="button" data-ts-next aria-label="Next story">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+
+            <ul class="ts-track" data-ts-track role="list">
+
+              <li class="ts-slide">
+                <article class="ts-card">
+                  <a class="ts-card__link" href="/stories/exploring-kashmir-in-winter">
+                    <div class="ts-card__media ts-card__media--kashmir">
+                      <span class="ts-card__category">Mountains</span>
+                    </div>
+                    <div class="ts-card__body">
+                      <h3 class="ts-card__title">Exploring Kashmir in Winter</h3>
+                      <p class="ts-card__excerpt">Snow-draped valleys, steaming kahwa, and a stillness Srinagar only shows in December.</p>
+                      <span class="ts-card__cta">Read Story <span aria-hidden="true">&rarr;</span></span>
+                    </div>
+                  </a>
+                </article>
+              </li>
+
+              <li class="ts-slide">
+                <article class="ts-card">
+                  <a class="ts-card__link" href="/stories/a-weekend-in-goa">
+                    <div class="ts-card__media ts-card__media--goa">
+                      <span class="ts-card__category">Beaches</span>
+                    </div>
+                    <div class="ts-card__body">
+                      <h3 class="ts-card__title">A Weekend in Goa</h3>
+                      <p class="ts-card__excerpt">Beach shacks, sunset drives, and the easy rhythm of North Goa in 48 hours.</p>
+                      <span class="ts-card__cta">Read Story <span aria-hidden="true">&rarr;</span></span>
+                    </div>
+                  </a>
+                </article>
+              </li>
+
+              <li class="ts-slide">
+                <article class="ts-card">
+                  <a class="ts-card__link" href="/stories/hidden-gems-of-bali">
+                    <div class="ts-card__media ts-card__media--bali">
+                      <span class="ts-card__category">Islands</span>
+                    </div>
+                    <div class="ts-card__body">
+                      <h3 class="ts-card__title">Hidden Gems of Bali</h3>
+                      <p class="ts-card__excerpt">Past Ubud's crowds lie rice terraces and waterfalls most itineraries miss entirely.</p>
+                      <span class="ts-card__cta">Read Story <span aria-hidden="true">&rarr;</span></span>
+                    </div>
+                  </a>
+                </article>
+              </li>
+
+              <li class="ts-slide">
+                <article class="ts-card">
+                  <a class="ts-card__link" href="/stories/dubai-in-3-days">
+                    <div class="ts-card__media ts-card__media--dubai">
+                      <span class="ts-card__category">City</span>
+                    </div>
+                    <div class="ts-card__body">
+                      <h3 class="ts-card__title">Dubai in 3 Days</h3>
+                      <p class="ts-card__excerpt">A tight itinerary from Burj Khalifa to the dunes without feeling rushed.</p>
+                      <span class="ts-card__cta">Read Story <span aria-hidden="true">&rarr;</span></span>
+                    </div>
+                  </a>
+                </article>
+              </li>
+
+              <li class="ts-slide">
+                <article class="ts-card">
+                  <a class="ts-card__link" href="/stories/trekking-through-ladakh">
+                    <div class="ts-card__media ts-card__media--ladakh">
+                      <span class="ts-card__category">Adventure</span>
+                    </div>
+                    <div class="ts-card__body">
+                      <h3 class="ts-card__title">Trekking Through Ladakh</h3>
+                      <p class="ts-card__excerpt">Thin air, high passes, and the kind of silence you only find above 4,000 metres.</p>
+                      <span class="ts-card__cta">Read Story <span aria-hidden="true">&rarr;</span></span>
+                    </div>
+                  </a>
+                </article>
+              </li>
+
+              <li class="ts-slide">
+                <article class="ts-card">
+                  <a class="ts-card__link" href="/stories/sunrise-at-tiger-hill">
+                    <div class="ts-card__media ts-card__media--tigerhill">
+                      <span class="ts-card__category">Hill Stations</span>
+                    </div>
+                    <div class="ts-card__body">
+                      <h3 class="ts-card__title">Sunrise at Tiger Hill</h3>
+                      <p class="ts-card__excerpt">A 4am climb above Darjeeling for the first light on Kanchenjunga.</p>
+                      <span class="ts-card__cta">Read Story <span aria-hidden="true">&rarr;</span></span>
+                    </div>
+                  </a>
+                </article>
+              </li>
+
+              <li class="ts-slide">
+                <article class="ts-card">
+                  <a class="ts-card__link" href="/stories/luxury-escape-to-maldives">
+                    <div class="ts-card__media ts-card__media--maldives">
+                      <span class="ts-card__category">Luxury</span>
+                    </div>
+                    <div class="ts-card__body">
+                      <h3 class="ts-card__title">Luxury Escape to Maldives</h3>
+                      <p class="ts-card__excerpt">Overwater villas, private sandbanks, and a slower kind of luxury.</p>
+                      <span class="ts-card__cta">Read Story <span aria-hidden="true">&rarr;</span></span>
+                    </div>
+                  </a>
+                </article>
+              </li>
+
+              <li class="ts-slide">
+                <article class="ts-card">
+                  <a class="ts-card__link" href="/stories/paris-for-first-time-travelers">
+                    <div class="ts-card__media ts-card__media--paris">
+                      <span class="ts-card__category">Guide</span>
+                    </div>
+                    <div class="ts-card__body">
+                      <h3 class="ts-card__title">Paris for First-Time Travelers</h3>
+                      <p class="ts-card__excerpt">The essential arrondissements, museums, and cafés worth the queue.</p>
+                      <span class="ts-card__cta">Read Story <span aria-hidden="true">&rarr;</span></span>
+                    </div>
+                  </a>
+                </article>
+              </li>
+
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ============================================================= -->
+    <!-- 9. FOOTER                                                     -->
+    <!-- ============================================================= -->
+    <footer class="site-footer" data-footer>
+      <div class="site-footer__panel">
+        <div class="site-footer__container">
+
+          <!-- Newsletter -->
+          <div class="footer-newsletter">
+            <h2 class="footer-newsletter__title">Join the Xploroo Travel Community</h2>
+            <form class="footer-newsletter__form" data-newsletter-form action="#" method="post" novalidate>
+              <label class="sr-only" for="footer-newsletter-email">Email address</label>
+              <input
+                class="footer-newsletter__input"
+                id="footer-newsletter-email"
+                type="email"
+                name="email"
+                autocomplete="email"
+                placeholder="Email Address"
+                required
+              />
+              <button class="btn btn--gradient btn--pill footer-newsletter__submit" type="submit">Subscribe</button>
+            </form>
+            <p class="footer-newsletter__message" data-newsletter-message role="status" aria-live="polite"></p>
+          </div>
+
+          <!-- Social icons -->
+          <ul class="footer-social" role="list" aria-label="Xploroo on social media">
+            <li>
+              <a class="footer-social__link" href="#" aria-label="Xploroo on Facebook">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H16.7V3.7C16.15 3.6 15.15 3.5 14 3.5c-2.4 0-4 1.45-4 4.1v2.3H7.3v3.1H10V21h3.5Z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a class="footer-social__link" href="#" aria-label="Xploroo on Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+              </a>
+            </li>
+            <li>
+              <a class="footer-social__link" href="#" aria-label="Xploroo on X">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 3h4.2l4 5.4L16.8 3H20l-6 7.6L20.4 21h-4.2l-4.3-5.8L7 21H3.8l6.4-8.1z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a class="footer-social__link" href="#" aria-label="Xploroo on YouTube">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.6 7.6c-.25-1-1-1.75-2-2C17.8 5.1 12 5.1 12 5.1s-5.8 0-7.6.5c-1 .25-1.75 1-2 2C2 9.4 2 12 2 12s0 2.6.4 4.4c.25 1 1 1.75 2 2 1.8.5 7.6.5 7.6.5s5.8 0 7.6-.5c1-.25 1.75-1 2-2 .4-1.8.4-4.4.4-4.4s0-2.6-.4-4.4ZM10 15.2V8.8l5.5 3.2Z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a class="footer-social__link" href="#" aria-label="Xploroo on LinkedIn">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.94 8.5H3.56V20.5H6.94V8.5ZM5.25 3.5A1.96 1.96 0 1 0 5.25 7.42 1.96 1.96 0 0 0 5.25 3.5ZM20.44 20.5H17.06V14.5c0-1.4-.03-3.2-1.95-3.2-1.96 0-2.26 1.53-2.26 3.1v6.1H9.47V8.5h3.24v1.64h.05c.45-.86 1.56-1.77 3.2-1.77 3.43 0 4.06 2.26 4.06 5.2v6.93Z"/></svg>
+              </a>
+            </li>
+          </ul>
+
+          <!-- Link columns -->
+          <nav class="footer-links" aria-label="Footer">
+            <div class="footer-links__col">
+              <h3 class="footer-links__title">About</h3>
+              <ul class="footer-links__list" role="list">
+                <li><a class="footer-links__link" href="/about">About Us</a></li>
+                <li><a class="footer-links__link" href="/how-it-works">How It Works</a></li>
+                <li><a class="footer-links__link" href="/team">Our Team</a></li>
+                <li><a class="footer-links__link" href="/faqs">FAQs</a></li>
+                <li><a class="footer-links__link" href="/contact">Contact Us</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-links__col">
+              <h3 class="footer-links__title">Packages</h3>
+              <ul class="footer-links__list" role="list">
+                <li><a class="footer-links__link" href="/packages/domestic">Domestic Packages</a></li>
+                <li><a class="footer-links__link" href="/packages/international">International Packages</a></li>
+                <li><a class="footer-links__link" href="/packages/honeymoon">Honeymoon Packages</a></li>
+                <li><a class="footer-links__link" href="/packages/adventure">Adventure Trips</a></li>
+                <li><a class="footer-links__link" href="/packages/luxury">Luxury Holidays</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-links__col">
+              <h3 class="footer-links__title">Explore</h3>
+              <ul class="footer-links__list" role="list">
+                <li><a class="footer-links__link" href="/travel-quizzes">Travel Quizzes</a></li>
+                <li><a class="footer-links__link" href="/influencers">Influencers</a></li>
+                <li><a class="footer-links__link" href="/winners">Winners</a></li>
+                <li><a class="footer-links__link" href="/stories">Travel Stories</a></li>
+                <li><a class="footer-links__link" href="/privacy">Privacy Policy</a></li>
+              </ul>
+            </div>
+          </nav>
+
+          <!-- Bottom bar -->
+          <div class="footer-bottom">
+            <p class="footer-bottom__copyright">&copy; <time datetime="2026">2026</time> Xploroo. All Rights Reserved.</p>
+            <ul class="footer-bottom__legal" role="list">
+              <li><a href="/privacy">Privacy Policy</a></li>
+              <li><a href="/terms">Terms &amp; Conditions</a></li>
+              <li><a href="/refund-policy">Refund Policy</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Header behavior (sticky blur, mobile menu, theme toggle) -->
+  <script src="js/header.js" defer></script>
+
+  <!-- Trending Packages behavior (drag/swipe carousel, wishlist) -->
+  <script src="js/trending-packages.js" defer></script>
+
+  <!-- Ending Soon behavior (drag/swipe carousel, wishlist, live countdown) -->
+  <script src="js/ending-soon.js" defer></script>
+
+  <!-- Recent Winners behavior (infinite-loop swipe carousel + dot pagination) -->
+  <script src="js/recent-winners.js" defer></script>
+
+  <!-- About Us behavior (video play trigger, marquee viewport pausing, stat count-up) -->
+  <script src="js/about.js" defer></script>
+
+  <!-- Travel Stories behavior (drag/swipe carousel + arrows, no looping) -->
+  <script src="js/travel-stories.js" defer></script>
+
+  <!-- Footer behavior (newsletter validation) -->
+  <script src="js/footer.js" defer></script>
+</body>
+</html>

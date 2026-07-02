@@ -1,0 +1,209 @@
+/* ==========================================================================
+   XPLOROO · Ending Soon module
+   ending-soon.css — Section head + the additive pieces on top of the
+   Trending Packages card component (urgency badge, countdown row, landmark
+   watermark icon, new destination gradients).
+   --------------------------------------------------------------------------
+   IMPORTANT: this file never redeclares `.tp-card`, `.tp-carousel`,
+   `.tp-track`, `.tp-arrow` or `.tp-slide` — those are reused byte-for-byte
+   from styles/trending-packages.css, which is not modified. Everything
+   below is either a new class (safe to add) or a new modifier for an
+   existing component (e.g. a new `--urgency` badge color, new destination
+   gradient variants) that Trending Packages' markup never references, so
+   its rendered output is unaffected.
+   Load AFTER trending-packages.css.
+   ========================================================================== */
+
+.ending-soon {
+  /* `.tp-track` (reused from trending-packages.css) resolves its
+     `grid-auto-columns` with `var(--tp-gap)`, which is only ever declared
+     inside `.trending-packages`. Re-declaring the same value here lets the
+     reused component work correctly inside `.ending-soon`'s subtree too,
+     without touching trending-packages.css. */
+  --tp-gap: 1.5rem;
+  position: relative;
+  padding-block: var(--section-gap);
+}
+
+.ending-soon__container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* -------------------------------------------------------------------------
+   Section head (mirrors Trending Packages' head layout with its own class
+   names, since the two sections must remain visually independent)
+   ------------------------------------------------------------------------- */
+.ending-soon__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-5);
+  margin-bottom: var(--space-8);
+}
+
+.ending-soon__eyebrow {
+  margin-bottom: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  /* Urgency-tinted eyebrow to differentiate from Trending's neutral one */
+  color: var(--coral-400);
+  transition: color 300ms ease;
+}
+/* Light theme: the pastel coral reads fine on black but fails contrast on a
+   white card/canvas — swap to the darker step of the same hue. */
+:root[data-theme="light"] .ending-soon__eyebrow { color: var(--coral-600); }
+
+.ending-soon__title {
+  font-size: var(--fs-3xl);
+  margin: 0;
+}
+
+.ending-soon__subtitle {
+  margin-top: var(--space-2);
+  max-width: 46ch;
+  color: var(--color-text-muted);
+}
+
+.ending-soon__viewall {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 2.75rem;
+  padding-inline: var(--space-5);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text-strong);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+  transition:
+    border-color var(--dur-fast) var(--ease-standard),
+    background-color var(--dur-fast) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-out);
+}
+.ending-soon__viewall:hover {
+  border-color: var(--coral-500);
+  background: rgba(251, 90, 90, 0.12);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  /* Mobile: only the heading remains — eyebrow, subtitle and the "View all
+     deals" button are hidden, and the heading is centered with its own
+     premium top/bottom spacing standing in for the removed head layout. */
+  .ending-soon__head {
+    justify-content: center;
+    margin-bottom: var(--space-8);
+  }
+  .ending-soon__heading { text-align: center; }
+  .ending-soon__eyebrow,
+  .ending-soon__subtitle,
+  .ending-soon__viewall {
+    display: none;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Wordmark position — the media now shows only the clean gradient
+   background and the destination name (no decorative overlay graphic).
+   ------------------------------------------------------------------------- */
+.tp-card__media .tp-card__wordmark {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(1.15rem, 0.95rem + 1vw, 1.5rem);
+  margin-top: auto;
+  margin-bottom: 0.9rem;
+  align-self: center;
+}
+.tp-card__media { flex-direction: column; align-items: center; justify-content: flex-end; }
+
+/* New destination gradients (Bali & Maldives are intentionally omitted here —
+   those two reuse the exact variants already defined in trending-packages.css) */
+.tp-card__media--mumbai      { --tp-c1: #c98a3a; --tp-c2: #1a1006; }
+.tp-card__media--goa         { --tp-c1: #1aa3a0; --tp-c2: #08201d; }
+.tp-card__media--dubai       { --tp-c1: #d9a441; --tp-c2: #1b1006; }
+.tp-card__media--kashmir     { --tp-c1: #5b7fa6; --tp-c2: #0c1420; }
+.tp-card__media--manali      { --tp-c1: #3f6b52; --tp-c2: #0a140f; }
+.tp-card__media--ladakh      { --tp-c1: #a85c3e; --tp-c2: #170d08; }
+.tp-card__media--thailand    { --tp-c1: #159a82; --tp-c2: #04140f; }
+.tp-card__media--paris       { --tp-c1: #5a5f9e; --tp-c2: #120f1c; }
+.tp-card__media--switzerland { --tp-c1: #5f8fc7; --tp-c2: #0b1622; }
+.tp-card__media--singapore   { --tp-c1: #3d7a9e; --tp-c2: #0a1620; }
+
+/* -------------------------------------------------------------------------
+   Urgency badge — "Only X Seats Left" (new modifier on the reused
+   `.tp-card__badge` component; red/amber to signal scarcity)
+   ------------------------------------------------------------------------- */
+.tp-card__badge--urgency {
+  color: #ffb199;
+  background: rgba(251, 90, 90, 0.16);
+  border-color: rgba(251, 90, 90, 0.45);
+  transition: color 300ms ease, background-color 300ms ease, border-color 300ms ease;
+}
+/* Light theme: the low-opacity tint composites very pale against a white
+   card, so the pastel text needs to darken to keep reading clearly. */
+:root[data-theme="light"] .tp-card__badge--urgency {
+  color: var(--coral-600);
+  background: rgba(226, 59, 59, 0.12);
+  border-color: rgba(226, 59, 59, 0.35);
+}
+/* Small pulsing dot for extra urgency, GPU-friendly (opacity + transform only) */
+.tp-card__badge--urgency::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  margin-right: 0.4rem;
+  border-radius: 50%;
+  background: var(--coral-500);
+  animation: es-dot-pulse 1.6s ease-in-out infinite;
+}
+@keyframes es-dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.35; transform: scale(0.72); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tp-card__badge--urgency::before { animation: none; }
+}
+
+/* -------------------------------------------------------------------------
+   Countdown row — new element inside the reused `.tp-card__body`
+   ------------------------------------------------------------------------- */
+.tp-card__countdown {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: #ffb199;
+  transition: color 300ms ease;
+}
+:root[data-theme="light"] .tp-card__countdown { color: var(--coral-600); }
+.tp-card__countdown svg { width: 14px; height: 14px; flex: none; }
+
+/* -------------------------------------------------------------------------
+   Body rebalance — these cards no longer carry a description line under the
+   badge, so the reused `.tp-card__body` (trending-packages.css) is given a
+   bit more breathing room here (scoped to `.ending-soon` only) to spread the
+   badge/meta/countdown group instead of leaving one dense cluster with a
+   large gap above the footer. Footer still anchors to the bottom via its
+   own `margin-top: auto`, unaffected by this.
+   ------------------------------------------------------------------------- */
+.ending-soon .tp-card__body {
+  gap: 0.95rem;
+  padding-top: 1.5rem;
+}
+.ending-soon .tp-card__badge {
+  margin-bottom: 0.15rem;
+}
+
+/* Once a deadline passes, JS adds this so the card visibly reads as expired */
+.tp-card.is-ended { opacity: 0.55; }
+.tp-card.is-ended .tp-card__cta { pointer-events: none; filter: grayscale(0.6); }
+.tp-card.is-ended .tp-card__countdown { color: var(--color-text-subtle); }
+.tp-card.is-ended .tp-card__badge--urgency::before { animation: none; background: var(--color-text-subtle); }

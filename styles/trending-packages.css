@@ -1,0 +1,458 @@
+/* ==========================================================================
+   XPLOROO · Trending Packages module
+   trending-packages.css — Section head, drag/swipe carousel and the
+   reusable package-card component.
+   --------------------------------------------------------------------------
+   Fully scoped to this section: every selector is namespaced under
+   `.trending-packages` / `.tp-*` so nothing here can leak into the other
+   placeholder sections (Ending Soon, Recent Winners, Travel Stories)
+   that still share the generic `.carousel` / `.package-card` markup from
+   the architecture pass. Reuses global tokens from variables.css.
+   Load AFTER utilities.css.
+   ========================================================================== */
+
+.trending-packages {
+  --tp-gap: 1.5rem;
+  position: relative;
+  padding-block: var(--section-gap);
+}
+
+.trending-packages__container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* -------------------------------------------------------------------------
+   Section head
+   ------------------------------------------------------------------------- */
+.trending-packages__head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-5);
+  margin-bottom: var(--space-8);
+}
+
+.trending-packages__eyebrow {
+  margin-bottom: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.trending-packages__title {
+  font-size: var(--fs-3xl);
+  margin: 0;
+}
+
+.trending-packages__subtitle {
+  margin-top: var(--space-2);
+  max-width: 46ch;
+  color: var(--color-text-muted);
+}
+
+.trending-packages__viewall {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 2.75rem;
+  padding-inline: var(--space-5);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text-strong);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+  transition:
+    border-color var(--dur-fast) var(--ease-standard),
+    background-color var(--dur-fast) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-out);
+}
+.trending-packages__viewall:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-subtle);
+  transform: translateY(-1px);
+}
+
+/* -------------------------------------------------------------------------
+   Carousel shell + navigation arrows
+   ------------------------------------------------------------------------- */
+.tp-carousel {
+  position: relative;
+}
+
+.tp-arrow {
+  position: absolute;
+  top: 38%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(10, 10, 14, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-standard);
+}
+.tp-arrow svg { width: 20px; height: 20px; }
+.tp-arrow--prev { left: -0.5rem; }
+.tp-arrow--next { right: -0.5rem; }
+.tp-arrow:hover {
+  background: rgba(24, 24, 34, 0.9);
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: translateY(-50%) scale(1.06);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+}
+.tp-arrow:active { transform: translateY(-50%) scale(0.94); }
+/* Disabled = at a scroll boundary, or nothing to scroll — fade out & disable hit-testing */
+.tp-arrow:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* -------------------------------------------------------------------------
+   Track — horizontal drag/swipe/snap carousel on desktop & tablet
+   ------------------------------------------------------------------------- */
+.tp-track {
+  display: grid;
+  grid-auto-flow: column;
+  /* ~4.15 cards visible so the 5th peeks in, matching the reference */
+  grid-auto-columns: calc((100% - (var(--tp-gap) * 3)) / 4.15);
+  gap: var(--tp-gap);
+  margin: 0;
+  padding: 0.25rem 0.25rem 0.75rem;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 0.25rem;
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  /* Hide the scrollbar while keeping it fully functional */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.tp-track::-webkit-scrollbar { display: none; }
+.tp-track.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;   /* don't fight the drag with snap mid-gesture */
+  scroll-behavior: auto;
+}
+
+.tp-slide {
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+@media (max-width: 1024px) {
+  .tp-track { grid-auto-columns: calc((100% - var(--tp-gap)) / 2.2); }
+}
+
+/* -------------------------------------------------------------------------
+   Card component
+   ------------------------------------------------------------------------- */
+.tp-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  /* transform/box-shadow/background/border only — stays on the GPU-
+     accelerated path for 60fps while still fading smoothly on theme switch */
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-standard),
+    background-color 300ms ease;
+  will-change: transform;
+}
+.tp-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-lg), var(--glow-soft);
+}
+/* Touch devices: no hover state — give a quick tap-down instead */
+@media (hover: none) {
+  .tp-card:active { transform: scale(0.98); }
+}
+
+/* ---- Media ---- */
+.tp-card__media {
+  position: relative;
+  aspect-ratio: 4 / 3.45;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: radial-gradient(120% 140% at 15% 0%, var(--tp-c1, #2a2a38) 0%, var(--tp-c2, #0c0c12) 65%);
+}
+/* Subtle diagonal texture so flat gradients still read as premium artwork */
+.tp-card__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.05) 0px,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px,
+    transparent 10px
+  );
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+.tp-card__wordmark {
+  position: relative;
+  z-index: 1;
+  padding-inline: 1rem;
+  max-width: 90%;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 1.2rem + 2vw, 2.5rem);
+  font-weight: var(--fw-extrabold);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: rgba(255, 255, 255, 0.94);
+  text-shadow: 0 6px 26px rgba(0, 0, 0, 0.55);
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+.tp-card:hover .tp-card__wordmark { transform: scale(1.06); }
+
+/* Destination gradient palettes — travel-inspired, no external images needed */
+.tp-card__media--santorini { --tp-c1: #3a6fa8; --tp-c2: #0e1a2b; }
+.tp-card__media--bali      { --tp-c1: #1f7a5c; --tp-c2: #0a1712; }
+.tp-card__media--alps      { --tp-c1: #4a7fb5; --tp-c2: #0b1420; }
+.tp-card__media--kyoto     { --tp-c1: #b8567a; --tp-c2: #1c0d14; }
+.tp-card__media--maldives  { --tp-c1: #1596a9; --tp-c2: #061417; }
+.tp-card__media--patagonia { --tp-c1: #4a5568; --tp-c2: #0d0f13; }
+.tp-card__media--amalfi    { --tp-c1: #d97a4d; --tp-c2: #1c0f08; }
+.tp-card__media--marrakech { --tp-c1: #c07a2e; --tp-c2: #1a0f04; }
+
+/* ---- Wishlist button (top-right overlay) ----
+   Glassmorphic circle + a pure stroke-only heart (never filled, in any
+   state — the reset-css default of `svg { fill: currentColor }` is
+   explicitly overridden below so the inline `fill="none"` heart path
+   actually stays hollow). Used by both Trending Packages and Ending Soon
+   (Ending Soon reuses this exact component, no separate CSS of its own). */
+.tp-card__wishlist {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-out);
+}
+.tp-card__wishlist svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  margin: auto;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  opacity: 0.85;
+  transition: opacity var(--dur-fast) var(--ease-standard);
+}
+.tp-card__wishlist:hover {
+  background: rgba(0, 0, 0, 0.6);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.08);
+}
+.tp-card__wishlist:hover svg { opacity: 1; }
+.tp-card__wishlist:active { transform: scale(0.9); }
+/* Saved state — the circle picks up the brand gradient, but the heart
+   itself stays outline-only (no fill), per the "never filled" requirement */
+.tp-card__wishlist[aria-pressed="true"] {
+  background: var(--gradient-brand);
+  border-color: transparent;
+}
+.tp-card__wishlist[aria-pressed="true"] svg { opacity: 1; }
+/* Pop micro-interaction, triggered by JS re-adding this class */
+.tp-card__wishlist.tp-pulse { animation: tp-heart-pop 420ms var(--ease-spring); }
+@keyframes tp-heart-pop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.32); }
+  100% { transform: scale(1); }
+}
+
+/* ---- Body ---- */
+.tp-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.58rem;
+  padding: 1.27rem 1.44rem 1.44rem;
+}
+
+.tp-card__badge {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  height: 1.5rem;
+  padding-inline: 0.65rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+.tp-card__badge--luxury    { color: #f5c26b; background: rgba(245, 166, 35, 0.16); border-color: rgba(245, 166, 35, 0.4); }
+.tp-card__badge--adventure { color: #6fe3c4; background: rgba(34, 197, 148, 0.16); border-color: rgba(34, 197, 148, 0.4); }
+.tp-card__badge--family    { color: #8ab8ff; background: rgba(59, 130, 246, 0.16); border-color: rgba(59, 130, 246, 0.4); }
+.tp-card__badge--honeymoon { color: var(--magenta-300); background: var(--color-secondary-subtle); border-color: rgba(236, 72, 153, 0.4); }
+
+.tp-card__title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: var(--fw-bold);
+  line-height: 1.3;
+  color: var(--color-text-strong);
+  /* 2-line clamp so every card in a row stays equal height */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.6em;
+}
+
+.tp-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+.tp-card__pin { width: 14px; height: 14px; flex: none; color: var(--color-text-subtle); }
+
+.tp-card__footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: 0.86rem;
+  border-top: 1px solid var(--color-divider);
+}
+.tp-card__price { display: flex; flex-direction: column; line-height: 1.15; }
+.tp-card__price-amount {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: var(--fw-extrabold);
+  color: var(--color-text-strong);
+}
+.tp-card__price-unit { font-size: var(--fs-2xs); color: var(--color-text-subtle); }
+
+/* Book Now — signature blue → purple gradient pill with a soft glow */
+.tp-card__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem;
+  padding-inline: 1.15rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+  color: #fff;
+  background-image: var(--gradient-brand);
+  box-shadow: var(--glow-brand);
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    filter var(--dur-fast) var(--ease-standard);
+}
+.tp-card__cta:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.06);
+  box-shadow: 0 12px 32px rgba(91, 107, 255, 0.5), 0 4px 14px rgba(139, 60, 240, 0.4);
+}
+.tp-card__cta:active { transform: translateY(0) scale(0.97); }
+
+/* -------------------------------------------------------------------------
+   Mobile — 2-column responsive grid, no slider/arrows
+   ------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  /* Mobile: only the heading remains — eyebrow, subtitle and the "View all
+     packages" button are hidden, and the heading is centered with its own
+     premium top/bottom spacing standing in for the removed head layout. */
+  .trending-packages__head {
+    justify-content: center;
+    margin-bottom: var(--space-8);
+  }
+  .trending-packages__heading { text-align: center; }
+  .trending-packages__eyebrow,
+  .trending-packages__subtitle,
+  .trending-packages__viewall {
+    display: none;
+  }
+
+  .tp-arrow { display: none; }   /* replaced by a static grid — no navigation needed */
+
+  .tp-track {
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-columns: repeat(2, 1fr);   /* 2 equal-width cards per row */
+    grid-auto-columns: unset;
+    gap: 0.85rem;
+    overflow: visible;
+    scroll-snap-type: none;
+    cursor: default;
+    padding: 0;
+  }
+  .tp-slide { scroll-snap-align: none; }
+
+  .tp-card__body { padding: 0.85rem 0.9rem 1rem; gap: 0.4rem; }
+  .tp-card__title { font-size: 0.9rem; min-height: 2.4em; }
+  .tp-card__meta { font-size: var(--fs-xs); }
+  .tp-card__price-amount { font-size: 1rem; }
+  .tp-card__wishlist { width: 34px; height: 34px; }
+
+  /* Mobile only (Trending Packages + Ending Soon): drop "Book Now" from the
+     card — desktop/tablet keep the button untouched. The footer collapses
+     back to a simple row so the price fills the space naturally instead of
+     leaving a gap where the button used to sit; card heights stay equal
+     across the grid since every card loses the same element. */
+  [data-section="trending-packages"] .tp-card__cta,
+  [data-section="ending-soon"] .tp-card__cta {
+    display: none;
+  }
+  [data-section="trending-packages"] .tp-card__footer,
+  [data-section="ending-soon"] .tp-card__footer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+  }
+}

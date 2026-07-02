@@ -1,0 +1,294 @@
+/* ==========================================================================
+   XPLOROO · About Us module
+   about.css — Fully original, self-contained component. Scoped entirely
+   under `.about` / `.about__*`, `.marquee`, `.stat-card` — never touches
+   any other section's classes or tokens.
+   ========================================================================== */
+
+.about {
+  position: relative;
+  padding-block: var(--section-gap);
+}
+
+.about__container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* -------------------------------------------------------------------------
+   Premium bordered panel — pure black, thin low-opacity white border,
+   large rounded corners, generous internal padding. Everything in this
+   section lives inside it.
+   ------------------------------------------------------------------------- */
+.about__panel {
+  background: var(--surface-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  padding: clamp(2rem, 1.5rem + 2.5vw, 4rem) clamp(1.25rem, 0.75rem + 2.5vw, 3rem);
+  transition: background-color 300ms ease, border-color 300ms ease;
+}
+
+/* -------------------------------------------------------------------------
+   Section title
+   ------------------------------------------------------------------------- */
+.about__head {
+  text-align: center;
+  margin-bottom: clamp(2rem, 1.6rem + 2vw, 3.5rem);
+}
+.about__title {
+  margin: 0;
+  font-size: var(--fs-3xl);
+  font-weight: var(--fw-extrabold);
+}
+
+/* -------------------------------------------------------------------------
+   Video — 16:9, rounded corners distinct from the outer panel border,
+   equal padding on all sides (the surrounding panel padding itself
+   provides that inset, so the frame never touches the outer border).
+   ------------------------------------------------------------------------- */
+.about__video {
+  margin-bottom: clamp(2.5rem, 2rem + 2.5vw, 4.5rem);
+}
+.about__video-frame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.06), transparent 40%),
+    var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
+  transition: background-color 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
+}
+/* Placeholder texture so the frame doesn't read as an empty box before a
+   real <video>/<iframe> embed is dropped in via data-about-video */
+.about__video-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.035) 0px,
+    rgba(255, 255, 255, 0.035) 1px,
+    transparent 1px,
+    transparent 12px
+  );
+  pointer-events: none;
+}
+
+.about__video-play {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: clamp(3.5rem, 3rem + 2vw, 4.75rem);
+  height: clamp(3.5rem, 3rem + 2vw, 4.75rem);
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-standard),
+    border-color 300ms ease,
+    color 300ms ease,
+    box-shadow var(--dur-base) var(--ease-out);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+.about__video-play svg { width: 42%; height: 42%; margin-left: 4%; }
+.about__video-play:hover {
+  transform: scale(1.08);
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 10px 36px rgba(124, 58, 237, 0.4);
+}
+/* Light theme: the video frame becomes a light surface, so the glass play
+   button inverts to dark-on-light for the same clear, glassy contrast. */
+:root[data-theme="light"] .about__video-play {
+  border-color: rgba(17, 17, 23, 0.25);
+  background: rgba(17, 17, 23, 0.06);
+  color: #17171c;
+}
+:root[data-theme="light"] .about__video-play:hover {
+  background: rgba(17, 17, 23, 0.12);
+}
+.about__video-play:active { transform: scale(0.96); }
+
+/* Once JS injects a real <video>/<iframe>, hide the placeholder chrome */
+.about__video-frame.is-playing .about__video-play,
+.about__video-frame.is-playing::before {
+  display: none;
+}
+.about__video-frame video,
+.about__video-frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  object-fit: cover;
+}
+
+/* -------------------------------------------------------------------------
+   Trusted Partners — two infinite marquee rows
+   ------------------------------------------------------------------------- */
+.about__partners {
+  margin-bottom: clamp(2.5rem, 2rem + 2.5vw, 4.5rem);
+}
+.about__partners-title {
+  text-align: center;
+  margin: 0 0 clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+
+.marquee {
+  --marquee-duration: 32s;
+  position: relative;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee + .marquee { margin-top: var(--space-5); }
+
+.marquee__track {
+  display: flex;
+  width: max-content;
+}
+.marquee__set {
+  display: flex;
+  align-items: center;
+  gap: clamp(1.5rem, 1.2rem + 1.5vw, 2.75rem);
+  padding-inline-end: clamp(1.5rem, 1.2rem + 1.5vw, 2.75rem);
+  list-style: none;
+  margin: 0;
+  will-change: transform;
+}
+
+.marquee--ltr .marquee__track { animation: marquee-ltr var(--marquee-duration) linear infinite; }
+.marquee--rtl .marquee__track { animation: marquee-rtl var(--marquee-duration) linear infinite; }
+
+@keyframes marquee-ltr {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+@keyframes marquee-rtl {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* Pause on hover (desktop) */
+@media (hover: hover) {
+  .marquee:hover .marquee__track { animation-play-state: paused; }
+}
+/* Pause when out of view (perf) — JS toggles this class via IntersectionObserver */
+.marquee.is-paused .marquee__track { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee__track { animation: none; }
+}
+
+.marquee__logo {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: clamp(2.5rem, 2.2rem + 1vw, 3rem);
+  padding-inline: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-standard), border-color var(--dur-fast) var(--ease-standard);
+}
+.marquee:hover .marquee__logo { color: var(--color-text-strong); }
+.marquee__logo:hover { border-color: var(--color-border-strong); }
+
+@media (max-width: 768px) {
+  .marquee__logo {
+    height: 2.25rem;
+    padding-inline: 1rem;
+    font-size: var(--fs-xs);
+  }
+  .marquee__set { gap: 1rem; padding-inline-end: 1rem; }
+  .marquee { --marquee-duration: 22s; }
+}
+
+/* -------------------------------------------------------------------------
+   Statistics card
+   ------------------------------------------------------------------------- */
+.about__stats {
+  display: flex;
+  justify-content: center;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: min(100%, 26rem);
+  padding: clamp(2rem, 1.6rem + 2vw, 3rem) var(--space-6);
+  text-align: center;
+  background: var(--surface-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  text-decoration: none;
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    background-color 300ms ease,
+    border-color var(--dur-base) var(--ease-standard),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+@media (hover: hover) {
+  .stat-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-lg), var(--glow-soft);
+  }
+}
+@media (hover: none) {
+  .stat-card:active { transform: scale(0.98); }
+}
+
+.stat-card__number {
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 2.3rem + 3vw, 4.5rem);
+  font-weight: var(--fw-extrabold);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  background: var(--gradient-brand-vivid);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.stat-card__label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.stat-card__link {
+  margin-top: 0.5rem;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+  transition: color 300ms ease;
+}
+.stat-card:hover .stat-card__link { color: var(--violet-300); }
+:root[data-theme="light"] .stat-card:hover .stat-card__link { color: var(--violet-600); }

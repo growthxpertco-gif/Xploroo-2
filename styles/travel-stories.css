@@ -1,0 +1,256 @@
+/* ==========================================================================
+   XPLOROO · Travel Stories module
+   travel-stories.css — Fully original, self-contained component. Scoped
+   entirely under `.travel-stories` / `.ts-*` — never touches any other
+   section's classes or tokens.
+   ========================================================================== */
+
+.travel-stories {
+  position: relative;
+  padding-block: var(--section-gap);
+}
+
+.travel-stories__container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* -------------------------------------------------------------------------
+   Section head — centered on mobile, left-aligned on desktop
+   ------------------------------------------------------------------------- */
+.travel-stories__head {
+  text-align: center;
+  margin-bottom: var(--space-8);
+}
+.travel-stories__title {
+  margin: 0;
+  font-size: var(--fs-3xl);
+}
+@media (min-width: 768px) {
+  .travel-stories__head { text-align: left; }
+}
+
+/* -------------------------------------------------------------------------
+   Carousel shell
+   ------------------------------------------------------------------------- */
+.ts-carousel {
+  position: relative;
+}
+
+.ts-track {
+  display: flex;
+  gap: var(--space-5);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+  margin: 0;
+  padding: 0 0 var(--space-2);
+  list-style: none;
+}
+.ts-track::-webkit-scrollbar { display: none; }
+.ts-track.is-dragging { cursor: grabbing; scroll-snap-type: none; }
+
+.ts-slide {
+  flex: 0 0 auto;
+  width: 82%;
+  scroll-snap-align: start;
+}
+@media (min-width: 480px) {
+  .ts-slide { width: 60%; }
+}
+@media (min-width: 768px) {
+  .ts-slide { width: calc((100% - 2 * var(--space-5)) / 3); }
+}
+@media (min-width: 1024px) {
+  .ts-slide { width: calc((100% - 3 * var(--space-5)) / 4); }
+}
+
+/* -------------------------------------------------------------------------
+   Arrows — desktop/tablet only (mobile relies on swipe, per spec)
+   ------------------------------------------------------------------------- */
+.ts-arrow {
+  display: none;
+  position: absolute;
+  top: 38%;
+  z-index: 2;
+  width: 2.875rem;
+  height: 2.875rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+.ts-arrow svg { width: 20px; height: 20px; }
+.ts-arrow:hover { background: rgba(0, 0, 0, 0.75); transform: translateY(-50%) scale(1.06); box-shadow: var(--shadow-md); }
+.ts-arrow:active { transform: translateY(-50%) scale(0.94); }
+/* Disabled = at the first/last card, nothing further to scroll to */
+.ts-arrow:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+.ts-arrow--prev { left: -1.4rem; transform: translateY(-50%); }
+.ts-arrow--next { right: -1.4rem; transform: translateY(-50%); }
+.ts-arrow--prev:hover { transform: translateY(-50%) scale(1.06); }
+.ts-arrow--next:hover { transform: translateY(-50%) scale(1.06); }
+
+@media (min-width: 768px) {
+  .ts-arrow { display: flex; }
+}
+
+/* -------------------------------------------------------------------------
+   Card
+   ------------------------------------------------------------------------- */
+.ts-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--surface-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-standard),
+    background-color 300ms ease;
+  will-change: transform;
+}
+@media (hover: hover) {
+  .ts-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-lg), var(--glow-soft);
+  }
+}
+@media (hover: none) {
+  .ts-card:active { transform: scale(0.98); }
+}
+
+.ts-card__link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.ts-card__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: flex-start;
+  overflow: hidden;
+  background: radial-gradient(120% 140% at 15% 0%, var(--ts-c1, #2a2a38) 0%, var(--ts-c2, #0c0c12) 65%);
+}
+.ts-card__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.05) 0px,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px,
+    transparent 10px
+  );
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+/* Image-zoom-on-hover: the media layer itself scales up while staying
+   clipped by the card's overflow:hidden, GPU-accelerated (transform only) */
+@media (hover: hover) {
+  .ts-card:hover .ts-card__media::after { transform: scale(1.12); }
+}
+
+.ts-card__category {
+  position: relative;
+  z-index: 1;
+  margin: 1rem;
+  display: inline-flex;
+  align-items: center;
+  height: 1.5rem;
+  padding-inline: 0.65rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+/* Destination gradient palettes — travel-inspired, no external images needed */
+.ts-card__media--kashmir  { --ts-c1: #5b7fa6; --ts-c2: #0c1420; }
+.ts-card__media--goa      { --ts-c1: #1aa3a0; --ts-c2: #08201d; }
+.ts-card__media--bali     { --ts-c1: #1f7a5c; --ts-c2: #0a1712; }
+.ts-card__media--dubai    { --ts-c1: #d9a441; --ts-c2: #1b1006; }
+.ts-card__media--ladakh   { --ts-c1: #a85c3e; --ts-c2: #170d08; }
+.ts-card__media--tigerhill{ --ts-c1: #7a6ab8; --ts-c2: #120c1e; }
+.ts-card__media--maldives { --ts-c1: #1596a9; --ts-c2: #061417; }
+.ts-card__media--paris    { --ts-c1: #5a5f9e; --ts-c2: #120f1c; }
+
+.ts-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.1rem 1.25rem 1.25rem;
+}
+
+.ts-card__title {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: var(--fw-bold);
+  line-height: 1.3;
+  color: var(--color-text-strong);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.6em;
+}
+
+.ts-card__excerpt {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ts-card__cta {
+  margin-top: auto;
+  padding-top: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+  width: fit-content;
+}
+.ts-card__cta span {
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.ts-card:hover .ts-card__cta span { transform: translateX(3px); }

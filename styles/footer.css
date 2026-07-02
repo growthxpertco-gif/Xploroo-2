@@ -1,0 +1,270 @@
+/* ==========================================================================
+   XPLOROO · Footer module
+   footer.css — Fully original, self-contained, reusable across every page.
+   Scoped entirely under `.site-footer`, `.footer-*` — never touches any
+   other section's classes or tokens.
+   ========================================================================== */
+
+.site-footer {
+  position: relative;
+}
+
+.site-footer__panel {
+  background: var(--surface-panel);
+  border: 1px solid var(--color-border);
+  border-bottom: none;
+  border-top-left-radius: var(--radius-3xl);
+  border-top-right-radius: var(--radius-3xl);
+  transition: background-color 300ms ease, border-color 300ms ease;
+}
+
+/* Mobile: the footer becomes one fully-enclosed bordered container
+   (all four corners rounded) rather than the open-bottom desktop panel */
+@media (max-width: 768px) {
+  .site-footer__panel {
+    border-bottom: 1px solid var(--color-border);
+    border-radius: var(--radius-2xl);
+    margin-inline: 18px;
+  }
+}
+
+.site-footer__container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding: clamp(2.5rem, 1.8rem + 3vw, 4.5rem) clamp(1.25rem, 0.75rem + 2.5vw, 3rem) clamp(2rem, 1.6rem + 1.5vw, 2.75rem);
+}
+
+/* -------------------------------------------------------------------------
+   Newsletter
+   ------------------------------------------------------------------------- */
+.footer-newsletter {
+  text-align: center;
+  max-width: 34rem;
+  margin-inline: auto;
+  margin-bottom: clamp(2rem, 1.6rem + 2vw, 3rem);
+}
+.footer-newsletter__title {
+  margin: 0 0 var(--space-5);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-extrabold);
+}
+
+.footer-newsletter__form {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+.footer-newsletter__input {
+  flex: 1;
+  height: 3.25rem;
+  padding-inline: 1.5rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-inset);
+  color: var(--color-text-strong);
+  font-size: var(--fs-base);
+  transition:
+    border-color var(--dur-fast) var(--ease-standard),
+    box-shadow var(--dur-fast) var(--ease-standard),
+    background-color 300ms ease,
+    color 300ms ease;
+}
+.footer-newsletter__input::placeholder { color: var(--color-text-subtle); }
+.footer-newsletter__input:focus-visible {
+  outline: none;
+  border-color: var(--color-border-brand);
+  box-shadow: var(--glow-focus);
+}
+
+.footer-newsletter__submit {
+  flex: none;
+  height: 3.25rem;
+  padding-inline: var(--space-6);
+}
+
+.footer-newsletter__message {
+  margin: var(--space-3) 0 0;
+  min-height: 1.2em;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-muted);
+}
+.footer-newsletter__message.is-success { color: var(--success-500, #22c55e); }
+.footer-newsletter__message.is-error { color: var(--danger-500, #ef4444); }
+
+/* Mobile: input/button stay in one row (~70/30 split) instead of stacking */
+@media (max-width: 768px) {
+  .footer-newsletter__form {
+    gap: 0.5rem;
+  }
+  .footer-newsletter__input {
+    flex: 7 1 0%;
+    min-width: 0;
+    padding-inline: 1rem;
+  }
+  .footer-newsletter__submit {
+    flex: 3 1 0%;
+    min-width: 0;
+    padding-inline: 0.5rem;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Social icons
+   ------------------------------------------------------------------------- */
+.footer-social {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-4);
+  margin: 0 0 clamp(2rem, 1.6rem + 2vw, 3rem);
+  padding: 0;
+  list-style: none;
+}
+.footer-social__link {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    color var(--dur-fast) var(--ease-standard),
+    background-color 300ms ease,
+    border-color var(--dur-fast) var(--ease-standard),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+.footer-social__link svg { width: 18px; height: 18px; }
+.footer-social__link:hover {
+  transform: translateY(-3px) scale(1.08);
+  color: var(--color-text-strong);
+  border-color: var(--color-border-strong);
+  box-shadow: var(--glow-soft);
+}
+.footer-social__link:active { transform: translateY(-1px) scale(0.96); }
+
+/* -------------------------------------------------------------------------
+   Footer link columns
+   ------------------------------------------------------------------------- */
+.footer-links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+  padding-block: clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
+  border-top: 1px solid var(--color-divider);
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.footer-links__title {
+  margin: 0 0 var(--space-4);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--color-text-strong);
+}
+.footer-links__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Underline-on-hover link animation, GPU-accelerated (transform only) */
+.footer-links__link {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  font-size: var(--fs-sm);
+  transition: color var(--dur-fast) var(--ease-standard);
+}
+.footer-links__link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.footer-links__link:hover {
+  color: var(--color-text-strong);
+}
+.footer-links__link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Mobile: 2-column grid, left-aligned. DOM order is About, Packages,
+   Explore — with 2 columns, grid auto-placement naturally lands About
+   top-left, Packages top-right, and Explore directly below About
+   (bottom-left) with no explicit grid-area/order needed. */
+@media (max-width: 768px) {
+  .footer-links {
+    grid-template-columns: repeat(2, 1fr);
+    text-align: left;
+  }
+  .footer-links__link { margin-inline: 0; }
+}
+
+/* -------------------------------------------------------------------------
+   Bottom bar
+   ------------------------------------------------------------------------- */
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-top: clamp(1.25rem, 1.1rem + 0.75vw, 1.75rem);
+}
+.footer-bottom__copyright {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--color-text-subtle);
+}
+.footer-bottom__legal {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.footer-bottom__legal a {
+  position: relative;
+  color: var(--color-text-subtle);
+  text-decoration: none;
+  font-size: var(--fs-xs);
+  transition: color var(--dur-fast) var(--ease-standard);
+}
+.footer-bottom__legal a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.footer-bottom__legal a:hover { color: var(--color-text-strong); }
+.footer-bottom__legal a:hover::after { transform: scaleX(1); }
+
+@media (max-width: 640px) {
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+  .footer-bottom__legal { flex-wrap: wrap; justify-content: center; }
+}

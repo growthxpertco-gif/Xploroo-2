@@ -1,0 +1,226 @@
+/* ==========================================================================
+   XPLOROO · Design Foundation
+   reset.css — Modern, opinionated CSS reset / normalize
+   --------------------------------------------------------------------------
+   Zeroes out inconsistent UA defaults and sets sensible baselines so that
+   base.css and utilities.css start from a predictable canvas. No visual
+   theming lives here — only structural normalization.
+   Load order:  variables.css → reset.css → base.css → utilities.css
+   ========================================================================== */
+
+/* Box sizing & border reset for everything, including pseudo-elements */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
+}
+
+/* Remove default margin/padding on core flow elements */
+html,
+body,
+h1, h2, h3, h4, h5, h6,
+p, figure, blockquote,
+dl, dd, ol, ul,
+fieldset, legend {
+  margin: 0;
+  padding: 0;
+}
+
+/* Document */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  tab-size: 4;
+  line-height: 1.5;
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  line-height: inherit;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Remove list styling when a list role/util is applied */
+ul[role="list"],
+ol[role="list"],
+ul[class],
+ol[class] {
+  list-style: none;
+}
+
+/* Headings & inline emphasis inherit until themed by base.css */
+h1, h2, h3, h4, h5, h6 {
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  text-wrap: balance;
+}
+
+/* Balanced/pretty text wrapping where supported */
+p, li, figcaption {
+  text-wrap: pretty;
+}
+
+/* Media — responsive block-level by default */
+img,
+picture,
+video,
+canvas,
+svg,
+iframe {
+  display: block;
+  max-width: 100%;
+}
+
+img,
+picture,
+video {
+  height: auto;
+}
+
+svg {
+  fill: currentColor;
+}
+
+/* Anchors */
+a {
+  color: inherit;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+/* Forms — inherit typography from ancestors */
+input,
+button,
+textarea,
+select,
+optgroup {
+  font: inherit;
+  color: inherit;
+  letter-spacing: inherit;
+  background-color: transparent;
+}
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+  -webkit-appearance: button;
+  appearance: button;
+  cursor: pointer;
+}
+
+button:disabled,
+[disabled] {
+  cursor: not-allowed;
+}
+
+/* Remove inner border/padding in Firefox buttons */
+::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+textarea {
+  resize: vertical;
+  overflow: auto;
+}
+
+/* Normalize number input spinners off by default (opt-in per component) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* Remove search input platform styling */
+input[type="search"] {
+  -webkit-appearance: none;
+  appearance: none;
+}
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Placeholder inherits color context (themed in base.css) */
+::placeholder {
+  opacity: 1;
+}
+
+/* Tables */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+}
+
+/* Fieldset / legend */
+fieldset {
+  min-width: 0;
+}
+legend {
+  display: block;
+}
+
+/* Correct the odd em font sizing in code elements */
+code,
+kbd,
+samp,
+pre {
+  font-family: var(--font-mono, monospace);
+  font-size: 1em;
+}
+
+/* Interactive niceties */
+summary {
+  display: list-item;
+  cursor: pointer;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* Anything draggable / with a click handler should signal interactivity */
+[role="button"],
+label[for] {
+  cursor: pointer;
+}
+
+/* Reset default outline; a themed :focus-visible ring is added in base.css */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Honor reduced-motion for all animation/transition on every element */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

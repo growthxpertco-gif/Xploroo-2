@@ -1,0 +1,256 @@
+/* ==========================================================================
+   XPLOROO · Design Foundation
+   base.css — Global element styling, typography, background, scrollbar,
+              selection & focus states
+   --------------------------------------------------------------------------
+   Applies the Xploroo theme to raw HTML elements using tokens from
+   variables.css. Component/utility classes live in utilities.css.
+   Load order:  variables.css → reset.css → base.css → utilities.css
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Fonts — Google Fonts (Sora · Inter · Space Grotesk)
+   For production, prefer a self-hosted or <link rel="preconnect"> approach.
+   -------------------------------------------------------------------------- */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap");
+
+/* --------------------------------------------------------------------------
+   Document & canvas
+   -------------------------------------------------------------------------- */
+html {
+  font-size: 100%;                 /* honor user's root font preference */
+  scroll-padding-top: var(--scroll-offset);
+  color-scheme: dark;
+  background-color: var(--bg-canvas);
+  transition: background-color 300ms ease;
+}
+:root[data-theme="light"] { color-scheme: light; }
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-regular);
+  line-height: var(--lh-normal);
+  letter-spacing: var(--ls-normal);
+  color: var(--color-text);
+  background-color: var(--bg-canvas);
+  background-image: var(--bg-image-aura);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  overflow-x: hidden;
+  font-feature-settings: "cv11", "ss01";
+  transition: background-color 300ms ease, color 300ms ease;
+}
+
+/* --------------------------------------------------------------------------
+   Typographic rhythm
+   Plain text elements get a theme-switch color transition here; anything
+   with its own more specific hover/interaction transition (cards, buttons,
+   links, badges, etc.) keeps that instead — see each component's stylesheet.
+   -------------------------------------------------------------------------- */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  color: var(--color-text-strong);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  text-wrap: balance;
+  transition: color 300ms ease;
+}
+
+h1 { font-size: var(--fs-4xl); font-weight: var(--fw-extrabold); letter-spacing: var(--ls-tighter); }
+h2 { font-size: var(--fs-3xl); font-weight: var(--fw-extrabold); letter-spacing: var(--ls-tighter); }
+h3 { font-size: var(--fs-2xl); }
+h4 { font-size: var(--fs-xl); }
+h5 { font-size: var(--fs-lg); font-weight: var(--fw-semibold); line-height: var(--lh-snug); }
+h6 {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-snug);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+p {
+  max-width: var(--measure);
+  color: var(--color-text-muted);
+  line-height: var(--lh-relaxed);
+  transition: color 300ms ease;
+}
+
+small { font-size: var(--fs-sm); }
+
+strong, b { font-weight: var(--fw-semibold); color: var(--color-text-strong); transition: color 300ms ease; }
+
+/* Generic theme-switch fade for plain inline/text elements that don't
+   declare a more specific transition of their own (badges, meta rows,
+   prices, list items, etc. across every card/section). Anything with its
+   own `transition:` shorthand (buttons, cards, panels, links) keeps that
+   instead, since a same-specificity or higher rule always wins. */
+span, li, small, label {
+  transition: color 300ms ease;
+}
+
+em, i { font-style: italic; }
+
+mark {
+  background: var(--color-primary-subtle);
+  color: var(--color-text-strong);
+  padding: 0 0.25em;
+  border-radius: var(--radius-xs);
+}
+
+/* Links */
+a {
+  color: var(--color-link);
+  transition: var(--transition-colors);
+}
+a:hover { color: var(--color-link-hover); }
+
+/* Lists (default, non-role/class lists keep markers indented) */
+ul, ol { padding-left: var(--space-5); }
+li { margin-block: var(--space-1); }
+
+/* Quotes & rules */
+blockquote {
+  border-left: 3px solid var(--color-border-brand);
+  padding-left: var(--space-4);
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+hr {
+  height: 1px;
+  border: 0;
+  background: var(--gradient-hairline);
+  margin-block: var(--space-6);
+}
+
+/* Code */
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  background: var(--color-surface-inset);
+  border: 1px solid var(--color-border);
+  padding: 0.15em 0.4em;
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+}
+pre {
+  font-family: var(--font-mono);
+  background: var(--color-surface-inset);
+  border: 1px solid var(--color-border);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+pre code {
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+/* Media niceties */
+img, video { border-radius: inherit; }
+
+/* Placeholder */
+::placeholder { color: var(--color-text-subtle); }
+
+/* --------------------------------------------------------------------------
+   Selection colors
+   -------------------------------------------------------------------------- */
+::selection {
+  background: var(--color-secondary);
+  color: var(--white);
+  text-shadow: none;
+}
+::-moz-selection {
+  background: var(--color-secondary);
+  color: var(--white);
+}
+
+/* --------------------------------------------------------------------------
+   Focus states — accessible, brand-tinted ring (keyboard only)
+   -------------------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+/* Elements that carry their own rounded shape get a glow ring instead */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: none;
+  box-shadow: var(--glow-focus);
+}
+
+/* --------------------------------------------------------------------------
+   Global scrollbar styling
+   -------------------------------------------------------------------------- */
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-600) transparent;
+}
+/* WebKit / Chromium / Edge */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--ink-600);
+  border-radius: var(--radius-pill);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+  background-clip: content-box;
+}
+::-webkit-scrollbar-corner { background: transparent; }
+
+/* --------------------------------------------------------------------------
+   Root app shell helpers
+   -------------------------------------------------------------------------- */
+#root,
+#app,
+.app-shell {
+  isolation: isolate;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Optional subtle grid/noise overlay layer for hero/background sections.
+   Add class `has-grid` to any positioned container to enable. */
+.has-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--bg-grid);
+  background-size: var(--bg-grid-size);
+  opacity: 0.5;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: radial-gradient(ellipse at center, #000 0%, transparent 80%);
+}
+
+/* Reduced-transparency users: solidify glass surfaces */
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --glass-bg: var(--color-surface);
+    --glass-bg-strong: var(--color-surface-2);
+    --glass-blur: 0px;
+    --glass-blur-strong: 0px;
+  }
+}
