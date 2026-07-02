@@ -1,0 +1,314 @@
+/* ==========================================================================
+   XPLOROO · Influencers module
+   influencers.css — Structural clone of styles/recent-winners.css (same
+   panel, peek-carousel, card anatomy, dot pagination, CTA/brandmark),
+   renamed under `.influencers` / `.inf-*` so it never touches or conflicts
+   with the Recent Winners component, which is left completely unmodified.
+   ========================================================================== */
+
+.influencers {
+  position: relative;
+  padding-block: var(--section-gap);
+}
+
+.influencers__container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* -------------------------------------------------------------------------
+   Section head
+   ------------------------------------------------------------------------- */
+.influencers__head {
+  text-align: center;
+  max-width: 40rem;
+  margin-inline: auto;
+  margin-bottom: var(--space-8);
+}
+.influencers__eyebrow {
+  margin-bottom: var(--space-2);
+  font-family: var(--font-mono, var(--font-body));
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--violet-400);
+  transition: color 300ms ease;
+}
+:root[data-theme="light"] .influencers__eyebrow { color: var(--violet-600); }
+.influencers__title {
+  font-size: var(--fs-3xl);
+  margin: 0;
+}
+/* Mobile-only simplified heading — hidden on desktop, swapped in at the
+   mobile breakpoint below in place of the eyebrow + full title. */
+.influencers__title--mobile {
+  display: none;
+  font-size: var(--fs-3xl);
+  margin: 0;
+  text-align: center;
+}
+
+
+/* -------------------------------------------------------------------------
+   Premium bordered panel — pure black, thin low-opacity white border, large
+   rounded corners, soft inner shadow.
+   ------------------------------------------------------------------------- */
+.inf-panel {
+  position: relative;
+  background: var(--surface-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-3xl);
+  padding: var(--space-6) 0 var(--space-5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 0 40px rgba(255, 255, 255, 0.025),
+    var(--shadow-lg);
+  overflow: hidden;
+  transition: background-color 300ms ease, border-color 300ms ease;
+}
+
+/* -------------------------------------------------------------------------
+   Carousel — one main card, next card peeks ~15-20% from the right
+   ------------------------------------------------------------------------- */
+.inf-carousel {
+  position: relative;
+  z-index: 1;
+}
+
+.inf-track {
+  display: flex;
+  gap: var(--space-4);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--space-5);
+  padding-inline: var(--space-5);
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.inf-track::-webkit-scrollbar { display: none; }
+
+.inf-slide {
+  flex: 0 0 auto;
+  width: 82%;
+  scroll-snap-align: start;
+}
+@media (min-width: 480px) {
+  .inf-slide { width: 62%; }
+}
+@media (min-width: 768px) {
+  .inf-track { gap: var(--space-5); scroll-padding-inline: var(--space-6); padding-inline: var(--space-6); }
+  .inf-slide { width: 38%; }
+}
+@media (min-width: 1024px) {
+  .inf-slide { width: 27%; }
+}
+
+/* -------------------------------------------------------------------------
+   Influencer card
+   ------------------------------------------------------------------------- */
+.inf-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    background-color 300ms ease,
+    border-color 300ms ease;
+  will-change: transform;
+}
+@media (hover: hover) {
+  .inf-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg), var(--glow-soft);
+  }
+}
+@media (hover: none) {
+  .inf-card:active { transform: scale(0.98); }
+}
+
+.inf-card__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: radial-gradient(120% 140% at 30% 0%, var(--inf-c1, #2a2a38) 0%, var(--inf-c2, #0c0c12) 70%);
+}
+.inf-card__media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.05) 0px,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px,
+    transparent 10px
+  );
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+/* Bottom scrim so the monogram reads cleanly like a portrait crop */
+.inf-card__media::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 55%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.inf-card__monogram {
+  position: relative;
+  z-index: 2;
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 2rem + 3vw, 3.75rem);
+  font-weight: var(--fw-extrabold);
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+}
+
+/* Influencer photo palettes — abstract, travel-inspired gradients standing
+   in for real portraits (no external photo assets in this build) */
+.inf-card__media--1 { --inf-c1: #3a6b8f; --inf-c2: #0a1a22; }
+.inf-card__media--2 { --inf-c1: #8a5a3c; --inf-c2: #1a1108; }
+.inf-card__media--3 { --inf-c1: #b8567a; --inf-c2: #1c0d14; }
+.inf-card__media--4 { --inf-c1: #4a8f5f; --inf-c2: #0a1712; }
+.inf-card__media--5 { --inf-c1: #2f8fb0; --inf-c2: #071a1e; }
+.inf-card__media--6 { --inf-c1: #8f7a2f; --inf-c2: #1a1607; }
+
+.inf-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: var(--space-5);
+}
+.inf-card__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-strong);
+  margin: 0;
+}
+.inf-card__followers {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--magenta-300);
+  transition: color 300ms ease;
+}
+:root[data-theme="light"] .inf-card__followers { color: var(--magenta-600); }
+.inf-card__bio {
+  margin: 0.15rem 0 0.5rem;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+.inf-card__link {
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+  width: fit-content;
+}
+.inf-card__link span {
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+.inf-card__link:hover span { transform: translateX(3px); }
+
+/* -------------------------------------------------------------------------
+   Dot pagination
+   ------------------------------------------------------------------------- */
+.inf-dots {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: var(--space-5);
+}
+.inf-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-border-strong);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 300ms ease, transform var(--dur-fast) var(--ease-out), width var(--dur-base) var(--ease-out);
+}
+.inf-dot.is-active {
+  width: 20px;
+  border-radius: var(--radius-pill);
+  background: var(--gradient-brand);
+}
+
+/* -------------------------------------------------------------------------
+   Bottom CTA + brandmark
+   ------------------------------------------------------------------------- */
+.influencers__cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  margin-top: var(--space-8);
+  text-align: center;
+}
+
+.inf-brandmark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+.inf-brandmark__logo {
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-extrabold);
+  letter-spacing: -0.02em;
+  background: var(--gradient-brand-vivid);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.inf-brandmark__tag {
+  font-size: var(--fs-sm);
+  color: var(--color-text-subtle);
+  max-width: 26rem;
+}
+
+/* -------------------------------------------------------------------------
+   Mobile: simplified header (single centered "Influencers" heading, no
+   eyebrow/subtitle) and no brandmark under the CTA. Carousel and card
+   design are untouched — only the section head and CTA footer change.
+   ------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .influencers__eyebrow,
+  .influencers__title {
+    display: none;
+  }
+  .influencers__title--mobile {
+    display: block;
+  }
+  .inf-brandmark {
+    display: none;
+  }
+}

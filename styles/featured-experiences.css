@@ -78,12 +78,80 @@
   }
 }
 
-/* Ticket-1 now holds a real component — center it in its slot so the -5°
-   rotation reads as an intentional tilt rather than shifting the layout. */
-.featured-experiences__ticket.ticket-1 {
+/* All three ticket slots hold the real component — center each one so its
+   tilt reads as an intentional rotation rather than shifting the layout. */
+.featured-experiences__ticket.ticket-1,
+.featured-experiences__ticket.ticket-2,
+.featured-experiences__ticket.ticket-3 {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Per-ticket rotation: ticket-1 tilts left, ticket-2 sits level,
+   ticket-3 tilts right. The base .ticket rule below carries the -5deg
+   default (ticket-1); these overrides adjust ticket-2 / ticket-3 only. */
+.ticket-2 .ticket {
+  transform: rotate(0deg);
+}
+.ticket-3 .ticket {
+  transform: rotate(5deg);
+}
+
+/* Desktop only — nudge Ticket 2 up ~10% of its own height while keeping
+   its 0° rotation and horizontal position untouched. */
+@media (min-width: 769px) {
+  .ticket-2 .ticket {
+    transform: rotate(0deg) translateY(-10%);
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Desktop-only hover interaction (>=1024px). Lifts + scales the hovered
+   ticket on top of its existing rotation, deepens its shadow/brightness,
+   and dims the other two — purely transform/opacity/filter, no layout
+   shift, rotations preserved.
+   ------------------------------------------------------------------------- */
+.ticket {
+  transition: transform 280ms ease-out, box-shadow 280ms ease-out, filter 280ms ease-out;
+}
+.featured-experiences__ticket {
+  position: relative;
+  transition: opacity 280ms ease-out;
+}
+
+@media (min-width: 1024px) {
+  .featured-experiences__tickets:hover .featured-experiences__ticket {
+    opacity: 0.93;
+  }
+  .featured-experiences__tickets:hover .featured-experiences__ticket:hover {
+    opacity: 1;
+    z-index: 5;
+  }
+
+  .ticket-1:hover .ticket {
+    transform: rotate(-5deg) translateY(-14px) scale(1.03);
+  }
+  .ticket-2:hover .ticket {
+    transform: rotate(0deg) translateY(calc(-10% - 14px)) scale(1.03);
+  }
+  .ticket-3:hover .ticket {
+    transform: rotate(5deg) translateY(-14px) scale(1.03);
+  }
+
+  .featured-experiences__ticket:hover .ticket {
+    box-shadow: 0 32px 80px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    filter: brightness(1.04) saturate(1.04);
+  }
+}
+
+/* Mobile: stack with a slight overlap between cards, keeping each
+   ticket's rotation (ticket-1 -5°, ticket-2 0°, ticket-3 +5°) intact. */
+@media (max-width: 768px) {
+  .featured-experiences__ticket.ticket-2,
+  .featured-experiences__ticket.ticket-3 {
+    margin-top: -44px;
+  }
 }
 
 /* ==========================================================================
@@ -95,13 +163,13 @@
    ========================================================================== */
 .ticket {
   --ticket-radius: 20px;
-  --ticket-notch: 26px;
+  --ticket-notch: 18px;
 
   position: relative;
   display: flex;
   width: 100%;
   max-width: 34rem;
-  aspect-ratio: 460 / 210;
+  aspect-ratio: 460 / 147;
   border-radius: var(--ticket-radius);
   overflow: hidden;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -116,12 +184,33 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 0.15em;
-  padding: 0.75rem 0.5rem;
+  justify-content: space-between;
+  padding: 0.25rem 0.5rem 0.2rem;
   color: #fff;
   background: linear-gradient(160deg, #ff9d5c 0%, #ec4899 48%, #7c3aed 100%);
   border-right: 2px dashed rgba(255, 255, 255, 0.35);
+}
+/* Ticket-2 / Ticket-3 — same gradient style/direction/brightness as
+   Ticket-1's left panel, only the color stops change. */
+.ticket-2 .ticket__left {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.22), transparent 35%),
+    linear-gradient(135deg, #8bcbff 0%, #4f8dff 30%, #2563eb 65%, #1e3a8a 100%);
+}
+.ticket-3 .ticket__left {
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.20), transparent 35%),
+    linear-gradient(135deg, #8cf7b3 0%, #4ade80 30%, #22c55e 65%, #166534 100%);
+}
+/* Invisible spacer reserving the barcode's footprint (its bottom offset +
+   height) as a real flex item, so `justify-content: space-between` splits
+   the remaining vertical space into two equal gaps: number-to-label and
+   label-to-barcode. Keeps the barcode's own position untouched. */
+.ticket__left::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 1px;
+  height: calc(11px + 0.49rem);
 }
 .ticket__step-number {
   font-family: var(--font-display);
@@ -141,10 +230,10 @@
 }
 .ticket__barcode {
   position: absolute;
-  bottom: 0.7rem;
+  bottom: 0.49rem;
   left: 12%;
   right: 12%;
-  height: 16px;
+  height: 11px;
   opacity: 0.8;
   background-image: repeating-linear-gradient(
     90deg,
@@ -164,8 +253,8 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 0.5rem;
-  padding: clamp(1rem, 0.8rem + 1vw, 1.75rem) clamp(1.25rem, 1rem + 1.2vw, 2.25rem);
+  gap: 0.35rem;
+  padding: clamp(0.7rem, 0.56rem + 0.7vw, 1.225rem) clamp(1.25rem, 1rem + 1.2vw, 2.25rem);
   background:
     linear-gradient(160deg, rgba(255, 255, 255, 0.05) 0%, transparent 45%),
     linear-gradient(155deg, #1c1c26 0%, #0a0a10 100%);
@@ -203,6 +292,10 @@
   font-size: clamp(0.75rem, 0.68rem + 0.3vw, 0.875rem);
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.7);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
 }
 
 /* ---- Circular cutouts at the seam (top + bottom) ----
@@ -240,6 +333,6 @@
 
 @media (max-width: 480px) {
   .ticket {
-    aspect-ratio: 340 / 190;
+    aspect-ratio: 340 / 133;
   }
 }

@@ -36,6 +36,9 @@
   <!-- Trending Packages module -->
   <link rel="stylesheet" href="styles/trending-packages.css" />
 
+  <!-- Influencers module (structural clone of Recent Winners) -->
+  <link rel="stylesheet" href="styles/influencers.css" />
+
   <!-- Ending Soon module (reuses the Trending Packages card component) -->
   <link rel="stylesheet" href="styles/ending-soon.css" />
 
@@ -280,14 +283,14 @@
 
             <div class="featured-experiences__tickets" data-featured-tickets>
               <div class="featured-experiences__ticket ticket-1" data-ticket="ticket-1">
-                <article class="ticket" aria-label="Step 1: Discover">
+                <article class="ticket" aria-label="Step 1: Play">
                   <div class="ticket__left">
                     <span class="ticket__step-number">01</span>
                     <span class="ticket__step-label">Step</span>
                     <div class="ticket__barcode" aria-hidden="true"></div>
                   </div>
                   <div class="ticket__right">
-                    <h3 class="ticket__heading">Discover</h3>
+                    <h3 class="ticket__heading">Play</h3>
                     <p class="ticket__text">Find curated travel experiences across India and the world with one seamless booking platform.</p>
                   </div>
                   <span class="ticket__notch ticket__notch--top" aria-hidden="true"></span>
@@ -295,8 +298,38 @@
                   <span class="ticket__perforation" aria-hidden="true"></span>
                 </article>
               </div>
-              <div class="featured-experiences__ticket ticket-2" data-ticket="ticket-2"></div>
-              <div class="featured-experiences__ticket ticket-3" data-ticket="ticket-3"></div>
+              <div class="featured-experiences__ticket ticket-2" data-ticket="ticket-2">
+                <article class="ticket" aria-label="Step 2: Gain">
+                  <div class="ticket__left">
+                    <span class="ticket__step-number">02</span>
+                    <span class="ticket__step-label">Step</span>
+                    <div class="ticket__barcode" aria-hidden="true"></div>
+                  </div>
+                  <div class="ticket__right">
+                    <h3 class="ticket__heading">Gain</h3>
+                    <p class="ticket__text">Earn entries by booking premium travel experiences and participating in Xploroo campaigns.</p>
+                  </div>
+                  <span class="ticket__notch ticket__notch--top" aria-hidden="true"></span>
+                  <span class="ticket__notch ticket__notch--bottom" aria-hidden="true"></span>
+                  <span class="ticket__perforation" aria-hidden="true"></span>
+                </article>
+              </div>
+              <div class="featured-experiences__ticket ticket-3" data-ticket="ticket-3">
+                <article class="ticket" aria-label="Step 3: Win">
+                  <div class="ticket__left">
+                    <span class="ticket__step-number">03</span>
+                    <span class="ticket__step-label">Step</span>
+                    <div class="ticket__barcode" aria-hidden="true"></div>
+                  </div>
+                  <div class="ticket__right">
+                    <h3 class="ticket__heading">Win</h3>
+                    <p class="ticket__text">Unlock exclusive travel rewards, VIP experiences, and unforgettable adventures.</p>
+                  </div>
+                  <span class="ticket__notch ticket__notch--top" aria-hidden="true"></span>
+                  <span class="ticket__notch ticket__notch--bottom" aria-hidden="true"></span>
+                  <span class="ticket__perforation" aria-hidden="true"></span>
+                </article>
+              </div>
             </div>
 
           </div>
@@ -516,6 +549,129 @@
               </li>
 
             </ul>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- =========================================================== -->
+      <!-- 4B. INFLUENCERS                                              -->
+      <!-- =========================================================== -->
+      <!-- Structural clone of the Recent Winners section below (same panel,
+           peek-carousel, card anatomy, dot pagination, CTA/brandmark) under
+           renamed `.influencers` / `.inf-*` classes in styles/influencers.css
+           so the Recent Winners section itself stays completely untouched. -->
+      <section class="influencers" aria-labelledby="influencers-title" data-section="influencers">
+        <div class="influencers__container">
+
+          <header class="influencers__head">
+            <p class="influencers__eyebrow">Top Creators</p>
+            <h2 class="influencers__title" id="influencers-title">Travel With Your Favorite Influencers</h2>
+            <h2 class="influencers__title--mobile" aria-hidden="true">Influencers</h2>
+          </header>
+
+          <div class="inf-panel">
+            <div class="inf-carousel" data-inf-carousel>
+              <ul class="inf-track" data-inf-track role="list">
+
+                <li class="inf-slide">
+                  <article class="inf-card">
+                    <div class="inf-card__media inf-card__media--1">
+                      <span class="inf-card__monogram">MT</span>
+                    </div>
+                    <div class="inf-card__body">
+                      <h3 class="inf-card__name">Maya Torres</h3>
+                      <p class="inf-card__followers">312K Followers</p>
+                      <p class="inf-card__bio">Chasing sunsets across 40 countries and counting.</p>
+                      <a class="inf-card__link" href="/influencers/maya-torres">View Profile <span aria-hidden="true">&rarr;</span></a>
+                    </div>
+                  </article>
+                </li>
+
+                <li class="inf-slide">
+                  <article class="inf-card">
+                    <div class="inf-card__media inf-card__media--2">
+                      <span class="inf-card__monogram">LC</span>
+                    </div>
+                    <div class="inf-card__body">
+                      <h3 class="inf-card__name">Liam Chen</h3>
+                      <p class="inf-card__followers">189K Followers</p>
+                      <p class="inf-card__bio">Turning remote trails into unforgettable frames.</p>
+                      <a class="inf-card__link" href="/influencers/liam-chen">View Profile <span aria-hidden="true">&rarr;</span></a>
+                    </div>
+                  </article>
+                </li>
+
+                <li class="inf-slide">
+                  <article class="inf-card">
+                    <div class="inf-card__media inf-card__media--3">
+                      <span class="inf-card__monogram">SR</span>
+                    </div>
+                    <div class="inf-card__body">
+                      <h3 class="inf-card__name">Sofia Rossi</h3>
+                      <p class="inf-card__followers">456K Followers</p>
+                      <p class="inf-card__bio">Five-star stays, hidden gems, zero compromises.</p>
+                      <a class="inf-card__link" href="/influencers/sofia-rossi">View Profile <span aria-hidden="true">&rarr;</span></a>
+                    </div>
+                  </article>
+                </li>
+
+                <li class="inf-slide">
+                  <article class="inf-card">
+                    <div class="inf-card__media inf-card__media--4">
+                      <span class="inf-card__monogram">AR</span>
+                    </div>
+                    <div class="inf-card__body">
+                      <h3 class="inf-card__name">Aditya Rao</h3>
+                      <p class="inf-card__followers">274K Followers</p>
+                      <p class="inf-card__bio">Budget travel, big stories, 60 countries deep.</p>
+                      <a class="inf-card__link" href="/influencers/aditya-rao">View Profile <span aria-hidden="true">&rarr;</span></a>
+                    </div>
+                  </article>
+                </li>
+
+                <li class="inf-slide">
+                  <article class="inf-card">
+                    <div class="inf-card__media inf-card__media--5">
+                      <span class="inf-card__monogram">CB</span>
+                    </div>
+                    <div class="inf-card__body">
+                      <h3 class="inf-card__name">Chloe Bennett</h3>
+                      <p class="inf-card__followers">398K Followers</p>
+                      <p class="inf-card__bio">Salt water hair and passport stamps forever.</p>
+                      <a class="inf-card__link" href="/influencers/chloe-bennett">View Profile <span aria-hidden="true">&rarr;</span></a>
+                    </div>
+                  </article>
+                </li>
+
+                <li class="inf-slide">
+                  <article class="inf-card">
+                    <div class="inf-card__media inf-card__media--6">
+                      <span class="inf-card__monogram">NK</span>
+                    </div>
+                    <div class="inf-card__body">
+                      <h3 class="inf-card__name">Noah Kim</h3>
+                      <p class="inf-card__followers">221K Followers</p>
+                      <p class="inf-card__bio">Home is wherever the road takes me next.</p>
+                      <a class="inf-card__link" href="/influencers/noah-kim">View Profile <span aria-hidden="true">&rarr;</span></a>
+                    </div>
+                  </article>
+                </li>
+
+              </ul>
+            </div>
+
+            <div class="inf-dots" data-inf-dots aria-hidden="true"></div>
+          </div>
+
+          <div class="influencers__cta">
+            <a class="btn btn--gradient btn--pill btn--lg" href="/influencers">
+              View All Influencers <span aria-hidden="true">&rarr;</span>
+            </a>
+            <div class="inf-brandmark">
+              <span class="inf-brandmark__logo">Xploroo</span>
+              <span class="inf-brandmark__tag">Real trips. Real influencers. Real inspiration.</span>
+            </div>
           </div>
 
         </div>
@@ -1245,6 +1401,9 @@
 
   <!-- Recent Winners behavior (infinite-loop swipe carousel + dot pagination) -->
   <script src="js/recent-winners.js" defer></script>
+
+  <!-- Influencers behavior (infinite-loop swipe carousel + dot pagination) -->
+  <script src="js/influencers.js" defer></script>
 
   <!-- About Us behavior (video play trigger, marquee viewport pausing, stat count-up) -->
   <script src="js/about.js" defer></script>
