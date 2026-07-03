@@ -30,6 +30,9 @@
   <!-- Header module -->
   <link rel="stylesheet" href="styles/header.css" />
 
+  <!-- Hero section module (spacing only — content removed above the machine) -->
+  <link rel="stylesheet" href="styles/hero.css" />
+
   <!-- Hero slot machine module (visual shell only) -->
   <link rel="stylesheet" href="styles/hero-slot-machine.css" />
 
@@ -235,34 +238,8 @@
       <!-- =========================================================== -->
       <!-- 2. HERO SECTION                                             -->
       <!-- =========================================================== -->
-      <section class="hero section" aria-labelledby="hero-title" data-section="hero">
+      <section class="hero section" data-section="hero">
         <div class="hero__inner container">
-
-          <div class="hero__content">
-            <p class="hero__eyebrow"><!-- eyebrow / tagline --></p>
-            <h1 class="hero__title" id="hero-title"><!-- hero headline --></h1>
-            <p class="hero__subtitle"><!-- supporting statement --></p>
-
-            <div class="hero__actions">
-              <a class="btn btn--primary" href="/packages"><!-- primary CTA --></a>
-              <a class="btn btn--outline" href="/travel-quizzes"><!-- secondary CTA --></a>
-            </div>
-
-            <ul class="hero__stats" role="list">
-              <li class="hero-stat">
-                <span class="hero-stat__value"><!-- value --></span>
-                <span class="hero-stat__label"><!-- label --></span>
-              </li>
-              <li class="hero-stat">
-                <span class="hero-stat__value"><!-- value --></span>
-                <span class="hero-stat__label"><!-- label --></span>
-              </li>
-              <li class="hero-stat">
-                <span class="hero-stat__value"><!-- value --></span>
-                <span class="hero-stat__label"><!-- label --></span>
-              </li>
-            </ul>
-          </div>
 
           <!-- Hero media / showcase (images populated later) -->
           <div class="hero__media" data-hero-media>
@@ -305,6 +282,13 @@
               </div>
 
             </figure>
+          </div>
+
+          <div class="hero__content">
+            <div class="hero__actions">
+              <a class="btn btn--primary" href="/packages"><!-- primary CTA --></a>
+              <a class="btn btn--outline" href="/travel-quizzes"><!-- secondary CTA --></a>
+            </div>
           </div>
 
         </div>
@@ -1199,7 +1183,8 @@
               <li class="ts-slide">
                 <article class="ts-card">
                   <a class="ts-card__link" href="/stories/exploring-kashmir-in-winter">
-                    <div class="ts-card__media ts-card__media--kashmir">
+                    <div class="ts-card__media">
+                      <img class="ts-card__img" src="https://ik.imagekit.io/mg0v9kccj/kalen-emsley-Bkci_8qcdvQ-unsplash.jpg" alt="Exploring Kashmir in Winter" />
                       <span class="ts-card__category">Mountains</span>
                     </div>
                     <div class="ts-card__body">
@@ -1214,7 +1199,8 @@
               <li class="ts-slide">
                 <article class="ts-card">
                   <a class="ts-card__link" href="/stories/a-weekend-in-goa">
-                    <div class="ts-card__media ts-card__media--goa">
+                    <div class="ts-card__media">
+                      <img class="ts-card__img" src="https://ik.imagekit.io/mg0v9kccj/pexels-egorkomarov-17906979.jpg" alt="A Weekend in Goa" />
                       <span class="ts-card__category">Beaches</span>
                     </div>
                     <div class="ts-card__body">
@@ -1229,7 +1215,8 @@
               <li class="ts-slide">
                 <article class="ts-card">
                   <a class="ts-card__link" href="/stories/hidden-gems-of-bali">
-                    <div class="ts-card__media ts-card__media--bali">
+                    <div class="ts-card__media">
+                      <img class="ts-card__img" src="https://ik.imagekit.io/mg0v9kccj/pexels-faikackmerd-33243110.jpg" alt="Hidden Gems of Bali" />
                       <span class="ts-card__category">Islands</span>
                     </div>
                     <div class="ts-card__body">
@@ -1244,7 +1231,8 @@
               <li class="ts-slide">
                 <article class="ts-card">
                   <a class="ts-card__link" href="/stories/dubai-in-3-days">
-                    <div class="ts-card__media ts-card__media--dubai">
+                    <div class="ts-card__media">
+                      <img class="ts-card__img" src="https://ik.imagekit.io/mg0v9kccj/pexels-davidgari-18325968.jpg" alt="Dubai in 3 Days" />
                       <span class="ts-card__category">City</span>
                     </div>
                     <div class="ts-card__body">
@@ -1259,7 +1247,8 @@
               <li class="ts-slide">
                 <article class="ts-card">
                   <a class="ts-card__link" href="/stories/trekking-through-ladakh">
-                    <div class="ts-card__media ts-card__media--ladakh">
+                    <div class="ts-card__media">
+                      <img class="ts-card__img" src="https://ik.imagekit.io/mg0v9kccj/pexels-sanskar-vyas-64833207-27593915.jpg" alt="Trekking Through Ladakh" />
                       <span class="ts-card__category">Adventure</span>
                     </div>
                     <div class="ts-card__body">
@@ -1274,7 +1263,8 @@
               <li class="ts-slide">
                 <article class="ts-card">
                   <a class="ts-card__link" href="/stories/sunrise-at-tiger-hill">
-                    <div class="ts-card__media ts-card__media--tigerhill">
+                    <div class="ts-card__media">
+                      <img class="ts-card__img" src="https://ik.imagekit.io/mg0v9kccj/pexels-quang-nguyen-vinh-222549-4268074.jpg" alt="Sunrise at Tiger Hill" />
                       <span class="ts-card__category">Hill Stations</span>
                     </div>
                     <div class="ts-card__body">
@@ -1289,7 +1279,8 @@
               <li class="ts-slide">
                 <article class="ts-card">
                   <a class="ts-card__link" href="/stories/luxury-escape-to-maldives">
-                    <div class="ts-card__media ts-card__media--maldives">
+                    <div class="ts-card__media">
+                      <img class="ts-card__img" src="https://ik.imagekit.io/mg0v9kccj/pexels-pixabay-38238.jpg" alt="Luxury Escape to Maldives" />
                       <span class="ts-card__category">Luxury</span>
                     </div>
                     <div class="ts-card__body">
@@ -1304,7 +1295,8 @@
               <li class="ts-slide">
                 <article class="ts-card">
                   <a class="ts-card__link" href="/stories/paris-for-first-time-travelers">
-                    <div class="ts-card__media ts-card__media--paris">
+                    <div class="ts-card__media">
+                      <img class="ts-card__img" src="https://ik.imagekit.io/mg0v9kccj/pexels-narin-chauhan-295714705-16467359.jpg" alt="Paris for First-Time Travelers" />
                       <span class="ts-card__category">Guide</span>
                     </div>
                     <div class="ts-card__body">

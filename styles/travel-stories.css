@@ -148,39 +148,34 @@
   text-decoration: none;
 }
 
+/* Clean image placeholder — same footprint (aspect-ratio), rounded top
+   corners inherited from .ts-card's overflow:hidden, neutral background
+   until a real story photo URL is added to the <img> below. */
 .ts-card__media {
   position: relative;
   aspect-ratio: 4 / 3;
-  display: flex;
-  align-items: flex-start;
   overflow: hidden;
-  background: radial-gradient(120% 140% at 15% 0%, var(--ts-c1, #2a2a38) 0%, var(--ts-c2, #0c0c12) 65%);
+  background: var(--color-surface-inset);
 }
-.ts-card__media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    115deg,
-    rgba(255, 255, 255, 0.05) 0px,
-    rgba(255, 255, 255, 0.05) 1px,
-    transparent 1px,
-    transparent 10px
-  );
-  mix-blend-mode: overlay;
-  pointer-events: none;
+.ts-card__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
   transition: transform var(--dur-slow) var(--ease-out);
 }
-/* Image-zoom-on-hover: the media layer itself scales up while staying
-   clipped by the card's overflow:hidden, GPU-accelerated (transform only) */
+/* Image-zoom-on-hover: the image itself scales up while staying clipped by
+   the card's overflow:hidden, GPU-accelerated (transform only) */
 @media (hover: hover) {
-  .ts-card:hover .ts-card__media::after { transform: scale(1.12); }
+  .ts-card:hover .ts-card__img { transform: scale(1.12); }
 }
 
 .ts-card__category {
-  position: relative;
+  position: absolute;
   z-index: 1;
-  margin: 1rem;
+  top: 1rem;
+  left: 1rem;
   display: inline-flex;
   align-items: center;
   height: 1.5rem;
@@ -196,16 +191,6 @@
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 }
-
-/* Destination gradient palettes — travel-inspired, no external images needed */
-.ts-card__media--kashmir  { --ts-c1: #5b7fa6; --ts-c2: #0c1420; }
-.ts-card__media--goa      { --ts-c1: #1aa3a0; --ts-c2: #08201d; }
-.ts-card__media--bali     { --ts-c1: #1f7a5c; --ts-c2: #0a1712; }
-.ts-card__media--dubai    { --ts-c1: #d9a441; --ts-c2: #1b1006; }
-.ts-card__media--ladakh   { --ts-c1: #a85c3e; --ts-c2: #170d08; }
-.ts-card__media--tigerhill{ --ts-c1: #7a6ab8; --ts-c2: #120c1e; }
-.ts-card__media--maldives { --ts-c1: #1596a9; --ts-c2: #061417; }
-.ts-card__media--paris    { --ts-c1: #5a5f9e; --ts-c2: #120f1c; }
 
 .ts-card__body {
   flex: 1;

@@ -1,0 +1,19 @@
+/* ==========================================================================
+   XPLOROO · Hero section module
+   hero.css — Minimal spacing only. The eyebrow/title/subtitle/stats that
+   used to sit above the slot machine have been removed from the markup, so
+   the slot machine is now the first visible element in the Hero section.
+   This file adds only the small breathing room between the navbar and the
+   machine — it does not touch the slot machine itself (styled entirely in
+   hero-slot-machine.css), the header, or any other section.
+   ========================================================================== */
+
+/* The shared `.section` utility class adds a large responsive top padding
+   (var(--section-gap), ~56-120px) meant for sections with a heading above
+   their content. Now that the slot machine is the first visible element,
+   override just the Hero's top padding to a small premium gap so it sits
+   directly under the navbar; bottom padding (spacing before the next
+   section) is left at the shared value. */
+.hero {
+  padding-top: 28px; /* ~24-32px premium gap below the navbar */
+}
