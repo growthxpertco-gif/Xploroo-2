@@ -175,3 +175,66 @@
   opacity: 0.55;
   box-shadow: 0 0 4px rgba(34, 211, 238, 0.35), 0 0 4px rgba(239, 84, 180, 0.3);
 }
+
+/* Small illuminated "X" separator between reels — built from two crossing
+   gradient bars. Hidden by default (mobile layout is untouched); only
+   shown in the desktop single-row layout below. */
+.slot-machine__x {
+  display: none;
+  position: relative;
+  flex: 0 0 auto;
+  align-self: center;
+  width: 18px;
+  height: 18px;
+}
+.slot-machine__x::before,
+.slot-machine__x::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--sm-cyan), var(--sm-pink));
+  opacity: 0.6;
+  box-shadow: 0 0 4px rgba(34, 211, 238, 0.35), 0 0 4px rgba(239, 84, 180, 0.3);
+}
+.slot-machine__x::before { transform: translateY(-50%) rotate(45deg); }
+.slot-machine__x::after { transform: translateY(-50%) rotate(-45deg); }
+
+/* -------------------------------------------------------------------------
+   Desktop (>=1024px) — single wide row of 3 larger reels inside a wide
+   horizontal cabinet, with illuminated "X" separators between them and an
+   asymmetric cyan-to-pink cabinet glow. Mobile markup/rules above are
+   untouched; this only re-lays out the existing elements at this breakpoint.
+   ------------------------------------------------------------------------- */
+@media (min-width: 1024px) {
+  .slot-machine {
+    max-width: 64rem;
+  }
+
+  /* Cabinet glow shifts from cyan on the left to pink on the right */
+  .slot-machine__cabinet {
+    box-shadow:
+      0 24px 60px rgba(0, 0, 0, 0.55),
+      -50px 0 90px rgba(0, 229, 255, 0.22),
+      50px 0 90px rgba(255, 77, 255, 0.2);
+  }
+
+  /* Only one reel row is shown at desktop; the second row and the row
+     divider (both mobile-only) are hidden without being removed. */
+  .slot-machine__reels .slot-machine__reel-row:last-of-type,
+  .slot-machine__row-divider {
+    display: none;
+  }
+
+  .slot-machine__reel-row {
+    align-items: center;
+    gap: clamp(1rem, 0.6rem + 2vw, 2rem);
+  }
+
+  .slot-machine__x {
+    display: block;
+  }
+}
