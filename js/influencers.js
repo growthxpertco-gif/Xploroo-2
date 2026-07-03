@@ -1,17 +1,12 @@
 /* ==========================================================================
    XPLOROO · Influencers module
-   influencers.js — Structural clone of js/recent-winners.js: infinite-
-   looping swipe/scroll-snap carousel with dot pagination. Renamed to
+   influencers.js — Finite (non-looping) swipe/scroll-snap carousel with
+   dot pagination and mouse drag-to-scroll. Scoped entirely to
    [data-inf-carousel] / [data-inf-track] / [data-inf-dots] so it never
    touches the Recent Winners carousel (data-rw-*), which is left completely
-   unmodified. Vanilla JS, no dependencies.
-
-   Looping technique: the first and last real slides are cloned and placed
-   on the opposite ends of the track (a 1-slide buffer either side). Native
-   scroll-snap + touch/trackpad scrolling drives the motion — once the user
-   settles on a clone, we silently (non-smooth) re-point scrollLeft to the
-   matching real slide, so the loop feels continuous with zero fake-frame
-   animation and stays on the GPU-accelerated scroll path for 60fps.
+   unmodified. No slide cloning, no wrap-around — the first card is the
+   starting point and native scroll-snap stops firmly at the last card in
+   either direction. Vanilla JS, no dependencies.
    ========================================================================== */
 (function () {
   "use strict";
@@ -21,95 +16,92 @@
 
   const track = carousel.querySelector("[data-inf-track]");
   const dotsWrap = document.querySelector("[data-inf-dots]");
-  const realSlides = Array.from(track.querySelectorAll(".inf-slide"));
-  const realCount = realSlides.length;
-  if (realCount < 2) return;
+  const slides = Array.from(track.querySelectorAll(".inf-slide"));
+  const slideCount = slides.length;
+  if (slideCount < 2) return;
 
-  /* ------------------------------------------------------------------ */
-  /* 1. Clone first/last slide for a seamless infinite loop               */
-  /* ------------------------------------------------------------------ */
-  function prepareClone(node) {
-    const clone = node.cloneNode(true);
-    clone.setAttribute("data-inf-clone", "");
-    clone.setAttribute("aria-hidden", "true");
-    clone.querySelectorAll("a, button").forEach((el) => el.setAttribute("tabindex", "-1"));
-    return clone;
-  }
-
-  const leadingClone = prepareClone(realSlides[realCount - 1]); // copy of last, placed at start
-  const trailingClone = prepareClone(realSlides[0]);            // copy of first, placed at end
-  track.insertBefore(leadingClone, realSlides[0]);
-  track.appendChild(trailingClone);
-
-  function getSlides() {
-    return Array.from(track.querySelectorAll(".inf-slide"));
-  }
+  // Start at the first card.
+  track.scrollLeft = 0;
 
   function slideStep() {
-    const slide = getSlides()[0];
-    const style = getComputedStyle(track);
-    const gap = parseFloat(style.columnGap || style.gap || "0") || 0;
-    return slide.getBoundingClientRect().width + gap;
+    const gap = parseFloat(getComputedStyle(track).columnGap || "0") || 0;
+    return slides[0].getBoundingClientRect().width + gap;
   }
 
-  function goToIndex(index, smooth) {
-    track.scrollTo({ left: slideStep() * index, behavior: smooth ? "smooth" : "auto" });
+  function maxScroll() {
+    return track.scrollWidth - track.clientWidth;
   }
-
-  // Land on the first real slide (index 1, since index 0 is the leading clone)
-  let ready = false;
-  requestAnimationFrame(() => {
-    goToIndex(1, false);
-    ready = true;
-  });
-
-  /* ------------------------------------------------------------------ */
-  /* 2. Detect settle point after scroll/swipe, silently wrap at the ends */
-  /* ------------------------------------------------------------------ */
-  let settleTimer = null;
 
   function currentIndex() {
     return Math.round(track.scrollLeft / slideStep());
   }
 
-  function onSettle() {
-    const total = getSlides().length;
-    const index = currentIndex();
-    if (index <= 0) {
-      goToIndex(total - 2, false); // wrap to last real slide
-    } else if (index >= total - 1) {
-      goToIndex(1, false); // wrap to first real slide
-    }
-    updateDots();
+  function goToIndex(index, smooth) {
+    const clamped = Math.max(0, Math.min(index, slideCount - 1));
+    const left = Math.min(clamped * slideStep(), maxScroll());
+    track.scrollTo({ left, behavior: smooth ? "smooth" : "auto" });
   }
 
-  track.addEventListener(
-    "scroll",
-    () => {
-      if (!ready) return;
-      updateDots();
-      clearTimeout(settleTimer);
-      settleTimer = setTimeout(onSettle, 120);
-    },
-    { passive: true }
-  );
+  /* ------------------------------------------------------------------ */
+  /* 1. Mouse drag-to-scroll (touch keeps native swipe/snap scrolling,   */
+  /*    which already provides momentum)                                 */
+  /* ------------------------------------------------------------------ */
+  let isDragging = false;
+  let dragMoved = false;
+  let startX = 0;
+  let startScrollLeft = 0;
 
-  window.addEventListener("resize", () => {
-    if (!ready) return;
-    goToIndex(currentIndex(), false);
-  });
+  function onPointerDown(e) {
+    if (e.pointerType === "touch") return;
+    isDragging = true;
+    dragMoved = false;
+    startX = e.clientX;
+    startScrollLeft = track.scrollLeft;
+    track.setPointerCapture(e.pointerId);
+    track.classList.add("is-dragging");
+  }
+
+  function onPointerMove(e) {
+    if (!isDragging) return;
+    const delta = e.clientX - startX;
+    if (Math.abs(delta) > 4) dragMoved = true;
+    track.scrollLeft = startScrollLeft - delta;
+  }
+
+  function endDrag() {
+    if (!isDragging) return;
+    isDragging = false;
+    track.classList.remove("is-dragging");
+  }
+
+  // Swallow the click that follows a drag so the card link doesn't
+  // navigate when the user was just panning the carousel.
+  function onTrackClickCapture(e) {
+    if (dragMoved) {
+      e.preventDefault();
+      e.stopPropagation();
+      dragMoved = false;
+    }
+  }
+
+  track.addEventListener("pointerdown", onPointerDown);
+  track.addEventListener("pointermove", onPointerMove);
+  track.addEventListener("pointerup", endDrag);
+  track.addEventListener("pointerleave", endDrag);
+  track.addEventListener("pointercancel", endDrag);
+  track.addEventListener("click", onTrackClickCapture, true);
 
   /* ------------------------------------------------------------------ */
-  /* 3. Dot pagination                                                   */
+  /* 2. Dot pagination                                                   */
   /* ------------------------------------------------------------------ */
   const dots = [];
   if (dotsWrap) {
-    for (let i = 0; i < realCount; i++) {
+    for (let i = 0; i < slideCount; i++) {
       const dot = document.createElement("button");
       dot.type = "button";
       dot.className = "inf-dot";
       dot.setAttribute("aria-label", "Go to influencer " + (i + 1));
-      dot.addEventListener("click", () => goToIndex(i + 1, true));
+      dot.addEventListener("click", () => goToIndex(i, true));
       dotsWrap.appendChild(dot);
       dots.push(dot);
     }
@@ -117,11 +109,25 @@
 
   function updateDots() {
     if (!dots.length) return;
-    let index = currentIndex() - 1; // shift for leading clone
-    if (index < 0) index = realCount - 1;
-    if (index > realCount - 1) index = 0;
+    const index = Math.max(0, Math.min(currentIndex(), slideCount - 1));
     dots.forEach((dot, i) => dot.classList.toggle("is-active", i === index));
   }
+
+  let scrollTicking = false;
+  track.addEventListener(
+    "scroll",
+    () => {
+      if (!scrollTicking) {
+        window.requestAnimationFrame(() => {
+          updateDots();
+          scrollTicking = false;
+        });
+        scrollTicking = true;
+      }
+    },
+    { passive: true }
+  );
+  window.addEventListener("resize", () => goToIndex(currentIndex(), false));
 
   updateDots();
 })();

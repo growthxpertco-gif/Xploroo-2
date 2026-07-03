@@ -85,10 +85,17 @@
   scroll-snap-type: x mandatory;
   scroll-padding-inline: var(--space-5);
   padding-inline: var(--space-5);
+  cursor: grab;
   -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
   scrollbar-width: none;
 }
 .inf-track::-webkit-scrollbar { display: none; }
+.inf-track.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none; /* don't fight the drag with snap mid-gesture */
+  scroll-behavior: auto;
+}
 
 .inf-slide {
   flex: 0 0 auto;
@@ -135,59 +142,21 @@
   .inf-card:active { transform: scale(0.98); }
 }
 
+/* Clean image placeholder — same footprint (aspect-ratio, rounded top
+   corners inherited from .inf-card's overflow:hidden), neutral background
+   until a real influencer photo URL is added to the <img> below. */
 .inf-card__media {
   position: relative;
   aspect-ratio: 4 / 5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
-  background: radial-gradient(120% 140% at 30% 0%, var(--inf-c1, #2a2a38) 0%, var(--inf-c2, #0c0c12) 70%);
+  background: var(--color-surface-inset);
 }
-.inf-card__media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    115deg,
-    rgba(255, 255, 255, 0.05) 0px,
-    rgba(255, 255, 255, 0.05) 1px,
-    transparent 1px,
-    transparent 10px
-  );
-  mix-blend-mode: overlay;
-  pointer-events: none;
+.inf-card__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-/* Bottom scrim so the monogram reads cleanly like a portrait crop */
-.inf-card__media::before {
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 55%;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.55), transparent);
-  pointer-events: none;
-  z-index: 1;
-}
-
-.inf-card__monogram {
-  position: relative;
-  z-index: 2;
-  font-family: var(--font-display);
-  font-size: clamp(2.75rem, 2rem + 3vw, 3.75rem);
-  font-weight: var(--fw-extrabold);
-  letter-spacing: -0.02em;
-  color: rgba(255, 255, 255, 0.92);
-  text-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
-}
-
-/* Influencer photo palettes — abstract, travel-inspired gradients standing
-   in for real portraits (no external photo assets in this build) */
-.inf-card__media--1 { --inf-c1: #3a6b8f; --inf-c2: #0a1a22; }
-.inf-card__media--2 { --inf-c1: #8a5a3c; --inf-c2: #1a1108; }
-.inf-card__media--3 { --inf-c1: #b8567a; --inf-c2: #1c0d14; }
-.inf-card__media--4 { --inf-c1: #4a8f5f; --inf-c2: #0a1712; }
-.inf-card__media--5 { --inf-c1: #2f8fb0; --inf-c2: #071a1e; }
-.inf-card__media--6 { --inf-c1: #8f7a2f; --inf-c2: #1a1607; }
 
 .inf-card__body {
   flex: 1;
