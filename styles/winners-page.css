@@ -1,0 +1,34 @@
+/* ==========================================================================
+   XPLOROO · Winners page
+   winners-page.css — Intentionally minimal placeholder page: a centered
+   heading + subtitle, no other content yet. Reuses the shared design
+   system (variables/reset/base/utilities) plus the existing header/footer
+   styles — this file only adds the page head. Scoped entirely under
+   `.winners-page` — never touches any other page.
+   ========================================================================== */
+
+.winners-page {
+  position: relative;
+  padding-block: var(--section-gap);
+}
+.winners-page__container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+.wp-hero {
+  text-align: center;
+  max-width: 44rem;
+  margin-inline: auto;
+}
+.wp-hero__title {
+  margin: 0;
+  font-size: var(--fs-4xl);
+}
+.wp-hero__subtitle {
+  margin: var(--space-4) 0 0;
+  font-size: var(--fs-md, var(--fs-base));
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}

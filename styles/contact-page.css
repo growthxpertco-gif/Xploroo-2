@@ -1,0 +1,249 @@
+/* ==========================================================================
+   XPLOROO · Contact page
+   contact-page.css — Hero, glass office-info card, social icon row,
+   premium contact form, and a map placeholder. Reuses the shared design
+   system (variables/reset/base/utilities) plus the existing header/footer
+   styles — this file only adds page-specific rules. Scoped entirely under
+   `.contact-page` / `.cp-*` — never touches any other page.
+   ========================================================================== */
+
+.contact-page {
+  position: relative;
+}
+.contact-page__section {
+  padding-block: var(--section-gap);
+}
+.contact-page__section + .contact-page__section {
+  padding-top: 0;
+}
+.contact-page__container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* -------------------------------------------------------------------------
+   Hero
+   ------------------------------------------------------------------------- */
+.cp-hero {
+  text-align: center;
+  max-width: 44rem;
+  margin-inline: auto;
+}
+.cp-hero__title {
+  margin: 0;
+  font-size: var(--fs-4xl);
+}
+.cp-hero__subtitle {
+  margin: var(--space-4) 0 0;
+  font-size: var(--fs-md, var(--fs-base));
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+/* -------------------------------------------------------------------------
+   Office info — premium glass card
+   ------------------------------------------------------------------------- */
+.cp-office {
+  max-width: 44rem;
+  margin-inline: auto;
+  padding: clamp(1.75rem, 1.4rem + 1.8vw, 2.5rem);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-3xl);
+  box-shadow: var(--shadow-lg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  transition: background-color 300ms ease, border-color 300ms ease;
+}
+
+.cp-office__row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+}
+.cp-office__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-strong);
+}
+.cp-office__icon svg { width: 1.15rem; height: 1.15rem; }
+
+.cp-office__label {
+  margin: 0 0 0.25rem;
+  font-family: var(--font-mono, var(--font-body));
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+.cp-office__value {
+  margin: 0;
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  color: var(--color-text-strong);
+}
+
+/* -------------------------------------------------------------------------
+   Connect With Us — social icon row
+   ------------------------------------------------------------------------- */
+.cp-connect__title {
+  margin: 0 0 var(--space-6);
+  text-align: center;
+  font-size: var(--fs-2xl, var(--fs-xl));
+}
+
+.cp-social {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+}
+.cp-social__link {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-full);
+  color: var(--color-text-strong);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-standard),
+    background-color 300ms ease;
+}
+.cp-social__link svg { width: 1.2rem; height: 1.2rem; }
+.cp-social__link:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-border-strong);
+  box-shadow: var(--glow-soft);
+}
+.cp-social__link:active { transform: translateY(-1px) scale(0.96); }
+
+/* -------------------------------------------------------------------------
+   Contact form — glass inputs, premium focus ring
+   ------------------------------------------------------------------------- */
+.cp-form {
+  max-width: 44rem;
+  margin-inline: auto;
+  padding: clamp(1.75rem, 1.4rem + 1.8vw, 2.5rem);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-3xl);
+  box-shadow: var(--shadow-lg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-5);
+  transition: background-color 300ms ease, border-color 300ms ease;
+}
+.cp-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.cp-form__field--full {
+  grid-column: 1 / -1;
+}
+.cp-form__label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--color-text-subtle);
+}
+.cp-form__input,
+.cp-form__textarea {
+  width: 100%;
+  padding: 0.9rem 1.1rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-inset);
+  color: var(--color-text-strong);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  transition:
+    border-color var(--dur-fast) var(--ease-standard),
+    box-shadow var(--dur-fast) var(--ease-standard),
+    background-color 300ms ease,
+    color 300ms ease;
+}
+.cp-form__textarea {
+  resize: vertical;
+  min-height: 8rem;
+}
+.cp-form__input::placeholder,
+.cp-form__textarea::placeholder { color: var(--color-text-subtle); }
+.cp-form__input:focus-visible,
+.cp-form__textarea:focus-visible {
+  outline: none;
+  border-color: var(--color-border-brand);
+  box-shadow: var(--glow-focus);
+}
+.cp-form__submit {
+  grid-column: 1 / -1;
+  justify-self: center;
+  margin-top: var(--space-2);
+  min-width: 12rem;
+}
+.cp-form__message {
+  grid-column: 1 / -1;
+  margin: 0;
+  min-height: 1.2em;
+  text-align: center;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+.cp-form__message.is-success { color: var(--color-success, var(--color-primary)); }
+
+@media (max-width: 640px) {
+  .cp-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Map placeholder
+   ------------------------------------------------------------------------- */
+.cp-map {
+  max-width: 64rem;
+  margin-inline: auto;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-3xl);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-inset);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cp-map__frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.cp-map__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--color-text-subtle);
+  font-size: var(--fs-sm);
+}
+.cp-map__placeholder svg { width: 2rem; height: 2rem; }

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="We're building a new way to discover, book, and share unforgettable travel experiences through creators, communities, and curated adventures." />
-  <title>About Xploroo</title>
+  <meta name="description" content="Our travel winners and unforgettable experiences will be showcased here soon." />
+  <title>Winners · Xploroo</title>
 
   <!-- Apply the stored theme before first paint (avoids a flash of the
        wrong theme on reload). Dark is the default — this only ever adds
@@ -30,8 +30,8 @@
   <!-- Header module (shared with the homepage) -->
   <link rel="stylesheet" href="styles/header.css" />
 
-  <!-- About page (hero, mission, features, timeline, CTA) -->
-  <link rel="stylesheet" href="styles/about-page.css" />
+  <!-- Winners page (minimal placeholder) -->
+  <link rel="stylesheet" href="styles/winners-page.css" />
 
   <!-- Footer module (shared with the homepage) -->
   <link rel="stylesheet" href="styles/footer.css" />
@@ -109,7 +109,7 @@
               <a class="main-nav__link" href="influencers.html">Influencers</a>
             </li>
             <li class="main-nav__item">
-              <a class="main-nav__link" href="winners.html">Winners</a>
+              <a class="main-nav__link" href="winners.html" aria-current="page">Winners</a>
             </li>
             <li class="main-nav__item">
               <a class="main-nav__link" href="merch.html">Merch</a>
@@ -118,7 +118,7 @@
               <a class="main-nav__link" href="/packages">Packages</a>
             </li>
             <li class="main-nav__item">
-              <a class="main-nav__link" href="about.html" aria-current="page">About Us</a>
+              <a class="main-nav__link" href="about.html">About Us</a>
             </li>
             <li class="main-nav__item">
               <a class="main-nav__link" href="faq.html">FAQ</a>
@@ -200,11 +200,11 @@
         <nav class="mobile-menu__nav" aria-label="Mobile">
           <ul class="mobile-menu__list" role="list">
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="index.html">Home</a></li>
-            <li class="mobile-menu__item"><a class="mobile-menu__link" href="about.html" aria-current="page">About Us</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="about.html">About Us</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="travel-quizzes.html">Travel Quizzes</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="influencers.html">Influencers</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="/packages">Packages</a></li>
-            <li class="mobile-menu__item"><a class="mobile-menu__link" href="winners.html">Winners</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="winners.html" aria-current="page">Winners</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="merch.html">Merch</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="faq.html">FAQ</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="contact.html">Contact Us</a></li>
@@ -223,119 +223,13 @@
     <!-- MAIN                                                          -->
     <!-- ============================================================= -->
     <main class="main" id="main">
-      <div class="about-page" data-section="about-page">
-
-        <!-- =========================================================== -->
-        <!-- HERO                                                        -->
-        <!-- =========================================================== -->
-        <section class="about-page__section">
-          <div class="about-page__container">
-            <div class="ap-hero">
-              <h1 class="ap-hero__title">About Xploroo</h1>
-              <p class="ap-hero__subtitle">We&rsquo;re building a new way to discover, book, and share unforgettable travel experiences through creators, communities, and curated adventures.</p>
-            </div>
+      <div class="winners-page" data-section="winners-page">
+        <div class="winners-page__container">
+          <div class="wp-hero">
+            <h1 class="wp-hero__title">Winners</h1>
+            <p class="wp-hero__subtitle">This page is currently under development.<br />Our travel winners and unforgettable experiences will be showcased here soon.</p>
           </div>
-        </section>
-
-        <!-- =========================================================== -->
-        <!-- OUR MISSION                                                 -->
-        <!-- =========================================================== -->
-        <section class="about-page__section">
-          <div class="about-page__container">
-            <div class="ap-mission">
-              <h2 class="ap-mission__title">Our Mission</h2>
-              <p class="ap-mission__text">Xploroo connects travelers, creators, and travel brands through unique, curated experiences &mdash; not ordinary package booking. Instead of scrolling through generic listings, travelers discover trips through people they already trust, while creators and brands get a platform built around real recommendations rather than one-size-fits-all deals.</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- =========================================================== -->
-        <!-- WHY XPLOROO                                                 -->
-        <!-- =========================================================== -->
-        <section class="about-page__section">
-          <div class="about-page__container">
-            <header class="ap-section-head">
-              <h2 class="ap-section-head__title">Why Xploroo</h2>
-            </header>
-
-            <div class="ap-features">
-              <article class="ap-feature">
-                <span class="ap-feature__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                </span>
-                <h3 class="ap-feature__title">Curated Experiences</h3>
-                <p class="ap-feature__text">Hand-picked trips and activities chosen for quality, not just availability.</p>
-              </article>
-
-              <article class="ap-feature">
-                <span class="ap-feature__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/><path d="m17 8 1.5 1.5L21 7"/></svg>
-                </span>
-                <h3 class="ap-feature__title">Trusted Influencers</h3>
-                <p class="ap-feature__text">Book through creators whose recommendations you already follow and trust.</p>
-              </article>
-
-              <article class="ap-feature">
-                <span class="ap-feature__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 8 8 9 4.8-1 8-4.5 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
-                </span>
-                <h3 class="ap-feature__title">Secure Bookings</h3>
-                <p class="ap-feature__text">Every booking is protected end-to-end, so you can travel with confidence.</p>
-              </article>
-
-              <article class="ap-feature">
-                <span class="ap-feature__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 21c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M14.5 15.6c2.5.3 4.5 2.2 4.5 5.4"/></svg>
-                </span>
-                <h3 class="ap-feature__title">Community Driven</h3>
-                <p class="ap-feature__text">Built with travelers and creators, shaped by real stories and shared adventures.</p>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <!-- =========================================================== -->
-        <!-- OUR JOURNEY                                                 -->
-        <!-- =========================================================== -->
-        <section class="about-page__section">
-          <div class="about-page__container">
-            <header class="ap-section-head">
-              <h2 class="ap-section-head__title">Our Journey</h2>
-            </header>
-
-            <div class="ap-timeline">
-              <div class="ap-timeline-item">
-                <h3 class="ap-timeline-item__title">Idea</h3>
-                <p class="ap-timeline-item__text">Xploroo began as a simple idea: travel discovery should feel personal, not transactional.</p>
-              </div>
-              <div class="ap-timeline-item">
-                <h3 class="ap-timeline-item__title">Platform Development</h3>
-                <p class="ap-timeline-item__text">We built the foundation &mdash; a premium booking experience designed around real experiences.</p>
-              </div>
-              <div class="ap-timeline-item">
-                <h3 class="ap-timeline-item__title">Creator Network</h3>
-                <p class="ap-timeline-item__text">We partnered with travel creators to bring trusted, first-hand recommendations to every trip.</p>
-              </div>
-              <div class="ap-timeline-item">
-                <h3 class="ap-timeline-item__title">Launch</h3>
-                <p class="ap-timeline-item__text">Xploroo opens its doors, bringing travelers, creators, and brands together in one place.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- =========================================================== -->
-        <!-- CTA                                                         -->
-        <!-- =========================================================== -->
-        <section class="about-page__section">
-          <div class="about-page__container">
-            <div class="ap-cta">
-              <h2 class="ap-cta__title">Ready to explore with us?</h2>
-              <a class="btn btn--gradient btn--pill btn--lg" href="index.html#packages">Explore Packages</a>
-            </div>
-          </div>
-        </section>
-
+        </div>
       </div>
     </main>
 
@@ -402,7 +296,7 @@
                 <li><a class="footer-links__link" href="about.html">About Us</a></li>
                 <li><a class="footer-links__link" href="/how-it-works">How It Works</a></li>
                 <li><a class="footer-links__link" href="/team">Our Team</a></li>
-                <li><a class="footer-links__link" href="/faqs">FAQs</a></li>
+                <li><a class="footer-links__link" href="faq.html">FAQs</a></li>
                 <li><a class="footer-links__link" href="contact.html">Contact Us</a></li>
               </ul>
             </div>
@@ -423,7 +317,7 @@
               <ul class="footer-links__list" role="list">
                 <li><a class="footer-links__link" href="travel-quizzes.html">Travel Quizzes</a></li>
                 <li><a class="footer-links__link" href="influencers.html">Influencers</a></li>
-                <li><a class="footer-links__link" href="winners.html">Winners</a></li>
+                <li><a class="footer-links__link" href="winners.html" aria-current="page">Winners</a></li>
                 <li><a class="footer-links__link" href="/stories">Travel Stories</a></li>
                 <li><a class="footer-links__link" href="/privacy">Privacy Policy</a></li>
               </ul>

@@ -1,0 +1,63 @@
+/* ==========================================================================
+   XPLOROO · Merch page
+   merch-page.css — Intentionally minimal placeholder page: a centered
+   heading + subtitle + a premium "Coming Soon" badge, no other content
+   yet. Reuses the shared design system (variables/reset/base/utilities)
+   plus the existing header/footer styles — this file only adds the page
+   head. Scoped entirely under `.merch-page` — never touches any other
+   page.
+   ========================================================================== */
+
+.merch-page {
+  position: relative;
+  padding-block: var(--section-gap);
+}
+.merch-page__container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+.merch-hero {
+  text-align: center;
+  max-width: 44rem;
+  margin-inline: auto;
+}
+.merch-hero__title {
+  margin: 0;
+  font-size: var(--fs-4xl);
+}
+.merch-hero__subtitle {
+  margin: var(--space-4) 0 0;
+  font-size: var(--fs-md, var(--fs-base));
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+/* Premium "Coming Soon" badge — gradient border pill, consistent with the
+   site's existing badge language (thin border, pill radius, uppercase
+   micro-label). */
+.merch-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+  height: 2.25rem;
+  padding-inline: var(--space-5);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border-strong);
+  font-family: var(--font-mono, var(--font-body));
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--color-text-strong);
+}
+.merch-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  box-shadow: var(--glow-soft);
+}

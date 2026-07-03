@@ -123,6 +123,29 @@
 }
 .tp-card__media { flex-direction: column; align-items: center; justify-content: flex-end; }
 
+/* -------------------------------------------------------------------------
+   Square (1:1) image container replacing the gradient artwork, scoped to
+   `.ending-soon` only — Trending Packages' own square-image rules (added in
+   trending-packages.css) are separate and untouched. The wordmark, wishlist
+   button, and everything in `.tp-card__body` below are unaffected.
+   ------------------------------------------------------------------------- */
+.ending-soon .tp-card__media {
+  aspect-ratio: 1 / 1;
+  background: var(--color-surface-inset);
+}
+.ending-soon .tp-card__media::after {
+  display: none;
+}
+.ending-soon .tp-card__img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
 /* New destination gradients (Bali & Maldives are intentionally omitted here —
    those two reuse the exact variants already defined in trending-packages.css) */
 .tp-card__media--mumbai      { --tp-c1: #c98a3a; --tp-c2: #1a1006; }

@@ -1,0 +1,122 @@
+/* ==========================================================================
+   XPLOROO · FAQ page
+   faq-page.css — Standalone page (faq.html): hero, premium accordion, and
+   a bottom CTA. Reuses the shared design system (variables/reset/base/
+   utilities) plus the existing header/footer styles — this file only adds
+   page-specific rules. Scoped entirely under `.faq-page` / `.faq-*` —
+   never touches any other page.
+   ========================================================================== */
+
+.faq-page {
+  position: relative;
+}
+.faq-page__section {
+  padding-block: var(--section-gap);
+}
+.faq-page__container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* -------------------------------------------------------------------------
+   Hero
+   ------------------------------------------------------------------------- */
+.faq-hero {
+  text-align: center;
+  max-width: 44rem;
+  margin-inline: auto;
+}
+.faq-hero__title {
+  margin: 0;
+  font-size: var(--fs-4xl);
+}
+.faq-hero__subtitle {
+  margin: var(--space-4) 0 0;
+  font-size: var(--fs-md, var(--fs-base));
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+/* -------------------------------------------------------------------------
+   Accordion
+   ------------------------------------------------------------------------- */
+.faq-accordion {
+  max-width: 46rem;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.faq-item {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  transition: border-color var(--dur-base) var(--ease-standard), background-color 300ms ease;
+}
+.faq-item.is-open {
+  border-color: var(--color-border-strong);
+}
+
+.faq-item__question {
+  margin: 0;
+}
+.faq-item__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-6);
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: var(--fs-md, var(--fs-base));
+  font-weight: var(--fw-bold);
+  color: var(--color-text-strong);
+  cursor: pointer;
+}
+.faq-item__icon {
+  flex: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  color: var(--color-text-muted);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.faq-item.is-open .faq-item__icon {
+  transform: rotate(180deg);
+  color: var(--color-text-strong);
+}
+
+.faq-item__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-base) var(--ease-out);
+}
+.faq-item.is-open .faq-item__panel {
+  grid-template-rows: 1fr;
+}
+.faq-item__panel-inner {
+  overflow: hidden;
+}
+.faq-item__answer {
+  margin: 0;
+  padding: 0 var(--space-6) var(--space-5);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+/* -------------------------------------------------------------------------
+   Bottom CTA
+   ------------------------------------------------------------------------- */
+.faq-cta {
+  text-align: center;
+}
+.faq-cta__title {
+  margin: 0 0 var(--space-6);
+  font-size: var(--fs-3xl);
+}

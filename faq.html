@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="We're building a new way to discover, book, and share unforgettable travel experiences through creators, communities, and curated adventures." />
-  <title>About Xploroo</title>
+  <meta name="description" content="Everything you need to know about booking trips, influencers, payments, cancellations, and Xploroo." />
+  <title>FAQ · Xploroo</title>
 
   <!-- Apply the stored theme before first paint (avoids a flash of the
        wrong theme on reload). Dark is the default — this only ever adds
@@ -30,8 +30,8 @@
   <!-- Header module (shared with the homepage) -->
   <link rel="stylesheet" href="styles/header.css" />
 
-  <!-- About page (hero, mission, features, timeline, CTA) -->
-  <link rel="stylesheet" href="styles/about-page.css" />
+  <!-- FAQ page (hero, accordion, CTA) -->
+  <link rel="stylesheet" href="styles/faq-page.css" />
 
   <!-- Footer module (shared with the homepage) -->
   <link rel="stylesheet" href="styles/footer.css" />
@@ -118,10 +118,10 @@
               <a class="main-nav__link" href="/packages">Packages</a>
             </li>
             <li class="main-nav__item">
-              <a class="main-nav__link" href="about.html" aria-current="page">About Us</a>
+              <a class="main-nav__link" href="about.html">About Us</a>
             </li>
             <li class="main-nav__item">
-              <a class="main-nav__link" href="faq.html">FAQ</a>
+              <a class="main-nav__link" href="faq.html" aria-current="page">FAQ</a>
             </li>
             <li class="main-nav__item">
               <a class="main-nav__link" href="contact.html">Contact Us</a>
@@ -200,13 +200,13 @@
         <nav class="mobile-menu__nav" aria-label="Mobile">
           <ul class="mobile-menu__list" role="list">
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="index.html">Home</a></li>
-            <li class="mobile-menu__item"><a class="mobile-menu__link" href="about.html" aria-current="page">About Us</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="about.html">About Us</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="travel-quizzes.html">Travel Quizzes</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="influencers.html">Influencers</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="/packages">Packages</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="winners.html">Winners</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="merch.html">Merch</a></li>
-            <li class="mobile-menu__item"><a class="mobile-menu__link" href="faq.html">FAQ</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="faq.html" aria-current="page">FAQ</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="contact.html">Contact Us</a></li>
           </ul>
         </nav>
@@ -223,115 +223,151 @@
     <!-- MAIN                                                          -->
     <!-- ============================================================= -->
     <main class="main" id="main">
-      <div class="about-page" data-section="about-page">
+      <div class="faq-page" data-section="faq-page">
 
         <!-- =========================================================== -->
         <!-- HERO                                                        -->
         <!-- =========================================================== -->
-        <section class="about-page__section">
-          <div class="about-page__container">
-            <div class="ap-hero">
-              <h1 class="ap-hero__title">About Xploroo</h1>
-              <p class="ap-hero__subtitle">We&rsquo;re building a new way to discover, book, and share unforgettable travel experiences through creators, communities, and curated adventures.</p>
+        <section class="faq-page__section">
+          <div class="faq-page__container">
+            <div class="faq-hero">
+              <h1 class="faq-hero__title">Frequently Asked Questions</h1>
+              <p class="faq-hero__subtitle">Everything you need to know about booking trips, influencers, payments, cancellations, and Xploroo.</p>
             </div>
           </div>
         </section>
 
         <!-- =========================================================== -->
-        <!-- OUR MISSION                                                 -->
+        <!-- FAQ ACCORDION                                               -->
         <!-- =========================================================== -->
-        <section class="about-page__section">
-          <div class="about-page__container">
-            <div class="ap-mission">
-              <h2 class="ap-mission__title">Our Mission</h2>
-              <p class="ap-mission__text">Xploroo connects travelers, creators, and travel brands through unique, curated experiences &mdash; not ordinary package booking. Instead of scrolling through generic listings, travelers discover trips through people they already trust, while creators and brands get a platform built around real recommendations rather than one-size-fits-all deals.</p>
+        <section class="faq-page__section">
+          <div class="faq-page__container">
+            <div class="faq-accordion" data-faq-accordion>
+
+              <div class="faq-item">
+                <h3 class="faq-item__question">
+                  <button class="faq-item__trigger" type="button" aria-expanded="false" aria-controls="faq-panel-1" id="faq-trigger-1">
+                    <span>How do I book a trip?</span>
+                    <svg class="faq-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                </h3>
+                <div class="faq-item__panel" id="faq-panel-1" role="region" aria-labelledby="faq-trigger-1">
+                  <div class="faq-item__panel-inner">
+                    <p class="faq-item__answer">Browse curated trips or influencer-led experiences, choose your dates, and complete checkout directly on Xploroo. You&rsquo;ll receive a confirmation as soon as payment is processed.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <h3 class="faq-item__question">
+                  <button class="faq-item__trigger" type="button" aria-expanded="false" aria-controls="faq-panel-2" id="faq-trigger-2">
+                    <span>Can I book through an influencer?</span>
+                    <svg class="faq-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                </h3>
+                <div class="faq-item__panel" id="faq-panel-2" role="region" aria-labelledby="faq-trigger-2">
+                  <div class="faq-item__panel-inner">
+                    <p class="faq-item__answer">Yes. Every influencer on Xploroo has their own profile with curated packages and exclusive links, so you can book the same trips they recommend, directly through them.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <h3 class="faq-item__question">
+                  <button class="faq-item__trigger" type="button" aria-expanded="false" aria-controls="faq-panel-3" id="faq-trigger-3">
+                    <span>Are payments secure?</span>
+                    <svg class="faq-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                </h3>
+                <div class="faq-item__panel" id="faq-panel-3" role="region" aria-labelledby="faq-trigger-3">
+                  <div class="faq-item__panel-inner">
+                    <p class="faq-item__answer">All payments are processed through encrypted, PCI-compliant payment gateways. Xploroo never stores your full card details on its own servers.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <h3 class="faq-item__question">
+                  <button class="faq-item__trigger" type="button" aria-expanded="false" aria-controls="faq-panel-4" id="faq-trigger-4">
+                    <span>What is the cancellation policy?</span>
+                    <svg class="faq-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                </h3>
+                <div class="faq-item__panel" id="faq-panel-4" role="region" aria-labelledby="faq-trigger-4">
+                  <div class="faq-item__panel-inner">
+                    <p class="faq-item__answer">Cancellation windows vary by package and are shown at checkout before you pay. Most trips offer a full refund if cancelled a set number of days before departure.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <h3 class="faq-item__question">
+                  <button class="faq-item__trigger" type="button" aria-expanded="false" aria-controls="faq-panel-5" id="faq-trigger-5">
+                    <span>Can I become an influencer?</span>
+                    <svg class="faq-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                </h3>
+                <div class="faq-item__panel" id="faq-panel-5" role="region" aria-labelledby="faq-trigger-5">
+                  <div class="faq-item__panel-inner">
+                    <p class="faq-item__answer">Yes! Apply through our creator partnership program. Once approved, you get your own storefront, exclusive package links, and access to referral earnings.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <h3 class="faq-item__question">
+                  <button class="faq-item__trigger" type="button" aria-expanded="false" aria-controls="faq-panel-6" id="faq-trigger-6">
+                    <span>How do referral commissions work?</span>
+                    <svg class="faq-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                </h3>
+                <div class="faq-item__panel" id="faq-panel-6" role="region" aria-labelledby="faq-trigger-6">
+                  <div class="faq-item__panel-inner">
+                    <p class="faq-item__answer">Influencers earn a percentage of every booking made through their unique link. Commissions are tracked automatically and paid out on a regular schedule.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <h3 class="faq-item__question">
+                  <button class="faq-item__trigger" type="button" aria-expanded="false" aria-controls="faq-panel-7" id="faq-trigger-7">
+                    <span>How do I contact support?</span>
+                    <svg class="faq-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                </h3>
+                <div class="faq-item__panel" id="faq-panel-7" role="region" aria-labelledby="faq-trigger-7">
+                  <div class="faq-item__panel-inner">
+                    <p class="faq-item__answer">Reach our support team any time through the Contact Us page, or email us directly — we typically respond within one business day.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <h3 class="faq-item__question">
+                  <button class="faq-item__trigger" type="button" aria-expanded="false" aria-controls="faq-panel-8" id="faq-trigger-8">
+                    <span>Do I receive booking confirmation instantly?</span>
+                    <svg class="faq-item__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+                  </button>
+                </h3>
+                <div class="faq-item__panel" id="faq-panel-8" role="region" aria-labelledby="faq-trigger-8">
+                  <div class="faq-item__panel-inner">
+                    <p class="faq-item__answer">Yes — as soon as your payment is confirmed, you&rsquo;ll receive an instant booking confirmation by email with your trip details and reference number.</p>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </section>
 
         <!-- =========================================================== -->
-        <!-- WHY XPLOROO                                                 -->
+        <!-- BOTTOM CTA                                                  -->
         <!-- =========================================================== -->
-        <section class="about-page__section">
-          <div class="about-page__container">
-            <header class="ap-section-head">
-              <h2 class="ap-section-head__title">Why Xploroo</h2>
-            </header>
-
-            <div class="ap-features">
-              <article class="ap-feature">
-                <span class="ap-feature__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                </span>
-                <h3 class="ap-feature__title">Curated Experiences</h3>
-                <p class="ap-feature__text">Hand-picked trips and activities chosen for quality, not just availability.</p>
-              </article>
-
-              <article class="ap-feature">
-                <span class="ap-feature__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/><path d="m17 8 1.5 1.5L21 7"/></svg>
-                </span>
-                <h3 class="ap-feature__title">Trusted Influencers</h3>
-                <p class="ap-feature__text">Book through creators whose recommendations you already follow and trust.</p>
-              </article>
-
-              <article class="ap-feature">
-                <span class="ap-feature__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 8 8 9 4.8-1 8-4.5 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
-                </span>
-                <h3 class="ap-feature__title">Secure Bookings</h3>
-                <p class="ap-feature__text">Every booking is protected end-to-end, so you can travel with confidence.</p>
-              </article>
-
-              <article class="ap-feature">
-                <span class="ap-feature__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 21c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M14.5 15.6c2.5.3 4.5 2.2 4.5 5.4"/></svg>
-                </span>
-                <h3 class="ap-feature__title">Community Driven</h3>
-                <p class="ap-feature__text">Built with travelers and creators, shaped by real stories and shared adventures.</p>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <!-- =========================================================== -->
-        <!-- OUR JOURNEY                                                 -->
-        <!-- =========================================================== -->
-        <section class="about-page__section">
-          <div class="about-page__container">
-            <header class="ap-section-head">
-              <h2 class="ap-section-head__title">Our Journey</h2>
-            </header>
-
-            <div class="ap-timeline">
-              <div class="ap-timeline-item">
-                <h3 class="ap-timeline-item__title">Idea</h3>
-                <p class="ap-timeline-item__text">Xploroo began as a simple idea: travel discovery should feel personal, not transactional.</p>
-              </div>
-              <div class="ap-timeline-item">
-                <h3 class="ap-timeline-item__title">Platform Development</h3>
-                <p class="ap-timeline-item__text">We built the foundation &mdash; a premium booking experience designed around real experiences.</p>
-              </div>
-              <div class="ap-timeline-item">
-                <h3 class="ap-timeline-item__title">Creator Network</h3>
-                <p class="ap-timeline-item__text">We partnered with travel creators to bring trusted, first-hand recommendations to every trip.</p>
-              </div>
-              <div class="ap-timeline-item">
-                <h3 class="ap-timeline-item__title">Launch</h3>
-                <p class="ap-timeline-item__text">Xploroo opens its doors, bringing travelers, creators, and brands together in one place.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- =========================================================== -->
-        <!-- CTA                                                         -->
-        <!-- =========================================================== -->
-        <section class="about-page__section">
-          <div class="about-page__container">
-            <div class="ap-cta">
-              <h2 class="ap-cta__title">Ready to explore with us?</h2>
-              <a class="btn btn--gradient btn--pill btn--lg" href="index.html#packages">Explore Packages</a>
+        <section class="faq-page__section">
+          <div class="faq-page__container">
+            <div class="faq-cta">
+              <h2 class="faq-cta__title">Still have questions?</h2>
+              <a class="btn btn--gradient btn--pill btn--lg" href="index.html#contact">Contact Us</a>
             </div>
           </div>
         </section>
@@ -402,7 +438,7 @@
                 <li><a class="footer-links__link" href="about.html">About Us</a></li>
                 <li><a class="footer-links__link" href="/how-it-works">How It Works</a></li>
                 <li><a class="footer-links__link" href="/team">Our Team</a></li>
-                <li><a class="footer-links__link" href="/faqs">FAQs</a></li>
+                <li><a class="footer-links__link" href="faq.html">FAQs</a></li>
                 <li><a class="footer-links__link" href="contact.html">Contact Us</a></li>
               </ul>
             </div>
@@ -448,6 +484,9 @@
 
   <!-- Header behavior (sticky blur, mobile menu, theme toggle) — shared -->
   <script src="js/header.js" defer></script>
+
+  <!-- FAQ accordion behavior -->
+  <script src="js/faq.js" defer></script>
 
   <!-- Footer behavior (newsletter validation) — shared -->
   <script src="js/footer.js" defer></script>
