@@ -30,6 +30,9 @@
   <!-- Header module -->
   <link rel="stylesheet" href="styles/header.css" />
 
+  <!-- Hero slot machine module (visual shell only) -->
+  <link rel="stylesheet" href="styles/hero-slot-machine.css" />
+
   <!-- Featured Experiences module -->
   <link rel="stylesheet" href="styles/featured-experiences.css" />
 
@@ -263,7 +266,43 @@
 
           <!-- Hero media / showcase (images populated later) -->
           <div class="hero__media" data-hero-media>
-            <figure class="hero__figure"></figure>
+            <figure class="hero__figure">
+
+              <!-- Slot machine visual shell only — no branding/artwork, no
+                   moving reels, no buttons, no JS. Self-contained component,
+                   styled entirely in styles/hero-slot-machine.css. -->
+              <div class="slot-machine" aria-hidden="true">
+
+                <div class="slot-machine__marquee">
+                  <div class="slot-machine__marquee-inner"></div>
+                </div>
+
+                <div class="slot-machine__cabinet">
+                  <span class="slot-machine__bolt slot-machine__bolt--tl"></span>
+                  <span class="slot-machine__bolt slot-machine__bolt--tr"></span>
+                  <span class="slot-machine__bolt slot-machine__bolt--bl"></span>
+                  <span class="slot-machine__bolt slot-machine__bolt--br"></span>
+
+                  <div class="slot-machine__glass">
+                    <div class="slot-machine__reels">
+                      <div class="slot-machine__reel-row">
+                        <div class="slot-machine__reel"></div>
+                        <div class="slot-machine__reel"></div>
+                        <div class="slot-machine__reel"></div>
+                      </div>
+                      <div class="slot-machine__row-divider"></div>
+                      <div class="slot-machine__reel-row">
+                        <div class="slot-machine__reel"></div>
+                        <div class="slot-machine__reel"></div>
+                        <div class="slot-machine__reel"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </figure>
           </div>
 
         </div>
@@ -619,13 +658,13 @@
                 <li class="inf-slide">
                   <article class="inf-card">
                     <div class="inf-card__media">
-                      <img class="inf-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260703_125532.jpg.jpeg" alt="Aditya Rao" />
+                      <img class="inf-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260703_132111.jpg.jpeg" alt="Aditya Rao" />
                     </div>
                     <div class="inf-card__body">
-                      <h3 class="inf-card__name">Aditya Rao</h3>
-                      <p class="inf-card__followers">274K Followers</p>
+                      <h3 class="inf-card__name">Payal Agarwal</h3>
+                      <p class="inf-card__followers">9K Followers</p>
                       <p class="inf-card__bio">Budget travel, big stories, 60 countries deep.</p>
-                      <a class="inf-card__link" href="/influencers/aditya-rao">View Profile <span aria-hidden="true">&rarr;</span></a>
+                      <a class="inf-card__link" href="/influencers/payal-agarwal">View Profile <span aria-hidden="true">&rarr;</span></a>
                     </div>
                   </article>
                 </li>
@@ -633,13 +672,13 @@
                 <li class="inf-slide">
                   <article class="inf-card">
                     <div class="inf-card__media">
-                      <img class="inf-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260703_125532.jpg.jpeg" alt="Chloe Bennett" />
+                      <img class="inf-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260703_132037.jpg.jpeg" alt="Chloe Bennett" />
                     </div>
                     <div class="inf-card__body">
-                      <h3 class="inf-card__name">Chloe Bennett</h3>
-                      <p class="inf-card__followers">398K Followers</p>
+                      <h3 class="inf-card__name">Neelima</h3>
+                      <p class="inf-card__followers">129K Followers</p>
                       <p class="inf-card__bio">Salt water hair and passport stamps forever.</p>
-                      <a class="inf-card__link" href="/influencers/chloe-bennett">View Profile <span aria-hidden="true">&rarr;</span></a>
+                      <a class="inf-card__link" href="/influencers/neelima">View Profile <span aria-hidden="true">&rarr;</span></a>
                     </div>
                   </article>
                 </li>
@@ -647,13 +686,13 @@
                 <li class="inf-slide">
                   <article class="inf-card">
                     <div class="inf-card__media">
-                      <img class="inf-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260703_125532.jpg.jpeg" alt="Noah Kim" />
+                      <img class="inf-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260703_132014.jpg.jpeg" alt="Noah Kim" />
                     </div>
                     <div class="inf-card__body">
-                      <h3 class="inf-card__name">Noah Kim</h3>
-                      <p class="inf-card__followers">221K Followers</p>
+                      <h3 class="inf-card__name">Rimli Talukdar</h3>
+                      <p class="inf-card__followers">5.3K Followers</p>
                       <p class="inf-card__bio">Home is wherever the road takes me next.</p>
-                      <a class="inf-card__link" href="/influencers/noah-kim">View Profile <span aria-hidden="true">&rarr;</span></a>
+                      <a class="inf-card__link" href="/influencers/rimli-talukdar">View Profile <span aria-hidden="true">&rarr;</span></a>
                     </div>
                   </article>
                 </li>
