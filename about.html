@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="We're building a new way to discover, book, and share unforgettable travel experiences through creators, communities, and curated adventures." />
+  <title>About Xploroo</title>
+
+  <!-- Apply the stored theme before first paint (avoids a flash of the
+       wrong theme on reload). Dark is the default — this only ever adds
+       the attribute for a stored "light" preference, never for dark. -->
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem("xploroo-theme") === "light") {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      } catch (_) {
+        /* localStorage unavailable (e.g. private browsing) — stay dark */
+      }
+    })();
+  </script>
+
+  <!-- Global design system (load order matters) -->
+  <link rel="stylesheet" href="styles/variables.css" />
+  <link rel="stylesheet" href="styles/reset.css" />
+  <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/utilities.css" />
+
+  <!-- Header module (shared with the homepage) -->
+  <link rel="stylesheet" href="styles/header.css" />
+
+  <!-- About page (hero, mission, features, timeline, CTA) -->
+  <link rel="stylesheet" href="styles/about-page.css" />
+
+  <!-- Footer module (shared with the homepage) -->
+  <link rel="stylesheet" href="styles/footer.css" />
+</head>
+
+<body>
+  <!-- Accessibility: skip to main content -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app-shell">
+
+    <!-- ============================================================= -->
+    <!-- STICKY HEADER (identical to the homepage)                     -->
+    <!-- ============================================================= -->
+    <header class="site-header" data-header data-sticky>
+      <div class="site-header__inner">
+
+        <!-- Hamburger: hidden on desktop; far-left slot on mobile -->
+        <button
+          class="nav-toggle"
+          type="button"
+          data-nav-toggle
+          aria-label="Open menu"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+        >
+          <span class="nav-toggle__box" aria-hidden="true">
+            <span class="nav-toggle__bar"></span>
+            <span class="nav-toggle__bar"></span>
+            <span class="nav-toggle__bar"></span>
+          </span>
+        </button>
+
+        <!-- Left cluster: logo + theme toggle -->
+        <div class="site-header__left">
+          <a class="brand" href="index.html" aria-label="Xploroo home">
+            <span class="brand__name">Xploroo</span>
+          </a>
+
+          <!-- Dark / Light toggle (switches the site-wide theme) -->
+          <button
+            class="theme-toggle"
+            type="button"
+            role="switch"
+            aria-checked="true"
+            aria-label="Toggle light and dark theme"
+            data-theme-toggle
+          >
+            <span class="theme-toggle__track" aria-hidden="true">
+              <span class="theme-toggle__thumb">
+                <!-- Moon (dark) -->
+                <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor"/>
+                </svg>
+                <!-- Sun (light) -->
+                <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4"/>
+                  <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+                </svg>
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <!-- Center: primary navigation (stays centered on the full bar) -->
+        <nav class="main-nav" aria-label="Primary">
+          <ul class="main-nav__list" role="list">
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="/travel-quizzes">Travel Quizzes</a>
+            </li>
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="influencers.html">Influencers</a>
+            </li>
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="/packages">Packages</a>
+            </li>
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="about.html" aria-current="page">About Us</a>
+            </li>
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="/contact">Contact Us</a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Right cluster: search + auth actions -->
+        <div class="site-header__actions">
+
+          <!-- Search: perfect circle, thin white border -->
+          <button class="icon-btn icon-btn--search" type="button" aria-label="Search" data-search>
+            <svg class="icon-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" fill="none"/>
+              <path d="m21 21-4.3-4.3" fill="none"/>
+            </svg>
+          </button>
+
+          <a class="btn-auth btn-auth--login" href="/login">Log In</a>
+          <a class="btn-auth btn-auth--signup" href="/signup">Sign Up</a>
+
+          <!-- Cart: shown on mobile (visual only for now) -->
+          <button class="icon-btn icon-btn--cart" type="button" aria-label="Cart" data-cart>
+            <svg class="icon-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="9" cy="20" r="1.5" fill="none"/>
+              <circle cx="18" cy="20" r="1.5" fill="none"/>
+              <path d="M2.5 4h2.2l2.1 11.2a1.6 1.6 0 0 0 1.6 1.3h7.9a1.6 1.6 0 0 0 1.6-1.3L21 7.5H6.2" fill="none"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Fullscreen mobile menu (overlay, controlled by the hamburger) -->
+    <div class="mobile-menu" id="mobile-menu" data-mobile-nav hidden>
+      <div class="mobile-menu__panel">
+
+        <!-- Top bar: logo + theme toggle (left), close (right) -->
+        <div class="mobile-menu__topbar">
+          <div class="mobile-menu__brand-group">
+            <a class="brand" href="index.html" aria-label="Xploroo home">
+              <span class="brand__name">Xploroo</span>
+            </a>
+
+            <button
+              class="theme-toggle"
+              type="button"
+              role="switch"
+              aria-checked="true"
+              aria-label="Toggle light and dark theme"
+              data-theme-toggle
+            >
+              <span class="theme-toggle__track" aria-hidden="true">
+                <span class="theme-toggle__thumb">
+                  <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor"/>
+                  </svg>
+                  <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+                  </svg>
+                </span>
+              </span>
+            </button>
+          </div>
+
+          <!-- Close: identical styling to the header icon buttons -->
+          <button class="icon-btn mobile-menu__close" type="button" aria-label="Close menu" data-menu-close>
+            <svg class="icon-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M6 6l12 12M18 6 6 18"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Primary navigation items -->
+        <nav class="mobile-menu__nav" aria-label="Mobile">
+          <ul class="mobile-menu__list" role="list">
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="index.html">Home</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="about.html" aria-current="page">About Us</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="/travel-quizzes">Travel Quizzes</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="influencers.html">Influencers</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="/packages">Packages</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="/winners">Winners</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="/merch">Merch</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="#faq">FAQ</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="/contact">Contact Us</a></li>
+          </ul>
+        </nav>
+
+        <!-- Bottom actions: Log In (left) · Sign Up (right) -->
+        <div class="mobile-menu__actions">
+          <a class="btn-auth btn-auth--login" href="/login">Log In</a>
+          <a class="btn-auth btn-auth--signup" href="/signup">Sign Up</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- MAIN                                                          -->
+    <!-- ============================================================= -->
+    <main class="main" id="main">
+      <div class="about-page" data-section="about-page">
+
+        <!-- =========================================================== -->
+        <!-- HERO                                                        -->
+        <!-- =========================================================== -->
+        <section class="about-page__section">
+          <div class="about-page__container">
+            <div class="ap-hero">
+              <h1 class="ap-hero__title">About Xploroo</h1>
+              <p class="ap-hero__subtitle">We&rsquo;re building a new way to discover, book, and share unforgettable travel experiences through creators, communities, and curated adventures.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- =========================================================== -->
+        <!-- OUR MISSION                                                 -->
+        <!-- =========================================================== -->
+        <section class="about-page__section">
+          <div class="about-page__container">
+            <div class="ap-mission">
+              <h2 class="ap-mission__title">Our Mission</h2>
+              <p class="ap-mission__text">Xploroo connects travelers, creators, and travel brands through unique, curated experiences &mdash; not ordinary package booking. Instead of scrolling through generic listings, travelers discover trips through people they already trust, while creators and brands get a platform built around real recommendations rather than one-size-fits-all deals.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- =========================================================== -->
+        <!-- WHY XPLOROO                                                 -->
+        <!-- =========================================================== -->
+        <section class="about-page__section">
+          <div class="about-page__container">
+            <header class="ap-section-head">
+              <h2 class="ap-section-head__title">Why Xploroo</h2>
+            </header>
+
+            <div class="ap-features">
+              <article class="ap-feature">
+                <span class="ap-feature__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                </span>
+                <h3 class="ap-feature__title">Curated Experiences</h3>
+                <p class="ap-feature__text">Hand-picked trips and activities chosen for quality, not just availability.</p>
+              </article>
+
+              <article class="ap-feature">
+                <span class="ap-feature__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/><path d="m17 8 1.5 1.5L21 7"/></svg>
+                </span>
+                <h3 class="ap-feature__title">Trusted Influencers</h3>
+                <p class="ap-feature__text">Book through creators whose recommendations you already follow and trust.</p>
+              </article>
+
+              <article class="ap-feature">
+                <span class="ap-feature__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 8 8 9 4.8-1 8-4.5 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+                </span>
+                <h3 class="ap-feature__title">Secure Bookings</h3>
+                <p class="ap-feature__text">Every booking is protected end-to-end, so you can travel with confidence.</p>
+              </article>
+
+              <article class="ap-feature">
+                <span class="ap-feature__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 21c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M14.5 15.6c2.5.3 4.5 2.2 4.5 5.4"/></svg>
+                </span>
+                <h3 class="ap-feature__title">Community Driven</h3>
+                <p class="ap-feature__text">Built with travelers and creators, shaped by real stories and shared adventures.</p>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <!-- =========================================================== -->
+        <!-- OUR JOURNEY                                                 -->
+        <!-- =========================================================== -->
+        <section class="about-page__section">
+          <div class="about-page__container">
+            <header class="ap-section-head">
+              <h2 class="ap-section-head__title">Our Journey</h2>
+            </header>
+
+            <div class="ap-timeline">
+              <div class="ap-timeline-item">
+                <h3 class="ap-timeline-item__title">Idea</h3>
+                <p class="ap-timeline-item__text">Xploroo began as a simple idea: travel discovery should feel personal, not transactional.</p>
+              </div>
+              <div class="ap-timeline-item">
+                <h3 class="ap-timeline-item__title">Platform Development</h3>
+                <p class="ap-timeline-item__text">We built the foundation &mdash; a premium booking experience designed around real experiences.</p>
+              </div>
+              <div class="ap-timeline-item">
+                <h3 class="ap-timeline-item__title">Creator Network</h3>
+                <p class="ap-timeline-item__text">We partnered with travel creators to bring trusted, first-hand recommendations to every trip.</p>
+              </div>
+              <div class="ap-timeline-item">
+                <h3 class="ap-timeline-item__title">Launch</h3>
+                <p class="ap-timeline-item__text">Xploroo opens its doors, bringing travelers, creators, and brands together in one place.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =========================================================== -->
+        <!-- CTA                                                         -->
+        <!-- =========================================================== -->
+        <section class="about-page__section">
+          <div class="about-page__container">
+            <div class="ap-cta">
+              <h2 class="ap-cta__title">Ready to explore with us?</h2>
+              <a class="btn btn--gradient btn--pill btn--lg" href="index.html#packages">Explore Packages</a>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <!-- ============================================================= -->
+    <!-- FOOTER (identical to the homepage)                            -->
+    <!-- ============================================================= -->
+    <footer class="site-footer" data-footer>
+      <div class="site-footer__panel">
+        <div class="site-footer__container">
+
+          <!-- Newsletter -->
+          <div class="footer-newsletter">
+            <h2 class="footer-newsletter__title">Join the Xploroo Travel Community</h2>
+            <form class="footer-newsletter__form" data-newsletter-form action="#" method="post" novalidate>
+              <label class="sr-only" for="footer-newsletter-email">Email address</label>
+              <input
+                class="footer-newsletter__input"
+                id="footer-newsletter-email"
+                type="email"
+                name="email"
+                autocomplete="email"
+                placeholder="Email Address"
+                required
+              />
+              <button class="btn btn--gradient btn--pill footer-newsletter__submit" type="submit">Subscribe</button>
+            </form>
+            <p class="footer-newsletter__message" data-newsletter-message role="status" aria-live="polite"></p>
+          </div>
+
+          <!-- Social icons -->
+          <ul class="footer-social" role="list" aria-label="Xploroo on social media">
+            <li>
+              <a class="footer-social__link" href="#" aria-label="Xploroo on Facebook">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H16.7V3.7C16.15 3.6 15.15 3.5 14 3.5c-2.4 0-4 1.45-4 4.1v2.3H7.3v3.1H10V21h3.5Z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a class="footer-social__link" href="#" aria-label="Xploroo on Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+              </a>
+            </li>
+            <li>
+              <a class="footer-social__link" href="#" aria-label="Xploroo on X">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 3h4.2l4 5.4L16.8 3H20l-6 7.6L20.4 21h-4.2l-4.3-5.8L7 21H3.8l6.4-8.1z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a class="footer-social__link" href="#" aria-label="Xploroo on YouTube">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.6 7.6c-.25-1-1-1.75-2-2C17.8 5.1 12 5.1 12 5.1s-5.8 0-7.6.5c-1 .25-1.75 1-2 2C2 9.4 2 12 2 12s0 2.6.4 4.4c.25 1 1 1.75 2 2 1.8.5 7.6.5 7.6.5s5.8 0 7.6-.5c1-.25 1.75-1 2-2 .4-1.8.4-4.4.4-4.4s0-2.6-.4-4.4ZM10 15.2V8.8l5.5 3.2Z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a class="footer-social__link" href="#" aria-label="Xploroo on LinkedIn">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.94 8.5H3.56V20.5H6.94V8.5ZM5.25 3.5A1.96 1.96 0 1 0 5.25 7.42 1.96 1.96 0 0 0 5.25 3.5ZM20.44 20.5H17.06V14.5c0-1.4-.03-3.2-1.95-3.2-1.96 0-2.26 1.53-2.26 3.1v6.1H9.47V8.5h3.24v1.64h.05c.45-.86 1.56-1.77 3.2-1.77 3.43 0 4.06 2.26 4.06 5.2v6.93Z"/></svg>
+              </a>
+            </li>
+          </ul>
+
+          <!-- Link columns -->
+          <nav class="footer-links" aria-label="Footer">
+            <div class="footer-links__col">
+              <h3 class="footer-links__title">About</h3>
+              <ul class="footer-links__list" role="list">
+                <li><a class="footer-links__link" href="about.html">About Us</a></li>
+                <li><a class="footer-links__link" href="/how-it-works">How It Works</a></li>
+                <li><a class="footer-links__link" href="/team">Our Team</a></li>
+                <li><a class="footer-links__link" href="/faqs">FAQs</a></li>
+                <li><a class="footer-links__link" href="/contact">Contact Us</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-links__col">
+              <h3 class="footer-links__title">Packages</h3>
+              <ul class="footer-links__list" role="list">
+                <li><a class="footer-links__link" href="/packages/domestic">Domestic Packages</a></li>
+                <li><a class="footer-links__link" href="/packages/international">International Packages</a></li>
+                <li><a class="footer-links__link" href="/packages/honeymoon">Honeymoon Packages</a></li>
+                <li><a class="footer-links__link" href="/packages/adventure">Adventure Trips</a></li>
+                <li><a class="footer-links__link" href="/packages/luxury">Luxury Holidays</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-links__col">
+              <h3 class="footer-links__title">Explore</h3>
+              <ul class="footer-links__list" role="list">
+                <li><a class="footer-links__link" href="/travel-quizzes">Travel Quizzes</a></li>
+                <li><a class="footer-links__link" href="influencers.html">Influencers</a></li>
+                <li><a class="footer-links__link" href="/winners">Winners</a></li>
+                <li><a class="footer-links__link" href="/stories">Travel Stories</a></li>
+                <li><a class="footer-links__link" href="/privacy">Privacy Policy</a></li>
+              </ul>
+            </div>
+          </nav>
+
+          <!-- Bottom bar -->
+          <div class="footer-bottom">
+            <p class="footer-bottom__copyright">&copy; <time datetime="2026">2026</time> Xploroo. All Rights Reserved.</p>
+            <ul class="footer-bottom__legal" role="list">
+              <li><a href="/privacy">Privacy Policy</a></li>
+              <li><a href="/terms">Terms &amp; Conditions</a></li>
+              <li><a href="/refund-policy">Refund Policy</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Header behavior (sticky blur, mobile menu, theme toggle) — shared -->
+  <script src="js/header.js" defer></script>
+
+  <!-- Footer behavior (newsletter validation) — shared -->
+  <script src="js/footer.js" defer></script>
+</body>
+</html>

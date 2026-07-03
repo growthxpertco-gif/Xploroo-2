@@ -1,0 +1,197 @@
+/* ==========================================================================
+   XPLOROO · About page
+   about-page.css — Standalone page (about.html): hero, mission glass card,
+   feature grid, timeline, and CTA. Reuses the shared design system
+   (variables/reset/base/utilities) plus the existing header/footer styles —
+   this file only adds page-specific rules. Scoped entirely under
+   `.about-page` / `.ap-*` — never touches the homepage About Us section
+   (`.about` / its own classes) or any other page.
+   ========================================================================== */
+
+.about-page {
+  position: relative;
+}
+.about-page__section {
+  padding-block: var(--section-gap);
+}
+.about-page__container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* -------------------------------------------------------------------------
+   Hero
+   ------------------------------------------------------------------------- */
+.ap-hero {
+  text-align: center;
+  max-width: 44rem;
+  margin-inline: auto;
+}
+.ap-hero__title {
+  margin: 0;
+  font-size: var(--fs-4xl);
+}
+.ap-hero__subtitle {
+  margin: var(--space-4) 0 0;
+  font-size: var(--fs-md, var(--fs-base));
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+/* -------------------------------------------------------------------------
+   Our Mission — premium glass card
+   ------------------------------------------------------------------------- */
+.ap-mission {
+  max-width: 52rem;
+  margin-inline: auto;
+  padding: clamp(2rem, 1.5rem + 2.5vw, 3rem);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-3xl);
+  box-shadow: var(--shadow-lg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  text-align: center;
+  transition: background-color 300ms ease, border-color 300ms ease;
+}
+.ap-mission__title {
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-2xl, var(--fs-xl));
+}
+.ap-mission__text {
+  margin: 0;
+  font-size: var(--fs-base);
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}
+
+/* -------------------------------------------------------------------------
+   Why Xploroo — responsive feature grid
+   ------------------------------------------------------------------------- */
+.ap-section-head {
+  text-align: center;
+  max-width: 40rem;
+  margin: 0 auto var(--space-8);
+}
+.ap-section-head__title {
+  margin: 0;
+  font-size: var(--fs-3xl);
+}
+
+.ap-features {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--space-6);
+}
+@media (min-width: 640px) {
+  .ap-features { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .ap-features { grid-template-columns: repeat(4, 1fr); }
+}
+
+.ap-feature {
+  padding: var(--space-6);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-standard),
+    background-color 300ms ease;
+}
+@media (hover: hover) {
+  .ap-feature:hover {
+    transform: translateY(-6px);
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-lg), var(--glow-soft);
+  }
+}
+.ap-feature__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: var(--space-4);
+  border-radius: var(--radius-lg, 12px);
+  color: var(--color-text-strong);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+}
+.ap-feature__icon svg { width: 1.35rem; height: 1.35rem; }
+.ap-feature__title {
+  margin: 0 0 0.4rem;
+  font-size: var(--fs-md, var(--fs-base));
+  font-weight: var(--fw-bold);
+  color: var(--color-text-strong);
+}
+.ap-feature__text {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+/* -------------------------------------------------------------------------
+   Our Journey — premium vertical timeline
+   ------------------------------------------------------------------------- */
+.ap-timeline {
+  position: relative;
+  max-width: 40rem;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+.ap-timeline::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: 7px;
+  width: 2px;
+  background: var(--gradient-brand);
+  opacity: 0.5;
+}
+.ap-timeline-item {
+  position: relative;
+  padding-left: var(--space-7);
+}
+.ap-timeline-item::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  box-shadow: 0 0 0 4px var(--color-surface-inset);
+}
+.ap-timeline-item__title {
+  margin: 0 0 0.35rem;
+  font-size: var(--fs-md, var(--fs-base));
+  font-weight: var(--fw-bold);
+  color: var(--color-text-strong);
+}
+.ap-timeline-item__text {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+/* -------------------------------------------------------------------------
+   CTA
+   ------------------------------------------------------------------------- */
+.ap-cta {
+  text-align: center;
+}
+.ap-cta__title {
+  margin: 0 0 var(--space-6);
+  font-size: var(--fs-3xl);
+}

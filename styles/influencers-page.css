@@ -1,0 +1,138 @@
+/* ==========================================================================
+   XPLOROO · Influencers page
+   influencers-page.css — Standalone page (influencers.html): page head
+   (title + subtitle) and a responsive card grid. Reuses the shared design
+   system (variables/reset/base/utilities) plus the existing header/footer
+   styles — this file only adds the page-specific head and `.ip-*` grid/card
+   rules. Scoped entirely under `.influencers-page` / `.ip-*` — never
+   touches the homepage Influencers section (`.influencers` / `.inf-*`).
+   ========================================================================== */
+
+.influencers-page {
+  position: relative;
+  padding-block: var(--section-gap);
+}
+
+.influencers-page__container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* -------------------------------------------------------------------------
+   Page head
+   ------------------------------------------------------------------------- */
+.influencers-page__head {
+  text-align: center;
+  max-width: 40rem;
+  margin-inline: auto;
+  margin-bottom: var(--space-8);
+}
+.influencers-page__title {
+  margin: 0;
+  font-size: var(--fs-4xl, var(--fs-3xl));
+}
+.influencers-page__subtitle {
+  margin: var(--space-2) 0 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+/* -------------------------------------------------------------------------
+   Responsive card grid
+   Mobile: 1 col · Tablet (>=640px): 2 cols · Desktop (>=1024px): 4 cols
+   ------------------------------------------------------------------------- */
+.ip-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--space-6);
+}
+@media (min-width: 640px) {
+  .ip-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .ip-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* -------------------------------------------------------------------------
+   Card
+   ------------------------------------------------------------------------- */
+.ip-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-standard),
+    background-color 300ms ease;
+}
+@media (hover: hover) {
+  .ip-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-lg), var(--glow-soft);
+  }
+}
+
+.ip-card__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--color-surface-inset);
+}
+.ip-card__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.ip-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: var(--space-5);
+}
+.ip-card__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-strong);
+}
+.ip-card__bio {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+.ip-card__followers {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--magenta-300);
+}
+:root[data-theme="light"] .ip-card__followers { color: var(--magenta-600); }
+
+.ip-card__socials {
+  display: flex;
+  gap: var(--space-2);
+  margin-top: 0.25rem;
+}
+.ip-card__social {
+  flex: 1 1 0%;
+}
+.ip-card__social svg { width: 1rem; height: 1rem; }
+
+.ip-card__book {
+  margin-top: var(--space-2);
+  width: 100%;
+}
