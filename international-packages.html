@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Test your knowledge of Xploroo, travel experiences, and our vision." />
-  <title>Travel Quiz · Xploroo</title>
+  <meta name="description" content="Discover unforgettable journeys across the world's most iconic destinations." />
+  <title>International Packages · Xploroo</title>
 
   <!-- Apply the stored theme before first paint (avoids a flash of the
        wrong theme on reload). Dark is the default — this only ever adds
@@ -33,8 +33,8 @@
   <!-- Search overlay module (shared with every page) -->
   <link rel="stylesheet" href="styles/search-overlay.css" />
 
-  <!-- Travel Quiz page (interactive quiz experience) -->
-  <link rel="stylesheet" href="styles/travel-quiz.css" />
+  <!-- Package listing page (shared with domestic-packages.html) -->
+  <link rel="stylesheet" href="styles/package-listing.css" />
 
   <!-- Footer module (shared with the homepage) -->
   <link rel="stylesheet" href="styles/footer.css" />
@@ -119,7 +119,7 @@
               </div>
             </li>
             <li class="main-nav__item">
-              <a class="main-nav__link" href="travel-quizzes.html" aria-current="page">Travel Quizzes</a>
+              <a class="main-nav__link" href="travel-quizzes.html">Travel Quizzes</a>
             </li>
             <li class="main-nav__item">
               <a class="main-nav__link" href="influencers.html">Influencers</a>
@@ -202,7 +202,7 @@
           <ul class="mobile-menu__list" role="list">
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="index.html">Home</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="about.html">About Us</a></li>
-            <li class="mobile-menu__item"><a class="mobile-menu__link" href="travel-quizzes.html" aria-current="page">Travel Quizzes</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="travel-quizzes.html">Travel Quizzes</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="influencers.html">Influencers</a></li>
             <li class="mobile-menu__item mobile-menu__item--submenu">
               <button type="button" class="mobile-menu__link mobile-menu__toggle" aria-expanded="false" aria-controls="mobile-submenu-packages" data-submenu-toggle>
@@ -211,7 +211,7 @@
               </button>
               <div class="mobile-submenu" id="mobile-submenu-packages" data-submenu>
                 <div class="mobile-submenu__inner">
-                  <a class="mobile-submenu__link" href="international-packages.html">International Packages</a>
+                  <a class="mobile-submenu__link" href="international-packages.html" aria-current="page">International Packages</a>
                   <a class="mobile-submenu__link" href="domestic-packages.html">Domestic Packages</a>
                 </div>
               </div>
@@ -280,85 +280,150 @@
     <!-- MAIN                                                          -->
     <!-- ============================================================= -->
     <main class="main" id="main">
-      <div class="quiz-page" data-section="quiz-page">
-        <div class="quiz-page__container">
+      <section class="package-listing" aria-labelledby="international-packages-title" data-section="package-listing">
+        <div class="package-listing__container">
 
-          <div class="quiz" data-quiz aria-hidden="false">
+          <header class="package-listing__head">
+            <h1 class="package-listing__title" id="international-packages-title">International Packages</h1>
+            <p class="package-listing__subtitle">Discover unforgettable journeys across the world&rsquo;s most iconic destinations.</p>
+          </header>
 
-            <!-- =========================================================
-                 INTRO — hero + Start Quiz (quiz does not start until
-                 clicked)
-                 ========================================================= -->
-            <section class="quiz-panel is-active" data-quiz-intro>
-              <div class="quiz-hero">
-                <h1 class="quiz-hero__title">Travel Quiz</h1>
-                <p class="quiz-hero__subtitle">Test your knowledge of Xploroo, travel experiences, and our vision.</p>
-                <button class="btn btn--glass btn--pill btn--lg quiz-hero__start" type="button" data-quiz-start>Start Quiz</button>
+          <div class="pkg-grid">
+
+            <article class="pkg-card">
+              <div class="pkg-card__media">
+                <img class="pkg-card__img" src="https://picsum.photos/seed/xploroo-intl-1/600/750" alt="Dubai Escape" />
               </div>
-            </section>
-
-            <!-- =========================================================
-                 QUIZ STAGE — one question at a time
-                 ========================================================= -->
-            <section class="quiz-panel" data-quiz-stage hidden>
-
-              <div class="quiz__progress">
-                <p class="quiz__progress-label">Question <span data-quiz-current>1</span> of <span data-quiz-total>25</span></p>
-                <div class="quiz__progress-track">
-                  <div class="quiz__progress-fill" data-quiz-progress-fill></div>
-                </div>
+              <div class="pkg-card__body">
+                <h3 class="pkg-card__name">Dubai Escape</h3>
+                <p class="pkg-card__destination">Dubai, UAE</p>
+                <p class="pkg-card__duration">5 Days / 4 Nights</p>
+                <p class="pkg-card__price">&#8377;54,999 <span>/person</span></p>
+                <a class="pkg-card__link" href="#">View Package <span aria-hidden="true">&rarr;</span></a>
               </div>
+            </article>
 
-              <div class="quiz__card-float">
-                <div class="quiz__card" data-quiz-card>
-                  <span class="quiz__number">Question <span data-quiz-qnum>1</span></span>
-                  <h2 class="quiz__question" data-quiz-question></h2>
-                  <div class="quiz__options" data-quiz-options role="list"></div>
-                </div>
+            <article class="pkg-card">
+              <div class="pkg-card__media">
+                <img class="pkg-card__img" src="https://picsum.photos/seed/xploroo-intl-2/600/750" alt="Bali Retreat" />
               </div>
-
-              <div class="quiz__nav">
-                <button class="btn btn--outline btn--pill" type="button" data-quiz-prev disabled>Previous</button>
-                <button class="btn btn--gradient btn--pill" type="button" data-quiz-next disabled>Next</button>
-                <button class="btn btn--gradient btn--pill" type="button" data-quiz-submit disabled hidden>Submit</button>
+              <div class="pkg-card__body">
+                <h3 class="pkg-card__name">Bali Retreat</h3>
+                <p class="pkg-card__destination">Bali, Indonesia</p>
+                <p class="pkg-card__duration">6 Days / 5 Nights</p>
+                <p class="pkg-card__price">&#8377;48,999 <span>/person</span></p>
+                <a class="pkg-card__link" href="#">View Package <span aria-hidden="true">&rarr;</span></a>
               </div>
-            </section>
+            </article>
 
-            <!-- =========================================================
-                 RESULTS
-                 ========================================================= -->
-            <section class="quiz-panel" data-quiz-results hidden>
-              <div class="quiz__results">
-
-                <div class="quiz__ring" data-quiz-ring>
-                  <svg viewBox="0 0 160 160" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="quizRingGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="var(--cyan-400, #22d3ee)"/>
-                        <stop offset="100%" stop-color="var(--violet-500, #7c3aed)"/>
-                      </linearGradient>
-                    </defs>
-                    <circle class="quiz__ring-track" cx="80" cy="80" r="70"/>
-                    <circle class="quiz__ring-fill" data-quiz-ring-fill cx="80" cy="80" r="70"/>
-                  </svg>
-                  <div class="quiz__ring-score">
-                    <span class="quiz__ring-score-value" data-quiz-score-value>0</span>
-                    <span class="quiz__ring-score-total" data-quiz-score-total>/ 25</span>
-                  </div>
-                </div>
-
-                <p class="quiz__badge" data-quiz-badge>🏆 Xploroo Expert</p>
-
-                <div>
-                  <button class="btn btn--gradient btn--pill btn--lg" type="button" data-quiz-restart>Play Again</button>
-                </div>
+            <article class="pkg-card">
+              <div class="pkg-card__media">
+                <img class="pkg-card__img" src="https://picsum.photos/seed/xploroo-intl-3/600/750" alt="Maldives Luxury" />
               </div>
-            </section>
+              <div class="pkg-card__body">
+                <h3 class="pkg-card__name">Maldives Luxury</h3>
+                <p class="pkg-card__destination">Maldives</p>
+                <p class="pkg-card__duration">5 Days / 4 Nights</p>
+                <p class="pkg-card__price">&#8377;89,999 <span>/person</span></p>
+                <a class="pkg-card__link" href="#">View Package <span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </article>
+
+            <article class="pkg-card">
+              <div class="pkg-card__media">
+                <img class="pkg-card__img" src="https://picsum.photos/seed/xploroo-intl-4/600/750" alt="Switzerland Explorer" />
+              </div>
+              <div class="pkg-card__body">
+                <h3 class="pkg-card__name">Switzerland Explorer</h3>
+                <p class="pkg-card__destination">Interlaken, Switzerland</p>
+                <p class="pkg-card__duration">7 Days / 6 Nights</p>
+                <p class="pkg-card__price">&#8377;1,24,999 <span>/person</span></p>
+                <a class="pkg-card__link" href="#">View Package <span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </article>
+
+            <article class="pkg-card">
+              <div class="pkg-card__media">
+                <img class="pkg-card__img" src="https://picsum.photos/seed/xploroo-intl-5/600/750" alt="Paris Getaway" />
+              </div>
+              <div class="pkg-card__body">
+                <h3 class="pkg-card__name">Paris Getaway</h3>
+                <p class="pkg-card__destination">Paris, France</p>
+                <p class="pkg-card__duration">6 Days / 5 Nights</p>
+                <p class="pkg-card__price">&#8377;99,999 <span>/person</span></p>
+                <a class="pkg-card__link" href="#">View Package <span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </article>
+
+            <article class="pkg-card">
+              <div class="pkg-card__media">
+                <img class="pkg-card__img" src="https://picsum.photos/seed/xploroo-intl-6/600/750" alt="Thailand Adventure" />
+              </div>
+              <div class="pkg-card__body">
+                <h3 class="pkg-card__name">Thailand Adventure</h3>
+                <p class="pkg-card__destination">Phuket, Thailand</p>
+                <p class="pkg-card__duration">5 Days / 4 Nights</p>
+                <p class="pkg-card__price">&#8377;39,999 <span>/person</span></p>
+                <a class="pkg-card__link" href="#">View Package <span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </article>
+
+            <article class="pkg-card">
+              <div class="pkg-card__media">
+                <img class="pkg-card__img" src="https://picsum.photos/seed/xploroo-intl-7/600/750" alt="Singapore Discovery" />
+              </div>
+              <div class="pkg-card__body">
+                <h3 class="pkg-card__name">Singapore Discovery</h3>
+                <p class="pkg-card__destination">Singapore</p>
+                <p class="pkg-card__duration">4 Days / 3 Nights</p>
+                <p class="pkg-card__price">&#8377;59,999 <span>/person</span></p>
+                <a class="pkg-card__link" href="#">View Package <span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </article>
+
+            <article class="pkg-card">
+              <div class="pkg-card__media">
+                <img class="pkg-card__img" src="https://picsum.photos/seed/xploroo-intl-8/600/750" alt="Japan Experience" />
+              </div>
+              <div class="pkg-card__body">
+                <h3 class="pkg-card__name">Japan Experience</h3>
+                <p class="pkg-card__destination">Tokyo &amp; Kyoto, Japan</p>
+                <p class="pkg-card__duration">7 Days / 6 Nights</p>
+                <p class="pkg-card__price">&#8377;1,39,999 <span>/person</span></p>
+                <a class="pkg-card__link" href="#">View Package <span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </article>
+
+            <article class="pkg-card">
+              <div class="pkg-card__media">
+                <img class="pkg-card__img" src="https://picsum.photos/seed/xploroo-intl-9/600/750" alt="Turkey Highlights" />
+              </div>
+              <div class="pkg-card__body">
+                <h3 class="pkg-card__name">Turkey Highlights</h3>
+                <p class="pkg-card__destination">Istanbul &amp; Cappadocia, Turkey</p>
+                <p class="pkg-card__duration">6 Days / 5 Nights</p>
+                <p class="pkg-card__price">&#8377;74,999 <span>/person</span></p>
+                <a class="pkg-card__link" href="#">View Package <span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </article>
+
+            <article class="pkg-card">
+              <div class="pkg-card__media">
+                <img class="pkg-card__img" src="https://picsum.photos/seed/xploroo-intl-10/600/750" alt="London City Tour" />
+              </div>
+              <div class="pkg-card__body">
+                <h3 class="pkg-card__name">London City Tour</h3>
+                <p class="pkg-card__destination">London, United Kingdom</p>
+                <p class="pkg-card__duration">5 Days / 4 Nights</p>
+                <p class="pkg-card__price">&#8377;1,09,999 <span>/person</span></p>
+                <a class="pkg-card__link" href="#">View Package <span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </article>
 
           </div>
 
         </div>
-      </div>
+      </section>
     </main>
 
     <!-- ============================================================= -->
@@ -443,7 +508,7 @@
             <div class="footer-links__col">
               <h3 class="footer-links__title">Explore</h3>
               <ul class="footer-links__list" role="list">
-                <li><a class="footer-links__link" href="travel-quizzes.html" aria-current="page">Travel Quizzes</a></li>
+                <li><a class="footer-links__link" href="travel-quizzes.html">Travel Quizzes</a></li>
                 <li><a class="footer-links__link" href="influencers.html">Influencers</a></li>
                 <li><a class="footer-links__link" href="winners.html">Winners</a></li>
                 <li><a class="footer-links__link" href="/stories">Travel Stories</a></li>
@@ -473,9 +538,6 @@
 
   <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
   <script src="js/search-overlay.js" defer></script>
-
-  <!-- Travel Quiz behavior (interactive quiz engine) -->
-  <script src="js/travel-quiz.js" defer></script>
 
   <!-- Footer behavior (newsletter validation) — shared -->
   <script src="js/footer.js" defer></script>

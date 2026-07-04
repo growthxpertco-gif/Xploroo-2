@@ -1,0 +1,473 @@
+/* ==========================================================================
+   XPLOROO · Travel Quiz page
+   travel-quiz.css — Interactive quiz experience: hero + Start Quiz, one
+   question at a time inside a premium glass card, animated progress bar,
+   Previous/Next/Submit navigation, and a results screen with an animated
+   circular score ring + performance badge. Reuses the shared design system
+   (variables/reset/base/utilities) plus the existing header/footer styles —
+   this file only adds page-specific rules. Scoped entirely under
+   `.quiz-page` / `.quiz__*` — never touches any other page.
+   ========================================================================== */
+
+.quiz-page {
+  position: relative;
+  padding-block: var(--section-gap);
+}
+.quiz-page__container {
+  max-width: 46rem;
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* -------------------------------------------------------------------------
+   Hero + Start Quiz
+   ------------------------------------------------------------------------- */
+.quiz-hero {
+  text-align: center;
+  max-width: 40rem;
+  margin-inline: auto;
+}
+.quiz-hero__title {
+  margin: 0;
+  font-size: var(--fs-4xl);
+}
+.quiz-hero__subtitle {
+  margin: var(--space-4) 0 0;
+  font-size: var(--fs-md, var(--fs-base));
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+.quiz-hero__start {
+  margin-top: var(--space-7);
+}
+
+/* Panels fade/slide in as they become active; `hidden` keeps inactive
+   panels fully out of layout and off the accessibility tree. */
+.quiz-panel {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity var(--dur-slow, 360ms) var(--ease-out), transform var(--dur-slow, 360ms) var(--ease-out);
+}
+.quiz-panel.is-active {
+  opacity: 1;
+  transform: none;
+}
+
+/* -------------------------------------------------------------------------
+   Progress
+   ------------------------------------------------------------------------- */
+.quiz__progress {
+  max-width: 36rem;
+  margin-inline: auto;
+  margin-bottom: var(--space-6);
+}
+.quiz__progress-label {
+  margin: 0 0 var(--space-3);
+  text-align: center;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.quiz__progress-track {
+  height: 6px;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-inset);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+}
+.quiz__progress-fill {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  width: 0%;
+  border-radius: var(--radius-pill);
+  background: var(--gradient-accent);
+  box-shadow: 0 0 10px rgba(34, 211, 238, 0.55), 0 0 16px rgba(124, 58, 237, 0.4);
+  transition: width var(--dur-slow, 420ms) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+}
+/* Soft moving highlight sweeping across the filled section */
+.quiz__progress-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: translateX(-100%);
+  animation: quiz-progress-shimmer 2.4s ease-in-out infinite;
+}
+@keyframes quiz-progress-shimmer {
+  to { transform: translateX(100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quiz__progress-fill::after { animation: none; display: none; }
+}
+
+/* -------------------------------------------------------------------------
+   Question card
+   `.quiz__card-float` only handles the subtle floating motion so it never
+   fights with `.quiz__card`'s own slide-transition transform (used for the
+   question-to-question animation below).
+   ------------------------------------------------------------------------- */
+.quiz__card-float {
+  max-width: 36rem;
+  margin-inline: auto;
+  animation: quiz-card-float 6s ease-in-out infinite;
+}
+@keyframes quiz-card-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+.quiz__card {
+  padding: clamp(1.75rem, 1.4rem + 1.8vw, 2.5rem);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-3xl);
+  box-shadow:
+    var(--shadow-lg),
+    0 0 36px rgba(124, 58, 237, 0.16),
+    0 0 60px rgba(34, 211, 238, 0.1);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  transition:
+    background-color 300ms ease,
+    border-color 300ms ease,
+    transform 340ms var(--ease-out),
+    opacity 340ms var(--ease-out);
+}
+/* Question-to-question slide, in two steps driven by JS:
+   1. `.is-out-*` is added while the card is still in its neutral position —
+      the base transition above animates it out (fade + slide).
+   2. Once the new question's content is swapped in, `.is-in-*` snaps the
+      card to the opposite offset instantly (`transition: none`), then JS
+      removes it on the next frame so the base transition animates it back
+      to neutral (fade + slide in). */
+.quiz__card.is-out-left  { transform: translateX(-22px); opacity: 0; }
+.quiz__card.is-out-right { transform: translateX(22px);  opacity: 0; }
+.quiz__card.is-in-left   { transition: none; transform: translateX(-22px); opacity: 0; }
+.quiz__card.is-in-right  { transition: none; transform: translateX(22px);  opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .quiz__card-float { animation: none; }
+  .quiz__card { transition-duration: 1ms; }
+}
+.quiz__number {
+  display: inline-block;
+  margin-bottom: var(--space-3);
+  font-family: var(--font-mono, var(--font-body));
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--violet-400);
+}
+:root[data-theme="light"] .quiz__number { color: var(--violet-600); }
+.quiz__question {
+  margin: 0 0 var(--space-6);
+  font-size: var(--fs-xl, var(--fs-lg));
+  line-height: 1.4;
+  color: var(--color-text-strong);
+}
+
+.quiz__options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.quiz__option {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--glass-bg-light, rgba(255, 255, 255, 0.05));
+  color: var(--color-text-strong);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  text-align: left;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) / 2));
+  backdrop-filter: blur(calc(var(--glass-blur) / 2));
+  transition:
+    border-color var(--dur-fast) var(--ease-standard),
+    background-color var(--dur-fast) var(--ease-standard),
+    transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+/* Gradient "ring" — a masked pseudo-layer so the 1px border smoothly
+   becomes the purple-blue gradient on hover/selection without disturbing
+   the glass background underneath. */
+.quiz__option::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: var(--gradient-accent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+.quiz__option-letter {
+  position: relative;
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  border: 1px solid var(--color-border-strong);
+  background: var(--glass-bg-light, rgba(255, 255, 255, 0.05));
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-muted);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: border-color var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard), background-color var(--dur-fast) var(--ease-standard);
+}
+.quiz__option-letter svg { width: 0.9rem; height: 0.9rem; animation: quiz-check-pop 0.3s var(--ease-out); }
+@keyframes quiz-check-pop {
+  from { transform: scale(0.3); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+@media (hover: hover) {
+  .quiz__option:not(:disabled):hover {
+    border-color: transparent;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35), 0 0 22px rgba(124, 58, 237, 0.3), 0 0 34px rgba(34, 211, 238, 0.18);
+  }
+  .quiz__option:not(:disabled):hover::before { opacity: 1; }
+}
+.quiz__option:disabled { cursor: default; }
+
+/* Quick "click" pop on selection (one-shot, replays automatically since a
+   fresh element is rendered with this class already applied) */
+@keyframes quiz-option-select-pop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+.quiz__option.is-selected {
+  border-color: transparent;
+  background: var(--color-primary-subtle);
+  box-shadow: 0 0 0 1px var(--violet-400) inset, 0 0 24px rgba(124, 58, 237, 0.45), 0 0 40px rgba(34, 211, 238, 0.25);
+  animation: quiz-option-select-pop 0.2s var(--ease-out);
+}
+.quiz__option.is-selected::before { opacity: 1; }
+.quiz__option.is-selected .quiz__option-letter {
+  border-color: transparent;
+  background: var(--gradient-accent);
+  color: #fff;
+}
+
+/* Tiny ripple on tap/click — spawned by JS at the click coordinates */
+.quiz__ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.32);
+  transform: scale(0);
+  opacity: 0.55;
+  pointer-events: none;
+  animation: quiz-ripple 0.5s ease-out forwards;
+}
+@keyframes quiz-ripple {
+  to { transform: scale(2.6); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quiz__option.is-selected { animation: none; }
+  .quiz__ripple { display: none; }
+  .quiz__option-letter svg { animation: none; }
+}
+
+/* Answer reveal (after selection): correct = green, wrong pick = red,
+   the actual correct option always highlights green so the user learns it */
+.quiz__option.is-correct {
+  border-color: var(--color-success, #22c55e);
+  background: rgba(34, 197, 94, 0.12);
+}
+.quiz__option.is-correct .quiz__option-letter {
+  border-color: transparent;
+  background: var(--color-success, #22c55e);
+  color: #fff;
+}
+.quiz__option.is-wrong {
+  border-color: var(--color-danger, #ef4444);
+  background: rgba(239, 68, 68, 0.12);
+}
+.quiz__option.is-wrong .quiz__option-letter {
+  border-color: transparent;
+  background: var(--color-danger, #ef4444);
+  color: #fff;
+}
+/* The reveal state (green/red) always wins over the interim selection
+   gradient ring, so the correct/wrong colors read clearly. */
+.quiz__option.is-correct::before,
+.quiz__option.is-wrong::before {
+  opacity: 0;
+}
+.quiz__option.is-correct.is-selected {
+  box-shadow: 0 0 0 1px var(--color-success, #22c55e) inset, 0 0 24px rgba(34, 197, 94, 0.4);
+}
+.quiz__option.is-wrong.is-selected {
+  box-shadow: 0 0 0 1px var(--color-danger, #ef4444) inset, 0 0 24px rgba(239, 68, 68, 0.4);
+}
+
+/* -------------------------------------------------------------------------
+   Navigation (Previous / Next / Submit)
+   ------------------------------------------------------------------------- */
+.quiz__nav {
+  max-width: 36rem;
+  margin: var(--space-6) auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.quiz__nav .btn:disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Previous — glass + thin border + hover glow */
+.quiz__nav [data-quiz-prev] {
+  background: var(--glass-bg);
+  border-color: var(--glass-border);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  transition:
+    box-shadow var(--dur-base) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-standard),
+    background-color var(--dur-fast) var(--ease-standard);
+}
+@media (hover: hover) {
+  .quiz__nav [data-quiz-prev]:not(:disabled):hover {
+    box-shadow: 0 0 20px rgba(145, 99, 241, 0.35), 0 0 30px rgba(34, 211, 238, 0.2);
+  }
+}
+
+/* Next — stronger glow + lift + arrow that nudges right on hover */
+.quiz__nav [data-quiz-next] {
+  transition:
+    box-shadow var(--dur-base) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out),
+    filter var(--dur-fast) var(--ease-standard);
+}
+.quiz__nav [data-quiz-next]::after {
+  content: "\2192";
+  display: inline-block;
+  margin-left: 0.4rem;
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+@media (hover: hover) {
+  .quiz__nav [data-quiz-next]:not(:disabled):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(124, 58, 237, 0.45), 0 0 34px rgba(34, 211, 238, 0.3);
+  }
+  .quiz__nav [data-quiz-next]:not(:disabled):hover::after {
+    transform: translateX(4px);
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Results
+   ------------------------------------------------------------------------- */
+.quiz__results {
+  text-align: center;
+  max-width: 32rem;
+  margin-inline: auto;
+}
+.quiz__ring {
+  position: relative;
+  width: 11rem;
+  height: 11rem;
+  margin: 0 auto var(--space-6);
+}
+.quiz__ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.quiz__ring-track { fill: none; stroke: var(--color-border); stroke-width: 8; }
+.quiz__ring-fill {
+  fill: none;
+  stroke: url(#quizRingGradient);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1.1s var(--ease-out);
+}
+.quiz__ring-score {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.quiz__ring-score-value {
+  font-family: var(--font-display);
+  font-size: var(--fs-3xl);
+  font-weight: var(--fw-extrabold);
+  color: var(--color-text-strong);
+  line-height: 1;
+}
+.quiz__ring-score-total {
+  margin-top: 0.2rem;
+  font-size: var(--fs-xs);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.quiz__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: var(--space-7);
+  padding: 0.6rem 1.25rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-strong);
+  background: var(--color-surface-2);
+  font-size: var(--fs-md, var(--fs-base));
+  font-weight: var(--fw-bold);
+  color: var(--color-text-strong);
+}
+
+/* -------------------------------------------------------------------------
+   Confetti (score > 90%) — lightweight CSS-driven pieces, JS only spawns
+   and cleans them up
+   ------------------------------------------------------------------------- */
+.quiz__confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 9999;
+}
+.quiz__confetti-piece {
+  position: absolute;
+  top: -10px;
+  width: 8px;
+  height: 14px;
+  opacity: 0.9;
+  animation: quiz-confetti-fall linear forwards;
+}
+@keyframes quiz-confetti-fall {
+  to {
+    transform: translateY(105vh) rotate(540deg);
+    opacity: 0.2;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .quiz__confetti-piece { animation: none; display: none; }
+}
+
+@media (max-width: 640px) {
+  .quiz__nav { flex-wrap: wrap; }
+  .quiz__nav .btn { flex: 1 1 auto; }
+}

@@ -210,6 +210,100 @@
 .main-nav__link:hover::after,
 .main-nav__link:focus-visible::after { transform: scaleX(1); }
 
+/* ---- "Packages" dropdown item (desktop only — `.main-nav` itself is
+   hidden below the mobile breakpoint, so none of this reaches the mobile
+   drawer's separate collapsible Packages submenu) --------------------- */
+.main-nav__item--dropdown { position: relative; }
+
+.main-nav__dropdown-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  /* font/color/underline come from the shared .main-nav__link class */
+}
+.main-nav__chevron {
+  width: 0.7rem;
+  height: 0.7rem;
+  flex: none;
+  transition: transform var(--dur-base, 220ms) var(--ease-out, ease);
+}
+.main-nav__dropdown-toggle[aria-expanded="true"] .main-nav__chevron {
+  transform: rotate(180deg);
+}
+
+.main-nav__dropdown {
+  position: absolute;
+  top: calc(100% + 14px);
+  left: 50%;
+  min-width: 13.5rem;
+  padding: 0.5rem;
+  border-radius: 16px;
+  background: rgba(8, 8, 12, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: var(--shadow-lg);
+  -webkit-backdrop-filter: blur(var(--glass-blur, 16px));
+  backdrop-filter: blur(var(--glass-blur, 16px));
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-8px);
+  transition:
+    opacity var(--dur-base, 220ms) var(--ease-out, ease),
+    transform var(--dur-base, 220ms) var(--ease-out, ease),
+    visibility 0s linear var(--dur-base, 220ms);
+  z-index: 50;
+}
+.main-nav__item--dropdown.is-open .main-nav__dropdown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+  transition:
+    opacity var(--dur-base, 220ms) var(--ease-out, ease),
+    transform var(--dur-base, 220ms) var(--ease-out, ease),
+    visibility 0s linear 0s;
+}
+@media (hover: hover) {
+  .main-nav__item--dropdown:hover .main-nav__dropdown {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+    transition:
+      opacity var(--dur-base, 220ms) var(--ease-out, ease),
+      transform var(--dur-base, 220ms) var(--ease-out, ease),
+      visibility 0s linear 0s;
+  }
+  .main-nav__item--dropdown:hover .main-nav__chevron {
+    transform: rotate(180deg);
+  }
+}
+
+.main-nav__dropdown-link {
+  display: block;
+  padding: 0.7rem 0.9rem;
+  border-radius: 10px;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold, 600);
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color var(--dur-fast, 140ms) var(--ease-standard, ease), color var(--dur-fast, 140ms) var(--ease-standard, ease);
+}
+.main-nav__dropdown-link + .main-nav__dropdown-link {
+  margin-top: 0.15rem;
+}
+.main-nav__dropdown-link:hover,
+.main-nav__dropdown-link:focus-visible {
+  color: #fff;
+  background: linear-gradient(90deg, rgba(124, 58, 237, 0.28), rgba(34, 211, 238, 0.16));
+  box-shadow: inset 3px 0 0 0 var(--violet-400, #9163f1);
+}
+
 /* --------------------------------------------------------------------------
    Right-side action buttons
    -------------------------------------------------------------------------- */
@@ -497,6 +591,71 @@
   background-clip: text;
 }
 .mobile-menu__link[aria-current="page"]::before { height: 62%; }
+
+/* ---- Collapsible "Packages" submenu ----------------------------------- */
+.mobile-menu__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+  width: 100%;
+  background: none;
+  border: none;
+  margin: 0;
+  cursor: pointer;
+  text-align: left;
+}
+.mobile-menu__chevron {
+  width: 0.8em;
+  height: 0.8em;
+  flex: none;
+  transition: transform var(--dur-base, 220ms) var(--ease-out, ease);
+}
+.mobile-menu__toggle[aria-expanded="true"] .mobile-menu__chevron {
+  transform: rotate(90deg);
+}
+
+.mobile-submenu {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-base, 220ms) var(--ease-out, ease);
+}
+.mobile-menu__item--submenu.is-expanded .mobile-submenu {
+  grid-template-rows: 1fr;
+}
+.mobile-submenu__inner {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding-top: 0.4rem;
+  padding-left: 1.1rem; /* slight indent under "Packages" */
+}
+.mobile-submenu__link {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+  padding: 0.2rem 0;
+  font-family: var(--font-display, "Sora", sans-serif);
+  font-size: clamp(1.05rem, 1rem + 0.3vw, 1.1875rem); /* smaller than the 1.3125-1.5rem main items */
+  font-weight: var(--fw-semibold, 600);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  transition:
+    color var(--dur-fast, 140ms) var(--ease-standard, ease),
+    transform var(--dur-base, 220ms) var(--ease-out, ease);
+}
+.mobile-submenu__link:hover,
+.mobile-submenu__link:focus-visible {
+  color: #fff;
+  transform: translateX(6px);
+}
+.mobile-submenu__link:active { transform: translateX(6px) scale(0.985); }
+:root[data-theme="light"] .mobile-submenu__link { color: rgba(17, 17, 23, 0.62); }
+:root[data-theme="light"] .mobile-submenu__link:hover,
+:root[data-theme="light"] .mobile-submenu__link:focus-visible { color: #000; }
 
 /* Staggered entrance for each item */
 .mobile-menu__item {

@@ -120,6 +120,75 @@
   if (closeBtn) closeBtn.addEventListener("click", closeMenu);
 
   /* ------------------------------------------------------------------ */
+  /* 2b. Collapsible "Packages" submenu — tapping it only expands/        */
+  /*     collapses its own submenu (no navigation, doesn't close the      */
+  /*     mobile drawer). Submenu links behave like normal nav links and    */
+  /*     close the drawer via the listener above (they're <a> tags).      */
+  /* ------------------------------------------------------------------ */
+  const submenuToggles = mobileMenu
+    ? mobileMenu.querySelectorAll("[data-submenu-toggle]")
+    : [];
+
+  submenuToggles.forEach((toggle) => {
+    const item = toggle.closest(".mobile-menu__item--submenu");
+    if (!item) return;
+
+    toggle.addEventListener("click", () => {
+      const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+      toggle.setAttribute("aria-expanded", isExpanded ? "false" : "true");
+      item.classList.toggle("is-expanded", !isExpanded);
+    });
+  });
+
+  /* ------------------------------------------------------------------ */
+  /* 2c. Desktop "Packages" dropdown — click-to-toggle (hover reveal is    */
+  /*     handled entirely in CSS). Closes on outside click and Escape.    */
+  /*     Scoped to `.main-nav`, which is hidden on mobile, so this never   */
+  /*     touches the mobile drawer's own Packages submenu above.          */
+  /* ------------------------------------------------------------------ */
+  const dropdownToggles = document.querySelectorAll("[data-dropdown-toggle]");
+
+  function closeDropdown(item, toggle) {
+    item.classList.remove("is-open");
+    toggle.setAttribute("aria-expanded", "false");
+  }
+
+  dropdownToggles.forEach((toggle) => {
+    const item = toggle.closest(".main-nav__item--dropdown");
+    if (!item) return;
+
+    toggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = item.classList.contains("is-open");
+      // Only one dropdown exists today, but close any others defensively.
+      dropdownToggles.forEach((otherToggle) => {
+        const otherItem = otherToggle.closest(".main-nav__item--dropdown");
+        if (otherItem && otherItem !== item) closeDropdown(otherItem, otherToggle);
+      });
+      item.classList.toggle("is-open", !isOpen);
+      toggle.setAttribute("aria-expanded", String(!isOpen));
+    });
+  });
+
+  if (dropdownToggles.length) {
+    document.addEventListener("click", (e) => {
+      dropdownToggles.forEach((toggle) => {
+        const item = toggle.closest(".main-nav__item--dropdown");
+        if (item && item.classList.contains("is-open") && !item.contains(e.target)) {
+          closeDropdown(item, toggle);
+        }
+      });
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key !== "Escape") return;
+      dropdownToggles.forEach((toggle) => {
+        const item = toggle.closest(".main-nav__item--dropdown");
+        if (item && item.classList.contains("is-open")) closeDropdown(item, toggle);
+      });
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
   /* 3. Dark/light theme toggle — applies site-wide via a `data-theme`   */
   /*    attribute on <html> (every component reads its colors from the   */
   /*    CSS custom properties in variables.css, which branch on that     */

@@ -30,6 +30,9 @@
   <!-- Header module -->
   <link rel="stylesheet" href="styles/header.css" />
 
+  <!-- Search overlay module (shared with every page) -->
+  <link rel="stylesheet" href="styles/search-overlay.css" />
+
   <!-- Hero section module (spacing only — content removed above the machine) -->
   <link rel="stylesheet" href="styles/hero.css" />
 
@@ -127,28 +130,26 @@
               <a class="main-nav__link" href="index.html" aria-current="page">Home</a>
             </li>
             <li class="main-nav__item">
+              <a class="main-nav__link" href="about.html">About Us</a>
+            </li>
+            <li class="main-nav__item main-nav__item--dropdown">
+              <button type="button" class="main-nav__link main-nav__dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="packages-dropdown-menu" data-dropdown-toggle>
+                <span>Packages</span>
+                <svg class="main-nav__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="main-nav__dropdown" id="packages-dropdown-menu" data-dropdown-menu>
+                <a class="main-nav__dropdown-link" href="international-packages.html">International Packages</a>
+                <a class="main-nav__dropdown-link" href="domestic-packages.html">Domestic Packages</a>
+              </div>
+            </li>
+            <li class="main-nav__item">
               <a class="main-nav__link" href="travel-quizzes.html">Travel Quizzes</a>
             </li>
             <li class="main-nav__item">
               <a class="main-nav__link" href="influencers.html">Influencers</a>
             </li>
             <li class="main-nav__item">
-              <a class="main-nav__link" href="winners.html">Winners</a>
-            </li>
-            <li class="main-nav__item">
-              <a class="main-nav__link" href="merch.html">Merch</a>
-            </li>
-            <li class="main-nav__item">
-              <a class="main-nav__link" href="packages.html">Packages</a>
-            </li>
-            <li class="main-nav__item">
-              <a class="main-nav__link" href="about.html">About Us</a>
-            </li>
-            <li class="main-nav__item">
-              <a class="main-nav__link" href="faq.html">FAQ</a>
-            </li>
-            <li class="main-nav__item">
-              <a class="main-nav__link" href="contact.html">Contact Us</a>
+              <a class="main-nav__link" href="/partner-with-us">Partner With Us</a>
             </li>
           </ul>
         </nav>
@@ -227,7 +228,18 @@
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="about.html">About Us</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="travel-quizzes.html">Travel Quizzes</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="influencers.html">Influencers</a></li>
-            <li class="mobile-menu__item"><a class="mobile-menu__link" href="packages.html">Packages</a></li>
+            <li class="mobile-menu__item mobile-menu__item--submenu">
+              <button type="button" class="mobile-menu__link mobile-menu__toggle" aria-expanded="false" aria-controls="mobile-submenu-packages" data-submenu-toggle>
+                <span>Packages</span>
+                <svg class="mobile-menu__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+              </button>
+              <div class="mobile-submenu" id="mobile-submenu-packages" data-submenu>
+                <div class="mobile-submenu__inner">
+                  <a class="mobile-submenu__link" href="international-packages.html">International Packages</a>
+                  <a class="mobile-submenu__link" href="domestic-packages.html">Domestic Packages</a>
+                </div>
+              </div>
+            </li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="winners.html">Winners</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="merch.html">Merch</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="faq.html">FAQ</a></li>
@@ -239,6 +251,51 @@
         <div class="mobile-menu__actions">
           <a class="btn-auth btn-auth--login" href="/login">Log In</a>
           <a class="btn-auth btn-auth--signup" href="/signup">Sign Up</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fullscreen search overlay (opened via the header search icon) -->
+    <div class="search-overlay" data-search-overlay hidden>
+      <div class="search-overlay__inner">
+        <div class="search-overlay__topbar">
+          <button class="search-overlay__close" type="button" aria-label="Close search" data-search-close>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M6 6l12 12M18 6 6 18"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="search-overlay__bar">
+          <input class="search-overlay__input" type="text" placeholder="Search..." aria-label="Search" data-search-input />
+          <span class="search-overlay__bar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7" fill="none"/>
+              <path d="m21 21-4.3-4.3" fill="none"/>
+            </svg>
+          </span>
+        </div>
+
+        <div class="search-overlay__tabs" role="tablist" aria-label="Search categories">
+          <button class="search-overlay__tab" type="button" role="tab" aria-selected="true" data-search-tab="packages">Packages</button>
+          <button class="search-overlay__tab" type="button" role="tab" aria-selected="false" data-search-tab="influencers">Influencers</button>
+          <button class="search-overlay__tab" type="button" role="tab" aria-selected="false" data-search-tab="meetgreet">Meet &amp; Greet</button>
+          <span class="search-overlay__tab-indicator" data-search-tab-indicator aria-hidden="true"></span>
+        </div>
+
+        <div class="search-overlay__panels">
+          <div class="search-overlay__panel" data-search-panel="packages">
+            <ul class="search-overlay__list" data-search-list></ul>
+            <p class="search-overlay__empty" data-search-empty>No packages found.</p>
+          </div>
+          <div class="search-overlay__panel" data-search-panel="influencers">
+            <ul class="search-overlay__list" data-search-list></ul>
+            <p class="search-overlay__empty" data-search-empty>No influencers found.</p>
+          </div>
+          <div class="search-overlay__panel" data-search-panel="meetgreet">
+            <ul class="search-overlay__list" data-search-list></ul>
+            <p class="search-overlay__empty" data-search-empty>No events found.</p>
+          </div>
         </div>
       </div>
     </div>
@@ -423,13 +480,13 @@
               <li class="tp-slide">
                 <article class="tp-card" data-tp-card>
                   <div class="tp-card__media tp-card__media--bali">
-                    <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-valentin-but-132622601-19407213.jpg" alt="Manali" />
+                    <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260704_161950.jpg.jpeg" alt="Manali" />
                     <button class="tp-card__wishlist" type="button" aria-label="Save Manali hill station package" aria-pressed="false" data-tp-wishlist>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
                     </button>
                   </div>
                   <div class="tp-card__body">
-                    <h3 class="tp-card__destination">Manali</h3>
+                    <h3 class="tp-card__destination">Manali with Anurag Sharma</h3>
                     <p class="tp-card__duration">3N 4D</p>
                     <div class="tp-card__footer">
                       <span class="tp-card__price"><span class="tp-card__price-amount">₹12,999</span><span class="tp-card__price-unit">/person</span></span>
@@ -1395,6 +1452,9 @@
 
   <!-- Header behavior (sticky blur, mobile menu, theme toggle) -->
   <script src="js/header.js" defer></script>
+
+  <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
+  <script src="js/search-overlay.js" defer></script>
 
   <!-- Trending Packages behavior (drag/swipe carousel, wishlist) -->
   <script src="js/trending-packages.js" defer></script>
