@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Vietnam Discovery — a premium 5-day journey through Hanoi, Ha Long Bay and Hoi An, only on Xploroo." />
+  <title>Vietnam Discovery | Xploroo Packages</title>
+
+  <!-- Apply the stored theme before first paint (avoids a flash of the
+       wrong theme on reload). Dark is the default — this only ever adds
+       the attribute for a stored "light" preference, never for dark. -->
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem("xploroo-theme") === "light") {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      } catch (_) {
+        /* localStorage unavailable (e.g. private browsing) — stay dark */
+      }
+    })();
+  </script>
+
+  <!-- Global design system (load order matters) -->
+  <link rel="stylesheet" href="styles/variables.css" />
+  <link rel="stylesheet" href="styles/reset.css" />
+  <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/utilities.css" />
+
+  <!-- Header module (shared with every page) -->
+  <link rel="stylesheet" href="styles/header.css" />
+
+  <!-- Search overlay module (shared with every page) -->
+  <link rel="stylesheet" href="styles/search-overlay.css" />
+
+  <!-- Package Details module — the master template for every package page -->
+  <link rel="stylesheet" href="styles/package-details.css" />
+
+  <!-- Footer module (reusable across every page) -->
+  <link rel="stylesheet" href="styles/footer.css" />
+</head>
+
+<body>
+  <!-- Accessibility: skip to main content -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app-shell">
+
+    <!-- ============================================================= -->
+    <!-- 1. STICKY HEADER                                              -->
+    <!-- ============================================================= -->
+    <header class="site-header" data-header data-sticky>
+      <div class="site-header__inner">
+
+        <!-- Hamburger: hidden on desktop; far-left slot on mobile -->
+        <button
+          class="nav-toggle"
+          type="button"
+          data-nav-toggle
+          aria-label="Open menu"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+        >
+          <span class="nav-toggle__box" aria-hidden="true">
+            <span class="nav-toggle__bar"></span>
+            <span class="nav-toggle__bar"></span>
+            <span class="nav-toggle__bar"></span>
+          </span>
+        </button>
+
+        <!-- Left cluster: logo + theme toggle -->
+        <div class="site-header__left">
+          <a class="brand" href="/" aria-label="Xploroo home">
+            <span class="brand__name">Xploroo</span>
+          </a>
+
+          <!-- Dark / Light toggle (switches the site-wide theme) -->
+          <button
+            class="theme-toggle"
+            type="button"
+            role="switch"
+            aria-checked="true"
+            aria-label="Toggle light and dark theme"
+            data-theme-toggle
+          >
+            <span class="theme-toggle__track" aria-hidden="true">
+              <span class="theme-toggle__thumb">
+                <!-- Moon (dark) -->
+                <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor"/>
+                </svg>
+                <!-- Sun (light) -->
+                <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4"/>
+                  <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+                </svg>
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <!-- Center: primary navigation (stays centered on the full bar) -->
+        <nav class="main-nav" aria-label="Primary">
+          <ul class="main-nav__list" role="list">
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="index.html">Home</a>
+            </li>
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="about.html">About Us</a>
+            </li>
+            <li class="main-nav__item main-nav__item--dropdown">
+              <button type="button" class="main-nav__link main-nav__dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="packages-dropdown-menu" data-dropdown-toggle>
+                <span>Packages</span>
+                <svg class="main-nav__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="main-nav__dropdown" id="packages-dropdown-menu" data-dropdown-menu>
+                <a class="main-nav__dropdown-link" href="international-packages.html" aria-current="page">International Packages</a>
+                <a class="main-nav__dropdown-link" href="domestic-packages.html">Domestic Packages</a>
+              </div>
+            </li>
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="travel-quizzes.html">Travel Quizzes</a>
+            </li>
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="influencers.html">Influencers</a>
+            </li>
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="/partner-with-us">Partner With Us</a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Right cluster: search + auth actions -->
+        <div class="site-header__actions">
+
+          <!-- Search: perfect circle, thin white border -->
+          <button class="icon-btn icon-btn--search" type="button" aria-label="Search" data-search>
+            <svg class="icon-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" fill="none"/>
+              <path d="m21 21-4.3-4.3" fill="none"/>
+            </svg>
+          </button>
+
+          <a class="btn-auth btn-auth--login" href="/login">Log In</a>
+          <a class="btn-auth btn-auth--signup" href="/signup">Sign Up</a>
+
+          <!-- Cart: shown on mobile (visual only for now) -->
+          <button class="icon-btn icon-btn--cart" type="button" aria-label="Cart" data-cart>
+            <svg class="icon-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="9" cy="20" r="1.5" fill="none"/>
+              <circle cx="18" cy="20" r="1.5" fill="none"/>
+              <path d="M2.5 4h2.2l2.1 11.2a1.6 1.6 0 0 0 1.6 1.3h7.9a1.6 1.6 0 0 0 1.6-1.3L21 7.5H6.2" fill="none"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Fullscreen mobile menu (overlay, controlled by the hamburger) -->
+    <div class="mobile-menu" id="mobile-menu" data-mobile-nav hidden>
+      <div class="mobile-menu__panel">
+
+        <!-- Top bar: logo + theme toggle (left), close (right) -->
+        <div class="mobile-menu__topbar">
+          <div class="mobile-menu__brand-group">
+            <a class="brand" href="/" aria-label="Xploroo home">
+              <span class="brand__name">Xploroo</span>
+            </a>
+
+            <button
+              class="theme-toggle"
+              type="button"
+              role="switch"
+              aria-checked="true"
+              aria-label="Toggle light and dark theme"
+              data-theme-toggle
+            >
+              <span class="theme-toggle__track" aria-hidden="true">
+                <span class="theme-toggle__thumb">
+                  <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor"/>
+                  </svg>
+                  <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+                  </svg>
+                </span>
+              </span>
+            </button>
+          </div>
+
+          <!-- Close: identical styling to the header icon buttons -->
+          <button class="icon-btn mobile-menu__close" type="button" aria-label="Close menu" data-menu-close>
+            <svg class="icon-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M6 6l12 12M18 6 6 18"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Primary navigation items -->
+        <nav class="mobile-menu__nav" aria-label="Mobile">
+          <ul class="mobile-menu__list" role="list">
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="index.html">Home</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="about.html">About Us</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="travel-quizzes.html">Travel Quizzes</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="influencers.html">Influencers</a></li>
+            <li class="mobile-menu__item mobile-menu__item--submenu">
+              <button type="button" class="mobile-menu__link mobile-menu__toggle" aria-expanded="false" aria-controls="mobile-submenu-packages" data-submenu-toggle>
+                <span>Packages</span>
+                <svg class="mobile-menu__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+              </button>
+              <div class="mobile-submenu" id="mobile-submenu-packages" data-submenu>
+                <div class="mobile-submenu__inner">
+                  <a class="mobile-submenu__link" href="international-packages.html" aria-current="page">International Packages</a>
+                  <a class="mobile-submenu__link" href="domestic-packages.html">Domestic Packages</a>
+                </div>
+              </div>
+            </li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="winners.html">Winners</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="merch.html">Merch</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="faq.html">FAQ</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="contact.html">Contact Us</a></li>
+          </ul>
+        </nav>
+
+        <!-- Bottom actions: Log In (left) · Sign Up (right) -->
+        <div class="mobile-menu__actions">
+          <a class="btn-auth btn-auth--login" href="/login">Log In</a>
+          <a class="btn-auth btn-auth--signup" href="/signup">Sign Up</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fullscreen search overlay (opened via the header search icon) -->
+    <div class="search-overlay" data-search-overlay hidden>
+      <div class="search-overlay__inner">
+        <div class="search-overlay__topbar">
+          <button class="search-overlay__close" type="button" aria-label="Close search" data-search-close>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M6 6l12 12M18 6 6 18"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="search-overlay__bar">
+          <input class="search-overlay__input" type="text" placeholder="Search..." aria-label="Search" data-search-input />
+          <span class="search-overlay__bar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7" fill="none"/>
+              <path d="m21 21-4.3-4.3" fill="none"/>
+            </svg>
+          </span>
+        </div>
+
+        <div class="search-overlay__tabs" role="tablist" aria-label="Search categories">
+          <button class="search-overlay__tab" type="button" role="tab" aria-selected="true" data-search-tab="packages">Packages</button>
+          <button class="search-overlay__tab" type="button" role="tab" aria-selected="false" data-search-tab="influencers">Influencers</button>
+          <button class="search-overlay__tab" type="button" role="tab" aria-selected="false" data-search-tab="meetgreet">Meet &amp; Greet</button>
+          <span class="search-overlay__tab-indicator" data-search-tab-indicator aria-hidden="true"></span>
+        </div>
+
+        <div class="search-overlay__panels">
+          <div class="search-overlay__panel" data-search-panel="packages">
+            <ul class="search-overlay__list" data-search-list></ul>
+            <p class="search-overlay__empty" data-search-empty>No packages found.</p>
+          </div>
+          <div class="search-overlay__panel" data-search-panel="influencers">
+            <ul class="search-overlay__list" data-search-list></ul>
+            <p class="search-overlay__empty" data-search-empty>No influencers found.</p>
+          </div>
+          <div class="search-overlay__panel" data-search-panel="meetgreet">
+            <ul class="search-overlay__list" data-search-list></ul>
+            <p class="search-overlay__empty" data-search-empty>No events found.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- MAIN — Package Details (master template)                      -->
+    <!-- ============================================================= -->
+    <main class="main" id="main">
+      <div class="pkg-page" data-pkg-page>
+
+        <!-- =========================================================
+             SECTION 1 — Hero (breadcrumb, title, status row + CTA,
+             hero image, thumbnail gallery — all one hero block)
+             ========================================================= -->
+        <section class="pkg-hero pkg-container" data-pkg-hero data-pkg-reveal aria-labelledby="pkg-title">
+
+          <nav class="pkg-breadcrumb" aria-label="Breadcrumb">
+            <a class="pkg-breadcrumb__link" href="index.html">Home</a>
+            <span class="pkg-breadcrumb__sep" aria-hidden="true">&rsaquo;</span>
+            <a class="pkg-breadcrumb__link" href="international-packages.html">International Packages</a>
+            <span class="pkg-breadcrumb__sep" aria-hidden="true">&rsaquo;</span>
+            <span class="pkg-breadcrumb__current" aria-current="page">Vietnam Discovery</span>
+          </nav>
+
+          <h1 class="pkg-hero__title" id="pkg-title">Vietnam Discovery</h1>
+
+          <p class="pkg-hero__desc">From Hanoi&rsquo;s old quarter to the emerald waters of Ha Long Bay — an immersive Vietnamese journey curated by Xploroo.</p>
+
+          <div class="pkg-hero__status">
+            <div class="pkg-hero__status-left">
+              <span class="pkg-badge pkg-badge--live">
+                <span class="pkg-badge__dot" aria-hidden="true"></span>
+                Live
+              </span>
+              <span class="pkg-hero__ends">Ends: 12 Sep 2026</span>
+            </div>
+            <a class="pkg-cta pkg-cta--hero" href="#pkg-pricing">
+              Book Now
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+
+          <div class="pkg-gallery">
+            <div class="pkg-gallery__hero">
+              <img
+                class="pkg-gallery__hero-img"
+                data-pkg-hero-image
+                src="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-son-hoa-nguyen-2155579462-33969968%20(1).jpg"
+                alt="Vietnam Discovery — main view"
+              />
+            </div>
+
+            <div class="pkg-gallery__thumbs" role="list">
+              <button class="pkg-gallery__thumb is-active" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-son-hoa-nguyen-2155579462-33969968%20(1).jpg" aria-label="View photo 1">
+                <img src="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-son-hoa-nguyen-2155579462-33969968%20(1).jpg" alt="" />
+              </button>
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-tonderue-31833273.jpg" aria-label="View photo 2">
+                <img src="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-tonderue-31833273.jpg" alt="" />
+              </button>
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-nguyen-ngoc-tien-1321490019-32704975.jpg" aria-label="View photo 3">
+                <img src="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-nguyen-ngoc-tien-1321490019-32704975.jpg" alt="" />
+              </button>
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-nguyen-ngoc-tien-1321490019-32150048.jpg" aria-label="View photo 4">
+                <img src="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-nguyen-ngoc-tien-1321490019-32150048.jpg" alt="" />
+              </button>
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-vincentfotos-29158231.jpg" aria-label="View photo 5">
+                <img src="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-vincentfotos-29158231.jpg" alt="" />
+              </button>
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-qhung999-28772275.jpg" aria-label="View photo 6">
+                <img src="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-qhung999-28772275.jpg" alt="" />
+              </button>
+              <!-- Thumbnails 7-10: only shown in the mobile 10-thumbnail
+                   gallery — hidden above the mobile breakpoint so the
+                   desktop hero keeps its original 6-thumbnail strip. -->
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/dubai-7/1600/1000" aria-label="View photo 7">
+                <img src="https://picsum.photos/seed/dubai-7/240/240" alt="" />
+              </button>
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-qhung999-27362168.jpg" aria-label="View photo 8">
+                <img src="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-qhung999-27362168.jpg" alt="" />
+              </button>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- =========================================================
+             Two-column layout: main content (3-8) + sticky pricing aside
+             ========================================================= -->
+        <div class="pkg-container">
+          <div class="pkg-layout">
+
+            <div class="pkg-layout__main">
+
+              <!-- ===================================================
+                   SECTION 3 — Info cards
+                   =================================================== -->
+              <section data-pkg-reveal data-pkg-section="info" aria-label="Package information">
+                <div class="pkg-info-grid">
+                  <div class="pkg-info-card pkg-info-card--duration">
+                    <span class="pkg-info-card__icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                    </span>
+                    <span>
+                      <span class="pkg-info-card__label">Duration</span>
+                      <span class="pkg-info-card__value">5 Days / 4 Nights</span>
+                    </span>
+                  </div>
+                  <div class="pkg-info-card pkg-info-card--destination">
+                    <span class="pkg-info-card__icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+                    </span>
+                    <span>
+                      <span class="pkg-info-card__label">Destination</span>
+                      <span class="pkg-info-card__value">Vietnam</span>
+                    </span>
+                  </div>
+                  <div class="pkg-info-card pkg-info-card--group">
+                    <span class="pkg-info-card__icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 20v-1.6a3.4 3.4 0 0 0-3.4-3.4H6.4A3.4 3.4 0 0 0 3 18.4V20"/><circle cx="9.7" cy="7.2" r="3.2"/><path d="M21 20v-1.6a3.4 3.4 0 0 0-2.6-3.3M14.8 4.1a3.2 3.2 0 0 1 0 6.2"/></svg>
+                    </span>
+                    <span>
+                      <span class="pkg-info-card__label">Group Size</span>
+                      <span class="pkg-info-card__value">2 &ndash; 10 People</span>
+                    </span>
+                  </div>
+                  <div class="pkg-info-card pkg-info-card--trip">
+                    <span class="pkg-info-card__icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+                    </span>
+                    <span>
+                      <span class="pkg-info-card__label">Trip Type</span>
+                      <span class="pkg-info-card__value">International &middot; Culture &amp; Nature</span>
+                    </span>
+                  </div>
+                </div>
+              </section>
+
+              <!-- ===================================================
+                   SECTION 4 — Package Overview + Trip Highlights
+                   =================================================== -->
+              <section data-pkg-reveal data-pkg-section="overview" aria-labelledby="pkg-overview-title">
+                <div class="pkg-overview">
+                  <div class="pkg-overview__text">
+                    <h2 id="pkg-overview-title">Package Overview</h2>
+                    <p>
+                      Xploroo's Vietnam Discovery threads together the country's most iconic experiences — Hanoi's
+                      bustling old quarter, an overnight cruise on Ha Long Bay, and the timeless charm of Hoi An's
+                      lantern-lit streets.
+                    </p>
+                    <p>
+                      Every flight, cruise and transfer is handled end-to-end, so you can focus on the street food,
+                      the scenery and the stories this country has to offer.
+                    </p>
+                  </div>
+                  <aside class="pkg-highlights">
+                    <h3 class="pkg-highlights__title">Trip Highlights</h3>
+                    <ul class="pkg-highlights__list">
+                      <li class="pkg-highlights__item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                        <span>Overnight cruise on Ha Long Bay</span>
+                      </li>
+                      <li class="pkg-highlights__item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                        <span>Hanoi Old Quarter walking tour</span>
+                      </li>
+                      <li class="pkg-highlights__item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                        <span>Hoi An ancient town &amp; lantern streets</span>
+                      </li>
+                      <li class="pkg-highlights__item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                        <span>Da Nang beach &amp; Marble Mountains</span>
+                      </li>
+                      <li class="pkg-highlights__item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                        <span>Authentic Vietnamese street food trail</span>
+                      </li>
+                    </ul>
+                  </aside>
+                </div>
+              </section>
+
+              <!-- ===================================================
+                   SECTION 5 — Tabs (Itinerary / Inclusions / Exclusions)
+                   =================================================== -->
+              <section data-pkg-reveal data-pkg-section="tabs" aria-label="Itinerary, inclusions and exclusions">
+                <div class="pkg-tabs__nav" role="tablist" aria-label="Package details tabs">
+                  <button class="pkg-tabs__tab" type="button" role="tab" aria-selected="true" data-pkg-tab="itinerary">Itinerary</button>
+                  <button class="pkg-tabs__tab" type="button" role="tab" aria-selected="false" data-pkg-tab="inclusions">Inclusions</button>
+                  <button class="pkg-tabs__tab" type="button" role="tab" aria-selected="false" data-pkg-tab="exclusions">Exclusions</button>
+                </div>
+
+                <div class="pkg-tabs__panel" data-pkg-tab-panel="itinerary">
+                  <div class="pkg-itinerary">
+                    <div class="pkg-itinerary__day">
+                      <span class="pkg-itinerary__badge">Day<br />1</span>
+                      <div>
+                        <h4 class="pkg-itinerary__title">Arrival in Hanoi</h4>
+                        <p class="pkg-itinerary__desc">Arrive in Hanoi, check into your hotel, and explore the Old Quarter's street food scene in the evening.</p>
+                      </div>
+                    </div>
+                    <div class="pkg-itinerary__day">
+                      <span class="pkg-itinerary__badge">Day<br />2</span>
+                      <div>
+                        <h4 class="pkg-itinerary__title">Ha Long Bay Cruise</h4>
+                        <p class="pkg-itinerary__desc">Transfer to Ha Long Bay for an overnight cruise, with kayaking and cave exploration along the way.</p>
+                      </div>
+                    </div>
+                    <div class="pkg-itinerary__day">
+                      <span class="pkg-itinerary__badge">Day<br />3</span>
+                      <div>
+                        <h4 class="pkg-itinerary__title">Da Nang &amp; Marble Mountains</h4>
+                        <p class="pkg-itinerary__desc">Fly to Da Nang, visit the Marble Mountains, and relax at My Khe Beach.</p>
+                      </div>
+                    </div>
+                    <div class="pkg-itinerary__day">
+                      <span class="pkg-itinerary__badge">Day<br />4</span>
+                      <div>
+                        <h4 class="pkg-itinerary__title">Hoi An Ancient Town</h4>
+                        <p class="pkg-itinerary__desc">A day trip to Hoi An's lantern-lit ancient town, with time for tailoring shops and riverside caf&eacute;s.</p>
+                      </div>
+                    </div>
+                    <div class="pkg-itinerary__day">
+                      <span class="pkg-itinerary__badge">Day<br />5</span>
+                      <div>
+                        <h4 class="pkg-itinerary__title">Leisure &amp; Departure</h4>
+                        <p class="pkg-itinerary__desc">A free morning before your transfer to the airport for your departure flight.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pkg-tabs__panel" data-pkg-tab-panel="inclusions">
+                  <ul class="pkg-list pkg-list--check">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Round-trip international flights</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>4 nights across Hanoi &amp; Da Nang hotels</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Overnight Ha Long Bay cruise with meals</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Daily breakfast</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>All intercity transfers</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Marble Mountains &amp; Hoi An excursions</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>English-speaking local guide</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>All applicable taxes</span></li>
+                  </ul>
+                </div>
+
+                <div class="pkg-tabs__panel" data-pkg-tab-panel="exclusions">
+                  <ul class="pkg-list pkg-list--cross">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>International visa fees</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Travel insurance</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Lunch &amp; dinner (unless noted)</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Personal expenses &amp; shopping</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Optional excursions</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Tips &amp; gratuities</span></li>
+                  </ul>
+                </div>
+              </section>
+
+              <!-- ===================================================
+                   SECTION 6 — What's Included (icon checklist)
+                   =================================================== -->
+              <section data-pkg-reveal data-pkg-section="included" aria-labelledby="pkg-included-title">
+                <div class="pkg-section__head">
+                  <h2 class="pkg-section__title" id="pkg-included-title">What&rsquo;s Included</h2>
+                </div>
+                <div class="pkg-included__grid">
+                  <div class="pkg-included__item">
+                    <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 21 12 17l4.5 1.2L14 14l7-4-3-3-9 3-3-1.5L2.5 12 6 13.5 4 18l4-1 1 4Z"/></svg></span>
+                    <span class="pkg-included__label">Flights</span>
+                  </div>
+                  <div class="pkg-included__item">
+                    <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21V8l9-5 9 5v13M3 21h18M9 21v-6h6v6"/></svg></span>
+                    <span class="pkg-included__label">Hotel Stay</span>
+                  </div>
+                  <div class="pkg-included__item">
+                    <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M4 11a4 4 0 0 1 8-2 4 4 0 0 1 8 2M4 11v7h16v-7"/></svg></span>
+                    <span class="pkg-included__label">Daily Meals</span>
+                  </div>
+                  <div class="pkg-included__item">
+                    <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17h14M5 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm14 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM5 17V8h10l4 4v5"/></svg></span>
+                    <span class="pkg-included__label">Transfers</span>
+                  </div>
+                  <div class="pkg-included__item">
+                    <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span>
+                    <span class="pkg-included__label">Sightseeing</span>
+                  </div>
+                  <div class="pkg-included__item">
+                    <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg></span>
+                    <span class="pkg-included__label">Local Guide</span>
+                  </div>
+                </div>
+              </section>
+
+              <!-- ===================================================
+                   SECTION 7 — Need Help card
+                   =================================================== -->
+              <section data-pkg-reveal data-pkg-section="help" aria-label="Need help booking this package">
+                <div class="pkg-help">
+                  <div>
+                    <h3 class="pkg-help__title">Need Help With This Trip?</h3>
+                    <p class="pkg-help__subtitle">Our travel experts can tailor this itinerary or answer any questions.</p>
+                  </div>
+                  <div class="pkg-help__actions">
+                    <a class="pkg-help__btn pkg-help__btn--whatsapp" href="https://wa.me/910000000000" target="_blank" rel="noopener">
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 2a8 8 0 0 1 6.9 12.1l-.3.5.9 3.2-3.3-.9-.5.3A8 8 0 1 1 12 4Zm-3.3 4.2c-.2 0-.5 0-.7.3-.3.3-1 1-1 2.3 0 1.4 1 2.7 1.1 2.9.1.2 2 3.1 4.9 4.2 2.4 1 2.9.8 3.4.7.5 0 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.1-.3-.2-.6-.4-.3-.1-1.7-.9-2-1-.2-.1-.4-.1-.6.1-.2.3-.6.9-.8 1-.1.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.6-.9-2.1-.2-.5-.4-.4-.6-.4Z"/></svg>
+                      WhatsApp
+                    </a>
+                    <a class="pkg-help__btn pkg-help__btn--call" href="tel:+910000000000">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .8 2.9a2 2 0 0 1-.4 2.2L8.1 10.2a16 16 0 0 0 6 6l1.4-1.4a2 2 0 0 1 2.2-.4c.9.4 1.9.7 2.9.8a2 2 0 0 1 1.7 2Z"/></svg>
+                      Call Us
+                    </a>
+                    <a class="pkg-help__btn pkg-help__btn--email" href="mailto:support@xploroo.com">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+                      Email
+                    </a>
+                  </div>
+                </div>
+              </section>
+
+              <!-- ===================================================
+                   SECTION 8 — "You May Also Like" related packages
+                   =================================================== -->
+              <section data-pkg-reveal data-pkg-section="related" aria-labelledby="pkg-related-title">
+                <div class="pkg-section__head">
+                  <h2 class="pkg-section__title" id="pkg-related-title">You May Also Like</h2>
+                  <p class="pkg-section__subtitle">Discover more unforgettable travel experiences curated by Xploroo.</p>
+                </div>
+                <div class="pkg-related" data-pkg-related>
+                  <button class="pkg-related__arrow pkg-related__arrow--prev" type="button" data-pkg-related-prev aria-label="Scroll to previous packages">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+                  </button>
+                  <button class="pkg-related__arrow pkg-related__arrow--next" type="button" data-pkg-related-next aria-label="Scroll to next packages">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+                  </button>
+
+                  <ul class="pkg-related__track" data-pkg-related-track role="list">
+
+                    <li class="pkg-related__slide">
+                      <article class="pkg-related__card">
+                        <a class="pkg-related__media" href="dubai-package.html" aria-label="View Dubai package">
+                          <img class="pkg-related__img" src="https://ik.imagekit.io/mg0v9kccj/k-t-CDOx0S1D5xc-unsplash.jpg?updatedAt=1783328246333" alt="Dubai" />
+                        </a>
+                        <button class="pkg-related__wishlist" type="button" aria-label="Save Dubai package" aria-pressed="false" data-pkg-related-wishlist>
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                        </button>
+                        <div class="pkg-related__body">
+                          <h3 class="pkg-related__name"><a href="dubai-package.html">Dubai</a></h3>
+                          <p class="pkg-related__duration">4 Days / 3 Nights</p>
+                          <div class="pkg-related__footer">
+                            <span class="pkg-related__price">&#8377;49,999<span>/person</span></span>
+                          </div>
+                        </div>
+                      </article>
+                    </li>
+
+                    <li class="pkg-related__slide">
+                      <article class="pkg-related__card">
+                        <a class="pkg-related__media" href="manali-package.html" aria-label="View Manali package">
+                          <img class="pkg-related__img" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260704_161950.jpg.jpeg?updatedAt=1783162536667" alt="Manali" />
+                        </a>
+                        <button class="pkg-related__wishlist" type="button" aria-label="Save Manali package" aria-pressed="false" data-pkg-related-wishlist>
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                        </button>
+                        <div class="pkg-related__body">
+                          <h3 class="pkg-related__name"><a href="manali-package.html">Manali</a></h3>
+                          <p class="pkg-related__duration">4 Days / 3 Nights</p>
+                          <div class="pkg-related__footer">
+                            <span class="pkg-related__price">&#8377;18,999<span>/person</span></span>
+                          </div>
+                        </div>
+                      </article>
+                    </li>
+
+                    <li class="pkg-related__slide">
+                      <article class="pkg-related__card">
+                        <a class="pkg-related__media" href="goa-package.html" aria-label="View Goa package">
+                          <img class="pkg-related__img" src="https://ik.imagekit.io/mg0v9kccj/pexels-landsmann-803094805-19209541.jpg?updatedAt=1783329374375" alt="Goa" />
+                        </a>
+                        <button class="pkg-related__wishlist" type="button" aria-label="Save Goa package" aria-pressed="false" data-pkg-related-wishlist>
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                        </button>
+                        <div class="pkg-related__body">
+                          <h3 class="pkg-related__name"><a href="goa-package.html">Goa</a></h3>
+                          <p class="pkg-related__duration">3 Days / 2 Nights</p>
+                          <div class="pkg-related__footer">
+                            <span class="pkg-related__price">&#8377;14,999<span>/person</span></span>
+                          </div>
+                        </div>
+                      </article>
+                    </li>
+
+                    <li class="pkg-related__slide">
+                      <article class="pkg-related__card">
+                        <a class="pkg-related__media" href="singapore-package.html" aria-label="View Singapore package">
+                          <img class="pkg-related__img" src="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-aaron-ruggi-412108105-15203321.jpg?updatedAt=1783090282459" alt="Singapore" />
+                        </a>
+                        <button class="pkg-related__wishlist" type="button" aria-label="Save Singapore package" aria-pressed="false" data-pkg-related-wishlist>
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                        </button>
+                        <div class="pkg-related__body">
+                          <h3 class="pkg-related__name"><a href="singapore-package.html">Singapore</a></h3>
+                          <p class="pkg-related__duration">4 Days / 3 Nights</p>
+                          <div class="pkg-related__footer">
+                            <span class="pkg-related__price">&#8377;39,999<span>/person</span></span>
+                          </div>
+                        </div>
+                      </article>
+                    </li>
+
+                    <li class="pkg-related__slide">
+                      <article class="pkg-related__card">
+                        <a class="pkg-related__media" href="jaipur-package.html" aria-label="View Jaipur package">
+                          <img class="pkg-related__img" src="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-rsapmech-11473355.jpg?updatedAt=1783090285012" alt="Jaipur" />
+                        </a>
+                        <button class="pkg-related__wishlist" type="button" aria-label="Save Jaipur package" aria-pressed="false" data-pkg-related-wishlist>
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                        </button>
+                        <div class="pkg-related__body">
+                          <h3 class="pkg-related__name"><a href="jaipur-package.html">Jaipur</a></h3>
+                          <p class="pkg-related__duration">5 Days / 4 Nights</p>
+                          <div class="pkg-related__footer">
+                            <span class="pkg-related__price">&#8377;21,999<span>/person</span></span>
+                          </div>
+                        </div>
+                      </article>
+                    </li>
+
+                    <li class="pkg-related__slide">
+                      <article class="pkg-related__card">
+                        <a class="pkg-related__media" href="kasol-package.html" aria-label="View Kasol package">
+                          <img class="pkg-related__img" src="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-strangr-5166305.jpg?updatedAt=1783090284993" alt="Kasol" />
+                        </a>
+                        <button class="pkg-related__wishlist" type="button" aria-label="Save Kasol package" aria-pressed="false" data-pkg-related-wishlist>
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                        </button>
+                        <div class="pkg-related__body">
+                          <h3 class="pkg-related__name"><a href="kasol-package.html">Kasol</a></h3>
+                          <p class="pkg-related__duration">4 Days / 3 Nights</p>
+                          <div class="pkg-related__footer">
+                            <span class="pkg-related__price">&#8377;16,999<span>/person</span></span>
+                          </div>
+                        </div>
+                      </article>
+                    </li>
+
+                    <li class="pkg-related__slide">
+                      <article class="pkg-related__card">
+                        <a class="pkg-related__media" href="thailand-phuket-package.html" aria-label="View Phuket package">
+                          <img class="pkg-related__img" src="https://ik.imagekit.io/mg0v9kccj/xploroo/pexels-1415852104-26561115.jpg?updatedAt=1783090286083" alt="Phuket" />
+                        </a>
+                        <button class="pkg-related__wishlist" type="button" aria-label="Save Phuket package" aria-pressed="false" data-pkg-related-wishlist>
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
+                        </button>
+                        <div class="pkg-related__body">
+                          <h3 class="pkg-related__name"><a href="thailand-phuket-package.html">Phuket</a></h3>
+                          <p class="pkg-related__duration">4 Days / 3 Nights</p>
+                          <div class="pkg-related__footer">
+                            <span class="pkg-related__price">&#8377;31,999<span>/person</span></span>
+                          </div>
+                        </div>
+                      </article>
+                    </li>
+
+                  </ul>
+                </div>
+              </section>
+
+            </div>
+
+            <!-- =====================================================
+                 SECTION 9 — Pricing card (sticky sidebar on desktop)
+                 ===================================================== -->
+            <aside class="pkg-layout__aside" data-pkg-reveal aria-label="Booking summary">
+              <div class="pkg-pricing" id="pkg-pricing">
+                <span class="pkg-pricing__label">Package Price</span>
+                <p class="pkg-pricing__amount">&#8377;36,999 <span>Per Person</span></p>
+                <ul class="pkg-pricing__list">
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Secure Booking</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Best Price Guaranteed</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>24&times;7 Support</li>
+                </ul>
+                <a class="pkg-cta pkg-cta--block" href="/checkout/vietnam-discovery">Book Now</a>
+              </div>
+            </aside>
+
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Sticky mobile booking bar (hidden until the hero scrolls past) -->
+    <div class="pkg-sticky-bar" data-pkg-sticky-bar>
+      <span class="pkg-sticky-bar__price">
+        <strong>&#8377;36,999</strong>
+        <span>Per Person</span>
+      </span>
+      <a class="pkg-cta" href="/checkout/vietnam-discovery">Book Now</a>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- 9. FOOTER                                                     -->
+    <!-- ============================================================= -->
+    <footer class="site-footer" data-footer>
+      <div class="site-footer__panel">
+        <div class="site-footer__container">
+
+          <!-- Newsletter -->
+          <div class="footer-newsletter">
+            <h2 class="footer-newsletter__title">Join the Xploroo Travel Community</h2>
+            <form class="footer-newsletter__form" data-newsletter-form action="#" method="post" novalidate>
+              <label class="sr-only" for="footer-newsletter-email">Email address</label>
+              <input
+                class="footer-newsletter__input"
+                id="footer-newsletter-email"
+                type="email"
+                name="email"
+                autocomplete="email"
+                placeholder="Email Address"
+                required
+              />
+              <button class="btn btn--gradient btn--pill footer-newsletter__submit" type="submit">Subscribe</button>
+            </form>
+            <p class="footer-newsletter__message" data-newsletter-message role="status" aria-live="polite"></p>
+          </div>
+
+          <!-- Social icons -->
+          <ul class="footer-social" role="list" aria-label="Xploroo on social media">
+            <li>
+              <a class="footer-social__link" href="#" aria-label="Xploroo on Facebook">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H16.7V3.7C16.15 3.6 15.15 3.5 14 3.5c-2.4 0-4 1.45-4 4.1v2.3H7.3v3.1H10V21h3.5Z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a class="footer-social__link" href="#" aria-label="Xploroo on Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+              </a>
+            </li>
+            <li>
+              <a class="footer-social__link" href="#" aria-label="Xploroo on X">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 3h4.2l4 5.4L16.8 3H20l-6 7.6L20.4 21h-4.2l-4.3-5.8L7 21H3.8l6.4-8.1z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a class="footer-social__link" href="#" aria-label="Xploroo on YouTube">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.6 7.6c-.25-1-1-1.75-2-2C17.8 5.1 12 5.1 12 5.1s-5.8 0-7.6.5c-1 .25-1.75 1-2 2C2 9.4 2 12 2 12s0 2.6.4 4.4c.25 1 1 1.75 2 2 1.8.5 7.6.5 7.6.5s5.8 0 7.6-.5c1-.25 1.75-1 2-2 .4-1.8.4-4.4.4-4.4s0-2.6-.4-4.4ZM10 15.2V8.8l5.5 3.2Z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a class="footer-social__link" href="#" aria-label="Xploroo on LinkedIn">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.94 8.5H3.56V20.5H6.94V8.5ZM5.25 3.5A1.96 1.96 0 1 0 5.25 7.42 1.96 1.96 0 0 0 5.25 3.5ZM20.44 20.5H17.06V14.5c0-1.4-.03-3.2-1.95-3.2-1.96 0-2.26 1.53-2.26 3.1v6.1H9.47V8.5h3.24v1.64h.05c.45-.86 1.56-1.77 3.2-1.77 3.43 0 4.06 2.26 4.06 5.2v6.93Z"/></svg>
+              </a>
+            </li>
+          </ul>
+
+          <!-- Link columns -->
+          <nav class="footer-links" aria-label="Footer">
+            <div class="footer-links__col">
+              <h3 class="footer-links__title">About</h3>
+              <ul class="footer-links__list" role="list">
+                <li><a class="footer-links__link" href="/about">About Us</a></li>
+                <li><a class="footer-links__link" href="/how-it-works">How It Works</a></li>
+                <li><a class="footer-links__link" href="/team">Our Team</a></li>
+                <li><a class="footer-links__link" href="/faqs">FAQs</a></li>
+                <li><a class="footer-links__link" href="contact.html">Contact Us</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-links__col">
+              <h3 class="footer-links__title">Packages</h3>
+              <ul class="footer-links__list" role="list">
+                <li><a class="footer-links__link" href="/packages/domestic">Domestic Packages</a></li>
+                <li><a class="footer-links__link" href="/packages/international">International Packages</a></li>
+                <li><a class="footer-links__link" href="/packages/honeymoon">Honeymoon Packages</a></li>
+                <li><a class="footer-links__link" href="/packages/adventure">Adventure Trips</a></li>
+                <li><a class="footer-links__link" href="/packages/luxury">Luxury Holidays</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-links__col">
+              <h3 class="footer-links__title">Explore</h3>
+              <ul class="footer-links__list" role="list">
+                <li><a class="footer-links__link" href="travel-quizzes.html">Travel Quizzes</a></li>
+                <li><a class="footer-links__link" href="/influencers">Influencers</a></li>
+                <li><a class="footer-links__link" href="winners.html">Winners</a></li>
+                <li><a class="footer-links__link" href="/stories">Travel Stories</a></li>
+                <li><a class="footer-links__link" href="/privacy">Privacy Policy</a></li>
+              </ul>
+            </div>
+          </nav>
+
+          <!-- Bottom bar -->
+          <div class="footer-bottom">
+            <p class="footer-bottom__copyright">&copy; <time datetime="2026">2026</time> Xploroo. All Rights Reserved.</p>
+            <ul class="footer-bottom__legal" role="list">
+              <li><a href="/privacy">Privacy Policy</a></li>
+              <li><a href="/terms">Terms &amp; Conditions</a></li>
+              <li><a href="/refund-policy">Refund Policy</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Header behavior (sticky blur, mobile menu, theme toggle) -->
+  <script src="js/header.js" defer></script>
+
+  <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
+  <script src="js/search-overlay.js" defer></script>
+
+  <!-- Package Details behavior — master template script -->
+  <script src="js/package-details.js" defer></script>
+
+  <!-- Footer behavior (newsletter form) -->
+  <script src="js/footer.js" defer></script>
+</body>
+</html>

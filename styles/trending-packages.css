@@ -195,6 +195,14 @@
   .tp-card:active { transform: scale(0.98); }
 }
 
+/* Cards that link to a dedicated package page (see data-tp-href in
+   trending-packages.js) get a pointer cursor + keyboard focus ring. */
+.tp-card[data-tp-href] { cursor: pointer; }
+.tp-card[data-tp-href]:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-lg), var(--glow-primary);
+}
+
 /* ---- Media ---- */
 .tp-card__media {
   position: relative;

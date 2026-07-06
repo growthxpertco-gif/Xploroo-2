@@ -1,0 +1,1224 @@
+/* ==========================================================================
+   XPLOROO · Package Details module
+   package-details.css — Master template for every package detail page
+   (dubai-package.html today; bali/goa/kashmir/maldives-package.html later).
+   --------------------------------------------------------------------------
+   Everything is scoped under the reusable `.pkg-*` namespace so this single
+   stylesheet can be dropped into any future package page unmodified — only
+   the HTML content (text/images/data-* values) changes per destination.
+   Reuses global tokens from variables.css. Load AFTER utilities.css.
+   ========================================================================== */
+
+.pkg-page {
+  padding-block: var(--section-gap);
+}
+
+/* -------------------------------------------------------------------------
+   Shared: scroll-reveal (fade + rise), used across every section below
+   ------------------------------------------------------------------------- */
+[data-pkg-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity var(--dur-slower) var(--ease-out), transform var(--dur-slower) var(--ease-out);
+}
+[data-pkg-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-pkg-reveal] { opacity: 1; transform: none; transition: none; }
+}
+
+.pkg-container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+.pkg-section {
+  padding-block: clamp(2rem, 1.4rem + 2.4vw, 3.5rem);
+}
+.pkg-section__head {
+  margin-bottom: var(--space-6);
+}
+.pkg-section__eyebrow {
+  margin-bottom: var(--space-2);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--violet-300);
+}
+.pkg-section__title {
+  font-size: var(--fs-2xl);
+  margin: 0;
+}
+.pkg-section__subtitle {
+  margin-top: var(--space-2);
+  color: var(--color-text-muted);
+  max-width: 60ch;
+}
+
+/* ==========================================================================
+   SECTION 1 — Hero header (breadcrumb, badge, title, status, CTA)
+   ========================================================================== */
+.pkg-hero {
+  padding-block: clamp(2rem, 1.2rem + 3vw, 3.5rem) clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+
+.pkg-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: var(--space-5);
+  font-size: var(--fs-sm);
+}
+.pkg-breadcrumb__link {
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+.pkg-breadcrumb__link:hover { color: var(--violet-300); }
+.pkg-breadcrumb__sep {
+  color: var(--color-text-subtle);
+  font-size: var(--fs-xs);
+}
+.pkg-breadcrumb__current {
+  color: var(--color-text-strong);
+  font-weight: var(--fw-medium);
+}
+
+.pkg-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 1.75rem;
+  padding-inline: 0.85rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+}
+.pkg-badge--category {
+  color: var(--violet-200);
+  background: var(--color-primary-subtle);
+  border: 1px solid var(--color-border-brand);
+}
+/* LIVE badge — Xploroo's signature purple-blue gradient (not the generic
+   green "live" convention), so it reads as premium/branded rather than a
+   plain status dot. */
+.pkg-badge--live {
+  color: #fff;
+  background-image: var(--gradient-brand);
+  border: 1px solid transparent;
+  box-shadow: var(--glow-brand);
+}
+.pkg-badge--live .pkg-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+  animation: pkg-live-pulse 1.8s var(--ease-standard) infinite;
+}
+@keyframes pkg-live-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.55); }
+  70%  { box-shadow: 0 0 0 7px rgba(255, 255, 255, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+}
+
+.pkg-hero__title {
+  margin-top: var(--space-4);
+  font-size: clamp(2.25rem, 1.8rem + 2vw, 3.25rem);
+}
+
+.pkg-hero__location {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: var(--space-3);
+  color: var(--color-text-muted);
+  font-size: var(--fs-md);
+}
+.pkg-hero__location svg { width: 18px; height: 18px; flex: none; color: var(--violet-300); }
+
+.pkg-hero__desc {
+  margin-top: var(--space-4);
+  max-width: 62ch;
+  font-size: var(--fs-md);
+  color: var(--color-text-muted);
+}
+
+.pkg-hero__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+}
+
+.pkg-hero__status-left {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.pkg-hero__ends {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+}
+
+.pkg-countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+.pkg-countdown svg { width: 16px; height: 16px; color: var(--color-text-subtle); }
+
+/* Signature large gradient CTA, reused for both hero + pricing card */
+.pkg-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 3.5rem;
+  padding-inline: 2.25rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  color: #fff;
+  background-image: var(--gradient-brand);
+  box-shadow: var(--glow-brand);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    filter var(--dur-fast) var(--ease-standard);
+}
+.pkg-cta:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.07);
+  box-shadow: 0 16px 40px rgba(91, 107, 255, 0.5), 0 6px 18px rgba(139, 60, 240, 0.42);
+  color: #fff;
+}
+.pkg-cta:active { transform: translateY(-1px) scale(0.98); }
+.pkg-cta--block { width: 100%; }
+.pkg-cta svg { width: 1.1em; height: 1.1em; flex: none; }
+
+/* Hero gallery (large image + thumbnail strip) — lives inside the hero
+   section itself, directly below the status row/CTA. */
+.pkg-gallery {
+  margin-top: var(--space-7);
+}
+.pkg-gallery__hero {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius-3xl);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: var(--shadow-xl);
+  background: var(--color-surface-inset);
+}
+.pkg-gallery__hero-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 1;
+  transition: opacity var(--dur-slow) var(--ease-standard);
+}
+.pkg-gallery__hero-img.is-fading { opacity: 0; }
+
+.pkg-gallery__thumbs {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  overflow-x: auto;
+  padding-bottom: 0.35rem;
+  scrollbar-width: thin;
+}
+.pkg-gallery__thumb {
+  flex: none;
+  width: clamp(84px, 12vw, 128px);
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 2px solid var(--color-border);
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0.65;
+  transition:
+    opacity var(--dur-fast) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-out);
+}
+.pkg-gallery__thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pkg-gallery__thumb:hover { opacity: 0.9; transform: translateY(-2px); }
+.pkg-gallery__thumb.is-active {
+  opacity: 1;
+  border-color: var(--violet-400);
+  box-shadow: var(--glow-primary);
+}
+
+/* ==========================================================================
+   SECTION 3 — Info cards (Duration / Destination / Group Size / Trip Type)
+   ========================================================================== */
+.pkg-info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+@media (max-width: 900px) {
+  .pkg-info-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+.pkg-info-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-standard),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+.pkg-info-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(145, 99, 241, 0.45);
+  box-shadow: var(--glow-soft);
+}
+.pkg-info-card__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius-md);
+  color: var(--violet-300);
+  background: var(--color-primary-subtle);
+}
+.pkg-info-card__icon svg { width: 20px; height: 20px; }
+.pkg-info-card__label {
+  display: block;
+  font-size: var(--fs-xs);
+  color: var(--color-text-subtle);
+}
+.pkg-info-card__value {
+  display: block;
+  margin-top: 0.15rem;
+  font-family: var(--font-display);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-strong);
+}
+
+/* ==========================================================================
+   SECTION 4 — Package Overview + Trip Highlights (two-column)
+   ========================================================================== */
+.pkg-overview {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--space-8);
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .pkg-overview { grid-template-columns: 1fr; }
+}
+
+.pkg-overview__text h2 { font-size: var(--fs-2xl); }
+.pkg-overview__text p { margin-top: var(--space-3); color: var(--color-text-muted); }
+.pkg-overview__text p + p { margin-top: var(--space-4); }
+
+.pkg-highlights {
+  padding: var(--space-6);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+}
+.pkg-highlights__title {
+  margin: 0 0 var(--space-4);
+  font-size: var(--fs-lg);
+}
+.pkg-highlights__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.pkg-highlights__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+}
+.pkg-highlights__item svg {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-top: 0.1em;
+  color: #22c55e;
+}
+
+/* ==========================================================================
+   SECTION 5 — Tabbed section (Itinerary / Inclusions / Exclusions)
+   ========================================================================== */
+.pkg-tabs__nav {
+  display: inline-flex;
+  gap: 0.4rem;
+  padding: 0.3rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-inset);
+  margin-bottom: var(--space-6);
+}
+.pkg-tabs__tab {
+  position: relative;
+  padding: 0.6rem 1.35rem;
+  border-radius: var(--radius-pill);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-muted);
+  transition: color var(--dur-base) var(--ease-standard), background-color var(--dur-base) var(--ease-standard);
+}
+.pkg-tabs__tab:hover { color: var(--color-text-strong); }
+.pkg-tabs__tab[aria-selected="true"] {
+  color: #fff;
+  background: var(--gradient-brand);
+  box-shadow: var(--glow-brand);
+}
+
+.pkg-tabs__panel {
+  display: none;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity var(--dur-base) var(--ease-standard), transform var(--dur-base) var(--ease-standard);
+}
+.pkg-tabs__panel.is-active { display: block; }
+.pkg-tabs__panel.is-visible { opacity: 1; transform: translateY(0); }
+
+/* Itinerary */
+.pkg-itinerary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.pkg-itinerary__day {
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-5);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  transition: border-color var(--dur-base) var(--ease-standard), transform var(--dur-base) var(--ease-out);
+}
+.pkg-itinerary__day:hover {
+  border-color: rgba(145, 99, 241, 0.4);
+  transform: translateX(4px);
+}
+.pkg-itinerary__badge {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-md);
+  background: var(--gradient-brand);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  text-align: center;
+  line-height: 1.1;
+}
+.pkg-itinerary__title { margin: 0; font-size: var(--fs-md); }
+.pkg-itinerary__desc { margin-top: 0.3rem; color: var(--color-text-muted); font-size: var(--fs-sm); }
+
+/* Inclusions / Exclusions lists */
+.pkg-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3) var(--space-6);
+}
+@media (max-width: 640px) {
+  .pkg-list { grid-template-columns: 1fr; }
+}
+.pkg-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+}
+.pkg-list svg { flex: none; width: 18px; height: 18px; margin-top: 0.1em; }
+.pkg-list--check svg { color: #22c55e; }
+.pkg-list--cross svg { color: #ef4444; }
+
+/* ==========================================================================
+   SECTION 6 — What's Included (icon checklist grid)
+   ========================================================================== */
+.pkg-included__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+}
+@media (max-width: 900px) {
+  .pkg-included__grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .pkg-included__grid { grid-template-columns: 1fr; }
+}
+.pkg-included__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  transition: transform var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-standard);
+}
+.pkg-included__item:hover { transform: translateY(-3px); border-color: rgba(145, 99, 241, 0.4); }
+.pkg-included__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--color-accent-subtle);
+  color: var(--cyan-300);
+}
+.pkg-included__icon svg { width: 18px; height: 18px; }
+.pkg-included__label { font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--color-text-strong); }
+
+/* ==========================================================================
+   SECTION 7 — Need Help card
+   ========================================================================== */
+.pkg-help {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  padding: var(--space-6);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+}
+.pkg-help__title { margin: 0; font-size: var(--fs-lg); }
+.pkg-help__subtitle { margin-top: 0.3rem; color: var(--color-text-muted); font-size: var(--fs-sm); }
+.pkg-help__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.pkg-help__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.85rem;
+  padding-inline: 1.25rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text-strong);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  text-decoration: none;
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-standard),
+    background-color var(--dur-fast) var(--ease-standard);
+}
+.pkg-help__btn svg { width: 18px; height: 18px; }
+.pkg-help__btn:hover { transform: translateY(-2px); color: var(--color-text-strong); }
+.pkg-help__btn--whatsapp:hover { border-color: #25d366; background: rgba(37, 211, 102, 0.12); }
+.pkg-help__btn--call:hover { border-color: var(--violet-400); background: var(--color-primary-subtle); }
+.pkg-help__btn--email:hover { border-color: var(--cyan-400); background: var(--color-accent-subtle); }
+
+/* ==========================================================================
+   SECTION 8 — Image gallery carousel (drag/swipe, 10 placeholder images)
+   ========================================================================== */
+.pkg-carousel {
+  position: relative;
+}
+.pkg-carousel__track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(220px, 30%);
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0.25rem 0.25rem 0.75rem;
+  list-style: none;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  cursor: grab;
+  scrollbar-width: none;
+}
+.pkg-carousel__track::-webkit-scrollbar { display: none; }
+.pkg-carousel__track.is-dragging { cursor: grabbing; scroll-snap-type: none; }
+@media (max-width: 640px) {
+  .pkg-carousel__track { grid-auto-columns: minmax(70%, 78%); }
+}
+
+.pkg-carousel__slide { scroll-snap-align: start; min-width: 0; }
+.pkg-carousel__figure {
+  aspect-ratio: 4 / 3;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-inset);
+}
+.pkg-carousel__img { width: 100%; height: 100%; object-fit: cover; transition: transform var(--dur-slow) var(--ease-out); }
+.pkg-carousel__figure:hover .pkg-carousel__img { transform: scale(1.06); }
+
+.pkg-carousel__arrow {
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(10, 10, 14, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-standard);
+}
+.pkg-carousel__arrow svg { width: 20px; height: 20px; }
+.pkg-carousel__arrow--prev { left: -0.5rem; }
+.pkg-carousel__arrow--next { right: -0.5rem; }
+.pkg-carousel__arrow:hover { transform: translateY(-50%) scale(1.06); background: rgba(24, 24, 34, 0.9); }
+.pkg-carousel__arrow:disabled { opacity: 0; pointer-events: none; }
+@media (max-width: 640px) {
+  .pkg-carousel__arrow { display: none; }
+}
+
+/* ==========================================================================
+   SECTION 9 — Pricing card (also reused inside the sticky desktop sidebar)
+   ========================================================================== */
+.pkg-pricing {
+  padding: var(--space-6);
+  border-radius: var(--radius-2xl);
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+    var(--gradient-brand) border-box;
+  box-shadow: var(--shadow-xl);
+}
+.pkg-pricing__label { font-size: var(--fs-sm); color: var(--color-text-muted); }
+.pkg-pricing__amount {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-top: 0.2rem;
+  font-family: var(--font-display);
+  font-size: var(--fs-3xl);
+  font-weight: var(--fw-extrabold);
+  color: var(--color-text-strong);
+}
+.pkg-pricing__amount span { font-size: var(--fs-sm); font-weight: var(--fw-medium); color: var(--color-text-muted); }
+
+.pkg-pricing__list {
+  list-style: none;
+  margin: var(--space-5) 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.pkg-pricing__list li {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+}
+.pkg-pricing__list svg { flex: none; width: 17px; height: 17px; color: #22c55e; }
+
+/* -------------------------------------------------------------------------
+   Main/aside layout — desktop sticky booking summary, single column mobile
+   ------------------------------------------------------------------------- */
+.pkg-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-9);
+}
+@media (min-width: 1025px) {
+  .pkg-layout { grid-template-columns: 1.75fr 1fr; align-items: start; }
+  .pkg-layout__aside { position: sticky; top: calc(var(--scroll-offset) + 1.5rem); }
+}
+.pkg-layout__main {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+  /* Without this, the carousel's/gallery's intrinsic content width leaks
+     into the grid-item sizing of `.pkg-layout` and forces the whole page
+     to overflow horizontally (the classic flex/grid min-width:auto trap). */
+  min-width: 0;
+}
+
+/* Mobile: the sidebar pricing card becomes a normal in-flow section instead
+   (still the same markup — no duplication needed for the template). */
+@media (max-width: 1024px) {
+  .pkg-layout__aside { margin-top: 0; }
+}
+
+/* ==========================================================================
+   Sticky booking bar — mobile only
+   ========================================================================== */
+.pkg-sticky-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-sticky);
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: 0.85rem var(--gutter);
+  padding-bottom: calc(0.85rem + env(safe-area-inset-bottom, 0px));
+  background: rgba(8, 8, 12, 0.85);
+  border-top: 1px solid var(--color-border);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  transform: translateY(100%);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.pkg-sticky-bar.is-visible { transform: translateY(0); }
+.pkg-sticky-bar__price {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+.pkg-sticky-bar__price strong {
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--color-text-strong);
+}
+.pkg-sticky-bar__price span { font-size: var(--fs-2xs); color: var(--color-text-subtle); }
+
+@media (max-width: 768px) {
+  .pkg-sticky-bar { display: flex; }
+  .pkg-page { padding-bottom: 5.5rem; } /* keep footer clear of the fixed bar */
+}
+
+/* ==========================================================================
+   MOBILE HERO REFINEMENTS (≤768px only)
+   Every rule in this block only ever fires below the mobile breakpoint —
+   the desktop hero (title, status row, 16:10 image, 6 thumbnails, gradient
+   CTA) is untouched and continues to use its base rules unmodified.
+   ========================================================================== */
+@media (max-width: 768px) {
+
+  /* 1. Compact top spacing — breadcrumb sits close to the header instead
+        of the generous desktop section rhythm. */
+  .pkg-page { padding-top: var(--space-4); }
+  .pkg-hero { padding-top: var(--space-3); }
+  .pkg-breadcrumb { margin-bottom: var(--space-3); }
+
+  /* 2. Status row — forced onto a single row: green LIVE badge, "Ends"
+        date, and a compact white pill CTA (no wrapping). */
+  .pkg-hero__status {
+    flex-wrap: nowrap;
+    gap: var(--space-2);
+  }
+  .pkg-hero__status-left {
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+  .pkg-hero__ends {
+    font-size: var(--fs-xs);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  /* Mobile LIVE badge reverts to the classic green treatment (the desktop
+     purple-blue gradient badge is unaffected). */
+  .pkg-badge--live {
+    flex: none;
+    color: #6fe3a4;
+    background-image: none;
+    background: rgba(34, 197, 94, 0.14);
+    border: 1px solid rgba(34, 197, 94, 0.4);
+    box-shadow: none;
+  }
+  .pkg-badge--live .pkg-badge__dot {
+    background: #22c55e;
+    animation-name: pkg-live-pulse-green;
+  }
+  /* Compact white/black CTA — ~33% smaller than the desktop 3.5rem button,
+     scoped to `.pkg-cta--hero` so the pricing-card and sticky-bar CTAs
+     (which also use the base `.pkg-cta` class) are unaffected. */
+  .pkg-cta--hero {
+    flex: none;
+    height: 2.35rem;
+    padding-inline: 1rem;
+    gap: 0.3rem;
+    font-size: var(--fs-xs);
+    background-image: none;
+    background: #fff;
+    color: #0a0a0f;
+    box-shadow: var(--shadow-sm);
+  }
+  .pkg-cta--hero:hover,
+  .pkg-cta--hero:active {
+    color: #0a0a0f;
+    box-shadow: var(--shadow-md);
+    transform: none;
+  }
+
+  /* 3. Hero image — square crop instead of the desktop 16:10 landscape.
+        Reuses the same <img>, so object-fit: cover simply recrops it. */
+  .pkg-gallery__hero {
+    aspect-ratio: 1 / 1;
+    border-radius: 22px;
+  }
+
+  /* 4. Thumbnail gallery — smaller squares, tight 8px gap, all 10 visible
+        (thumbnails 7-10 exist only for this mobile gallery). */
+  .pkg-gallery__thumbs { gap: 8px; }
+  .pkg-gallery__thumb {
+    width: 64px;
+    border-radius: var(--radius-md);
+  }
+}
+
+@keyframes pkg-live-pulse-green {
+  0%   { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55); }
+  70%  { box-shadow: 0 0 0 7px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+/* Desktop only — hide thumbnails 7-10 so the desktop hero keeps its
+   original 6-thumbnail strip exactly as before. */
+@media (min-width: 769px) {
+  .pkg-gallery__thumbs .pkg-gallery__thumb:nth-child(n+7) {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   MOBILE BODY REFINEMENTS (≤768px only)
+   Info capsules, section reorder (tabs before overview) and a premium
+   overview card. Desktop keeps the original 4-up grid, DOM section order,
+   and plain-text overview — none of it is touched outside this query.
+   ========================================================================== */
+@media (max-width: 768px) {
+
+  /* 1. Package info cards → full-width horizontal capsules, one per row */
+  .pkg-info-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .pkg-info-card {
+    --pkg-accent-glow: rgba(124, 58, 237, 0.22);
+    position: relative;
+    overflow: hidden;
+    min-height: 70px;
+    padding: 14px 18px;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+    box-shadow: var(--shadow-md), 0 0 22px var(--pkg-accent-glow);
+    transition:
+      transform var(--dur-fast) var(--ease-out),
+      box-shadow var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-standard);
+  }
+  .pkg-info-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(145, 99, 241, 0.45);
+    box-shadow: var(--shadow-lg), 0 0 30px var(--pkg-accent-glow);
+  }
+  .pkg-info-card:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: var(--shadow-sm), 0 0 18px var(--pkg-accent-glow);
+  }
+  /* Thin top accent line — same gradient as the icon, confined to a 2px bar */
+  .pkg-info-card::before {
+    content: "";
+    position: absolute;
+    left: 18px;
+    right: 18px;
+    top: 0;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--pkg-accent-gradient, var(--gradient-brand));
+    opacity: 0.9;
+  }
+  .pkg-info-card__icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 12px;
+    background: var(--pkg-accent-gradient, var(--gradient-brand));
+    color: #fff;
+  }
+  .pkg-info-card__label { font-size: var(--fs-2xs); }
+  .pkg-info-card__value { font-size: var(--fs-base); color: #fff; }
+
+  /* Each capsule gets its own accent — confined to the icon square, the
+     thin top line, and a soft matching outer glow. The capsule background
+     itself stays the same dark glass for all four (set once above). */
+  .pkg-info-card--duration {
+    --pkg-accent-glow: rgba(124, 58, 237, 0.22);
+    --pkg-accent-gradient: linear-gradient(135deg, #7c3aed, #ec4899);
+  }
+  .pkg-info-card--destination {
+    --pkg-accent-glow: rgba(34, 211, 238, 0.22);
+    --pkg-accent-gradient: linear-gradient(135deg, #22d3ee, #3b82f6);
+  }
+  .pkg-info-card--group {
+    --pkg-accent-glow: rgba(16, 185, 129, 0.22);
+    --pkg-accent-gradient: linear-gradient(135deg, #10b981, #14b8a6);
+  }
+  .pkg-info-card--trip {
+    --pkg-accent-glow: rgba(245, 158, 11, 0.22);
+    --pkg-accent-gradient: linear-gradient(135deg, #f59e0b, #fbbf24);
+  }
+
+  /* 2. Section reorder — info capsules, then tabs, then overview, then the
+        remaining sections in their original relative order. `.pkg-layout__main`
+        is already a column flexbox, so `order` reshuffles the visual stack
+        without moving anything in the DOM (desktop ignores `order` entirely
+        since this query never applies there). */
+  .pkg-layout__main [data-pkg-section="info"]      { order: 1; }
+  .pkg-layout__main [data-pkg-section="tabs"]      { order: 2; }
+  .pkg-layout__main [data-pkg-section="overview"]  { order: 3; }
+  .pkg-layout__main [data-pkg-section="included"]  { order: 4; }
+  .pkg-layout__main [data-pkg-section="help"]      { order: 5; }
+  .pkg-layout__main [data-pkg-section="related"]   { order: 6; }
+
+  /* 2b. Tab container — full width to match the info capsules, with equal
+         side margins so it's centered and never touches the edge. Display
+         changes from inline-flex (shrink-to-fit) to a full-width flex row;
+         the pill shape, background and active-tab gradient/animation are
+         all untouched — only sizing changes below. */
+  .pkg-tabs__nav {
+    display: flex;
+    width: 100%;
+    padding: 6px;
+    gap: 6px;
+    box-sizing: border-box;
+  }
+  .pkg-tabs__tab {
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0.55rem 0.5rem;
+    font-size: var(--fs-xs);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* 3. Package Overview → full-width premium card with a soft multi-colour
+        aurora wash confined to the corners/edges (Trip Highlights already
+        stacks below it once `.pkg-overview` collapses to one column). */
+  .pkg-overview__text {
+    padding: 1.5rem 1.25rem;
+    border-radius: var(--radius-2xl);
+    border: 1px solid var(--glass-border);
+    /* Six low-opacity radial blobs (purple, pink, cyan, blue, emerald,
+       indigo) anchored at the corners/edges, fading to transparent well
+       before the center — the text sits on plain --glass-bg underneath. */
+    background:
+      radial-gradient(65% 45% at 0% 0%,   rgba(124, 58, 237, 0.14) 0%, transparent 55%),
+      radial-gradient(65% 45% at 100% 0%, rgba(236, 72, 153, 0.13) 0%, transparent 55%),
+      radial-gradient(65% 45% at 0% 100%, rgba(34, 211, 238, 0.12) 0%, transparent 55%),
+      radial-gradient(65% 45% at 100% 100%, rgba(59, 130, 246, 0.12) 0%, transparent 55%),
+      radial-gradient(50% 40% at 0% 50%,  rgba(16, 185, 129, 0.09) 0%, transparent 50%),
+      radial-gradient(50% 40% at 100% 50%, rgba(99, 102, 241, 0.09) 0%, transparent 50%),
+      var(--glass-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    backdrop-filter: blur(var(--glass-blur));
+  }
+  .pkg-overview__text h2 {
+    margin-top: 0;
+    color: var(--color-text-strong);
+  }
+  .pkg-overview__text p {
+    line-height: var(--lh-relaxed);
+    color: var(--color-text);
+  }
+}
+
+/* ==========================================================================
+   "You May Also Like" — related packages carousel (replaces the old raw
+   image Gallery section). Mirrors the homepage Trending Packages carousel's
+   premium look and feel (drag/swipe track, arrow nav, glass card, wishlist
+   heart, hover lift) as its own self-contained component — this does not
+   touch trending-packages.css/js, which stay completely untouched. Unlike
+   Trending Packages, the track stays a horizontal scroller on every
+   breakpoint (no 2-col grid fallback), so mobile keeps native swipe.
+   ========================================================================== */
+.pkg-related {
+  position: relative;
+}
+
+.pkg-related__arrow {
+  position: absolute;
+  top: 38%;
+  transform: translateY(-50%);
+  z-index: 5;
+  width: 3rem;
+  height: 3rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(10, 10, 14, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    opacity var(--dur-fast) var(--ease-standard);
+}
+.pkg-related__arrow svg { width: 20px; height: 20px; }
+.pkg-related__arrow--prev { left: -0.5rem; }
+.pkg-related__arrow--next { right: -0.5rem; }
+.pkg-related__arrow:hover {
+  background: rgba(24, 24, 34, 0.9);
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: translateY(-50%) scale(1.06);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
+}
+.pkg-related__arrow:active { transform: translateY(-50%) scale(0.94); }
+.pkg-related__arrow:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+@media (max-width: 640px) {
+  .pkg-related__arrow { display: none; }
+}
+
+.pkg-related__track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - (var(--space-5) * 3)) / 4.15);
+  gap: var(--space-5);
+  margin: 0;
+  padding: 0.25rem 0.25rem 0.75rem;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 0.25rem;
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.pkg-related__track::-webkit-scrollbar { display: none; }
+.pkg-related__track.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+  scroll-behavior: auto;
+}
+.pkg-related__slide { scroll-snap-align: start; min-width: 0; }
+
+@media (max-width: 1024px) {
+  .pkg-related__track { grid-auto-columns: calc((100% - var(--space-5)) / 2.2); }
+}
+@media (max-width: 640px) {
+  /* Horizontal swipe, one-card-at-a-time feel — never a static grid. */
+  .pkg-related__track { grid-auto-columns: minmax(64%, 70%); gap: var(--space-4); }
+}
+
+.pkg-related__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-standard);
+}
+.pkg-related__card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(145, 99, 241, 0.45);
+  box-shadow: var(--shadow-lg), var(--glow-soft);
+}
+@media (hover: none) {
+  .pkg-related__card:active { transform: scale(0.98); }
+}
+
+.pkg-related__media {
+  position: relative;
+  display: block;
+  aspect-ratio: 1 / 1;
+  background: var(--color-surface-inset);
+}
+.pkg-related__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+.pkg-related__card:hover .pkg-related__img { transform: scale(1.05); }
+
+.pkg-related__wishlist {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.38);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-standard),
+    border-color var(--dur-fast) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-out);
+}
+.pkg-related__wishlist svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  margin: auto;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  opacity: 0.85;
+  transition: opacity var(--dur-fast) var(--ease-standard);
+}
+.pkg-related__wishlist:hover {
+  background: rgba(0, 0, 0, 0.6);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.08);
+}
+.pkg-related__wishlist:hover svg { opacity: 1; }
+.pkg-related__wishlist:active { transform: scale(0.9); }
+.pkg-related__wishlist[aria-pressed="true"] {
+  background: var(--gradient-brand);
+  border-color: transparent;
+}
+.pkg-related__wishlist[aria-pressed="true"] svg { opacity: 1; }
+.pkg-related__wishlist.is-pulsing { animation: pkg-related-heart-pop 420ms var(--ease-spring); }
+@keyframes pkg-related-heart-pop {
+  0%   { transform: scale(1); }
+  45%  { transform: scale(1.32); }
+  100% { transform: scale(1); }
+}
+
+.pkg-related__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.1rem 1.25rem 1.25rem;
+}
+.pkg-related__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: var(--fw-bold);
+}
+.pkg-related__name a {
+  color: var(--color-text-strong);
+  text-decoration: none;
+}
+.pkg-related__duration {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.pkg-related__footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-divider);
+}
+.pkg-related__price {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: var(--fw-extrabold);
+  color: var(--color-text-strong);
+}
+.pkg-related__price span {
+  margin-left: 0.2rem;
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-subtle);
+}
+
+.pkg-related__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--violet-300);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-standard), transform var(--dur-fast) var(--ease-standard);
+}
+.pkg-related__link:hover {
+  color: var(--violet-200);
+  transform: translateX(2px);
+}

@@ -127,4 +127,33 @@
       button.classList.add("tp-pulse");
     });
   });
+
+  /* ------------------------------------------------------------------ */
+  /* 4. Card navigation — opt-in via `data-tp-href` (e.g. the Dubai card  */
+  /*    links to dubai-package.html). Cards without this attribute are    */
+  /*    completely unaffected, so nothing changes for the rest of the     */
+  /*    carousel until each destination gets its own dedicated page.      */
+  /* ------------------------------------------------------------------ */
+  carousel.querySelectorAll("[data-tp-href]").forEach((card) => {
+    const destination = card.dataset.tpHref;
+    const wishlistBtn = card.querySelector("[data-tp-wishlist]");
+
+    function goToDestination() {
+      window.location.href = destination;
+    }
+
+    card.setAttribute("role", "link");
+    card.setAttribute("tabindex", "0");
+
+    card.addEventListener("click", (e) => {
+      if (wishlistBtn && wishlistBtn.contains(e.target)) return;
+      goToDestination();
+    });
+    card.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      if (wishlistBtn && wishlistBtn.contains(e.target)) return;
+      e.preventDefault();
+      goToDestination();
+    });
+  });
 })();
