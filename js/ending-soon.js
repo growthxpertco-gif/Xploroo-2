@@ -170,4 +170,40 @@
 
   tickCountdowns();
   window.setInterval(tickCountdowns, 60_000); // refresh once a minute
+
+  /* ------------------------------------------------------------------ */
+  /* 5. Card navigation — opt-in via `data-tp-href` (mirrors the exact    */
+  /*    same pattern already working in trending-packages.js). Clicking  */
+  /*    anywhere on the card navigates to its package page; clicks on     */
+  /*    the wishlist button or the "Book Now" link are excluded so they    */
+  /*    aren't double-handled (the link already navigates natively, and   */
+  /*    the wishlist button must never trigger navigation).               */
+  /* ------------------------------------------------------------------ */
+  carousel.querySelectorAll("[data-tp-href]").forEach((card) => {
+    const destination = card.dataset.tpHref;
+    const wishlistBtn = card.querySelector("[data-tp-wishlist]");
+    const ctaLink = card.querySelector(".tp-card__cta");
+
+    function isExcluded(target) {
+      return (wishlistBtn && wishlistBtn.contains(target)) || (ctaLink && ctaLink.contains(target));
+    }
+
+    function goToDestination() {
+      window.location.href = destination;
+    }
+
+    card.setAttribute("role", "link");
+    card.setAttribute("tabindex", "0");
+
+    card.addEventListener("click", (e) => {
+      if (isExcluded(e.target)) return;
+      goToDestination();
+    });
+    card.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      if (isExcluded(e.target)) return;
+      e.preventDefault();
+      goToDestination();
+    });
+  });
 })();
