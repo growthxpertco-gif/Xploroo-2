@@ -186,6 +186,52 @@
 }
 
 /* -------------------------------------------------------------------------
+   Founder's Journey — one Influencer-style card. The `.ip-card` component
+   itself comes from influencers-page.css (linked by about.html for this
+   section), so dimensions/hover/radius/glass/shadow match influencers.html
+   exactly. Only the wrapper link + founder-specific text bits live here.
+   ------------------------------------------------------------------------- */
+.ap-section-head__subtitle {
+  margin: var(--space-2) 0 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.ap-founder {
+  display: block;
+  max-width: 21rem;              /* ≈ one column of the influencers 4-up grid */
+  margin-inline: auto;
+  color: inherit;
+  text-decoration: none;
+}
+.ap-founder:hover { color: inherit; }
+
+.ap-founder__role {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--magenta-300);
+}
+:root[data-theme="light"] .ap-founder__role { color: var(--magenta-600); }
+
+.ap-founder__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: var(--space-3);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--violet-300);
+  transition:
+    color var(--dur-fast) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-standard);
+}
+.ap-founder:hover .ap-founder__cta {
+  color: var(--violet-200);
+  transform: translateX(3px);
+}
+
+/* -------------------------------------------------------------------------
    CTA
    ------------------------------------------------------------------------- */
 .ap-cta {

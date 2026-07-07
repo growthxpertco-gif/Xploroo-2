@@ -271,4 +271,23 @@
       });
     });
   }
+
+  /* ------------------------------------------------------------------ */
+  /* 8. Booking handoff — before following any "Book Now" link, persist   */
+  /*    the selected package slug so booking.html can still recover it    */
+  /*    if a host's clean-URL redirect strips the query string (e.g. the  */
+  /*    `serve` dev server or Vercel's cleanUrls both 301 `/booking.html` */
+  /*    to `/booking`, dropping `?package=`). document-wide because the   */
+  /*    sticky mobile bar lives outside `.pkg-page`.                      */
+  /* ------------------------------------------------------------------ */
+  document.querySelectorAll('a[href*="booking.html?package="]').forEach((link) => {
+    link.addEventListener("click", () => {
+      try {
+        const slug = new URL(link.href, window.location.href).searchParams.get("package");
+        if (slug) sessionStorage.setItem("xploroo-selected-package", slug);
+      } catch (_) {
+        /* URL/sessionStorage unavailable — query param path still works */
+      }
+    });
+  });
 })();

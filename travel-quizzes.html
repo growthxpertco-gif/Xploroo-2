@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Test your knowledge of Xploroo, travel experiences, and our vision." />
-  <title>Travel Quiz · Xploroo</title>
+  <meta name="description" content="Play & Win — play exciting games, climb the leaderboard, earn Xploroo Coins, and unlock unforgettable travel experiences." />
+  <title>Play &amp; Win · Xploroo</title>
 
   <!-- Apply the stored theme before first paint (avoids a flash of the
        wrong theme on reload). Dark is the default — this only ever adds
@@ -33,8 +33,8 @@
   <!-- Search overlay module (shared with every page) -->
   <link rel="stylesheet" href="styles/search-overlay.css" />
 
-  <!-- Travel Quiz page (interactive quiz experience) -->
-  <link rel="stylesheet" href="styles/travel-quiz.css" />
+  <!-- Play & Win arena (gaming landing page — page-scoped neon theme) -->
+  <link rel="stylesheet" href="styles/play-win.css" />
 
   <!-- Footer module (shared with the homepage) -->
   <link rel="stylesheet" href="styles/footer.css" />
@@ -280,82 +280,246 @@
     <!-- MAIN                                                          -->
     <!-- ============================================================= -->
     <main class="main" id="main">
-      <div class="quiz-page" data-section="quiz-page">
-        <div class="quiz-page__container">
+      <div class="pw-page" data-pw-page>
 
-          <div class="quiz" data-quiz aria-hidden="false">
+        <!-- Animated arena background: grid mesh + aurora blobs; particles
+             are injected into this layer by play-win.js -->
+        <div class="pw-bg" data-pw-bg aria-hidden="true">
+          <span class="pw-blob pw-blob--violet"></span>
+          <span class="pw-blob pw-blob--cyan"></span>
+          <span class="pw-blob pw-blob--pink"></span>
+          <span class="pw-blob pw-blob--orange"></span>
+        </div>
 
-            <!-- =========================================================
-                 INTRO — hero + Start Quiz (quiz does not start until
-                 clicked)
-                 ========================================================= -->
-            <section class="quiz-panel is-active" data-quiz-intro>
-              <div class="quiz-hero">
-                <h1 class="quiz-hero__title">Travel Quiz</h1>
-                <p class="quiz-hero__subtitle">Test your knowledge of Xploroo, travel experiences, and our vision.</p>
-                <button class="btn btn--glass btn--pill btn--lg quiz-hero__start" type="button" data-quiz-start>Start Quiz</button>
+        <div class="pw-container">
+
+          <!-- =========================================================
+               HERO
+               ========================================================= -->
+          <section class="pw-hero" data-pw-reveal aria-labelledby="pw-title">
+            <span class="pw-hero__float pw-hero__float--coin" aria-hidden="true">🪙</span>
+            <span class="pw-hero__float pw-hero__float--trophy" aria-hidden="true">🏆</span>
+            <span class="pw-hero__float pw-hero__float--dice" aria-hidden="true">🎲</span>
+            <span class="pw-hero__float pw-hero__float--plane" aria-hidden="true">✈️</span>
+
+            <h1 class="pw-hero__title" id="pw-title">
+              <span class="pw-hero__title-emoji" aria-hidden="true">🎮</span>
+              <span class="pw-hero__title-text">Play &amp; Win</span>
+            </h1>
+            <p class="pw-hero__subtitle">Play exciting games, climb the leaderboard, earn Xploroo Coins, and unlock unforgettable travel experiences.</p>
+
+            <span class="pw-hero__cta" role="status">
+              <span class="pw-hero__cta-dot" aria-hidden="true"></span>
+              Coming Soon
+            </span>
+          </section>
+
+          <!-- =========================================================
+               FEATURE CARDS
+               ========================================================= -->
+          <section data-pw-reveal aria-label="What you can win">
+            <div class="pw-features">
+              <article class="pw-feature pw-feature--gold">
+                <span class="pw-feature__icon" aria-hidden="true">🏆</span>
+                <h2 class="pw-feature__title">Win Free Trips</h2>
+                <p class="pw-feature__text">Top the arena and fly free — full holiday packages up for grabs every season.</p>
+              </article>
+              <article class="pw-feature pw-feature--cyan">
+                <span class="pw-feature__icon" aria-hidden="true">🪙</span>
+                <h2 class="pw-feature__title">Earn Xploroo Coins</h2>
+                <p class="pw-feature__text">Every game earns coins you can redeem for real discounts on your future trips.</p>
+              </article>
+              <article class="pw-feature pw-feature--violet">
+                <span class="pw-feature__icon" aria-hidden="true">📈</span>
+                <h2 class="pw-feature__title">Global Leaderboard</h2>
+                <p class="pw-feature__text">Compete with travellers everywhere — the top players will appear right here.</p>
+              </article>
+              <article class="pw-feature pw-feature--pink">
+                <span class="pw-feature__icon" aria-hidden="true">🎁</span>
+                <h2 class="pw-feature__title">Exclusive Rewards</h2>
+                <p class="pw-feature__text">Travel vouchers, upgrades, merchandise and surprise rewards for the boldest players.</p>
+              </article>
+            </div>
+          </section>
+
+          <!-- =========================================================
+               XPLOROO COINS DASHBOARD
+               ========================================================= -->
+          <section data-pw-reveal aria-labelledby="pw-coins-title">
+            <div class="pw-coins">
+              <div class="pw-section-head">
+                <span class="pw-section-head__eyebrow">Your Wallet</span>
+                <h2 class="pw-section-head__title" id="pw-coins-title">Xploroo Coins</h2>
               </div>
-            </section>
 
-            <!-- =========================================================
-                 QUIZ STAGE — one question at a time
-                 ========================================================= -->
-            <section class="quiz-panel" data-quiz-stage hidden>
-
-              <div class="quiz__progress">
-                <p class="quiz__progress-label">Question <span data-quiz-current>1</span> of <span data-quiz-total>25</span></p>
-                <div class="quiz__progress-track">
-                  <div class="quiz__progress-fill" data-quiz-progress-fill></div>
+              <div class="pw-coins__grid">
+                <div class="pw-coins__stat">
+                  <span class="pw-coins__label">Available Coins</span>
+                  <span class="pw-coins__value pw-coins__value--gold" data-pw-count="0" data-pw-suffix=" XC">0 XC</span>
+                </div>
+                <div class="pw-coins__stat">
+                  <span class="pw-coins__label">Lifetime Coins</span>
+                  <span class="pw-coins__value pw-coins__value--cyan" data-pw-count="0" data-pw-suffix=" XC">0 XC</span>
+                </div>
+                <div class="pw-coins__stat">
+                  <span class="pw-coins__label">Level</span>
+                  <span class="pw-coins__value pw-coins__value--level">Explorer</span>
                 </div>
               </div>
 
-              <div class="quiz__card-float">
-                <div class="quiz__card" data-quiz-card>
-                  <span class="quiz__number">Question <span data-quiz-qnum>1</span></span>
-                  <h2 class="quiz__question" data-quiz-question></h2>
-                  <div class="quiz__options" data-quiz-options role="list"></div>
-                </div>
+              <p class="pw-coins__note">Coins will be visible here once games launch.</p>
+            </div>
+          </section>
+
+          <!-- =========================================================
+               LEADERBOARD (premium empty state — no real rankings)
+               ========================================================= -->
+          <section data-pw-reveal aria-labelledby="pw-board-title">
+            <div class="pw-section-head">
+              <span class="pw-section-head__eyebrow">Hall of Fame</span>
+              <h2 class="pw-section-head__title" id="pw-board-title">Global Leaderboard</h2>
+              <p class="pw-section-head__subtitle">The first champions of Xploroo will be crowned here.</p>
+            </div>
+
+            <div class="pw-board">
+              <div class="pw-board__row pw-board__row--head" aria-hidden="true">
+                <span>Rank</span>
+                <span>Player</span>
+                <span class="pw-board__cell--xp">XP</span>
+                <span>Coins</span>
+                <span>Prize</span>
               </div>
 
-              <div class="quiz__nav">
-                <button class="btn btn--outline btn--pill" type="button" data-quiz-prev disabled>Previous</button>
-                <button class="btn btn--gradient btn--pill" type="button" data-quiz-next disabled>Next</button>
-                <button class="btn btn--gradient btn--pill" type="button" data-quiz-submit disabled hidden>Submit</button>
+              <div class="pw-board__row">
+                <span class="pw-board__rank pw-board__rank--1">1</span>
+                <span class="pw-board__ghost"></span>
+                <span class="pw-board__ghost pw-board__ghost--sm pw-board__cell--xp"></span>
+                <span class="pw-board__ghost pw-board__ghost--sm"></span>
+                <span class="pw-board__prize">✈ Free Trip</span>
               </div>
-            </section>
+              <div class="pw-board__row">
+                <span class="pw-board__rank pw-board__rank--2">2</span>
+                <span class="pw-board__ghost"></span>
+                <span class="pw-board__ghost pw-board__ghost--sm pw-board__cell--xp"></span>
+                <span class="pw-board__ghost pw-board__ghost--sm"></span>
+                <span class="pw-board__prize">💎 Upgrade</span>
+              </div>
+              <div class="pw-board__row">
+                <span class="pw-board__rank pw-board__rank--3">3</span>
+                <span class="pw-board__ghost"></span>
+                <span class="pw-board__ghost pw-board__ghost--sm pw-board__cell--xp"></span>
+                <span class="pw-board__ghost pw-board__ghost--sm"></span>
+                <span class="pw-board__prize">🎁 Voucher</span>
+              </div>
 
-            <!-- =========================================================
-                 RESULTS
-                 ========================================================= -->
-            <section class="quiz-panel" data-quiz-results hidden>
-              <div class="quiz__results">
+              <p class="pw-board__empty">
+                <strong>Coming Soon</strong>
+                Rankings go live with the first game. Your name could be at the top.
+              </p>
+            </div>
+          </section>
 
-                <div class="quiz__ring" data-quiz-ring>
-                  <svg viewBox="0 0 160 160" aria-hidden="true">
-                    <defs>
-                      <linearGradient id="quizRingGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stop-color="var(--cyan-400, #22d3ee)"/>
-                        <stop offset="100%" stop-color="var(--violet-500, #7c3aed)"/>
-                      </linearGradient>
-                    </defs>
-                    <circle class="quiz__ring-track" cx="80" cy="80" r="70"/>
-                    <circle class="quiz__ring-fill" data-quiz-ring-fill cx="80" cy="80" r="70"/>
-                  </svg>
-                  <div class="quiz__ring-score">
-                    <span class="quiz__ring-score-value" data-quiz-score-value>0</span>
-                    <span class="quiz__ring-score-total" data-quiz-score-total>/ 25</span>
+          <!-- =========================================================
+               COMING GAMES — horizontal carousel
+               ========================================================= -->
+          <section data-pw-reveal aria-labelledby="pw-games-title">
+            <div class="pw-section-head">
+              <span class="pw-section-head__eyebrow">The Arcade</span>
+              <h2 class="pw-section-head__title" id="pw-games-title">Coming Games</h2>
+              <p class="pw-section-head__subtitle">Six ways to play, earn and win — rolling out soon.</p>
+            </div>
+
+            <ul class="pw-games" data-pw-games role="list">
+              <li class="pw-games__slide">
+                <article class="pw-game pw-game--quiz">
+                  <div class="pw-game__art" aria-hidden="true"><span>🧠</span></div>
+                  <div class="pw-game__body">
+                    <h3 class="pw-game__name">Travel Quiz</h3>
+                    <span class="pw-game__badge">Launching Soon</span>
                   </div>
-                </div>
+                </article>
+              </li>
+              <li class="pw-games__slide">
+                <article class="pw-game pw-game--spin">
+                  <div class="pw-game__art" aria-hidden="true"><span>🎡</span></div>
+                  <div class="pw-game__body">
+                    <h3 class="pw-game__name">Spin &amp; Win</h3>
+                    <span class="pw-game__badge">Launching Soon</span>
+                  </div>
+                </article>
+              </li>
+              <li class="pw-games__slide">
+                <article class="pw-game pw-game--treasure">
+                  <div class="pw-game__art" aria-hidden="true"><span>🗺️</span></div>
+                  <div class="pw-game__body">
+                    <h3 class="pw-game__name">Treasure Hunt</h3>
+                    <span class="pw-game__badge">Launching Soon</span>
+                  </div>
+                </article>
+              </li>
+              <li class="pw-games__slide">
+                <article class="pw-game pw-game--puzzle">
+                  <div class="pw-game__art" aria-hidden="true"><span>🧩</span></div>
+                  <div class="pw-game__body">
+                    <h3 class="pw-game__name">Destination Puzzle</h3>
+                    <span class="pw-game__badge">Launching Soon</span>
+                  </div>
+                </article>
+              </li>
+              <li class="pw-games__slide">
+                <article class="pw-game pw-game--lucky">
+                  <div class="pw-game__art" aria-hidden="true"><span>🎰</span></div>
+                  <div class="pw-game__body">
+                    <h3 class="pw-game__name">Lucky Draw</h3>
+                    <span class="pw-game__badge">Launching Soon</span>
+                  </div>
+                </article>
+              </li>
+              <li class="pw-games__slide">
+                <article class="pw-game pw-game--memory">
+                  <div class="pw-game__art" aria-hidden="true"><span>🃏</span></div>
+                  <div class="pw-game__body">
+                    <h3 class="pw-game__name">Memory Challenge</h3>
+                    <span class="pw-game__badge">Launching Soon</span>
+                  </div>
+                </article>
+              </li>
+            </ul>
+          </section>
 
-                <p class="quiz__badge" data-quiz-badge>🏆 Xploroo Expert</p>
+          <!-- =========================================================
+               REWARDS SHOWCASE
+               ========================================================= -->
+          <section data-pw-reveal aria-labelledby="pw-rewards-title">
+            <div class="pw-section-head">
+              <span class="pw-section-head__eyebrow">The Vault</span>
+              <h2 class="pw-section-head__title" id="pw-rewards-title">Rewards Showcase</h2>
+              <p class="pw-section-head__subtitle">A glimpse of what your coins and wins will unlock.</p>
+            </div>
 
-                <div>
-                  <button class="btn btn--gradient btn--pill btn--lg" type="button" data-quiz-restart>Play Again</button>
-                </div>
+            <div class="pw-rewards">
+              <div class="pw-reward pw-reward--trip">
+                <span class="pw-reward__emoji" aria-hidden="true">✈️</span>
+                <span class="pw-reward__name">Free Trip</span>
               </div>
-            </section>
-
-          </div>
+              <div class="pw-reward pw-reward--luxury">
+                <span class="pw-reward__emoji" aria-hidden="true">💎</span>
+                <span class="pw-reward__name">Luxury Upgrade</span>
+              </div>
+              <div class="pw-reward pw-reward--vip">
+                <span class="pw-reward__emoji" aria-hidden="true">🎟️</span>
+                <span class="pw-reward__name">VIP Meet &amp; Greet</span>
+              </div>
+              <div class="pw-reward pw-reward--merch">
+                <span class="pw-reward__emoji" aria-hidden="true">🎁</span>
+                <span class="pw-reward__name">Merchandise</span>
+              </div>
+              <div class="pw-reward pw-reward--coins">
+                <span class="pw-reward__emoji" aria-hidden="true">🪙</span>
+                <span class="pw-reward__name">Bonus Coins</span>
+              </div>
+            </div>
+          </section>
 
         </div>
       </div>
@@ -474,8 +638,8 @@
   <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
   <script src="js/search-overlay.js" defer></script>
 
-  <!-- Travel Quiz behavior (interactive quiz engine) -->
-  <script src="js/travel-quiz.js" defer></script>
+  <!-- Play & Win arena behavior (particles, reveals, counters, carousel) -->
+  <script src="js/play-win.js" defer></script>
 
   <!-- Footer behavior (newsletter validation) — shared -->
   <script src="js/footer.js" defer></script>
