@@ -1,0 +1,143 @@
+/* ==========================================================================
+   XPLOROO · Reel component (standalone, reusable)
+   reel-component.css — Styles ONE luxury slot-machine reel: a fixed
+   "viewing window" that clips a vertically-scrolling "track" holding
+   exactly 6 destination cards. The track's position is driven entirely by
+   JS setting `transform: translateY()` on `[data-reel-track]` — this file
+   only owns the static look (glass shell, glow border, card chrome).
+
+   Scoped entirely under `.reel-*` classes so it never collides with any
+   other component. All sizing is driven by CSS custom properties on the
+   root `.reel` element, so duplicating the block's HTML (with a new
+   `data-reel-id`) is enough to get a second/third reel with the exact same
+   styling — no extra CSS needed.
+   ========================================================================== */
+
+.reel {
+  /* ---- Public theming/sizing hooks — tweak per-instance if needed ---- */
+  --reel-width: clamp(7rem, 6rem + 4vw, 9.5rem);   /* viewing window width  */
+  --reel-ratio: 4 / 5;                              /* card aspect ratio    */
+  --reel-radius: 20px;
+  --reel-border: 2px;
+  --reel-glow-a: #3b82f6;  /* blue  */
+  --reel-glow-b: #8b5cf6;  /* purple */
+
+  position: relative;
+  width: var(--reel-width);
+  flex: none;
+}
+
+/* -------------------------------------------------------------------------
+   Viewing window — the only part of the reel that's ever visible. Clips
+   the track so exactly one card shows at a time. The glowing blue/purple
+   border + glass shell live here (not on the track), so they never move.
+   ------------------------------------------------------------------------- */
+.reel__window {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--reel-ratio);
+  overflow: hidden;
+  border-radius: var(--reel-radius);
+  padding: var(--reel-border); /* gradient-border trick */
+  background: linear-gradient(150deg, var(--reel-glow-a) 0%, var(--reel-glow-b) 100%);
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.55),
+    0 0 22px rgba(59, 130, 246, 0.35),
+    0 0 22px rgba(139, 92, 246, 0.28);
+}
+
+/* Inner clipping surface — sits inside the gradient-border padding so the
+   glow reads as a thin outline, not a filled block. */
+.reel__window::before {
+  content: "";
+  position: absolute;
+  inset: var(--reel-border);
+  z-index: 2;
+  border-radius: calc(var(--reel-radius) - var(--reel-border));
+  overflow: hidden;
+  pointer-events: none;
+  /* Glossy top sheen, matches the site's existing "premium glass" language */
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10), inset 0 -18px 30px rgba(0, 0, 0, 0.55);
+}
+
+/* -------------------------------------------------------------------------
+   Track — the scrolling element. Exactly 6 cards stacked vertically;
+   `transform: translateY()` (set by JS every animation frame) is the ONLY
+   thing that ever moves. No layout-affecting properties are touched during
+   animation, so this stays GPU-composited and off the main layout thread.
+   ------------------------------------------------------------------------- */
+.reel__track {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  /* NO height/overflow here — the track must be as tall as ALL its stacked
+     cards combined (12 after JS clones the 6 originals once), and clipping
+     is the WINDOW's job. Giving the track `height: 100%` + overflow:hidden
+     would make it one card tall and clip every card after the first,
+     leaving the window empty the moment card 1 scrolls away. */
+  border-radius: calc(var(--reel-radius) - var(--reel-border));
+  will-change: transform; /* hint the compositor — set once, not toggled */
+}
+
+/* -------------------------------------------------------------------------
+   Card — one destination. Each card is exactly one window-height tall
+   (flex: none so it never shrinks/grows), so `translateY(-N * cardHeight)`
+   always lands a card exactly centered in the window.
+   ------------------------------------------------------------------------- */
+.reel__card {
+  position: relative;
+  flex: none;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.reel__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Dark gradient overlay — bottom-heavy so the destination label stays
+   legible over any photo. */
+.reel__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.55) 75%, rgba(0, 0, 0, 0.88) 100%);
+}
+
+.reel__label {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0.6rem 0.65rem;
+  font-family: "Sora", "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(0.8rem, 0.72rem + 0.3vw, 0.95rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #fff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+/* -------------------------------------------------------------------------
+   Landed state — a brief highlight pulse on the winning card once a spin
+   settles, reinforcing the "premium bounce" without any extra markup.
+   Toggled by JS adding/removing `.is-landed` on the active card.
+   ------------------------------------------------------------------------- */
+.reel__card.is-landed .reel__overlay {
+  animation: reel-landed-glow 900ms ease-out;
+}
+@keyframes reel-landed-glow {
+  0%   { box-shadow: inset 0 0 0 0 rgba(139, 92, 246, 0); }
+  30%  { box-shadow: inset 0 0 40px 6px rgba(139, 92, 246, 0.35); }
+  100% { box-shadow: inset 0 0 0 0 rgba(139, 92, 246, 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reel__card.is-landed .reel__overlay { animation: none; }
+}

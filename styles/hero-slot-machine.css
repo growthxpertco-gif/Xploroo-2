@@ -204,6 +204,61 @@
 .slot-machine__x::after { transform: translateY(-50%) rotate(-45deg); }
 
 /* -------------------------------------------------------------------------
+   Mobile (<1024px) — compact single-row hanging cabinet. Same reel markup
+   as desktop (no HTML changes): the second reel row + its divider are
+   hidden here too (mirroring the desktop rule below, kept separate so the
+   two breakpoints never depend on each other), corner bolts are dropped,
+   the cabinet detaches from the marquee by a small gap, and two thin
+   metallic wires (marquee pseudo-elements) bridge that gap so the body
+   reads as suspended rather than empty space. Reel size/aspect-ratio is
+   untouched — only the surrounding spacing is tightened.
+   ------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  /* 1. One row only */
+  .slot-machine__reels .slot-machine__reel-row:last-of-type,
+  .slot-machine__row-divider {
+    display: none;
+  }
+
+  /* 2. No corner bolts — redundant clutter now that the wires carry the
+     "hanging" read; desktop keeps all four untouched. */
+  .slot-machine__bolt {
+    display: none;
+  }
+
+  /* 4. Gap instead of overlap: the cabinet no longer tucks under the
+     marquee, it hangs 14px below it. */
+  .slot-machine__cabinet {
+    margin-top: 14px;
+  }
+
+  /* 5. Thin metallic support wires, one per side, bridging the gap. */
+  .slot-machine__marquee::before,
+  .slot-machine__marquee::after {
+    content: "";
+    position: absolute;
+    bottom: -14px;
+    width: 2px;
+    height: 14px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, #eef2f8 0%, #a7afc0 55%, #6b7280 100%);
+    box-shadow: 0 0 4px rgba(210, 222, 255, 0.55), 0 0 2px rgba(255, 255, 255, 0.4);
+    z-index: 3;
+  }
+  .slot-machine__marquee::before { left: 20%; }
+  .slot-machine__marquee::after  { right: 20%; }
+
+  /* 3 & 6 & 8. Denser glass panel + tighter reel gap now that only one row
+     remains — no reserved space left below for a second row. */
+  .slot-machine__glass {
+    padding: clamp(1rem, 0.85rem + 0.6vw, 1.25rem) clamp(0.9rem, 0.75rem + 0.6vw, 1.1rem);
+  }
+  .slot-machine__reel-row {
+    gap: clamp(0.5rem, 0.4rem + 0.8vw, 0.75rem);
+  }
+}
+
+/* -------------------------------------------------------------------------
    Desktop (>=1024px) — single wide row of 3 larger reels inside a wide
    horizontal cabinet, with illuminated "X" separators between them and an
    asymmetric cyan-to-pink cabinet glow. Mobile markup/rules above are

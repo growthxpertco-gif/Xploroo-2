@@ -169,7 +169,12 @@
   grid-template-columns: repeat(2, 1fr);
   gap: var(--space-3);
 }
-@media (max-width: 420px) {
+/* Matches .auth-grid's breakpoint above — below this width, two columns no
+   longer leave enough room for "Continue with Google/Apple" to fit without
+   forcing the row wider than the card (overflowing the form) or squashing
+   the two buttons to uneven widths. Stacking full-width keeps them exactly
+   as wide as the email/password inputs, like every other breakpoint below. */
+@media (max-width: 560px) {
   .auth-social { grid-template-columns: 1fr; }
 }
 .auth-social__btn svg { width: 18px; height: 18px; }

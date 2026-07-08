@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reel Component — Demo</title>
+  <link rel="stylesheet" href="styles/reel-component.css" />
+  <style>
+    /* Demo-page-only chrome — not part of the reusable component. */
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      font-family: system-ui, sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =====================================================================
+       REUSABLE REEL COMPONENT — copy this whole `.reel` block to duplicate
+       a second/third reel later. Only `data-reel` needs to stay unique-ish
+       (it doesn't need an id, initReel() finds it via querySelector scoped
+       to this element), and the 6 image/name pairs can be swapped freely.
+       ===================================================================== -->
+  <div class="reel" data-reel>
+    <div class="reel__window">
+      <div class="reel__track" data-reel-track>
+
+        <article class="reel__card">
+          <img class="reel__image" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260707_231943.jpg.jpeg?updatedAt=1783446707944" alt="Dubai" />
+          <div class="reel__overlay"></div>
+          <p class="reel__label">Dubai</p>
+        </article>
+
+        <article class="reel__card">
+          <img class="reel__image" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260707_231809.jpg.jpeg?updatedAt=1783446708209" alt="Goa" />
+          <div class="reel__overlay"></div>
+          <p class="reel__label">Goa</p>
+        </article>
+
+        <article class="reel__card">
+          <img class="reel__image" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260703_170724.jpg.jpeg?updatedAt=1783078705945" alt="Vietnam" />
+          <div class="reel__overlay"></div>
+          <p class="reel__label">Vietnam</p>
+        </article>
+
+        <article class="reel__card">
+          <img class="reel__image" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260703_132014.jpg.jpeg?updatedAt=1783065390185" alt="Singapore" />
+          <div class="reel__overlay"></div>
+          <p class="reel__label">Singapore</p>
+        </article>
+
+        <article class="reel__card">
+          <img class="reel__image" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260703_131131.jpg.jpeg?updatedAt=1783064570925" alt="Japan" />
+          <div class="reel__overlay"></div>
+          <p class="reel__label">Japan</p>
+        </article>
+
+        <article class="reel__card">
+          <img class="reel__image" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260703_125532.jpg.jpeg?updatedAt=1783064185950" alt="Iceland" />
+          <div class="reel__overlay"></div>
+          <p class="reel__label">Iceland</p>
+        </article>
+
+      </div>
+    </div>
+  </div>
+
+  <script src="js/reel-component.js" defer></script>
+</body>
+</html>
