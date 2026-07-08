@@ -36,6 +36,44 @@
     italy:     { name: "Italy Classic Escape",           destination: "Italy",             duration: "6 Days / 5 Nights", price: 89999,  image: "https://picsum.photos/seed/italy-hero/600/600" },
   };
 
+  /* ------------------------------------------------------------------ */
+  /* Influencer service catalog — one entry per bookable experience type. */
+  /* Add new services here when future influencer pages need them; every  */
+  /* influencer page reuses this same booking.html + catalog.            */
+  /* ------------------------------------------------------------------ */
+  const SERVICES = {
+    "meet-greet":     { name: "Meet & Greet",   price: 9999,  image: "https://picsum.photos/seed/meet-greet-hero/600/600" },
+    "podcast-shoot":  { name: "Podcast Shoot",  price: 14999, image: "https://picsum.photos/seed/podcast-shoot-hero/600/600" },
+    "blog-shoot":     { name: "Blog Shoot",     price: 11999, image: "https://picsum.photos/seed/blog-shoot-hero/600/600" },
+    "personal-event": { name: "Personal Event", price: 24999, image: "https://picsum.photos/seed/personal-event-hero/600/600" },
+  };
+
+  /* ------------------------------------------------------------------ */
+  /* Influencer directory — slug -> display name, one entry per influencer */
+  /* page. Add a new entry whenever a new influencer page is created; the  */
+  /* slug must match that page's `?influencer=` value.                    */
+  /* ------------------------------------------------------------------ */
+  const INFLUENCERS = {
+    vanshika:  "Vanshika Dharu",
+    tanya:     "Tanya Munakhiya",
+    palak:     "Palak Thakur",
+    payal:     "Payal Agarwal",
+    neelima:   "Neelima",
+    rimli:     "Rimli Talukdar",
+    gataansha: "Gataansha Raghuwanshi",
+    ishmeet:   "Ishmeet Singh",
+    varshita:  "Varshita Gupta",
+    diwakar:   "Diwakar Pratap",
+    vishal:    "Vishal Singh",
+    anurag:    "Anurag Sharma",
+    piyush:    "Piyush Munakhya",
+    bhavesh:   "Bhavesh Rathod",
+    siya:      "Siya",
+    sabhya:    "Sabhya Khera",
+    shruti:    "Shruti Rane",
+    triplets:  "The Triplets",
+  };
+
   /* Demo coupons — swap for a server-side check when a backend exists. */
   const COUPONS = {
     XPLOROO10: { type: "percent", value: 10, label: "10% off" },
@@ -45,20 +83,61 @@
   const TAX_RATE = 0.05; // 5% GST
 
   /* ------------------------------------------------------------------ */
-  /* Resolve the selected package (falls back to Dubai so the page never  */
-  /* renders empty during direct visits).                                 */
+  /* Resolve the selected package OR influencer service. An influencer    */
+  /* service link (`?service=<slug>`) always wins when present — this is  */
+  /* the only branch point between the two flows; everything downstream   */
+  /* (totals, coupon, payment hand-off) is shared code.                   */
   /* ------------------------------------------------------------------ */
   const params = new URLSearchParams(window.location.search);
   let slugFallback = null;
+  let serviceSlugFallback = null;
+  let influencerSlugFallback = null;
   try {
     // Written by package-details.js on Book Now click — survives hosts whose
     // clean-URL redirect strips the `?package=` query string.
     slugFallback = sessionStorage.getItem("xploroo-selected-package");
+    // Written by influencer-profile.js on Book Now click — same reasoning,
+    // for the `?service=` / `?influencer=` query strings used by influencer
+    // experience pages.
+    serviceSlugFallback = sessionStorage.getItem("xploroo-selected-service");
+    influencerSlugFallback = sessionStorage.getItem("xploroo-selected-influencer");
   } catch (_) {
     /* sessionStorage unavailable — the query param path still works */
   }
-  const slug = (params.get("package") || slugFallback || "dubai").toLowerCase();
-  const pkg = PACKAGES[slug] || PACKAGES.dubai;
+
+  // An explicit query string on THIS navigation always wins over a
+  // sessionStorage fallback from an earlier, unrelated visit — this stops a
+  // stale `xploroo-selected-service`/`xploroo-selected-package` (e.g. left
+  // over from booking an influencer service earlier in the same tab) from
+  // hijacking a fresh booking of the other type. The fallback is only ever
+  // consulted when the current URL is silent on both.
+  const hasQueryService = params.has("service");
+  const hasQueryPackage = params.has("package");
+
+  const serviceSlug = (
+    hasQueryService ? params.get("service") :
+    hasQueryPackage ? "" :
+    (serviceSlugFallback || "")
+  ).toLowerCase();
+  const isServiceBooking = Object.prototype.hasOwnProperty.call(SERVICES, serviceSlug);
+
+  const influencerSlug = (params.get("influencer") || (isServiceBooking ? influencerSlugFallback : "") || "").toLowerCase();
+  const influencerName = INFLUENCERS[influencerSlug] || "Xploroo Influencer";
+
+  const slug = (
+    hasQueryPackage ? params.get("package") :
+    hasQueryService ? "dubai" :
+    (slugFallback || "dubai")
+  ).toLowerCase();
+  const pkg = isServiceBooking
+    ? {
+        name: SERVICES[serviceSlug].name,
+        destination: influencerName, // shown under the "Influencer" label
+        duration: SERVICES[serviceSlug].name, // shown under the "Service" label
+        price: SERVICES[serviceSlug].price,
+        image: SERVICES[serviceSlug].image,
+      }
+    : (PACKAGES[slug] || PACKAGES.dubai);
 
   /* ------------------------------------------------------------------ */
   /* Element lookups                                                     */
@@ -67,9 +146,14 @@
 
   const imageEl = el("image");
   const nameEls = page.querySelectorAll('[data-bk="name"]');
+  const summaryTitleEl = el("summary-title");
+  const destinationLabelEl = el("destination-label");
+  const durationLabelEl = el("duration-label");
+  const priceLabelEl = el("price-label");
   const destinationEl = el("destination");
   const durationEl = el("duration");
   const priceEl = el("price");
+  const bookingTypeRowEl = el("booking-type-row");
   const travellersDisplayEl = el("travellers-display");
   const totalDisplayEl = el("total-display");
 
@@ -78,6 +162,9 @@
   const couponInput = el("coupon");
   const couponApplyBtn = el("coupon-apply");
   const couponMessageEl = el("coupon-message");
+
+  const step2SectionEl = el("step2"); // Traveller Details — hidden for influencer service bookings
+  const step3SectionEl = el("step3"); // Additional Details — hidden for influencer service bookings
 
   const payCostEl = el("pay-cost");
   const payTaxEl = el("pay-tax");
@@ -117,12 +204,49 @@
   /* ------------------------------------------------------------------ */
   /* Populate the static summary card                                    */
   /* ------------------------------------------------------------------ */
-  imageEl.src = pkg.image;
-  imageEl.alt = pkg.name;
   nameEls.forEach((n) => (n.textContent = pkg.name));
   destinationEl.textContent = pkg.destination;
   durationEl.textContent = pkg.duration;
   priceEl.textContent = formatINR(pkg.price);
+
+  if (isServiceBooking) {
+    // Simplified influencer-experience view: relabel the summary, show only
+    // Influencer / Service / Price / Booking Type, and drop everything trip-
+    // related (image, travel date, traveller count, per-item total) plus the
+    // Traveller Details and Additional Details steps entirely — nothing here
+    // touches the regular package flow below.
+    if (summaryTitleEl) summaryTitleEl.textContent = "Booking Summary";
+    if (destinationLabelEl) destinationLabelEl.textContent = "Influencer";
+    if (durationLabelEl) durationLabelEl.textContent = "Service";
+    if (priceLabelEl) priceLabelEl.textContent = "Price";
+    if (bookingTypeRowEl) bookingTypeRowEl.hidden = false;
+
+    const mediaEl = page.querySelector(".bk-summary__media");
+    if (mediaEl) mediaEl.hidden = true;
+
+    const travelDateRow = travelDateInput.closest(".bk-summary__item");
+    if (travelDateRow) travelDateRow.hidden = true;
+    travelDateInput.required = false;
+
+    const travellersDisplayRow = travellersDisplayEl.closest(".bk-summary__item");
+    if (travellersDisplayRow) travellersDisplayRow.hidden = true;
+
+    const totalDisplayRow = totalDisplayEl.closest(".bk-summary__item");
+    if (totalDisplayRow) totalDisplayRow.hidden = true;
+
+    if (step2SectionEl) {
+      step2SectionEl.hidden = true;
+      step2SectionEl.querySelectorAll("input, select, textarea").forEach((f) => (f.required = false));
+    }
+    if (step3SectionEl) {
+      step3SectionEl.hidden = true;
+      step3SectionEl.querySelectorAll("input, select, textarea").forEach((f) => (f.required = false));
+    }
+  } else {
+    // Regular package flow — unchanged: package image + full traveller form.
+    imageEl.src = pkg.image;
+    imageEl.alt = pkg.name;
+  }
 
   // Default travel date: two weeks from today (user can change it).
   const defaultDate = new Date(Date.now() + 14 * 86_400_000);
@@ -182,8 +306,17 @@
     const data = new FormData(form);
     const t = computeTotals();
     return {
+      // Kept as `package` (rather than a differently-shaped `service` key) so
+      // payment.js — which reads `booking.package.*` unconditionally — keeps
+      // working unchanged for both flows. `bookingType`/`serviceSlug` let
+      // future code branch on an influencer-service booking without a schema
+      // change.
+      bookingType: isServiceBooking ? "service" : "package",
+      serviceSlug: isServiceBooking ? serviceSlug : null,
+      influencerSlug: isServiceBooking ? influencerSlug : null,
+      influencerName: isServiceBooking ? influencerName : null,
       package: {
-        slug,
+        slug: isServiceBooking ? serviceSlug : slug,
         name: pkg.name,
         destination: pkg.destination,
         duration: pkg.duration,

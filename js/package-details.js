@@ -285,6 +285,13 @@
       try {
         const slug = new URL(link.href, window.location.href).searchParams.get("package");
         if (slug) sessionStorage.setItem("xploroo-selected-package", slug);
+        // Clear any leftover influencer-service selection from an earlier
+        // visit — otherwise a stale `xploroo-selected-service` can hijack
+        // this package booking on hosts that strip the `?package=` query
+        // string (booking.js would wrongly fall back to it and render the
+        // influencer summary instead of this package).
+        sessionStorage.removeItem("xploroo-selected-service");
+        sessionStorage.removeItem("xploroo-selected-influencer");
       } catch (_) {
         /* URL/sessionStorage unavailable — query param path still works */
       }

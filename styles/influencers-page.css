@@ -136,3 +136,11 @@
   margin-top: var(--space-2);
   width: 100%;
 }
+
+/* Cards opted into card-wide click-through (see js/influencers-page.js) —
+   currently only the first influencer card carries `data-ip-href`. */
+.ip-card[data-ip-href] { cursor: pointer; }
+.ip-card[data-ip-href]:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-lg), var(--glow-primary);
+}

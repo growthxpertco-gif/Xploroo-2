@@ -33,6 +33,9 @@
   <!-- Search overlay module (shared with every page) -->
   <link rel="stylesheet" href="styles/search-overlay.css" />
 
+  <!-- Founder's Journey module -->
+  <link rel="stylesheet" href="styles/founder-journey.css" />
+
   <!-- Footer module (reusable across every page) -->
   <link rel="stylesheet" href="styles/footer.css" />
 </head>
@@ -138,17 +141,8 @@
             </svg>
           </button>
 
-          <a class="btn-auth btn-auth--login" href="/login">Log In</a>
-          <a class="btn-auth btn-auth--signup" href="/signup">Sign Up</a>
-
-          <!-- Cart: shown on mobile (visual only for now) -->
-          <button class="icon-btn icon-btn--cart" type="button" aria-label="Cart" data-cart>
-            <svg class="icon-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="9" cy="20" r="1.5" fill="none"/>
-              <circle cx="18" cy="20" r="1.5" fill="none"/>
-              <path d="M2.5 4h2.2l2.1 11.2a1.6 1.6 0 0 0 1.6 1.3h7.9a1.6 1.6 0 0 0 1.6-1.3L21 7.5H6.2" fill="none"/>
-            </svg>
-          </button>
+          <a class="btn-auth btn-auth--login" href="login.html">Log In</a>
+          <a class="btn-auth btn-auth--signup" href="signup.html">Sign Up</a>
         </div>
       </div>
     </header>
@@ -222,8 +216,8 @@
 
         <!-- Bottom actions: Log In (left) · Sign Up (right) -->
         <div class="mobile-menu__actions">
-          <a class="btn-auth btn-auth--login" href="/login">Log In</a>
-          <a class="btn-auth btn-auth--signup" href="/signup">Sign Up</a>
+          <a class="btn-auth btn-auth--login" href="login.html">Log In</a>
+          <a class="btn-auth btn-auth--signup" href="signup.html">Sign Up</a>
         </div>
       </div>
     </div>
@@ -274,18 +268,135 @@
     </div>
 
     <!-- ============================================================= -->
-    <!-- MAIN — Founder's Journey (intentionally minimal placeholder)  -->
+    <!-- MAIN — Founder's Journey                                      -->
     <!-- ============================================================= -->
     <main class="main" id="main">
-      <section class="section" aria-labelledby="fj-title">
-        <div class="container text-center">
-          <h1 id="fj-title">Founder&rsquo;s Journey</h1>
-          <p class="mt-4 mx-auto text-muted">
-            This page is under development.<br />
-            The complete story, vision, and journey behind Xploroo will be shared here soon.
-          </p>
+      <div class="fj-page" data-fj-page>
+        <div class="fj-container">
+
+          <!-- =========================================================
+               HERO — heading, founder name, opening quote
+               ========================================================= -->
+          <section class="fj-hero" aria-labelledby="fj-title" data-fj-reveal>
+            <h1 class="fj-hero__title" id="fj-title">Founder&rsquo;s Journey</h1>
+            <p class="fj-hero__role">Founder</p>
+            <p class="fj-hero__name">Anurag Sharma</p>
+            <blockquote class="fj-hero__quote">
+              <p>&quot;I used to think success was about being first. Now I know it&rsquo;s about being brave enough to start again&mdash;when no one is watching.&quot;</p>
+            </blockquote>
+          </section>
+
+          <!-- =========================================================
+               CHAPTERS
+               ========================================================= -->
+          <div class="fj-chapters">
+
+            <article class="fj-chapter" data-theme="chapter-1" data-fj-reveal>
+              <div class="fj-chapter__inner">
+                <p class="fj-chapter__label">Chapter 1</p>
+                <h2 class="fj-chapter__title">The Boy Who Learned to Dream in the Hills</h2>
+                <div class="fj-chapter__body">
+                  <p>I was born in Shimla.</p>
+                  <p>The mountains didn&rsquo;t just raise me&mdash;they shaped me. The crisp air, the winding roads, and the silence of the pines taught me one thing early: life is not a straight road. It's a climb.</p>
+                  <p>School at Hainault and Laureate Public School gave me structure. But the hills gave me something more&mdash;curiosity. I studied Tourism from IGNOU because I knew, deep down, my soul wasn&rsquo;t built to live inside four walls.</p>
+                  <p>It was meant for roads, for unknown destinations, for the thrill of the journey.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="fj-chapter" data-theme="chapter-2" data-fj-reveal>
+              <div class="fj-chapter__inner">
+                <p class="fj-chapter__label">Chapter 2</p>
+                <h2 class="fj-chapter__title">Love, Loss, and Learning to Let Go</h2>
+                <div class="fj-chapter__body">
+                  <p>After tourism, the world pushed me toward an MBA. So I tried.</p>
+                  <p>But the pressure swallowed me whole. I had to drop out&mdash;not because I was weak, but because I was breaking. It took me a while to heal, but I did go back and complete my MBA.</p>
+                  <p>And somewhere in that messy journey, I found love.</p>
+                  <p>I got married to a woman who understood me&mdash;or so I thought. For a while, life felt like it was finally on track. We were building a home, a future, a dream.</p>
+                  <p>But life is unpredictable.</p>
+                  <p>Misunderstandings grew like shadows. We tried. We really did. But some distances can&rsquo;t be bridged with effort alone. We drifted. We fought. We grieved.</p>
+                  <p>And then, we let go.</p>
+                  <p>We got divorced. She moved on. I stayed behind&mdash;with a broken home, a business that was crumbling, and a mirror that showed me a stranger I didn&rsquo;t recognize.</p>
+                  <p>I was alone. Really alone. And for the first time, I understood: you can be in a crowded room and still feel completely empty.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="fj-chapter" data-theme="chapter-3" data-fj-reveal>
+              <div class="fj-chapter__inner">
+                <p class="fj-chapter__label">Chapter 3</p>
+                <h2 class="fj-chapter__title">Building, Losing, and Rising from the Ashes</h2>
+                <div class="fj-chapter__body">
+                  <p>I poured myself into work.</p>
+                  <p>Hospitality became my escape. I started from the bottom&mdash;Sales, F&amp;B, Operations&mdash;and fought my way up to General Manager. I built my own brands too: Start Your Travel Adventure, Skynwinds, Secret Places.</p>
+                  <p>For a few years, it worked. I was finally building something of my own. I felt seen.</p>
+                  <p>Then 2020 hit.</p>
+                  <p>The pandemic didn&rsquo;t just pause the world&mdash;it erased mine. No bookings. No income. Loans. EMI. Bankruptcy.</p>
+                  <p>I lost everything. The office. The team. The brands I had built with my own hands. I sat in an empty room, staring at the ceiling, wondering&mdash;was it all for nothing?</p>
+                  <p>That was the second time I hit rock bottom.</p>
+                  <p>The first was heartbreak. The second was losing my purpose.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="fj-chapter" data-theme="chapter-4" data-fj-reveal>
+              <div class="fj-chapter__inner">
+                <p class="fj-chapter__label">Chapter 4</p>
+                <h2 class="fj-chapter__title">Why I Built Xploroo</h2>
+                <div class="fj-chapter__body">
+                  <p>When travel started to stir again, I had two choices:</p>
+                  <ul>
+                    <li>Take a safe job. Play small. Stay invisible.</li>
+                    <li>Or build again&mdash;with scars, with wisdom, with a new rule.</li>
+                  </ul>
+                  <p>I chose to build.</p>
+                  <p>But this time, I knew something I didn&rsquo;t before: Service first. Branding later.</p>
+                  <p>In 10+ years of travel, I saw it clearly&mdash;<br />Platforms sell tickets. Agencies sell packages.<br />But nobody was selling connection.</p>
+                  <p>In 2024, I started Xploroo under Secret Ventures.</p>
+                  <p>The idea? Simple.</p>
+                  <p>Travel shouldn&rsquo;t feel lonely.</p>
+                  <p>Crew chat before you fly. Creator-led trips. Real people. Real experiences.<br />Not just a trip&mdash;a tribe.</p>
+                  <p>xploroo is live. And xploroo World is coming soon.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="fj-chapter" data-theme="chapter-5" data-fj-reveal>
+              <div class="fj-chapter__inner">
+                <p class="fj-chapter__label">Chapter 5</p>
+                <h2 class="fj-chapter__title">The Philosophy That Keeps Me Going</h2>
+                <div class="fj-chapter__body">
+                  <p>I&rsquo;ve been the guy who lost love.<br />I&rsquo;ve been the guy who lost his business.<br />I know what it&rsquo;s like to be in a beautiful place and still feel completely invisible.</p>
+                  <p>That&rsquo;s why at Xploroo, we obsess over the small things:</p>
+                  <ul>
+                    <li>The welcome that feels like a hug.</li>
+                    <li>The dinner where no one sits alone.</li>
+                    <li>The crew who remembers your name&mdash;not because they have to, but because they care.</li>
+                  </ul>
+                  <p>I don&rsquo;t believe in shortcuts. I don&rsquo;t believe in hype.</p>
+                  <p>I believe in quality, patience, and showing up every single day&mdash;even when no one is clapping.</p>
+                  <p>The Vision? To make Xploroo the most loved travel brand in India.<br />Not the loudest. Not the biggest.</p>
+                  <p>The most trusted.</p>
+                </div>
+              </div>
+            </article>
+
+            <article class="fj-chapter fj-chapter--finale" data-theme="finale" data-fj-reveal>
+              <div class="fj-chapter__inner">
+                <h2 class="fj-chapter__title fj-chapter__title--standalone">Join The Journey</h2>
+                <div class="fj-chapter__body">
+                  <p>Xploroo is not just my company.</p>
+                  <p>It&rsquo;s for the ones who&rsquo;ve been hurt and still choose to trust.<br />It&rsquo;s for the ones who&rsquo;ve started over&mdash;more than once.<br />It&rsquo;s for those who still believe in good trips, good people, and second chances.</p>
+                  <p>For anyone who&rsquo;s watched a vlog and thought: &ldquo;I wish I was there&hellip; with someone.&rdquo;</p>
+                  <p>Now you can be.</p>
+                  <p class="fj-chapter__closing">Let&rsquo;s xplore. Together.</p>
+                </div>
+              </div>
+            </article>
+
+          </div>
         </div>
-      </section>
+      </div>
     </main>
 
     <!-- ============================================================= -->
@@ -323,22 +434,17 @@
             </li>
             <li>
               <a class="footer-social__link" href="#" aria-label="Xploroo on Instagram">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none"/><circle cx="12" cy="12" r="4" fill="none"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
               </a>
             </li>
             <li>
-              <a class="footer-social__link" href="#" aria-label="Xploroo on X">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 3h4.2l4 5.4L16.8 3H20l-6 7.6L20.4 21h-4.2l-4.3-5.8L7 21H3.8l6.4-8.1z"/></svg>
+              <a class="footer-social__link" href="#" aria-label="Xploroo on WhatsApp">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.87 14.03c-.25.7-1.45 1.34-2 1.42-.51.08-1.15.11-1.86-.12-.43-.14-.98-.32-1.69-.63-2.97-1.28-4.91-4.28-5.06-4.48-.15-.2-1.21-1.61-1.21-3.07 0-1.46.77-2.18 1.04-2.48.27-.3.59-.37.79-.37.2 0 .39 0 .56.01.18.01.42-.07.66.5.25.6.84 2.07.91 2.22.07.15.12.33.02.53-.09.2-.14.32-.28.49-.14.17-.29.38-.42.51-.14.14-.28.29-.12.57.15.28.68 1.12 1.46 1.82 1 .9 1.85 1.18 2.13 1.31.28.14.44.12.6-.07.17-.2.7-.82.89-1.1.19-.28.37-.23.63-.14.25.09 1.6.76 1.87.9.28.14.46.21.53.33.07.12.07.68-.18 1.37Z"/></svg>
               </a>
             </li>
             <li>
-              <a class="footer-social__link" href="#" aria-label="Xploroo on YouTube">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.6 7.6c-.25-1-1-1.75-2-2C17.8 5.1 12 5.1 12 5.1s-5.8 0-7.6.5c-1 .25-1.75 1-2 2C2 9.4 2 12 2 12s0 2.6.4 4.4c.25 1 1 1.75 2 2 1.8.5 7.6.5 7.6.5s5.8 0 7.6-.5c1-.25 1.75-1 2-2 .4-1.8.4-4.4.4-4.4s0-2.6-.4-4.4ZM10 15.2V8.8l5.5 3.2Z"/></svg>
-              </a>
-            </li>
-            <li>
-              <a class="footer-social__link" href="#" aria-label="Xploroo on LinkedIn">
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.94 8.5H3.56V20.5H6.94V8.5ZM5.25 3.5A1.96 1.96 0 1 0 5.25 7.42 1.96 1.96 0 0 0 5.25 3.5ZM20.44 20.5H17.06V14.5c0-1.4-.03-3.2-1.95-3.2-1.96 0-2.26 1.53-2.26 3.1v6.1H9.47V8.5h3.24v1.64h.05c.45-.86 1.56-1.77 3.2-1.77 3.43 0 4.06 2.26 4.06 5.2v6.93Z"/></svg>
+              <a class="footer-social__link" href="tel:+910000000000" aria-label="Call Xploroo">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8Z"/></svg>
               </a>
             </li>
           </ul>
@@ -348,10 +454,10 @@
             <div class="footer-links__col">
               <h3 class="footer-links__title">About</h3>
               <ul class="footer-links__list" role="list">
-                <li><a class="footer-links__link" href="/about">About Us</a></li>
-                <li><a class="footer-links__link" href="/how-it-works">How It Works</a></li>
-                <li><a class="footer-links__link" href="/team">Our Team</a></li>
-                <li><a class="footer-links__link" href="/faqs">FAQs</a></li>
+                <li><a class="footer-links__link" href="about.html">About Us</a></li>
+                <li><a class="footer-links__link" href="how-it-works.html">How It Works</a></li>
+                <li><a class="footer-links__link" href="our-team.html">Our Team</a></li>
+                <li><a class="footer-links__link" href="faq.html">FAQs</a></li>
                 <li><a class="footer-links__link" href="contact.html">Contact Us</a></li>
               </ul>
             </div>
@@ -359,11 +465,11 @@
             <div class="footer-links__col">
               <h3 class="footer-links__title">Packages</h3>
               <ul class="footer-links__list" role="list">
-                <li><a class="footer-links__link" href="/packages/domestic">Domestic Packages</a></li>
-                <li><a class="footer-links__link" href="/packages/international">International Packages</a></li>
-                <li><a class="footer-links__link" href="/packages/honeymoon">Honeymoon Packages</a></li>
-                <li><a class="footer-links__link" href="/packages/adventure">Adventure Trips</a></li>
-                <li><a class="footer-links__link" href="/packages/luxury">Luxury Holidays</a></li>
+                <li><a class="footer-links__link" href="domestic-packages.html">Domestic Packages</a></li>
+                <li><a class="footer-links__link" href="international-packages.html">International Packages</a></li>
+                <li><a class="footer-links__link" href="honeymoon-packages.html">Honeymoon Packages</a></li>
+                <li><a class="footer-links__link" href="adventure-trips.html">Adventure Trips</a></li>
+                <li><a class="footer-links__link" href="luxury-holidays.html">Luxury Holidays</a></li>
               </ul>
             </div>
 
@@ -371,10 +477,10 @@
               <h3 class="footer-links__title">Explore</h3>
               <ul class="footer-links__list" role="list">
                 <li><a class="footer-links__link" href="travel-quizzes.html">Play &amp; Win</a></li>
-                <li><a class="footer-links__link" href="/influencers">Influencers</a></li>
+                <li><a class="footer-links__link" href="influencers.html">Influencers</a></li>
                 <li><a class="footer-links__link" href="winners.html">Winners</a></li>
-                <li><a class="footer-links__link" href="/stories">Travel Stories</a></li>
-                <li><a class="footer-links__link" href="/privacy">Privacy Policy</a></li>
+                <li><a class="footer-links__link" href="travel-stories.html">Travel Stories</a></li>
+                <li><a class="footer-links__link" href="privacy-policy.html">Privacy Policy</a></li>
               </ul>
             </div>
           </nav>
@@ -383,9 +489,9 @@
           <div class="footer-bottom">
             <p class="footer-bottom__copyright">&copy; <time datetime="2026">2026</time> Xploroo. All Rights Reserved.</p>
             <ul class="footer-bottom__legal" role="list">
-              <li><a href="/privacy">Privacy Policy</a></li>
-              <li><a href="/terms">Terms &amp; Conditions</a></li>
-              <li><a href="/refund-policy">Refund Policy</a></li>
+              <li><a href="privacy-policy.html">Privacy Policy</a></li>
+              <li><a href="terms-conditions.html">Terms &amp; Conditions</a></li>
+              <li><a href="refund-policy.html">Refund Policy</a></li>
             </ul>
           </div>
 
@@ -400,6 +506,9 @@
 
   <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
   <script src="js/search-overlay.js" defer></script>
+
+  <!-- Founder's Journey behavior (scroll reveal) -->
+  <script src="js/founder-journey.js" defer></script>
 
   <!-- Footer behavior (newsletter form) -->
   <script src="js/footer.js" defer></script>

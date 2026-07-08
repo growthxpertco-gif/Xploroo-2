@@ -26,30 +26,37 @@
   /* Placeholder data — swap for real API results later. Each item's     */
   /* `text` field is what the search input filters against.              */
   /* ------------------------------------------------------------------ */
-  const PLACEHOLDER_IMG =
-    "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect width='120' height='120' fill='%23191922'/%3E%3C/svg%3E";
-
+  // Placeholder thumbnails — swap these picsum seed URLs for real package
+  // photography later. Seeds match the hero images already used on each
+  // destination's package page (js/booking.js PACKAGES catalog) for
+  // visual consistency between search results and the package itself.
   const DATA = {
     packages: [
-      { name: "Goa Beach Escape", location: "Goa, India", duration: "4 Days 3 Nights", price: "18,999" },
-      { name: "Bali Island Retreat", location: "Bali, Indonesia", duration: "6 Days 5 Nights", price: "42,499" },
-      { name: "Dubai Skyline Tour", location: "Dubai, UAE", duration: "5 Days 4 Nights", price: "39,999" },
-      { name: "Manali Snow Trail", location: "Manali, India", duration: "3 Days 2 Nights", price: "12,499" },
-      { name: "Vietnam Adventure", location: "Vietnam, Asia", duration: "7 Days 6 Nights", price: "34,999" },
-      { name: "Kerala Backwaters", location: "Kerala, India", duration: "4 Days 3 Nights", price: "16,999" },
+      { name: "Goa Beach Escape", location: "Goa, India", duration: "3 Days 2 Nights", price: "14,999", image: "https://picsum.photos/seed/goa-hero/128/128" },
+      { name: "Bali Island Retreat", location: "Bali, Indonesia", duration: "6 Days 5 Nights", price: "42,499", image: "https://picsum.photos/seed/bali-hero/128/128" },
+      { name: "Dubai Escape", location: "Dubai, UAE", duration: "4 Days 3 Nights", price: "49,999", image: "https://picsum.photos/seed/dubai-hero/128/128" },
+      { name: "Manali Getaway", location: "Manali, HP", duration: "4 Days 3 Nights", price: "18,999", image: "https://picsum.photos/seed/manali-hero/128/128" },
+      { name: "Vietnam Discovery", location: "Vietnam", duration: "5 Days 4 Nights", price: "36,999", image: "https://picsum.photos/seed/vietnam-hero/128/128" },
+      { name: "Singapore Explorer", location: "Singapore", duration: "4 Days 3 Nights", price: "39,999", image: "https://picsum.photos/seed/singapore-hero/128/128" },
+      { name: "Jaipur Heritage Trail", location: "Jaipur, Rajasthan", duration: "5 Days 4 Nights", price: "21,999", image: "https://picsum.photos/seed/jaipur-hero/128/128" },
+      { name: "Kasol & Parvati Valley", location: "Kasol, HP", duration: "4 Days 3 Nights", price: "16,999", image: "https://picsum.photos/seed/kasol-hero/128/128" },
+      { name: "Phuket Island Escape", location: "Phuket, Thailand", duration: "4 Days 3 Nights", price: "31,999", image: "https://picsum.photos/seed/phuket-hero/128/128" },
+      { name: "Iceland Northern Lights Escape", location: "Iceland", duration: "6 Days 5 Nights", price: "1,09,999", image: "https://picsum.photos/seed/iceland-hero/128/128" },
+      { name: "Japan Cherry Blossom Trail", location: "Japan", duration: "6 Days 5 Nights", price: "99,999", image: "https://picsum.photos/seed/japan-hero/128/128" },
+      { name: "Italy Classic Escape", location: "Italy", duration: "6 Days 5 Nights", price: "89,999", image: "https://picsum.photos/seed/italy-hero/128/128" },
     ],
     influencers: [
-      { name: "Anurrag Sharma", location: "2.4M Followers" },
-      { name: "Priya Kapoor", location: "1.8M Followers" },
-      { name: "Rohan Mehta", location: "980K Followers" },
-      { name: "Sara D'Souza", location: "3.1M Followers" },
-      { name: "Kabir Anand", location: "1.2M Followers" },
+      { name: "Anurrag Sharma", location: "2.4M Followers", image: "https://picsum.photos/seed/inf-anurrag/128/128" },
+      { name: "Priya Kapoor", location: "1.8M Followers", image: "https://picsum.photos/seed/inf-priya/128/128" },
+      { name: "Rohan Mehta", location: "980K Followers", image: "https://picsum.photos/seed/inf-rohan/128/128" },
+      { name: "Sara D'Souza", location: "3.1M Followers", image: "https://picsum.photos/seed/inf-sara/128/128" },
+      { name: "Kabir Anand", location: "1.2M Followers", image: "https://picsum.photos/seed/inf-kabir/128/128" },
     ],
     meetgreet: [
-      { name: "Metallica Live Meet & Greet", location: "Mumbai, India", duration: "12 Dec 2026" },
-      { name: "Coldplay Backstage Pass", location: "Ahmedabad, India", duration: "18 Jan 2027" },
-      { name: "Arijit Singh Fan Meet", location: "Delhi, India", duration: "22 Nov 2026" },
-      { name: "AR Rahman VIP Session", location: "Chennai, India", duration: "05 Feb 2027" },
+      { name: "Metallica Live Meet & Greet", location: "Mumbai, India", duration: "12 Dec 2026", image: "https://picsum.photos/seed/mg-metallica/128/128" },
+      { name: "Coldplay Backstage Pass", location: "Ahmedabad, India", duration: "18 Jan 2027", image: "https://picsum.photos/seed/mg-coldplay/128/128" },
+      { name: "Arijit Singh Fan Meet", location: "Delhi, India", duration: "22 Nov 2026", image: "https://picsum.photos/seed/mg-arijit/128/128" },
+      { name: "AR Rahman VIP Session", location: "Chennai, India", duration: "05 Feb 2027", image: "https://picsum.photos/seed/mg-arrahman/128/128" },
     ],
   };
 
@@ -57,7 +64,7 @@
     if (tab === "packages") {
       return `
         <a class="search-result" href="packages.html" data-search-text="${item.name} ${item.location}">
-          <img class="search-result__image" src="${PLACEHOLDER_IMG}" alt="" />
+          <img class="search-result__image" src="${item.image}" alt="" />
           <div class="search-result__body">
             <span class="search-result__title">${item.name}</span>
             <span class="search-result__meta">
@@ -76,7 +83,7 @@
     if (tab === "influencers") {
       return `
         <a class="search-result" href="influencers.html" data-search-text="${item.name}">
-          <img class="search-result__image" src="${PLACEHOLDER_IMG}" alt="" />
+          <img class="search-result__image" src="${item.image}" alt="" />
           <div class="search-result__body">
             <span class="search-result__title">${item.name}</span>
             <span class="search-result__meta"><span>${item.location}</span></span>
@@ -87,7 +94,7 @@
     // meetgreet
     return `
       <a class="search-result" href="influencers.html" data-search-text="${item.name} ${item.location}">
-        <img class="search-result__image" src="${PLACEHOLDER_IMG}" alt="" />
+        <img class="search-result__image" src="${item.image}" alt="" />
         <div class="search-result__body">
           <span class="search-result__title">${item.name}</span>
           <span class="search-result__meta">

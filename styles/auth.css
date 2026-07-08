@@ -1,0 +1,192 @@
+/* ==========================================================================
+   XPLOROO · Authentication module
+   auth.css — Shared styles for login.html and signup.html. A single
+   `.auth-*` namespace so both pages stay visually identical and this file
+   can't leak into any other page. Reuses the global `.field` / `.input` /
+   `.select` / `.btn` design system from utilities.css — only the card
+   shell, layout grid and small auth-specific bits live here.
+   Load AFTER utilities.css.
+   ========================================================================== */
+
+.auth-page {
+  padding-block: clamp(2.5rem, 1.6rem + 3vw, 4.5rem) var(--section-gap);
+}
+
+.auth-container {
+  max-width: 34rem;
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+/* Signup needs a little more room for the two-column field grid */
+.auth-container--wide { max-width: 42rem; }
+
+/* -------------------------------------------------------------------------
+   Head
+   ------------------------------------------------------------------------- */
+.auth-head {
+  text-align: center;
+  margin-bottom: var(--space-7);
+}
+.auth-head__title {
+  margin: 0;
+  font-size: var(--fs-3xl);
+}
+.auth-head__subtitle {
+  margin: var(--space-3) auto 0;
+  max-width: 42ch;
+  color: var(--color-text-muted);
+}
+
+/* -------------------------------------------------------------------------
+   Card — glass panel with a soft gradient border, matching the pricing /
+   coins panels used elsewhere on the site (border-box gradient trick).
+   ------------------------------------------------------------------------- */
+.auth-card {
+  padding: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
+  border-radius: var(--radius-3xl);
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--glass-bg), var(--glass-bg)) padding-box,
+    linear-gradient(135deg, rgba(124, 58, 237, 0.6), rgba(34, 211, 238, 0.35), rgba(124, 58, 237, 0.6)) border-box;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-xl), 0 0 60px rgba(124, 58, 237, 0.12);
+  animation: auth-card-in 560ms var(--ease-out) both;
+}
+@keyframes auth-card-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .auth-card { animation: none; }
+}
+
+/* -------------------------------------------------------------------------
+   Form grid — single column on login, responsive 2-up on signup
+   ------------------------------------------------------------------------- */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+.auth-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4) var(--space-5);
+}
+@media (max-width: 560px) {
+  .auth-grid { grid-template-columns: 1fr; }
+}
+.auth-grid .field--full { grid-column: 1 / -1; }
+
+/* Password field + inline show/hide toggle */
+.auth-password-field {
+  position: relative;
+}
+.auth-password-field .input { padding-right: 2.75rem; }
+.auth-password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 0.4rem;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border: none;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-subtle);
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-standard), background-color var(--dur-fast) var(--ease-standard);
+}
+.auth-password-toggle:hover { color: var(--color-text-strong); background: var(--color-surface-hover); }
+.auth-password-toggle svg { width: 18px; height: 18px; }
+.auth-password-toggle .auth-eye-off { display: none; }
+.auth-password-toggle[aria-pressed="true"] .auth-eye-on { display: none; }
+.auth-password-toggle[aria-pressed="true"] .auth-eye-off { display: block; }
+
+/* Checkbox row (Remember me / Terms) + inline "Forgot Password?" */
+.auth-check-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.auth-check {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+.auth-check a { color: var(--color-link); }
+.auth-forgot {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--violet-300);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease-standard);
+}
+.auth-forgot:hover { color: var(--violet-200); }
+
+/* Submit CTA — full-width gradient button, glow on hover */
+.auth-submit {
+  width: 100%;
+  box-shadow: var(--glow-brand);
+}
+.auth-submit:hover { box-shadow: 0 16px 40px rgba(91, 107, 255, 0.5), 0 6px 18px rgba(139, 60, 240, 0.42); }
+
+/* -------------------------------------------------------------------------
+   Divider — "or continue with"
+   ------------------------------------------------------------------------- */
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-6) 0 var(--space-5);
+  color: var(--color-text-subtle);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wider);
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--gradient-hairline);
+}
+
+/* -------------------------------------------------------------------------
+   Social buttons
+   ------------------------------------------------------------------------- */
+.auth-social {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+@media (max-width: 420px) {
+  .auth-social { grid-template-columns: 1fr; }
+}
+.auth-social__btn svg { width: 18px; height: 18px; }
+
+/* -------------------------------------------------------------------------
+   Bottom switch line ("Don't have an account? Create Account")
+   ------------------------------------------------------------------------- */
+.auth-switch {
+  margin: var(--space-6) 0 0;
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+.auth-switch a {
+  margin-left: 0.35rem;
+  font-weight: var(--fw-semibold);
+  color: var(--violet-300);
+  text-decoration: none;
+}
+.auth-switch a:hover { color: var(--violet-200); }

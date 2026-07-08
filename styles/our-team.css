@@ -1,0 +1,117 @@
+/* ==========================================================================
+   XPLOROO · Our Team module
+   our-team.css — Standalone page (our-team.html). Centered hero + a
+   responsive grid of premium glass member cards (photo, name, designation,
+   short bio). Scoped entirely under `.team-*` so it never touches any other
+   page. Reuses global tokens from variables.css. Load AFTER utilities.css.
+   ========================================================================== */
+
+.team-page {
+  padding-block: clamp(2.5rem, 1.6rem + 3vw, 4.5rem) var(--section-gap);
+}
+.team-container {
+  max-width: var(--container-lg);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+.team-hero {
+  text-align: center;
+  max-width: 40rem;
+  margin-inline: auto;
+  margin-bottom: clamp(2.75rem, 2rem + 3vw, 4.5rem);
+  animation: team-fade-in var(--dur-slower) var(--ease-out) both;
+}
+.team-hero__title {
+  margin: 0;
+  font-size: clamp(2.25rem, 1.7rem + 2.6vw, 3.5rem);
+}
+.team-hero__subtitle {
+  margin: var(--space-4) auto 0;
+  font-size: var(--fs-md);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: var(--space-6);
+}
+@media (min-width: 640px) {
+  .team-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .team-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.team-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity var(--dur-slower) var(--ease-out), transform var(--dur-slower) var(--ease-out),
+    border-color var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-out);
+}
+.team-card.is-visible { opacity: 1; transform: translateY(0); }
+@media (hover: hover) {
+  .team-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--color-border-strong);
+    box-shadow: var(--shadow-lg), var(--glow-soft);
+  }
+}
+
+.team-card__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--color-surface-inset);
+}
+.team-card__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.team-card__body {
+  padding: var(--space-5);
+}
+.team-card__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-strong);
+}
+.team-card__role {
+  margin: 0.2rem 0 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-primary-hover);
+}
+.team-card__bio {
+  margin: var(--space-3) 0 0;
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}
+
+@keyframes team-fade-in {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .team-hero, .team-card { animation: none; opacity: 1; transform: none; transition: none; }
+  .team-card:hover { transform: none; }
+}

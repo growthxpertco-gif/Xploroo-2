@@ -1,0 +1,78 @@
+/* ==========================================================================
+   XPLOROO · Placeholder page module
+   placeholder-page.css — Shared "coming soon" template for footer pages that
+   don't have content yet (how-it-works.html, our-team.html, etc.). One glass
+   card: heading, short subtitle, "under development" status pill. Scoped
+   entirely under `.ph-*` so it never touches any other page. Reuses global
+   tokens from variables.css. Load AFTER utilities.css.
+   ========================================================================== */
+
+.ph-page {
+  min-height: 56vh;
+  display: flex;
+  align-items: center;
+  padding-block: clamp(3rem, 2.2rem + 4vw, 6rem) var(--section-gap);
+}
+
+.ph-container {
+  width: 100%;
+  max-width: var(--container-md);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+.ph-card {
+  text-align: center;
+  max-width: 40rem;
+  margin-inline: auto;
+  padding: clamp(2.5rem, 1.9rem + 3vw, 4rem);
+  border-radius: var(--radius-3xl);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-card);
+  animation: ph-fade-in var(--dur-slower) var(--ease-out) both;
+}
+
+.ph-card__title {
+  margin: 0;
+  font-size: clamp(2rem, 1.6rem + 2vw, 3rem);
+}
+
+.ph-card__subtitle {
+  margin: var(--space-4) auto 0;
+  max-width: 36ch;
+  font-size: var(--fs-md);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.ph-card__status {
+  margin: var(--space-6) 0 0;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-brand);
+  background: var(--color-primary-subtle);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-primary-hover);
+}
+.ph-card__status::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+@keyframes ph-fade-in {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ph-card { animation: none; }
+}

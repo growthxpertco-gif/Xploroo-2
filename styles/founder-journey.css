@@ -1,0 +1,238 @@
+/* ==========================================================================
+   XPLOROO · Founder's Journey module
+   founder-journey.css — Standalone page (founder-journey.html). Pure black
+   canvas (inherited from variables.css --color-bg, never overridden here),
+   a centered hero, and one premium glass card per chapter with a subtle
+   animated gradient-ring border — a different two-colour theme per chapter,
+   set via `--fj-grad-a` / `--fj-grad-b` on `[data-theme]`. Scoped entirely
+   under `.fj-*` — never touches any other page. Reuses global tokens from
+   variables.css. Load AFTER utilities.css.
+   ========================================================================== */
+
+@property --fj-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.fj-page {
+  padding-block: clamp(2.5rem, 1.6rem + 3vw, 4.5rem) var(--section-gap);
+}
+
+.fj-container {
+  max-width: var(--container-md);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* -------------------------------------------------------------------------
+   HERO — centered: heading, role/name, opening quote
+   ------------------------------------------------------------------------- */
+.fj-hero {
+  text-align: center;
+  max-width: 42rem;
+  margin-inline: auto;
+  margin-bottom: clamp(3rem, 2.2rem + 3vw, 4.5rem);
+}
+.fj-hero__title {
+  margin: 0;
+  font-size: clamp(2.5rem, 1.9rem + 3vw, 4rem);
+}
+.fj-hero__role {
+  margin: var(--space-5) 0 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-primary-hover);
+}
+.fj-hero__name {
+  margin: var(--space-1) 0 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-strong);
+}
+
+.fj-hero__quote {
+  margin: var(--space-7) auto 0;
+  max-width: 38rem;
+  padding: var(--space-6) var(--space-7);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-card);
+}
+.fj-hero__quote p {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--color-text-strong);
+}
+
+/* -------------------------------------------------------------------------
+   Scroll reveal (fade + rise), applied by js/founder-journey.js
+   ------------------------------------------------------------------------- */
+[data-fj-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity var(--dur-slower) var(--ease-out), transform var(--dur-slower) var(--ease-out);
+}
+[data-fj-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* -------------------------------------------------------------------------
+   Chapters — one premium card per chapter, stacked
+   ------------------------------------------------------------------------- */
+.fj-chapters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-7);
+}
+
+/* Colour themes — subtle two-stop gradients, one per chapter */
+.fj-chapter[data-theme="chapter-1"] { --fj-grad-a: #a855f7; --fj-grad-b: #ec4899; } /* Purple -> Pink */
+.fj-chapter[data-theme="chapter-2"] { --fj-grad-a: #3b82f6; --fj-grad-b: #22d3ee; } /* Blue -> Cyan */
+.fj-chapter[data-theme="chapter-3"] { --fj-grad-a: #f97316; --fj-grad-b: #fbbf24; } /* Orange -> Gold */
+.fj-chapter[data-theme="chapter-4"] { --fj-grad-a: #10b981; --fj-grad-b: #14b8a6; } /* Emerald -> Teal */
+.fj-chapter[data-theme="chapter-5"] { --fj-grad-a: #6366f1; --fj-grad-b: #8b5cf6; } /* Indigo -> Violet */
+
+/* Animated gradient-ring border: the outer element paints the conic
+   gradient; a 1.5px inset reveals it as a thin ring around the dark glass
+   card sitting on top. Kept subtle — low opacity, no full-saturation fill. */
+.fj-chapter {
+  position: relative;
+  border-radius: var(--radius-3xl);
+  padding: 1.5px;
+  background: conic-gradient(from var(--fj-angle), var(--fj-grad-a), var(--fj-grad-b), var(--fj-grad-a));
+  animation: fj-rotate-ring 10s linear infinite;
+}
+.fj-chapter::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  z-index: -1;
+  border-radius: inherit;
+  background: inherit;
+  filter: blur(22px);
+  opacity: 0.35;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+@media (hover: hover) {
+  .fj-chapter:hover { transform: translateY(-4px); }
+  .fj-chapter:hover::before { opacity: 0.55; }
+}
+.fj-chapter {
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+@keyframes fj-rotate-ring {
+  to { --fj-angle: 360deg; }
+}
+
+.fj-chapter__inner {
+  border-radius: calc(var(--radius-3xl) - 1.5px);
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  padding: clamp(1.75rem, 1.3rem + 2vw, 3rem);
+}
+
+.fj-chapter__label {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 1.3rem + 1.4vw, 2.25rem);
+  font-weight: var(--fw-bold);
+  background: linear-gradient(90deg, var(--fj-grad-a), var(--fj-grad-b));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.fj-chapter__title {
+  margin: var(--space-2) 0 0;
+  font-size: var(--fs-xl);
+  color: var(--color-text-strong);
+}
+.fj-chapter__title--standalone {
+  margin-top: 0;
+  font-size: clamp(1.6rem, 1.3rem + 1.4vw, 2.25rem);
+}
+
+.fj-chapter__body {
+  margin-top: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.fj-chapter__body p {
+  margin: 0;
+  font-size: var(--fs-md);
+  line-height: 1.85;
+  color: var(--color-text-muted);
+}
+.fj-chapter__body ul {
+  margin: 0;
+  padding-left: 1.25em;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  list-style: disc;
+}
+.fj-chapter__body li {
+  font-size: var(--fs-md);
+  line-height: 1.85;
+  color: var(--color-text-muted);
+}
+.fj-chapter__body li::marker {
+  color: var(--fj-grad-a);
+}
+
+.fj-chapter__closing {
+  margin-top: var(--space-2);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+}
+
+/* -------------------------------------------------------------------------
+   Finale card — "Join The Journey" — aurora multi-colour gradient ring
+   ------------------------------------------------------------------------- */
+.fj-chapter--finale {
+  background: conic-gradient(
+    from var(--fj-angle),
+    #a855f7, #ec4899, #f97316, #fbbf24, #22d3ee, #6366f1, #a855f7
+  );
+}
+.fj-chapter--finale::before {
+  filter: blur(28px);
+  opacity: 0.4;
+}
+@media (hover: hover) {
+  .fj-chapter--finale:hover::before { opacity: 0.6; }
+}
+.fj-chapter--finale .fj-chapter__title--standalone {
+  background: conic-gradient(from var(--fj-angle), #a855f7, #ec4899, #f97316, #fbbf24, #22d3ee, #6366f1, #a855f7);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@media (max-width: 560px) {
+  .fj-hero__quote { padding: var(--space-5) var(--space-6); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fj-chapter, .fj-chapter--finale, .fj-chapter__label, .fj-chapter--finale .fj-chapter__title--standalone {
+    animation: none;
+  }
+  .fj-chapter:hover { transform: none; }
+  [data-fj-reveal] { opacity: 1; transform: none; transition: none; }
+}

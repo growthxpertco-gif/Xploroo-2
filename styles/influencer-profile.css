@@ -1,0 +1,199 @@
+/* ==========================================================================
+   XPLOROO · Influencer Profile module
+   influencer-profile.css — Master template stylesheet for every individual
+   influencer page (first-influencer.html today, duplicated per creator
+   later). Scoped entirely under `.ifp-*` so it never touches the
+   Influencers grid page (`.influencers-page` / `.ip-*`) or any other
+   page. Reuses global tokens from variables.css. Load AFTER utilities.css.
+   ========================================================================== */
+
+.ifp-page {
+  padding-block: clamp(2.5rem, 1.6rem + 3vw, 4.5rem) var(--section-gap);
+}
+
+.ifp-container {
+  max-width: var(--container-md);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* -------------------------------------------------------------------------
+   TOP SECTION — name + short intro only (no image, per spec)
+   ------------------------------------------------------------------------- */
+.ifp-hero {
+  text-align: center;
+  max-width: 46rem;
+  margin-inline: auto;
+  margin-bottom: clamp(3rem, 2.2rem + 3vw, 4.5rem);
+  animation: ifp-fade-in var(--dur-slower) var(--ease-out) both;
+}
+.ifp-hero__name {
+  margin: 0;
+  font-size: clamp(2.5rem, 1.9rem + 3vw, 4rem);
+}
+.ifp-hero__intro {
+  margin: var(--space-4) auto 0;
+  font-size: var(--fs-md);
+  color: var(--color-text-muted);
+}
+
+/* -------------------------------------------------------------------------
+   Section head — "Book Experiences"
+   ------------------------------------------------------------------------- */
+.ifp-section-head {
+  text-align: center;
+  margin-bottom: var(--space-7);
+}
+.ifp-section-head__title {
+  margin: 0;
+  font-size: var(--fs-3xl);
+}
+.ifp-section-head__subtitle {
+  margin: var(--space-2) auto 0;
+  max-width: 48ch;
+  color: var(--color-text-muted);
+}
+
+/* -------------------------------------------------------------------------
+   Experiences — four stacked premium glass cards
+   ------------------------------------------------------------------------- */
+.ifp-experiences {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.ifp-experience {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
+  border-radius: var(--radius-3xl);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-card), 0 0 0 rgba(124, 58, 237, 0);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-standard);
+  animation: ifp-fade-in var(--dur-slower) var(--ease-out) both;
+}
+
+/* Per-card colour theme — a subtle accent only (top hairline + emoji chip +
+   hover glow + price colour). The glass card body stays untouched. */
+.ifp-experience[data-theme="meet-greet"]    { --ifp-grad-a: #a855f7; --ifp-grad-b: #ec4899; --ifp-glow-rgb: 168, 85, 247; }
+.ifp-experience[data-theme="podcast-shoot"] { --ifp-grad-a: #3b82f6; --ifp-grad-b: #22d3ee; --ifp-glow-rgb: 59, 130, 246; }
+.ifp-experience[data-theme="blog-shoot"]    { --ifp-grad-a: #f97316; --ifp-grad-b: #fbbf24; --ifp-glow-rgb: 249, 115, 22; }
+.ifp-experience[data-theme="personal-event"]{ --ifp-grad-a: #22c55e; --ifp-grad-b: #10b981; --ifp-glow-rgb: 34, 197, 94; }
+
+.ifp-experience[data-theme]::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ifp-grad-a), var(--ifp-grad-b));
+}
+.ifp-experience:nth-child(1) { animation-delay: 60ms; }
+.ifp-experience:nth-child(2) { animation-delay: 140ms; }
+.ifp-experience:nth-child(3) { animation-delay: 220ms; }
+.ifp-experience:nth-child(4) { animation-delay: 300ms; }
+
+@keyframes ifp-fade-in {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ifp-hero, .ifp-experience { animation: none; }
+}
+.ifp-experience:hover {
+  transform: translateY(-6px);
+  border-color: rgba(145, 99, 241, 0.45);
+  box-shadow: var(--shadow-lg), var(--glow-soft);
+}
+.ifp-experience[data-theme]:hover {
+  border-color: rgba(var(--ifp-glow-rgb), 0.5);
+  box-shadow: var(--shadow-lg), 0 0 32px rgba(var(--ifp-glow-rgb), 0.3);
+}
+
+.ifp-experience__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.ifp-experience__emoji {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: var(--radius-xl);
+  font-size: 1.5rem;
+  background: var(--color-primary-subtle);
+  border: 1px solid var(--color-border-brand);
+  transition: transform var(--dur-base) var(--ease-spring);
+}
+.ifp-experience:hover .ifp-experience__emoji { transform: scale(1.1) rotate(-4deg); }
+.ifp-experience[data-theme] .ifp-experience__emoji {
+  background: linear-gradient(135deg, rgba(var(--ifp-glow-rgb), 0.3), rgba(var(--ifp-glow-rgb), 0.12));
+  border-color: rgba(var(--ifp-glow-rgb), 0.45);
+}
+
+.ifp-experience__title {
+  margin: 0;
+  font-size: var(--fs-xl);
+}
+
+.ifp-experience__desc {
+  margin: var(--space-4) 0 0;
+  max-width: 60ch;
+  color: var(--color-text-muted);
+}
+
+.ifp-experience__price {
+  margin: var(--space-4) 0 0;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: var(--ifp-grad-a, var(--color-primary));
+}
+.ifp-experience__price span {
+  margin-left: 0.4em;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+}
+
+/* White rounded "Book Now" — deliberately distinct from the site's gradient
+   CTA so it reads as a premium, high-contrast action against the glass card. */
+.ifp-experience__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: var(--space-5);
+  height: 3rem;
+  padding-inline: 1.75rem;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: #fff;
+  color: #0a0a0f;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+.ifp-experience__cta:hover {
+  color: #0a0a0f;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(255, 255, 255, 0.18), var(--glow-soft);
+}
+.ifp-experience__cta:active { transform: translateY(0) scale(0.97); }
+.ifp-experience__cta svg { width: 1.05em; height: 1.05em; flex: none; }
+
+@media (max-width: 560px) {
+  .ifp-experience__head { align-items: flex-start; gap: var(--space-3); }
+  .ifp-experience__title { font-size: var(--fs-lg); }
+}
