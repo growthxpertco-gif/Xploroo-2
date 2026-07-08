@@ -33,6 +33,9 @@
   <!-- Search overlay module (shared with every page) -->
   <link rel="stylesheet" href="styles/search-overlay.css" />
 
+  <!-- Auth gate module (Play & Win login-required modal) -->
+  <link rel="stylesheet" href="styles/auth-gate.css" />
+
   <!-- Hero section module (spacing only — content removed above the machine) -->
   <link rel="stylesheet" href="styles/hero.css" />
 
@@ -324,11 +327,17 @@
                   <div class="slot-machine__glass">
                     <div class="slot-machine__reels">
                       <div class="slot-machine__reel-row">
-                        <div class="slot-machine__reel"></div>
+                        <!-- Each slot embeds its own standalone reel page in
+                             an <iframe> — separate document per reel, so all
+                             three spin fully independently. Styling for the
+                             iframe itself (fills the slot, clipped to the
+                             neon border) lives in styles/hero-slot-machine.css
+                             under `.slot-machine__reel iframe`. -->
+                        <div class="slot-machine__reel"><iframe src="reel-demo.html" title="Slot reel 1" loading="lazy" scrolling="no"></iframe></div>
                         <span class="slot-machine__x" aria-hidden="true"></span>
-                        <div class="slot-machine__reel"></div>
+                        <div class="slot-machine__reel"><iframe src="reel-demo%20-%20Copy.html" title="Slot reel 2" loading="lazy" scrolling="no"></iframe></div>
                         <span class="slot-machine__x" aria-hidden="true"></span>
-                        <div class="slot-machine__reel"></div>
+                        <div class="slot-machine__reel"><iframe src="reel-demo%20-%20Copy%20(2).html" title="Slot reel 3" loading="lazy" scrolling="no"></iframe></div>
                       </div>
                       <div class="slot-machine__row-divider"></div>
                       <div class="slot-machine__reel-row">
@@ -1416,12 +1425,12 @@
           <!-- Social icons -->
           <ul class="footer-social" role="list" aria-label="Xploroo on social media">
             <li>
-              <a class="footer-social__link" href="#" aria-label="Xploroo on Facebook">
+              <a class="footer-social__link" href="https://facebook.com/yourpage" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Facebook">
                 <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H16.7V3.7C16.15 3.6 15.15 3.5 14 3.5c-2.4 0-4 1.45-4 4.1v2.3H7.3v3.1H10V21h3.5Z"/></svg>
               </a>
             </li>
             <li>
-              <a class="footer-social__link" href="#" aria-label="Xploroo on Instagram">
+              <a class="footer-social__link" href="https://instagram.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Instagram">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none"/><circle cx="12" cy="12" r="4" fill="none"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
               </a>
             </li>
@@ -1496,6 +1505,9 @@
 
   <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
   <script src="js/search-overlay.js" defer></script>
+
+  <!-- Auth gate behavior (restricts Play & Win to logged-in users) -->
+  <script src="js/auth-gate.js" defer></script>
 
   <!-- Trending Packages behavior (drag/swipe carousel, wishlist) -->
   <script src="js/trending-packages.js" defer></script>

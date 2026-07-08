@@ -6,32 +6,30 @@
    all that's needed to build the full 3-reel machine later — nothing here
    assumes there's only one reel on the page.
 
-   SEAMLESS LOOPING (no HTML/CSS changes — cloning happens here, at runtime)
-   ---------------------------------------------------------------------
-   A spin can travel up to 4 loops + a 5-card offset from any starting card,
-   i.e. up to ~34 "card heights" in one direction. If we only had the 6
-   authored cards to scroll through, the window would run out of real
-   content well before the animation finishes and show blank space right at
-   the loop seam. So at init we clone the 6 cards several times and append
-   the clones after the originals (same images, same markup — just DOM
-   duplicates), giving enough real, continuously-scrollable content to cover
-   any single spin's full travel distance. The instant a spin lands, we
-   silently snap the track back to the equivalent position among the first
-   6 (real) cards — invisible, because a clone and its original render the
-   exact same pixels — so the DOM never grows and the next spin has the
-   same full range of clone content to travel through again.
+   SEAMLESS LOOPING — clone once + continuous modulo wrap
+   -------------------------------------------------------
+   At init the 6 authored cards are cloned ONCE and appended, so the track
+   holds 1 2 3 4 5 6 1 2 3 4 5 6 stacked vertically. A spin's position is
+   tracked as an ever-growing "virtual" distance, but the transform actually
+   rendered each frame is `virtual % (6 * cardHeight)` — i.e. the moment the
+   scroll would reach the cloned set, it is instantly re-expressed as the
+   identical position inside the original set. Card 6 flowing into clone-1
+   looks exactly like card 6 flowing into card 1, and the wrap lands on
+   pixels that are identical by construction, so the reset is invisible.
+   The window is therefore ALWAYS showing real card content: the wrapped
+   offset stays within the first set, and the clone set below it feeds the
+   window whenever two cards are partially visible mid-scroll.
    ========================================================================== */
 (function () {
   "use strict";
 
   const CARDS_PER_REEL = 6;
-  const EXTRA_LOOPS = 5;      // clone depth: covers the worst-case 34-card travel
-  const MIN_LOOPS = 2;        // "2-4 full revolutions" per spin
+  const MIN_LOOPS = 2;        // full revolutions per spin: 2-4
   const MAX_LOOPS = 4;
   const SPIN_DURATION_MS = 2800;
   const BOUNCE_DURATION_MS = 320;
   const BOUNCE_PX = 4;        // subtle 2-5px settle bounce
-  const PAUSE_AFTER_LANDING_MS = 3000; // "wait about 3 seconds" per spec
+  const PAUSE_AFTER_LANDING_MS = 3000;
 
   /* ------------------------------------------------------------------ */
   /* Three-phase trapezoidal motion profile: linear acceleration ramp,  */
@@ -65,71 +63,72 @@
    * @param {HTMLElement} reelEl - the `.reel` root element
    */
   function initReel(reelEl) {
+    const windowEl = reelEl.querySelector(".reel__window");
     const track = reelEl.querySelector("[data-reel-track]");
     const originalCards = Array.from(reelEl.querySelectorAll(".reel__card"));
-    if (!track || originalCards.length !== CARDS_PER_REEL) return;
+    if (!windowEl || !track || originalCards.length !== CARDS_PER_REEL) return;
 
-    // Clone the 6 cards EXTRA_LOOPS more times so the track has continuous
-    // real content for the full length of any spin (see module comment).
-    for (let i = 0; i < EXTRA_LOOPS; i++) {
-      originalCards.forEach((card) => track.appendChild(card.cloneNode(true)));
-    }
-    const allCards = Array.from(track.children); // 6 * (1 + EXTRA_LOOPS) total
+    // Clone the 6 cards once and append: track becomes 1..6,1..6. The clone
+    // set is what the window shows while the wrap point passes through.
+    originalCards.forEach((card) => track.appendChild(card.cloneNode(true)));
+    const allCards = Array.from(track.children); // 12 total
 
     let cardHeight = 0;
-    let currentIndex = 0; // 0-5 — which real destination is currently resting/centered
+    let currentIndex = 0;   // 0-5 — destination currently resting in the window
     let spinRafId = null;
     let bounceRafId = null;
     let spinTimer = null;
 
-    /* Recompute geometry from the live DOM — keeps the reel correct across
-       resizes/orientation changes without hardcoding any pixel values. */
+    /* Geometry: each card must be EXACTLY one window (inner) height tall so
+       `translateY(-N * cardHeight)` centers card N perfectly. The height is
+       applied inline here because the track is auto-height (it must be as
+       tall as all 12 cards combined — that's what keeps the window full). */
     function measure() {
-      cardHeight = reelEl.querySelector(".reel__window").getBoundingClientRect().height;
+      const padding = parseFloat(getComputedStyle(windowEl).paddingTop) || 0;
+      cardHeight = windowEl.getBoundingClientRect().height - padding * 2;
+      allCards.forEach((c) => (c.style.height = cardHeight + "px"));
     }
 
-    function setTransform(px) {
-      track.style.transform = `translateY(${px}px)`;
+    /* Render a virtual scroll distance (grows without bound during a spin)
+       as a transform wrapped into the first card set: the "instant reset
+       back to the original set" happens here, every frame, with pixel-
+       identical output on both sides of the wrap — so it's never visible. */
+    function render(virtualDistance) {
+      const loopHeight = cardHeight * CARDS_PER_REEL;
+      const wrapped = virtualDistance % loopHeight; // 0 <= wrapped < loopHeight
+      track.style.transform = `translateY(${-wrapped}px)`;
     }
 
     function markLanded(index) {
-      // `index` is always 0-5 here (the resting position always lives among
-      // the first, real 6 cards — see the silent snap at the end of spin()).
       allCards.forEach((c, i) => c.classList.toggle("is-landed", i === index));
     }
 
     /* One full spin: 3-phase acceleration/cruise/deceleration through 2-4
-       full revolutions, landing on a uniformly random destination (repeats
-       allowed — no artificial "never the same twice" bias). */
+       full revolutions, landing on a uniformly random destination. */
     function spin() {
       measure();
 
       const loops = MIN_LOOPS + Math.floor(Math.random() * (MAX_LOOPS - MIN_LOOPS + 1));
       const target = Math.floor(Math.random() * CARDS_PER_REEL); // uniform over all 6
       const offset = (target - currentIndex + CARDS_PER_REEL) % CARDS_PER_REEL;
-      const cardsToTravel = loops * CARDS_PER_REEL + offset; // always >= 2*6 cards
+      const cardsToTravel = loops * CARDS_PER_REEL + offset; // >= 12 cards pass by
 
-      const startPx = -(currentIndex * cardHeight);
+      const startDistance = currentIndex * cardHeight;
       const totalDistance = cardsToTravel * cardHeight;
       const startTime = performance.now();
 
       allCards.forEach((c) => c.classList.remove("is-landed"));
 
       function tick(now) {
-        const elapsed = now - startTime;
-        const t = Math.min(elapsed / SPIN_DURATION_MS, 1);
-
-        setTransform(startPx - totalDistance * trapezoidProgress(t));
+        const t = Math.min((now - startTime) / SPIN_DURATION_MS, 1);
+        render(startDistance + totalDistance * trapezoidProgress(t));
 
         if (t < 1) {
           spinRafId = requestAnimationFrame(tick);
         } else {
           spinRafId = null;
           currentIndex = target;
-          // Silent snap back into the real (non-cloned) 6-card range — the
-          // clone we just scrolled to and this real card are pixel-identical,
-          // so nothing visibly changes.
-          setTransform(-(currentIndex * cardHeight));
+          render(currentIndex * cardHeight); // exact rest position
           markLanded(currentIndex);
           bounce();
         }
@@ -138,20 +137,22 @@
       spinRafId = requestAnimationFrame(tick);
     }
 
-    /* Small premium settle bounce (2-5px) after the reel stops. */
+    /* Small premium settle bounce (2-5px) after the reel stops. The bounce
+       is rendered through the same wrapped pipeline (as a tiny extra
+       forward distance) so even at the wrap boundary the window stays full. */
     function bounce() {
-      const restPx = -(currentIndex * cardHeight);
+      const restDistance = currentIndex * cardHeight;
       const startTime = performance.now();
 
       function tick(now) {
         const t = Math.min((now - startTime) / BOUNCE_DURATION_MS, 1);
         const wave = Math.sin(t * Math.PI) * (1 - t); // rises then eases back to 0
-        setTransform(restPx + wave * BOUNCE_PX);
+        render(restDistance + wave * BOUNCE_PX);
 
         if (t < 1) {
           bounceRafId = requestAnimationFrame(tick);
         } else {
-          setTransform(restPx);
+          render(restDistance);
           bounceRafId = null;
           scheduleNextSpin();
         }
@@ -169,18 +170,16 @@
     function handleResize() {
       if (spinRafId || bounceRafId) return; // mid-motion — next tick re-measures anyway
       measure();
-      setTransform(-(currentIndex * cardHeight));
+      render(currentIndex * cardHeight);
     }
 
     measure();
-    setTransform(0);
+    render(0);
     markLanded(0);
     window.addEventListener("resize", handleResize);
 
     // First spin starts after one full pause, so the reel visibly "rests"
-    // on card 1 before the first spin — matches "animation starts
-    // automatically" while still feeling like a deliberate machine, not a
-    // marquee that never stops.
+    // on card 1 before the first spin.
     scheduleNextSpin();
   }
 
