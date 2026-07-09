@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="We're building a new way to discover, book, and share unforgettable travel experiences through creators, communities, and curated adventures." />
-  <title>About Xploroo</title>
+  <meta name="description" content="Restricted sign-in for Xploroo administrators." />
+  <title>Admin Login | Xploroo</title>
 
   <!-- Apply the stored theme before first paint (avoids a flash of the
        wrong theme on reload). Dark is the default — this only ever adds
@@ -27,20 +27,17 @@
   <link rel="stylesheet" href="styles/base.css" />
   <link rel="stylesheet" href="styles/utilities.css" />
 
-  <!-- Header module (shared with the homepage) -->
+  <!-- Header module (shared with every page) -->
   <link rel="stylesheet" href="styles/header.css" />
 
   <!-- Search overlay module (shared with every page) -->
   <link rel="stylesheet" href="styles/search-overlay.css" />
 
-  <!-- About page (hero, mission, features, timeline, CTA) -->
-  <link rel="stylesheet" href="styles/about-page.css" />
+  <!-- Authentication module — reused as-is for the admin login card
+       (same `.auth-*` design language as login.html / signup.html). -->
+  <link rel="stylesheet" href="styles/auth.css" />
 
-  <!-- Influencers card component — reused by the Founder's Journey section
-       so the founder card matches the Influencer cards exactly -->
-  <link rel="stylesheet" href="styles/influencers-page.css" />
-
-  <!-- Footer module (shared with the homepage) -->
+  <!-- Footer module (reusable across every page) -->
   <link rel="stylesheet" href="styles/footer.css" />
 </head>
 
@@ -51,7 +48,7 @@
   <div class="app-shell">
 
     <!-- ============================================================= -->
-    <!-- STICKY HEADER (identical to the homepage)                     -->
+    <!-- 1. STICKY HEADER                                              -->
     <!-- ============================================================= -->
     <header class="site-header" data-header data-sticky>
       <div class="site-header__inner">
@@ -110,7 +107,7 @@
               <a class="main-nav__link" href="index.html">Home</a>
             </li>
             <li class="main-nav__item">
-              <a class="main-nav__link" href="about.html" aria-current="page">About Us</a>
+              <a class="main-nav__link" href="about.html">About Us</a>
             </li>
             <li class="main-nav__item main-nav__item--dropdown">
               <button type="button" class="main-nav__link main-nav__dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="packages-dropdown-menu" data-dropdown-toggle>
@@ -196,7 +193,7 @@
         <nav class="mobile-menu__nav" aria-label="Mobile">
           <ul class="mobile-menu__list" role="list">
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="index.html">Home</a></li>
-            <li class="mobile-menu__item"><a class="mobile-menu__link" href="about.html" aria-current="page">About Us</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="about.html">About Us</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="travel-quizzes.html">Play &amp; Win</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="influencers.html">Influencers</a></li>
             <li class="mobile-menu__item mobile-menu__item--submenu">
@@ -272,166 +269,48 @@
     </div>
 
     <!-- ============================================================= -->
-    <!-- MAIN                                                          -->
+    <!-- MAIN — Admin Login                                            -->
     <!-- ============================================================= -->
     <main class="main" id="main">
-      <div class="about-page" data-section="about-page">
+      <div class="auth-page">
+        <div class="auth-container">
 
-        <!-- =========================================================== -->
-        <!-- HERO                                                        -->
-        <!-- =========================================================== -->
-        <section class="about-page__section">
-          <div class="about-page__container">
-            <div class="ap-hero">
-              <h1 class="ap-hero__title">About Xploroo</h1>
-              <p class="ap-hero__subtitle">We&rsquo;re building a new way to discover, book, and share unforgettable travel experiences through creators, communities, and curated adventures.</p>
-            </div>
+          <header class="auth-head">
+            <h1 class="auth-head__title">Admin Login</h1>
+            <p class="auth-head__subtitle">Restricted access for Xploroo administrators.</p>
+          </header>
+
+          <div class="auth-card">
+
+            <!-- Temporary, frontend-only admin auth — see js/admin-auth.js.
+                 Deliberately separate from the traveler/influencer auth
+                 system (js/auth.js): its own form, its own storage key,
+                 built so it can be swapped for a real backend later. -->
+            <form class="auth-form" data-admin-login-form novalidate>
+
+              <label class="field">
+                <span class="field__label">Username</span>
+                <input class="input" type="text" name="username" autocomplete="username" placeholder="Enter admin username" required />
+              </label>
+
+              <label class="field">
+                <span class="field__label">Password</span>
+                <input class="input" type="password" name="password" autocomplete="current-password" placeholder="Enter admin password" required />
+              </label>
+
+              <p class="auth-message" data-admin-login-error role="status" aria-live="polite"></p>
+
+              <button class="btn btn--gradient btn--pill btn--lg auth-submit" type="submit">Login</button>
+            </form>
+
           </div>
-        </section>
 
-        <!-- =========================================================== -->
-        <!-- OUR MISSION                                                 -->
-        <!-- =========================================================== -->
-        <section class="about-page__section">
-          <div class="about-page__container">
-            <div class="ap-mission">
-              <h2 class="ap-mission__title">Our Mission</h2>
-              <p class="ap-mission__text">Xploroo connects travelers, creators, and travel brands through unique, curated experiences &mdash; not ordinary package booking. Instead of scrolling through generic listings, travelers discover trips through people they already trust, while creators and brands get a platform built around real recommendations rather than one-size-fits-all deals.</p>
-            </div>
-          </div>
-        </section>
-
-        <!-- =========================================================== -->
-        <!-- WHY XPLOROO                                                 -->
-        <!-- =========================================================== -->
-        <section class="about-page__section">
-          <div class="about-page__container">
-            <header class="ap-section-head">
-              <h2 class="ap-section-head__title">Why Xploroo</h2>
-            </header>
-
-            <div class="ap-features">
-              <article class="ap-feature">
-                <span class="ap-feature__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5Z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
-                </span>
-                <h3 class="ap-feature__title">Curated Experiences</h3>
-                <p class="ap-feature__text">Hand-picked trips and activities chosen for quality, not just availability.</p>
-              </article>
-
-              <article class="ap-feature">
-                <span class="ap-feature__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/><path d="m17 8 1.5 1.5L21 7"/></svg>
-                </span>
-                <h3 class="ap-feature__title">Trusted Influencers</h3>
-                <p class="ap-feature__text">Book through creators whose recommendations you already follow and trust.</p>
-              </article>
-
-              <article class="ap-feature">
-                <span class="ap-feature__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 8 8 9 4.8-1 8-4.5 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
-                </span>
-                <h3 class="ap-feature__title">Secure Bookings</h3>
-                <p class="ap-feature__text">Every booking is protected end-to-end, so you can travel with confidence.</p>
-              </article>
-
-              <article class="ap-feature">
-                <span class="ap-feature__icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 21c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M14.5 15.6c2.5.3 4.5 2.2 4.5 5.4"/></svg>
-                </span>
-                <h3 class="ap-feature__title">Community Driven</h3>
-                <p class="ap-feature__text">Built with travelers and creators, shaped by real stories and shared adventures.</p>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <!-- =========================================================== -->
-        <!-- OUR JOURNEY                                                 -->
-        <!-- =========================================================== -->
-        <section class="about-page__section">
-          <div class="about-page__container">
-            <header class="ap-section-head">
-              <h2 class="ap-section-head__title">Our Journey</h2>
-            </header>
-
-            <div class="ap-timeline">
-              <div class="ap-timeline-item">
-                <h3 class="ap-timeline-item__title">Idea</h3>
-                <p class="ap-timeline-item__text">Xploroo began as a simple idea: travel discovery should feel personal, not transactional.</p>
-              </div>
-              <div class="ap-timeline-item">
-                <h3 class="ap-timeline-item__title">Platform Development</h3>
-                <p class="ap-timeline-item__text">We built the foundation &mdash; a premium booking experience designed around real experiences.</p>
-              </div>
-              <div class="ap-timeline-item">
-                <h3 class="ap-timeline-item__title">Creator Network</h3>
-                <p class="ap-timeline-item__text">We partnered with travel creators to bring trusted, first-hand recommendations to every trip.</p>
-              </div>
-              <div class="ap-timeline-item">
-                <h3 class="ap-timeline-item__title">Launch</h3>
-                <p class="ap-timeline-item__text">Xploroo opens its doors, bringing travelers, creators, and brands together in one place.</p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- =========================================================== -->
-        <!-- FOUNDER'S JOURNEY                                           -->
-        <!-- =========================================================== -->
-        <section class="about-page__section" aria-labelledby="founder-journey-title">
-          <div class="about-page__container">
-            <header class="ap-section-head">
-              <h2 class="ap-section-head__title" id="founder-journey-title">Founder&rsquo;s Journey</h2>
-              <p class="ap-section-head__subtitle">The story behind Xploroo and the vision that started it all.</p>
-            </header>
-
-            <!-- One Influencer-style card (the .ip-card component comes from
-                 influencers-page.css, linked above, so dimensions / hover /
-                 radius / glass / shadow stay identical to influencers.html).
-                 The whole card is a single link to founder-journey.html. -->
-            <a class="ap-founder" href="founder-journey.html" aria-label="Read the full Founder's Journey">
-              <article class="ip-card">
-                <div class="ip-card__media">
-                  <img class="ip-card__img" src="https://ik.imagekit.io/mg0v9kccj/xploroo/IMG_20260704_121932.jpg.jpeg?updatedAt=1783147862135" alt="Portrait of the Xploroo founder" />
-                </div>
-                <div class="ip-card__body">
-                  <h3 class="ip-card__name">Anurag Sharma</h3>
-                  <p class="ap-founder__role">Founder &amp; CEO</p>
-                  <p class="ip-card__bio">&ldquo;Building a community where travel becomes an unforgettable experience.&rdquo;</p>
-                  <span class="ap-founder__cta">Read Full Journey <span aria-hidden="true">&rarr;</span></span>
-                </div>
-              </article>
-            </a>
-          </div>
-        </section>
-
-        <!-- =========================================================== -->
-        <!-- CTA                                                         -->
-        <!-- =========================================================== -->
-        <section class="about-page__section">
-          <div class="about-page__container">
-            <div class="ap-cta">
-              <h2 class="ap-cta__title">Ready to explore with us?</h2>
-              <a class="btn btn--gradient btn--pill btn--lg" href="index.html#packages">Explore Packages</a>
-            </div>
-          </div>
-        </section>
-
-        <!-- =========================================================== -->
-        <!-- ADMIN LOGIN (temporary)                                     -->
-        <!-- =========================================================== -->
-        <section class="about-page__section text-center">
-          <div class="about-page__container">
-            <a class="btn btn--glass btn--pill" href="admin-login.html">Admin Login</a>
-          </div>
-        </section>
-
+        </div>
       </div>
     </main>
 
     <!-- ============================================================= -->
-    <!-- FOOTER (identical to the homepage)                            -->
+    <!-- FOOTER                                                        -->
     <!-- ============================================================= -->
     <footer class="site-footer" data-footer>
       <div class="site-footer__panel">
@@ -532,13 +411,17 @@
 
   </div>
 
-  <!-- Header behavior (sticky blur, mobile menu, theme toggle) — shared -->
+  <!-- Header behavior (sticky blur, mobile menu, theme toggle) -->
   <script src="js/header.js" defer></script>
 
   <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
   <script src="js/search-overlay.js" defer></script>
 
-  <!-- Footer behavior (newsletter validation) — shared -->
+  <!-- Admin authentication (temporary, frontend-only — see the file for
+       how this stays separate from js/auth.js) -->
+  <script src="js/admin-auth.js" defer></script>
+
+  <!-- Footer behavior (newsletter form) -->
   <script src="js/footer.js" defer></script>
 </body>
 </html>

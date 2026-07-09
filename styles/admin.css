@@ -22,8 +22,14 @@
 }
 
 .admin-hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
   margin-bottom: clamp(2rem, 1.6rem + 2vw, 3rem);
 }
+.admin-hero__intro { min-width: 0; }
 .admin-hero__title {
   margin: 0;
   font-size: clamp(2rem, 1.6rem + 2vw, 2.75rem);

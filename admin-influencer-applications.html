@@ -21,6 +21,22 @@
     })();
   </script>
 
+  <!-- Admin route guard — synchronous, runs before anything renders so this
+       page never flashes admin content for an unauthenticated visitor.
+       Mirrors js/admin-auth.js's session key/logic (see that file); kept
+       inline here only so the redirect can happen this early. -->
+  <script>
+    (function () {
+      try {
+        if (sessionStorage.getItem("xploroo-admin-session") !== "true") {
+          window.location.replace("admin-login.html");
+        }
+      } catch (_) {
+        window.location.replace("admin-login.html");
+      }
+    })();
+  </script>
+
   <!-- Global design system (load order matters) -->
   <link rel="stylesheet" href="styles/variables.css" />
   <link rel="stylesheet" href="styles/reset.css" />
@@ -284,8 +300,11 @@
         <div class="admin-container">
 
           <header class="admin-hero">
-            <h1 class="admin-hero__title">Admin Panel</h1>
-            <p class="admin-hero__subtitle">Review Influencer applications, manage travel packages, and approve influencer payouts.</p>
+            <div class="admin-hero__intro">
+              <h1 class="admin-hero__title">Admin Panel</h1>
+              <p class="admin-hero__subtitle">Review Influencer applications, manage travel packages, and approve influencer payouts.</p>
+            </div>
+            <button class="btn btn--glass btn--pill" type="button" data-admin-logout>Admin Logout</button>
           </header>
 
           <div class="admin-tabs" role="tablist" aria-label="Admin sections" data-admin-tabs>
@@ -420,6 +439,10 @@
 
   <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
   <script src="js/search-overlay.js" defer></script>
+
+  <!-- Admin authentication (temporary, frontend-only) — powers the Admin
+       Logout button below. The route guard itself runs inline in <head>. -->
+  <script src="js/admin-auth.js" defer></script>
 
   <!-- Role system state (shared with every page in the role system) -->
   <script src="js/user-role.js" defer></script>
