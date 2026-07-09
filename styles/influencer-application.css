@@ -1,0 +1,179 @@
+/* ==========================================================================
+   XPLOROO · Influencer application module
+   influencer-application.css — The "Become an Influencer" application form
+   (influencer-application.html). Reuses the shared `.field` / `.input` /
+   `.select` / `.btn` system from utilities.css for every real form control;
+   this file only owns the page shell, the form grid, the custom file-upload
+   control, and the post-submit success/status states.
+   Scoped entirely under `.apply-*`. Load AFTER utilities.css and
+   role-shared.css.
+   ========================================================================== */
+
+.apply-page {
+  padding-block: clamp(2.5rem, 1.6rem + 3vw, 4.5rem) var(--section-gap);
+}
+.apply-container {
+  max-width: var(--container-md);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+.apply-hero {
+  text-align: center;
+  max-width: 36rem;
+  margin-inline: auto;
+  margin-bottom: clamp(2.5rem, 1.9rem + 3vw, 4rem);
+}
+.apply-hero__title {
+  margin: 0;
+  font-size: clamp(2.1rem, 1.6rem + 2.4vw, 3.25rem);
+}
+.apply-hero__subtitle {
+  margin: var(--space-4) auto 0;
+  font-size: var(--fs-md);
+  color: var(--color-text-muted);
+}
+
+/* -------------------------------------------------------------------------
+   Form card
+   ------------------------------------------------------------------------- */
+.apply-card {
+  padding: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
+  border-radius: var(--radius-3xl);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-card);
+}
+
+.apply-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+.apply-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4) var(--space-5);
+}
+@media (max-width: 560px) {
+  .apply-grid { grid-template-columns: 1fr; }
+}
+.apply-grid .field--full { grid-column: 1 / -1; }
+
+.apply-submit {
+  width: 100%;
+  box-shadow: var(--glow-brand);
+}
+
+/* -------------------------------------------------------------------------
+   Custom file-upload control (placeholder — captures a filename only,
+   nothing is actually uploaded anywhere).
+   ------------------------------------------------------------------------- */
+.apply-file {
+  display: block;
+  position: relative;
+}
+.apply-file__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.apply-file__zone {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1.5px dashed var(--color-border);
+  background: var(--color-surface-2);
+  transition: border-color var(--dur-fast) var(--ease-standard), background-color var(--dur-fast) var(--ease-standard);
+}
+.apply-file__input:hover ~ .apply-file__zone,
+.apply-file__input:focus-visible ~ .apply-file__zone {
+  border-color: var(--color-border-brand);
+  background: var(--color-primary-subtle);
+}
+.apply-file__icon {
+  flex: none;
+  width: 1.3rem;
+  height: 1.3rem;
+  color: var(--color-text-muted);
+}
+.apply-file__text {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+}
+.apply-file__name {
+  font-size: var(--fs-xs);
+  color: var(--color-text-subtle);
+}
+
+/* -------------------------------------------------------------------------
+   Post-submit success state — replaces the form entirely once submitted.
+   ------------------------------------------------------------------------- */
+.apply-success {
+  text-align: center;
+  padding: clamp(1rem, 0.6rem + 1.4vw, 1.5rem) 0;
+}
+.apply-success__icon {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--color-success) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-success) 40%, transparent);
+  color: var(--color-success);
+}
+.apply-success__icon svg { width: 1.6rem; height: 1.6rem; }
+.apply-success__title {
+  margin: var(--space-5) 0 0;
+  font-size: var(--fs-xl);
+}
+.apply-success__desc {
+  margin: var(--space-3) auto 0;
+  max-width: 40ch;
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}
+.apply-success__pill {
+  margin-top: var(--space-5);
+}
+.apply-success__back {
+  display: inline-block;
+  margin-top: var(--space-6);
+}
+
+/* -------------------------------------------------------------------------
+   "Can't apply right now" state — already pending or already an influencer.
+   ------------------------------------------------------------------------- */
+.apply-blocked {
+  text-align: center;
+  padding: clamp(1rem, 0.6rem + 1.4vw, 1.5rem) 0;
+}
+.apply-blocked__title {
+  margin: 0;
+  font-size: var(--fs-xl);
+}
+.apply-blocked__desc {
+  margin: var(--space-3) auto 0;
+  max-width: 40ch;
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}
+.apply-blocked__pill {
+  margin-top: var(--space-5);
+}
+.apply-blocked__back {
+  display: inline-block;
+  margin-top: var(--space-6);
+}

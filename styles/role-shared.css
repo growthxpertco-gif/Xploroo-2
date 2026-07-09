@@ -1,0 +1,59 @@
+/* ==========================================================================
+   XPLOROO · Role system — shared bits
+   role-shared.css — The "Influencer" role badge and application-status pill
+   used across account.html, influencer-application.html,
+   influencer-dashboard.html and admin-influencer-applications.html. Kept in
+   one place so the same badge always looks identical everywhere it appears.
+   Scoped entirely under `.role-badge` / `.status-pill` — never touches any
+   other component. Load AFTER utilities.css.
+   ========================================================================== */
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-brand);
+  background: var(--color-primary-subtle);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-primary-hover);
+}
+.role-badge svg { width: 0.85rem; height: 0.85rem; flex: none; }
+
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.status-pill::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: currentColor;
+}
+.status-pill--pending {
+  color: var(--color-warning);
+  background: color-mix(in srgb, var(--color-warning) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-warning) 40%, transparent);
+}
+.status-pill--approved {
+  color: var(--color-success);
+  background: color-mix(in srgb, var(--color-success) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-success) 40%, transparent);
+}
+.status-pill--rejected {
+  color: var(--color-danger);
+  background: color-mix(in srgb, var(--color-danger) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-danger) 40%, transparent);
+}
