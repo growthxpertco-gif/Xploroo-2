@@ -14,7 +14,7 @@
 .trending-packages {
   --tp-gap: 1.5rem;
   position: relative;
-  padding-block: var(--section-gap);
+  padding-block: var(--home-section-gap); /* homepage inter-section gap, see hero.css */
 }
 
 .trending-packages__container {

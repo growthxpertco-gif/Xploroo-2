@@ -8,12 +8,22 @@
    hero-slot-machine.css), the header, or any other section.
    ========================================================================== */
 
+/* Homepage-only inter-section gap — scoped here (and reused by every other
+   homepage section stylesheet, all exclusive to index.html) so the space
+   *between* sections can be tuned without touching the global
+   `--section-gap` utility other pages still rely on, and without touching
+   any section's internal spacing. ~45% smaller than `--section-gap`. */
+:root {
+  --home-section-gap: clamp(1.2rem, 0.9rem + 1.7vw, 2.6rem);
+}
+
 /* The shared `.section` utility class adds a large responsive top padding
    (var(--section-gap), ~56-120px) meant for sections with a heading above
    their content. Now that the slot machine is the first visible element,
    override just the Hero's top padding to a small premium gap so it sits
    directly under the navbar; bottom padding (spacing before the next
-   section) is left at the shared value. */
+   section) uses the reduced homepage gap above. */
 .hero {
   padding-top: 28px; /* ~24-32px premium gap below the navbar */
+  padding-bottom: var(--home-section-gap);
 }

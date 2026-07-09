@@ -35,6 +35,51 @@
   color: var(--color-text-muted);
 }
 
+/* -------------------------------------------------------------------------
+   Tabs — Influencer Applications / Package Management. Same underline-
+   indicator recipe as .search-overlay__tabs (search-overlay.css), scoped
+   under .admin-* so this file stays self-contained.
+   ------------------------------------------------------------------------- */
+.admin-tabs {
+  display: flex;
+  gap: var(--space-6);
+  margin-bottom: clamp(2rem, 1.6rem + 2vw, 3rem);
+  border-bottom: 1px solid var(--color-divider);
+  position: relative;
+}
+.admin-tabs__tab {
+  padding: 0 0 var(--space-3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-muted);
+  transition: color var(--dur-base) var(--ease-standard);
+}
+.admin-tabs__tab:hover { color: var(--color-text-strong); }
+.admin-tabs__tab[aria-selected="true"] { color: var(--color-text-strong); }
+.admin-tabs__indicator {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: var(--gradient-brand, var(--color-primary));
+  border-radius: var(--radius-pill);
+  transform: translateX(0);
+  transition:
+    transform var(--dur-slow) var(--ease-emphasis),
+    width var(--dur-slow) var(--ease-emphasis);
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-tabs__indicator { transition: none; }
+}
+
+.admin-panel { display: none; }
+.admin-panel.is-active { display: block; }
+
 .admin-list {
   display: flex;
   flex-direction: column;
@@ -45,13 +90,30 @@
    Empty state
    ------------------------------------------------------------------------- */
 .admin-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
   text-align: center;
   padding: clamp(2.5rem, 2rem + 2vw, 3.5rem);
   border-radius: var(--radius-2xl);
   border: 1px dashed var(--color-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   color: var(--color-text-muted);
   font-size: var(--fs-sm);
 }
+.admin-empty__icon {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--color-primary-subtle);
+  color: var(--violet-300);
+}
+.admin-empty__icon svg { width: 1.4rem; height: 1.4rem; }
 
 /* -------------------------------------------------------------------------
    Application card
@@ -73,11 +135,18 @@
 
 .admin-card__photo {
   flex: none;
+  display: grid;
+  place-items: center;
   width: 4.5rem;
   height: 4.5rem;
   border-radius: 50%;
-  object-fit: cover;
   border: 2px solid var(--glass-border);
+  background: linear-gradient(135deg, #8b3cf0 0%, #5b6bff 48%, #22d3ee 100%);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-xl);
+  line-height: 1;
 }
 
 .admin-card__body { min-width: 0; flex: 1; }

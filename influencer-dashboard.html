@@ -39,6 +39,9 @@
   <!-- Influencer dashboard module -->
   <link rel="stylesheet" href="styles/influencer-dashboard.css" />
 
+  <!-- Influencer dashboard section content (Invites, Earnings, etc.) -->
+  <link rel="stylesheet" href="styles/dash-sections.css" />
+
   <!-- Footer module (reusable across every page) -->
   <link rel="stylesheet" href="styles/footer.css" />
 </head>
@@ -352,61 +355,61 @@
                 <section class="dash-panel is-active" data-dash-panel="invites">
                   <h2 class="dash-panel__title">Collaboration Invites</h2>
                   <p class="dash-panel__desc">Brand and Xploroo collaboration invites will land here.</p>
-                  <span class="dash-panel__empty">Coming soon</span>
+                  <div data-dash-section="invites"></div>
                 </section>
 
                 <section class="dash-panel" data-dash-panel="earnings">
                   <h2 class="dash-panel__title">Earnings</h2>
                   <p class="dash-panel__desc">A breakdown of what you&rsquo;ve earned through Xploroo.</p>
-                  <span class="dash-panel__empty">Coming soon</span>
+                  <div data-dash-section="earnings"></div>
                 </section>
 
                 <section class="dash-panel" data-dash-panel="withdrawals">
                   <h2 class="dash-panel__title">Withdrawals</h2>
                   <p class="dash-panel__desc">Request and track payouts to your bank account.</p>
-                  <span class="dash-panel__empty">Coming soon</span>
+                  <div data-dash-section="withdrawals"></div>
                 </section>
 
                 <section class="dash-panel" data-dash-panel="kyc">
                   <h2 class="dash-panel__title">KYC</h2>
                   <p class="dash-panel__desc">Verify your identity to enable withdrawals.</p>
-                  <span class="dash-panel__empty">Coming soon</span>
+                  <div data-dash-section="kyc"></div>
                 </section>
 
                 <section class="dash-panel" data-dash-panel="content">
                   <h2 class="dash-panel__title">Content Tracker</h2>
                   <p class="dash-panel__desc">Track the content you&rsquo;ve delivered for each collaboration.</p>
-                  <span class="dash-panel__empty">Coming soon</span>
+                  <div data-dash-section="content"></div>
                 </section>
 
                 <section class="dash-panel" data-dash-panel="calendar">
                   <h2 class="dash-panel__title">Calendar</h2>
                   <p class="dash-panel__desc">Upcoming trips, shoots, and deadlines in one place.</p>
-                  <span class="dash-panel__empty">Coming soon</span>
+                  <div data-dash-section="calendar"></div>
                 </section>
 
                 <section class="dash-panel" data-dash-panel="reviews">
                   <h2 class="dash-panel__title">Reviews</h2>
                   <p class="dash-panel__desc">Feedback from brands and the Xploroo team.</p>
-                  <span class="dash-panel__empty">Coming soon</span>
+                  <div data-dash-section="reviews"></div>
                 </section>
 
                 <section class="dash-panel" data-dash-panel="leaderboard">
                   <h2 class="dash-panel__title">Leaderboard</h2>
                   <p class="dash-panel__desc">See how you rank among Xploroo&rsquo;s creator community.</p>
-                  <span class="dash-panel__empty">Coming soon</span>
+                  <div data-dash-section="leaderboard"></div>
                 </section>
 
                 <section class="dash-panel" data-dash-panel="notifications">
                   <h2 class="dash-panel__title">Notifications</h2>
                   <p class="dash-panel__desc">Updates on your applications, invites, and payouts.</p>
-                  <span class="dash-panel__empty">Coming soon</span>
+                  <div data-dash-section="notifications"></div>
                 </section>
 
                 <section class="dash-panel" data-dash-panel="support">
                   <h2 class="dash-panel__title">Support</h2>
                   <p class="dash-panel__desc">Reach the Xploroo creator support team.</p>
-                  <span class="dash-panel__empty">Coming soon</span>
+                  <div data-dash-section="support"></div>
                 </section>
 
               </div>
@@ -530,6 +533,12 @@
 
   <!-- Influencer dashboard behavior (gate + sidebar tabs) -->
   <script src="js/influencer-dashboard.js" defer></script>
+
+  <!-- Influencer dashboard section content (Invites, Earnings, Withdrawals,
+       KYC, Content Tracker, Calendar, Reviews, Leaderboard, Notifications,
+       Support) — renders into each panel independently of the tab switcher
+       above, so it never touches routing or the sidebar. -->
+  <script src="js/dash-sections.js" defer></script>
 
   <!-- Footer behavior (newsletter form) -->
   <script src="js/footer.js" defer></script>

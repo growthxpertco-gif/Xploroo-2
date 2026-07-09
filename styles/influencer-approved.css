@@ -1,0 +1,211 @@
+/* ==========================================================================
+   XPLOROO · Influencer approved module
+   influencer-approved.css — The screen shown in place of the application
+   form once an applicant is approved (role === "influencer"): a
+   congratulations section, then the "My Services & Pricing" card grid
+   (see js/influencer-services.js). Rendered inside the same `.apply-card`
+   shell as the form (influencer-application.css), so this file only owns
+   what's unique to these two sections. Reuses the shared `.field` /
+   `.input` / `.btn` system from utilities.css for every real form control.
+   Scoped entirely under `.influencer-success-*` / `.influencer-services-*` /
+   `.service-card-*`. Load AFTER utilities.css and influencer-application.css.
+   ========================================================================== */
+
+/* -------------------------------------------------------------------------
+   Congratulations section
+   ------------------------------------------------------------------------- */
+.influencer-success {
+  text-align: center;
+  padding: clamp(1rem, 0.6rem + 1.4vw, 1.5rem) 0 clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+
+.influencer-success__illustration {
+  display: grid;
+  place-items: center;
+  width: clamp(5rem, 4rem + 4vw, 7rem);
+  height: clamp(5rem, 4rem + 4vw, 7rem);
+  margin: 0 auto var(--space-5);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.16), transparent 55%),
+    linear-gradient(135deg, #8b3cf0 0%, #5b6bff 48%, #22d3ee 100%);
+  color: #fff;
+  box-shadow: var(--glow-brand);
+}
+.influencer-success__illustration svg {
+  width: 46%;
+  height: 46%;
+}
+
+.influencer-success__title {
+    margin: 0;
+    font-size: 2.0rem;
+}
+.influencer-success__subtitle {
+  margin: var(--space-2) 0 0;
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+}
+.influencer-success__message {
+  margin: var(--space-4) auto 0;
+  max-width: 46ch;
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}
+.influencer-success__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: var(--space-6);
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-success);
+  background: color-mix(in srgb, var(--color-success) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-success) 40%, transparent);
+}
+
+/* -------------------------------------------------------------------------
+   My Services & Pricing
+   ------------------------------------------------------------------------- */
+.influencer-services {
+  margin-top: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  padding-top: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  border-top: 1px solid var(--glass-border);
+}
+.influencer-services__head {
+  text-align: center;
+  max-width: 40rem;
+  margin-inline: auto;
+  margin-bottom: var(--space-6);
+}
+.influencer-services__title {
+  margin: 0;
+  font-size: var(--fs-xl);
+}
+.influencer-services__subtitle {
+  margin: var(--space-3) auto 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.influencer-services__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr));
+  gap: var(--space-5);
+}
+
+/* -------------------------------------------------------------------------
+   Service card
+   ------------------------------------------------------------------------- */
+.service-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--glass-border);
+  background: var(--color-surface-2);
+  transition: border-color var(--dur-fast) var(--ease-standard);
+}
+.service-card:has([data-service-enabled]:checked) {
+  border-color: var(--color-border-brand);
+}
+
+.service-card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+.service-card__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-primary-subtle);
+  font-size: 1.2rem;
+  line-height: 1;
+}
+.service-card__heading { flex: 1; min-width: 0; }
+.service-card__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  color: var(--color-text-strong);
+}
+.service-card__desc {
+  margin: 0.25rem 0 0;
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+/* Toggle switch — native checkbox visually hidden, track/thumb styled */
+.service-card__toggle {
+  flex: none;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+.service-card__toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.service-card__toggle-track {
+  display: block;
+  width: 2.5rem;
+  height: 1.4rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-hover);
+  border: 1px solid var(--glass-border);
+  transition: background-color var(--dur-fast) var(--ease-standard);
+}
+.service-card__toggle-thumb {
+  display: block;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0.14rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  transition: transform var(--dur-fast) var(--ease-standard);
+}
+.service-card__toggle input:checked ~ .service-card__toggle-track {
+  background: linear-gradient(120deg, #6a79ff, #22d3ee);
+  border-color: transparent;
+}
+.service-card__toggle input:checked ~ .service-card__toggle-track .service-card__toggle-thumb {
+  transform: translateX(1.1rem);
+}
+.service-card__toggle input:focus-visible ~ .service-card__toggle-track {
+  box-shadow: var(--glow-focus);
+}
+
+.service-card__fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+@media (max-width: 420px) {
+  .service-card__fields { grid-template-columns: 1fr; }
+}
+
+.service-card__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.service-card__save { flex: none; }
+.service-card__saved {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--color-success);
+}

@@ -1,0 +1,516 @@
+/* ==========================================================================
+   XPLOROO · Influencer dashboard — section content
+   dash-sections.css — Styles for the real content rendered by
+   js/dash-sections.js into each of the 10 dashboard panels (Collaboration
+   Invites, Earnings, Withdrawals, KYC, Content Tracker, Calendar, Reviews,
+   Leaderboard, Notifications, Support). Never touches `.dash-sidebar` or
+   the panel-switching mechanics owned by influencer-dashboard.css /
+   js/influencer-dashboard.js — purely the content that lives *inside* each
+   `.dash-panel`. Reuses the shared `.field` / `.input` / `.select` / `.btn`
+   system from utilities.css and `.status-pill` from role-shared.css.
+   Scoped under `.dash-empty`, `.dash-stat-*`, `.dash-table*`, and one
+   prefix per section (`.dash-invite-*`, `.dash-earn-*`, `.dash-wd-*`,
+   `.dash-kyc-*`, `.dash-content-*`, `.dash-cal-*`, `.dash-review-*`,
+   `.dash-lb-*`, `.dash-notif-*`, `.dash-ticket-*`).
+   Load AFTER utilities.css, role-shared.css and influencer-dashboard.css.
+   ========================================================================== */
+
+/* -------------------------------------------------------------------------
+   Shared primitives
+   ------------------------------------------------------------------------- */
+[data-dash-section] { margin-top: var(--space-6); }
+
+.dash-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  text-align: center;
+  padding: clamp(2rem, 1.6rem + 2vw, 3rem);
+  border-radius: var(--radius-2xl);
+  border: 1px dashed var(--color-border);
+  color: var(--color-text-muted);
+  font-size: var(--fs-sm);
+}
+.dash-empty__icon {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--color-primary-subtle);
+  color: var(--violet-300);
+}
+.dash-empty__icon svg { width: 1.4rem; height: 1.4rem; }
+
+.dash-icon-chip {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-primary-subtle);
+  color: var(--violet-300);
+}
+.dash-icon-chip svg { width: 1.15rem; height: 1.15rem; }
+
+.dash-cards {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.dash-card {
+  padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  background: var(--color-surface-2);
+}
+
+/* Stat cards — top summary rows (Earnings / Withdrawals) */
+.dash-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+.dash-stat-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: clamp(1.1rem, 0.9rem + 0.7vw, 1.4rem);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  background: var(--color-surface-2);
+}
+.dash-stat-card__value {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--color-text-strong);
+}
+.dash-stat-card__label {
+  margin: 0.15rem 0 0;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+/* Tables — Transaction Timeline / Withdrawal History / Leaderboard */
+.dash-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+}
+.dash-table {
+  width: 100%;
+  min-width: 32rem;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+.dash-table th {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-subtle);
+  background: var(--color-surface-2);
+  white-space: nowrap;
+}
+.dash-table td {
+  padding: var(--space-3) var(--space-4);
+  border-top: 1px solid var(--glass-border);
+  color: var(--color-text-strong);
+  white-space: nowrap;
+}
+.dash-table tr:first-child td { border-top: none; }
+
+/* -------------------------------------------------------------------------
+   1. Collaboration Invites
+   ------------------------------------------------------------------------- */
+.dash-invite-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  background: var(--color-surface-2);
+}
+.dash-invite-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.dash-invite-card__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  color: var(--color-text-strong);
+}
+.dash-invite-card__destination {
+  margin: 0.2rem 0 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+.dash-invite-card__meta {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--space-3);
+}
+.dash-invite-card__meta dt {
+  font-size: var(--fs-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-subtle);
+}
+.dash-invite-card__meta dd {
+  margin: 0.15rem 0 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+}
+.dash-invite-card__deliverables {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.dash-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.7rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border);
+  background: var(--color-surface-hover);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-muted);
+}
+.dash-invite-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+/* -------------------------------------------------------------------------
+   3. Withdrawals
+   ------------------------------------------------------------------------- */
+.dash-wd-warning {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--color-warning) 40%, transparent);
+  background: color-mix(in srgb, var(--color-warning) 12%, transparent);
+  color: var(--color-warning);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+.dash-wd-warning svg { flex: none; width: 1.2rem; height: 1.2rem; }
+
+.dash-wd-request {
+  margin-bottom: var(--space-6);
+}
+
+.dash-section-title {
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  color: var(--color-text-strong);
+}
+
+/* -------------------------------------------------------------------------
+   4. KYC
+   ------------------------------------------------------------------------- */
+.dash-kyc__current {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  background: var(--color-surface-2);
+}
+.dash-kyc__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--space-5);
+}
+.dash-kyc-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+.dash-kyc-card__desc {
+  margin: 0 0 var(--space-4);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+.dash-upload {
+  display: block;
+  position: relative;
+}
+.dash-upload__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.dash-upload__zone {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1.5px dashed var(--color-border);
+  background: var(--color-surface-hover);
+  transition: border-color var(--dur-fast) var(--ease-standard), background-color var(--dur-fast) var(--ease-standard);
+}
+.dash-upload__input:hover ~ .dash-upload__zone,
+.dash-upload__input:focus-visible ~ .dash-upload__zone {
+  border-color: var(--color-border-brand);
+  background: var(--color-primary-subtle);
+}
+.dash-upload__icon { flex: none; width: 1.2rem; height: 1.2rem; color: var(--color-text-muted); }
+.dash-upload__text { font-size: var(--fs-xs); font-weight: var(--fw-semibold); color: var(--color-text-strong); }
+.dash-upload__name { font-size: var(--fs-2xs); color: var(--color-text-subtle); }
+
+/* -------------------------------------------------------------------------
+   5. Content Tracker
+   ------------------------------------------------------------------------- */
+.dash-content-group {
+  padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  background: var(--color-surface-2);
+}
+.dash-content-group__title {
+  margin: 0 0 var(--space-4);
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  color: var(--color-text-strong);
+}
+.dash-content-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--glass-border);
+}
+.dash-content-row:first-of-type { border-top: none; padding-top: 0; }
+.dash-content-row__label {
+  flex: 0 0 9rem;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+}
+.dash-content-row__link {
+  flex: 1;
+  min-width: 10rem;
+  height: var(--control-height-sm);
+}
+.dash-content-row__save { flex: none; }
+
+/* -------------------------------------------------------------------------
+   6. Calendar
+   ------------------------------------------------------------------------- */
+.dash-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: var(--space-4);
+}
+.dash-cal-card {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  background: var(--color-surface-2);
+}
+.dash-cal-card__date {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-primary-subtle);
+  color: var(--violet-300);
+}
+.dash-cal-card__date-day { font-size: var(--fs-lg); font-weight: var(--fw-bold); line-height: 1; }
+.dash-cal-card__date-month { font-size: var(--fs-2xs); text-transform: uppercase; letter-spacing: 0.05em; }
+.dash-cal-card__title { margin: 0; font-size: var(--fs-sm); font-weight: var(--fw-semibold); color: var(--color-text-strong); }
+.dash-cal-card__desc { margin: 0.2rem 0 0; font-size: var(--fs-xs); color: var(--color-text-muted); }
+.dash-cal-card__type { margin-top: var(--space-2); }
+
+/* -------------------------------------------------------------------------
+   7. Reviews
+   ------------------------------------------------------------------------- */
+.dash-review-stars {
+  color: #f5b301;
+  font-size: var(--fs-sm);
+  letter-spacing: 0.1em;
+}
+.dash-review-card {
+  padding: clamp(1.1rem, 0.9rem + 0.7vw, 1.5rem);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  background: var(--color-surface-2);
+}
+.dash-review-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.dash-review-card__reviewer {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+}
+.dash-review-card__comment {
+  margin: var(--space-3) 0 0;
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+.dash-review-card__meta {
+  margin-top: var(--space-3);
+  font-size: var(--fs-2xs);
+  color: var(--color-text-subtle);
+}
+
+/* -------------------------------------------------------------------------
+   8. Leaderboard
+   ------------------------------------------------------------------------- */
+.dash-lb-me {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+.dash-lb-row--me td { color: var(--violet-300); font-weight: var(--fw-bold); }
+
+/* -------------------------------------------------------------------------
+   9. Notifications
+   ------------------------------------------------------------------------- */
+.dash-notif-card {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  background: var(--color-surface-2);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-standard);
+}
+.dash-notif-card--unread { border-color: var(--color-border-brand); }
+.dash-notif-card__body { flex: 1; min-width: 0; }
+.dash-notif-card__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+}
+.dash-notif-card__dot {
+  flex: none;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+.dash-notif-card__message {
+  margin: 0.25rem 0 0;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+.dash-notif-card__date {
+  margin: var(--space-2) 0 0;
+  font-size: var(--fs-2xs);
+  color: var(--color-text-subtle);
+}
+
+/* -------------------------------------------------------------------------
+   10. Support
+   ------------------------------------------------------------------------- */
+.dash-support__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+.dash-ticket-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+  padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  background: var(--color-surface-2);
+}
+.dash-ticket-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+@media (max-width: 520px) {
+  .dash-ticket-form__grid { grid-template-columns: 1fr; }
+}
+.dash-ticket-form__grid .field--full { grid-column: 1 / -1; }
+
+.dash-ticket-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--glass-border);
+  background: var(--color-surface-2);
+}
+.dash-ticket-card__subject {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+}
+.dash-ticket-card__meta {
+  margin: 0.25rem 0 0;
+  font-size: var(--fs-2xs);
+  color: var(--color-text-subtle);
+}
+
+/* -------------------------------------------------------------------------
+   Responsive — mobile-first tightening
+   ------------------------------------------------------------------------- */
+@media (max-width: 480px) {
+  .dash-invite-card__head,
+  .dash-review-card__head { flex-direction: column; align-items: flex-start; }
+  .dash-content-row__label { flex-basis: 100%; }
+}

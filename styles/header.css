@@ -691,6 +691,95 @@
   font-size: 0.9rem;
 }
 
+/* ---- Account panel (mobile sidebar, logged-in state) ------------------
+   Replaces the Log In / Sign Up pair inside .mobile-menu__actions once a
+   session exists (see js/header.js + js/auth.js). Premium glass pill,
+   matching the site's `.auth-card` / status-pill language. */
+.mobile-account {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.5rem 0.6rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow:
+    0 8px 28px rgba(91, 107, 255, 0.22),
+    0 2px 10px rgba(139, 60, 240, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.mobile-account[hidden] { display: none; }
+
+.mobile-account__avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  border-radius: 50%;
+  background: var(--signup-gradient);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.mobile-account__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.mobile-account__name {
+  font-size: 0.85rem;
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mobile-account__badge {
+  align-self: flex-start;
+  font-size: 0.62rem;
+  font-weight: var(--fw-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--violet-300);
+  padding: 0.1rem 0.5rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-subtle);
+  border: 1px solid var(--glass-border);
+}
+
+.mobile-account__buttons {
+  flex: none;
+  display: flex;
+  gap: 0.35rem;
+}
+.mobile-account__icon-btn {
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg-light);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: var(--transition-colors);
+}
+.mobile-account__icon-btn:hover {
+  color: var(--color-text-strong);
+  background: var(--color-surface-hover);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.mobile-account__icon-btn svg { width: 17px; height: 17px; }
+
 /* Lock body scroll while menu is open (class added to <html> by JS) */
 .is-menu-open,
 .is-menu-open body { overflow: hidden; }

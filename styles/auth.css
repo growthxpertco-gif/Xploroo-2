@@ -133,6 +133,17 @@
 }
 .auth-forgot:hover { color: var(--violet-200); }
 
+/* Inline status message (signup/login result) — hidden until it has text */
+.auth-message {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  text-align: center;
+}
+.auth-message:empty { display: none; }
+.auth-message--success { color: var(--color-success); }
+.auth-message--error { color: var(--color-danger); }
+
 /* Submit CTA — full-width gradient button, glow on hover */
 .auth-submit {
   width: 100%;

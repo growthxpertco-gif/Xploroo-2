@@ -9,7 +9,7 @@
 
 .recent-winners {
   position: relative;
-  padding-block: var(--section-gap);
+  padding-block: var(--home-section-gap); /* homepage inter-section gap, see hero.css */
 }
 
 .recent-winners__container {

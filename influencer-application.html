@@ -39,6 +39,9 @@
   <!-- Influencer application module -->
   <link rel="stylesheet" href="styles/influencer-application.css" />
 
+  <!-- Post-approval success screen + services & pricing module -->
+  <link rel="stylesheet" href="styles/influencer-approved.css" />
+
   <!-- Footer module (reusable across every page) -->
   <link rel="stylesheet" href="styles/footer.css" />
 </head>
@@ -344,30 +347,6 @@
                     <textarea class="input" name="whyJoin" rows="4" placeholder="Tell us what draws you to Xploroo." required></textarea>
                   </label>
 
-                  <label class="field field--full">
-                    <span class="field__label">Upload Portfolio</span>
-                    <span class="apply-file">
-                      <input class="apply-file__input" type="file" name="portfolio" accept="image/*,.pdf" />
-                      <span class="apply-file__zone">
-                        <svg class="apply-file__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0-12 4 4m-4-4-4 4"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
-                        <span class="apply-file__text">Choose file</span>
-                        <span class="apply-file__name" data-apply-file-name>No file chosen</span>
-                      </span>
-                    </span>
-                  </label>
-
-                  <label class="field field--full">
-                    <span class="field__label">Upload Profile Photo</span>
-                    <span class="apply-file">
-                      <input class="apply-file__input" type="file" name="photo" accept="image/*" />
-                      <span class="apply-file__zone">
-                        <svg class="apply-file__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0-12 4 4m-4-4-4 4"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
-                        <span class="apply-file__text">Choose file</span>
-                        <span class="apply-file__name" data-apply-file-name>No file chosen</span>
-                      </span>
-                    </span>
-                  </label>
-
                 </div>
 
                 <button class="btn btn--gradient btn--pill apply-submit" type="submit">Submit Application</button>
@@ -489,6 +468,10 @@
 
   <!-- Role system state (shared with every page in the role system) -->
   <script src="js/user-role.js" defer></script>
+
+  <!-- My Services & Pricing (post-approval) — standalone module so future
+       services can be added without touching the application flow. -->
+  <script src="js/influencer-services.js" defer></script>
 
   <!-- Influencer application behavior -->
   <script src="js/influencer-application.js" defer></script>

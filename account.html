@@ -282,19 +282,35 @@
             <p class="account-hero__subtitle">Manage your profile and your Xploroo journey.</p>
           </header>
 
-          <!-- Demo profile — this page has no real "logged in" session yet
-               (see js/account.js); only the role/badges below are real,
-               driven by js/user-role.js. -->
+          <!-- Profile header — avatar, name and email are all rendered by
+               js/account.js from the logged-in session (localStorage
+               "xploroo-session", written by js/auth.js). Role badges stay
+               driven by js/user-role.js, unchanged. -->
           <section class="account-card">
-            <img class="account-card__avatar" src="https://picsum.photos/seed/xploroo-demo-traveler/200/200" alt="" />
+            <span class="account-card__avatar" data-account-avatar aria-hidden="true"></span>
             <div class="account-card__body">
-              <h2 class="account-card__name">Aarav Mehta</h2>
-              <p class="account-card__email">aarav.mehta@example.com</p>
+              <h2 class="account-card__name" data-account-name></h2>
+              <p class="account-card__email" data-account-email></p>
               <div class="account-card__badges" data-account-badges></div>
             </div>
           </section>
 
+          <!-- Profile details — js/account.js swaps this between the
+               completion form and the read-only saved-profile card. -->
+          <section class="account-profile" data-account-profile></section>
+
           <div class="account-panel" data-account-panel></div>
+
+          <!-- Manage Services shortcut — js/account.js shows this only for
+               approved Influencers (role === "influencer"), linking to the
+               existing "My Services & Pricing" section already built into
+               influencer-application.html once approved. -->
+          <div data-account-services></div>
+
+          <button class="account-logout" type="button" data-account-logout>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+            Log Out
+          </button>
 
         </div>
       </div>

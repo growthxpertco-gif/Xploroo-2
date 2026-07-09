@@ -1,0 +1,190 @@
+/* ==========================================================================
+   XPLOROO · Admin — Package Management module
+   admin-packages.css — The "Package Management" tab of
+   admin-influencer-applications.html: a premium glass form (add/edit) plus
+   a grid of saved-package cards, rendered by js/admin-packages.js. Reuses
+   the shared `.field` / `.input` / `.select` / `.btn` system from
+   utilities.css and `.admin-empty` from admin.css for the empty state.
+   Scoped entirely under `.pkg-*`. Load AFTER utilities.css and admin.css.
+   ========================================================================== */
+
+/* -------------------------------------------------------------------------
+   Form card
+   ------------------------------------------------------------------------- */
+.pkg-form-card {
+  padding: clamp(1.5rem, 1.1rem + 1.6vw, 2.5rem);
+  border-radius: var(--radius-3xl);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-card);
+}
+.pkg-form-card__title {
+  margin: 0 0 var(--space-5);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--color-text-strong);
+}
+
+.pkg-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+.pkg-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4) var(--space-5);
+}
+@media (max-width: 560px) {
+  .pkg-form__grid { grid-template-columns: 1fr; }
+}
+.pkg-form__grid .field--full { grid-column: 1 / -1; }
+
+.pkg-form__status {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.pkg-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+.pkg-form__save { box-shadow: var(--glow-brand); }
+.pkg-form__message {
+  margin: 0;
+  min-height: 1em;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--color-success);
+}
+
+/* Active / Inactive toggle — same recipe as the influencer service-card
+   toggle (styles/influencer-approved.css), scoped locally so this file
+   stays self-contained. */
+.pkg-status-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  width: fit-content;
+}
+.pkg-status-toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.pkg-status-toggle__track {
+  display: block;
+  width: 2.5rem;
+  height: 1.4rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-hover);
+  border: 1px solid var(--glass-border);
+  transition: background-color var(--dur-fast) var(--ease-standard);
+}
+.pkg-status-toggle__thumb {
+  display: block;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0.14rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+  transition: transform var(--dur-fast) var(--ease-standard);
+}
+.pkg-status-toggle input:checked ~ .pkg-status-toggle__track {
+  background: linear-gradient(120deg, #22c55e, #16a34a);
+  border-color: transparent;
+}
+.pkg-status-toggle input:checked ~ .pkg-status-toggle__track .pkg-status-toggle__thumb {
+  transform: translateX(1.1rem);
+}
+.pkg-status-toggle input:focus-visible ~ .pkg-status-toggle__track {
+  box-shadow: var(--glow-focus);
+}
+.pkg-status-toggle__label {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+}
+
+/* -------------------------------------------------------------------------
+   Saved packages
+   ------------------------------------------------------------------------- */
+.pkg-saved {
+  margin-top: clamp(2rem, 1.6rem + 2vw, 3rem);
+}
+.pkg-saved__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+.pkg-saved__title {
+  margin: 0;
+  font-size: var(--fs-xl);
+}
+
+.pkg-saved__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: var(--space-5);
+}
+
+.pkg-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--glass-border);
+  background: var(--color-surface-2);
+}
+.pkg-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.pkg-card__name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  color: var(--color-text-strong);
+}
+.pkg-card__destination {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+.pkg-card__meta {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.pkg-card__meta dt {
+  font-size: var(--fs-2xs, var(--fs-xs));
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-subtle);
+}
+.pkg-card__meta dd {
+  margin: 0.1rem 0 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+}
+.pkg-card__actions {
+  margin-top: var(--space-2);
+  display: flex;
+  gap: var(--space-3);
+}

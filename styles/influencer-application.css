@@ -3,8 +3,9 @@
    influencer-application.css — The "Become an Influencer" application form
    (influencer-application.html). Reuses the shared `.field` / `.input` /
    `.select` / `.btn` system from utilities.css for every real form control;
-   this file only owns the page shell, the form grid, the custom file-upload
-   control, and the post-submit success/status states.
+   this file only owns the page shell, the form grid, and the post-submit
+   success/status states. The post-approval screen ("My Services &
+   Pricing") lives in styles/influencer-approved.css instead.
    Scoped entirely under `.apply-*`. Load AFTER utilities.css and
    role-shared.css.
    ========================================================================== */
@@ -65,53 +66,6 @@
 .apply-submit {
   width: 100%;
   box-shadow: var(--glow-brand);
-}
-
-/* -------------------------------------------------------------------------
-   Custom file-upload control (placeholder — captures a filename only,
-   nothing is actually uploaded anywhere).
-   ------------------------------------------------------------------------- */
-.apply-file {
-  display: block;
-  position: relative;
-}
-.apply-file__input {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-}
-.apply-file__zone {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-4) var(--space-5);
-  border-radius: var(--radius-lg);
-  border: 1.5px dashed var(--color-border);
-  background: var(--color-surface-2);
-  transition: border-color var(--dur-fast) var(--ease-standard), background-color var(--dur-fast) var(--ease-standard);
-}
-.apply-file__input:hover ~ .apply-file__zone,
-.apply-file__input:focus-visible ~ .apply-file__zone {
-  border-color: var(--color-border-brand);
-  background: var(--color-primary-subtle);
-}
-.apply-file__icon {
-  flex: none;
-  width: 1.3rem;
-  height: 1.3rem;
-  color: var(--color-text-muted);
-}
-.apply-file__text {
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-semibold);
-  color: var(--color-text-strong);
-}
-.apply-file__name {
-  font-size: var(--fs-xs);
-  color: var(--color-text-subtle);
 }
 
 /* -------------------------------------------------------------------------

@@ -1,9 +1,11 @@
 /* ==========================================================================
    XPLOROO · Authentication module
-   auth.js — Shared behavior for login.html and signup.html. Every handler
-   below is a placeholder: forms never submit anywhere and no network calls
-   are made. Each block is written so a real integration can replace just
-   its body later without touching markup or other handlers.
+   auth.js — Shared behavior for login.html and signup.html. Signup and
+   login are backed by a single localStorage "users" list (see
+   USERS_KEY below) so there's no real backend yet, but the two pages
+   authenticate against the same data. Every other handler (OAuth
+   buttons, forgot password) is still a placeholder no-op — only the
+   forms themselves are wired up.
    Vanilla JS, no dependencies. Loaded with `defer`.
    ========================================================================== */
 (function () {
@@ -12,14 +14,105 @@
   const form = document.querySelector("[data-auth-form]");
   if (!form) return;
 
+  const USERS_KEY = "xploroo-users";
+  const SESSION_KEY = "xploroo-session";
+
+  function getUsers() {
+    try {
+      const raw = localStorage.getItem(USERS_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function saveUsers(users) {
+    try {
+      localStorage.setItem(USERS_KEY, JSON.stringify(users));
+    } catch (_) {}
+  }
+
+  function findUserByEmail(email) {
+    const normalized = email.trim().toLowerCase();
+    return getUsers().find((u) => u.email === normalized);
+  }
+
   /* ------------------------------------------------------------------ */
-  /* 1. Email / Password submit — placeholder only.                       */
-  /*    Future: POST credentials to the auth backend, then redirect to    */
-  /*    the user's dashboard on success.                                  */
+  /* Inline status message — created once, reused for every submit.      */
+  /* Sits between the last field and the submit button in both forms.    */
   /* ------------------------------------------------------------------ */
+  const submitBtn = form.querySelector(".auth-submit");
+  const message = document.createElement("p");
+  message.className = "auth-message";
+  message.setAttribute("role", "status");
+  message.setAttribute("aria-live", "polite");
+  submitBtn.parentElement.insertBefore(message, submitBtn);
+
+  function showMessage(text, kind) {
+    message.textContent = text;
+    message.classList.remove("auth-message--success", "auth-message--error");
+    message.classList.add(kind === "success" ? "auth-message--success" : "auth-message--error");
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 1. Email / Password submit — signup on signup.html, sign-in on      */
+  /*    login.html. Distinguished by the presence of signup-only fields  */
+  /*    (fullName / confirmPassword) rather than a separate script.      */
+  /* ------------------------------------------------------------------ */
+  const fullNameField = form.querySelector('[name="fullName"]');
+  const confirmPasswordField = form.querySelector('[name="confirmPassword"]');
+  const isSignupForm = !!(fullNameField && confirmPasswordField);
+
   form.addEventListener("submit", (e) => {
     e.preventDefault();
-    // Intentionally a no-op for now — see comment above.
+
+    if (!form.reportValidity()) return;
+
+    if (isSignupForm) {
+      const fullName = form.querySelector('[name="fullName"]').value.trim();
+      const email = form.querySelector('[name="email"]').value.trim();
+      const password = form.querySelector('[name="password"]').value;
+
+      if (findUserByEmail(email)) {
+        showMessage("An account with this email already exists.", "error");
+        return;
+      }
+
+      const users = getUsers();
+      users.push({
+        fullName,
+        email: email.toLowerCase(),
+        password,
+        createdAt: new Date().toISOString(),
+      });
+      saveUsers(users);
+
+      showMessage("Account created successfully.", "success");
+      form.querySelectorAll("input, button").forEach((el) => (el.disabled = true));
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 2000);
+    } else {
+      const email = form.querySelector('[name="email"]').value.trim();
+      const password = form.querySelector('[name="password"]').value;
+
+      const user = findUserByEmail(email);
+      if (!user || user.password !== password) {
+        showMessage("Invalid email or password.", "error");
+        return;
+      }
+
+      try {
+        localStorage.setItem(SESSION_KEY, JSON.stringify({ fullName: user.fullName, email: user.email }));
+      } catch (_) {}
+
+      showMessage("Login successful. Redirecting…", "success");
+      form.querySelectorAll("input, button").forEach((el) => (el.disabled = true));
+      setTimeout(() => {
+        window.location.href = "account.html";
+      }, 1200);
+    }
   });
 
   /* ------------------------------------------------------------------ */

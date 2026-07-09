@@ -2,11 +2,14 @@
    XPLOROO · Influencer application
    influencer-application.js — Drives influencer-application.html: shows the
    form only when the visitor is eligible to apply (Traveler, no pending
-   application), otherwise shows a status message instead. On submit, saves
-   the application via XploroRole.submitApplication() (see js/user-role.js)
-   and swaps in a success state — no network call, no real file upload
-   (both file fields are explicitly placeholders per spec).
-   Vanilla JS, no dependencies. Loaded with `defer`, after user-role.js.
+   application). On submit, saves the application via
+   XploroRole.submitApplication() (see js/user-role.js) and swaps in a
+   success state. Once the role is "influencer" (admin-approved), the
+   application form never renders again — instead this shows the
+   congratulations screen + the "My Services & Pricing" grid (see
+   js/influencer-services.js).
+   Vanilla JS, no dependencies. Loaded with `defer`, after user-role.js and
+   influencer-services.js.
    ========================================================================== */
 (function () {
   "use strict";
@@ -18,32 +21,15 @@
   const form = card.querySelector("[data-apply-form]");
 
   /* ------------------------------------------------------------------ */
-  /* File inputs — placeholder upload controls: just reflect the chosen  */
-  /* filename back to the user, nothing is stored or sent anywhere.      */
-  /* ------------------------------------------------------------------ */
-  form.querySelectorAll(".apply-file__input").forEach((input) => {
-    const nameEl = input.parentElement.querySelector("[data-apply-file-name]");
-    input.addEventListener("change", () => {
-      if (nameEl) nameEl.textContent = input.files[0] ? input.files[0].name : "No file chosen";
-    });
-  });
-
-  /* ------------------------------------------------------------------ */
-  /* Eligibility gate — decides whether the form or a status message      */
-  /* shows, based on the shared role state.                               */
+  /* Eligibility gate — decides whether the form, the approved screen, or */
+  /* a status message shows, based on the shared role state.              */
   /* ------------------------------------------------------------------ */
   function renderGate() {
     const state = window.XploroRole.getState();
 
     if (state.role === "influencer") {
       formView.hidden = true;
-      renderBlocked(
-        "You&rsquo;re Already an Influencer",
-        "Your application was already approved &mdash; head to your Influencer Dashboard to get started.",
-        null,
-        "influencer-dashboard.html",
-        "Go to Influencer Dashboard"
-      );
+      renderApproved();
       return;
     }
 
@@ -77,6 +63,36 @@
   }
 
   /* ------------------------------------------------------------------ */
+  /* Approved — congratulations screen + "My Services & Pricing". Once     */
+  /* role is "influencer" this fully replaces the card; the application    */
+  /* form can never come back for this browser's session.                 */
+  /* ------------------------------------------------------------------ */
+  function renderApproved() {
+    card.innerHTML = `
+      <div class="influencer-success">
+        <div class="influencer-success__illustration" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/><circle cx="12" cy="12" r="4.5"/></svg>
+        </div>
+        <h2 class="influencer-success__title">&#127881; Congratulations!</h2>
+        <p class="influencer-success__subtitle">Welcome to the Xploroo Influencer Community.</p>
+        <p class="influencer-success__message">You&rsquo;re now an official Xploroo Influencer. Get ready to travel the world, collaborate with exciting brands, connect with travelers, and earn through unforgettable experiences.</p>
+        <span class="influencer-success__badge">&#10003; Verified Xploroo Influencer</span>
+      </div>
+
+      <section class="influencer-services" data-influencer-services>
+        <header class="influencer-services__head">
+          <h2 class="influencer-services__title">My Services &amp; Pricing</h2>
+          <p class="influencer-services__subtitle">Choose which services you offer and set your pricing. This will be shown on your public profile soon.</p>
+        </header>
+        <div class="influencer-services__grid" data-influencer-services-grid></div>
+      </section>`;
+
+    if (window.XploroServices) {
+      window.XploroServices.renderCards(card.querySelector("[data-influencer-services-grid]"));
+    }
+  }
+
+  /* ------------------------------------------------------------------ */
   /* Submit — save the application, show the success state.               */
   /* ------------------------------------------------------------------ */
   form.addEventListener("submit", (e) => {
@@ -95,8 +111,6 @@
       country: data.get("country") || "",
       bio: data.get("bio") || "",
       whyJoin: data.get("whyJoin") || "",
-      portfolioFileName: form.querySelector('[name="portfolio"]')?.files[0]?.name || "",
-      photoFileName: form.querySelector('[name="photo"]')?.files[0]?.name || "",
     });
 
     card.innerHTML = `

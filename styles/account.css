@@ -51,11 +51,19 @@
 }
 .account-card__avatar {
   flex: none;
+  display: grid;
+  place-items: center;
   width: 5rem;
   height: 5rem;
   border-radius: 50%;
-  object-fit: cover;
   border: 2px solid var(--glass-border);
+  background: linear-gradient(135deg, #8b3cf0 0%, #5b6bff 48%, #22d3ee 100%);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-xl);
+  line-height: 1;
+  box-shadow: var(--glow-brand);
 }
 .account-card__body {
   min-width: 0;
@@ -82,7 +90,8 @@
    Dynamic panel — one of: become-influencer CTA / pending / rejected /
    approved-influencer. js/account.js injects the matching markup below.
    ------------------------------------------------------------------------- */
-.account-panel {
+.account-panel,
+[data-account-services]:not(:empty) {
   margin-top: var(--space-6);
 }
 
@@ -141,3 +150,143 @@
 .account-status__action {
   margin-top: var(--space-6);
 }
+
+/* -------------------------------------------------------------------------
+   Profile details — completion form <-> read-only saved-profile card.
+   js/account.js swaps the inner markup of .account-profile between the
+   two; both share the same glass-card shell defined here.
+   ------------------------------------------------------------------------- */
+.account-profile {
+  margin-top: var(--space-6);
+}
+.account-profile__form,
+.account-profile__card {
+  position: relative;
+  padding: clamp(1.5rem, 1.2rem + 1.4vw, 2.25rem);
+  border-radius: var(--radius-3xl);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-card);
+  animation: account-profile-in 420ms var(--ease-out) both;
+}
+@keyframes account-profile-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .account-profile__form,
+  .account-profile__card { animation: none; }
+}
+
+.account-profile__title {
+  margin: 0 0 var(--space-5);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--color-text-strong);
+}
+
+.account-profile__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+.account-profile__error {
+  margin: 0;
+  min-height: 1em;
+  font-size: var(--fs-xs);
+  color: var(--color-danger);
+}
+.account-profile__save {
+  width: 100%;
+  box-shadow: var(--glow-brand);
+}
+
+/* Edit icon — pinned top-right of the read-only card */
+.account-profile__edit {
+  position: absolute;
+  top: clamp(1.1rem, 0.9rem + 0.7vw, 1.4rem);
+  right: clamp(1.1rem, 0.9rem + 0.7vw, 1.4rem);
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg-light);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: var(--transition-colors);
+}
+.account-profile__edit:hover {
+  color: var(--color-text-strong);
+  background: var(--color-surface-hover);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.account-profile__edit svg { width: 16px; height: 16px; }
+
+.account-profile__rows {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.account-profile__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+.account-profile__row-icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--radius-lg);
+  background: var(--color-primary-subtle);
+  color: var(--violet-300);
+}
+.account-profile__row-icon svg { width: 18px; height: 18px; }
+.account-profile__row dt {
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-subtle);
+}
+.account-profile__row dd {
+  margin: 0.15rem 0 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+}
+
+/* -------------------------------------------------------------------------
+   Logout — full-width premium glass button, pinned to the page's bottom.
+   ------------------------------------------------------------------------- */
+.account-logout {
+  width: 100%;
+  margin-top: var(--space-6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  height: var(--control-height-lg, 3.25rem);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  color: var(--color-danger);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  cursor: pointer;
+  transition: var(--transition-colors);
+  box-shadow: var(--shadow-card);
+}
+.account-logout:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+.account-logout svg { width: 18px; height: 18px; }

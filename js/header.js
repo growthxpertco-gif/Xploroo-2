@@ -236,4 +236,91 @@
       });
     });
   }
+
+  /* ------------------------------------------------------------------ */
+  /* 4. Mobile sidebar — logged-in account panel                         */
+  /*    Swaps the Log In / Sign Up buttons inside the mobile drawer's     */
+  /*    bottom bar for a compact glass account panel once a session       */
+  /*    exists. The session is written by js/auth.js on successful login  */
+  /*    (localStorage "xploroo-session") — this only reads it, so there's */
+  /*    no second auth system. The role badge reads the same              */
+  /*    "xploroo-user-role" storage js/user-role.js owns. Desktop header  */
+  /*    actions are untouched — this is scoped to `.mobile-menu__actions` */
+  /*    only.                                                             */
+  /* ------------------------------------------------------------------ */
+  const mobileActions = mobileMenu ? mobileMenu.querySelector(".mobile-menu__actions") : null;
+
+  if (mobileActions) {
+    const SESSION_KEY = "xploroo-session";
+    const ROLE_KEY = "xploroo-user-role";
+
+    function getSession() {
+      try {
+        const raw = localStorage.getItem(SESSION_KEY);
+        const parsed = raw ? JSON.parse(raw) : null;
+        return parsed && parsed.fullName ? parsed : null;
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function getRoleLabel() {
+      try {
+        const raw = localStorage.getItem(ROLE_KEY);
+        const parsed = raw ? JSON.parse(raw) : null;
+        return parsed && parsed.role === "influencer" ? "Influencer" : "Traveler";
+      } catch (_) {
+        return "Traveler";
+      }
+    }
+
+    const authButtons = Array.from(mobileActions.querySelectorAll(".btn-auth"));
+
+    const panel = document.createElement("div");
+    panel.className = "mobile-account";
+    panel.hidden = true;
+    panel.innerHTML = `
+      <span class="mobile-account__avatar" data-mobile-account-avatar aria-hidden="true"></span>
+      <span class="mobile-account__body">
+        <span class="mobile-account__name" data-mobile-account-name></span>
+        <span class="mobile-account__badge" data-mobile-account-badge></span>
+      </span>
+      <span class="mobile-account__buttons">
+        <a class="mobile-account__icon-btn" href="account.html" aria-label="View Profile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </a>
+        <button class="mobile-account__icon-btn" type="button" data-mobile-logout aria-label="Log out">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
+        </button>
+      </span>`;
+    mobileActions.appendChild(panel);
+
+    const nameEl = panel.querySelector("[data-mobile-account-name]");
+    const badgeEl = panel.querySelector("[data-mobile-account-badge]");
+    const avatarEl = panel.querySelector("[data-mobile-account-avatar]");
+    const logoutBtn = panel.querySelector("[data-mobile-logout]");
+
+    function renderAccountState() {
+      const session = getSession();
+      if (session) {
+        authButtons.forEach((btn) => (btn.hidden = true));
+        panel.hidden = false;
+        nameEl.textContent = session.fullName;
+        badgeEl.textContent = getRoleLabel();
+        avatarEl.textContent = session.fullName.trim().charAt(0).toUpperCase() || "?";
+      } else {
+        authButtons.forEach((btn) => (btn.hidden = false));
+        panel.hidden = true;
+      }
+    }
+
+    logoutBtn.addEventListener("click", () => {
+      try {
+        localStorage.removeItem(SESSION_KEY);
+      } catch (_) {}
+      window.location.href = "index.html";
+    });
+
+    renderAccountState();
+  }
 })();
