@@ -283,8 +283,8 @@
           </header>
 
           <!-- Profile header — avatar, name and email are all rendered by
-               js/account.js from the logged-in session (localStorage
-               "xploroo-session", written by js/auth.js). Role badges stay
+               js/account.js from the logged-in Supabase session
+               (window.XploroAuth, see js/supabase.js). Role badges stay
                driven by js/user-role.js, unchanged. -->
           <section class="account-card">
             <span class="account-card__avatar" data-account-avatar aria-hidden="true"></span>
@@ -423,6 +423,11 @@
 
   <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
   <script src="js/search-overlay.js" defer></script>
+
+  <!-- Supabase client (official CDN build) + shared config/auth helpers —
+       see js/supabase.js. Required by js/account.js's session check. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
+  <script src="js/supabase.js" defer></script>
 
   <!-- Role system state (shared with every page in the role system) -->
   <script src="js/user-role.js" defer></script>

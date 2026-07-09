@@ -18,8 +18,9 @@
 
    The applicant's email isn't part of the application record itself (the
    form never collects one — see influencer-application.html), so this
-   reads it from "xploroo-session" (the same key js/auth.js writes on
-   login) as a best-effort, falling back to a placeholder when unavailable.
+   reads it from the current Supabase session (window.XploroAuth, see
+   js/supabase.js) as a best-effort, falling back to a placeholder when
+   unavailable.
 
    Vanilla JS, no dependencies. Loaded with `defer`, after user-role.js.
    ========================================================================== */
@@ -45,14 +46,10 @@
     return `<a href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`;
   }
 
-  function getApplicantEmail() {
-    try {
-      const raw = localStorage.getItem("xploroo-session");
-      const parsed = raw ? JSON.parse(raw) : null;
-      return (parsed && parsed.email) || "";
-    } catch (_) {
-      return "";
-    }
+  async function getApplicantEmail() {
+    if (!window.XploroAuth) return "";
+    const user = await window.XploroAuth.getUser();
+    return (user && user.email) || "";
   }
 
   function renderEmpty() {
@@ -65,7 +62,7 @@
       </div>`;
   }
 
-  function render() {
+  async function render() {
     const state = window.XploroRole.getState();
     const app = state.application;
 
@@ -76,7 +73,7 @@
 
     const d = app.data;
     const initial = (d.fullName || "?").trim().charAt(0).toUpperCase();
-    const email = getApplicantEmail();
+    const email = await getApplicantEmail();
 
     listEl.innerHTML = `
       <article class="admin-card">

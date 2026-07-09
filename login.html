@@ -455,6 +455,12 @@
   <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
   <script src="js/search-overlay.js" defer></script>
 
+  <!-- Supabase client (official CDN build) + shared config — see
+       js/supabase.js. Connection only for now; js/auth.js below still
+       uses localStorage exactly as before. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
+  <script src="js/supabase.js" defer></script>
+
   <!-- Authentication behavior (placeholders only — see js/auth.js) -->
   <script src="js/auth.js" defer></script>
 

@@ -240,27 +240,58 @@
   /* ------------------------------------------------------------------ */
   /* 4. Mobile sidebar — logged-in account panel                         */
   /*    Swaps the Log In / Sign Up buttons inside the mobile drawer's     */
-  /*    bottom bar for a compact glass account panel once a session       */
-  /*    exists. The session is written by js/auth.js on successful login  */
-  /*    (localStorage "xploroo-session") — this only reads it, so there's */
-  /*    no second auth system. The role badge reads the same              */
-  /*    "xploroo-user-role" storage js/user-role.js owns. Desktop header  */
-  /*    actions are untouched — this is scoped to `.mobile-menu__actions` */
-  /*    only.                                                             */
+  /*    bottom bar for a compact glass account panel once a Supabase      */
+  /*    session exists (window.XploroAuth, see js/supabase.js). header.js */
+  /*    runs on every page, most of which don't declare the Supabase      */
+  /*    CDN/config <script> tags themselves, so this lazily injects them  */
+  /*    once if missing (see ensureSupabaseReady) rather than requiring   */
+  /*    every page to add them. The role badge still reads the            */
+  /*    unmigrated "xploroo-user-role" storage js/user-role.js owns.      */
+  /*    Desktop header actions are untouched — this is scoped to          */
+  /*    `.mobile-menu__actions` only.                                     */
   /* ------------------------------------------------------------------ */
   const mobileActions = mobileMenu ? mobileMenu.querySelector(".mobile-menu__actions") : null;
 
   if (mobileActions) {
-    const SESSION_KEY = "xploroo-session";
     const ROLE_KEY = "xploroo-user-role";
+    const SUPABASE_CDN_SRC = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js";
+    const SUPABASE_CONFIG_SRC = "js/supabase.js";
 
-    function getSession() {
+    function loadScriptOnce(src) {
+      return new Promise((resolve, reject) => {
+        const existing = document.querySelector(`script[src="${src}"]`);
+        if (existing) {
+          if (existing.dataset.loaded === "true") {
+            resolve();
+          } else {
+            existing.addEventListener("load", () => resolve());
+            existing.addEventListener("error", () => reject(new Error(`Failed to load ${src}`)));
+          }
+          return;
+        }
+        const s = document.createElement("script");
+        s.src = src;
+        s.addEventListener("load", () => {
+          s.dataset.loaded = "true";
+          resolve();
+        });
+        s.addEventListener("error", () => reject(new Error(`Failed to load ${src}`)));
+        document.head.appendChild(s);
+      });
+    }
+
+    async function ensureSupabaseReady() {
+      if (window.XploroAuth) return true;
       try {
-        const raw = localStorage.getItem(SESSION_KEY);
-        const parsed = raw ? JSON.parse(raw) : null;
-        return parsed && parsed.fullName ? parsed : null;
+        if (typeof window.supabase === "undefined") {
+          await loadScriptOnce(SUPABASE_CDN_SRC);
+        }
+        if (!window.XploroAuth) {
+          await loadScriptOnce(SUPABASE_CONFIG_SRC);
+        }
+        return !!window.XploroAuth;
       } catch (_) {
-        return null;
+        return false;
       }
     }
 
@@ -300,24 +331,25 @@
     const avatarEl = panel.querySelector("[data-mobile-account-avatar]");
     const logoutBtn = panel.querySelector("[data-mobile-logout]");
 
-    function renderAccountState() {
-      const session = getSession();
-      if (session) {
+    async function renderAccountState() {
+      const ready = await ensureSupabaseReady();
+      const user = ready ? await window.XploroAuth.getUser() : null;
+
+      if (user) {
+        const displayName = (user.user_metadata && user.user_metadata.full_name) || user.email.split("@")[0];
         authButtons.forEach((btn) => (btn.hidden = true));
         panel.hidden = false;
-        nameEl.textContent = session.fullName;
+        nameEl.textContent = displayName;
         badgeEl.textContent = getRoleLabel();
-        avatarEl.textContent = session.fullName.trim().charAt(0).toUpperCase() || "?";
+        avatarEl.textContent = displayName.trim().charAt(0).toUpperCase() || "?";
       } else {
         authButtons.forEach((btn) => (btn.hidden = false));
         panel.hidden = true;
       }
     }
 
-    logoutBtn.addEventListener("click", () => {
-      try {
-        localStorage.removeItem(SESSION_KEY);
-      } catch (_) {}
+    logoutBtn.addEventListener("click", async () => {
+      if (window.XploroAuth) await window.XploroAuth.signOut();
       window.location.href = "index.html";
     });
 

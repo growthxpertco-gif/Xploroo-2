@@ -1,41 +1,38 @@
 /* ==========================================================================
    XPLOROO · Authentication module
    auth.js — Shared behavior for login.html and signup.html. Signup and
-   login are backed by a single localStorage "users" list (see
-   USERS_KEY below) so there's no real backend yet, but the two pages
-   authenticate against the same data. Every other handler (OAuth
-   buttons, forgot password) is still a placeholder no-op — only the
-   forms themselves are wired up.
-   Vanilla JS, no dependencies. Loaded with `defer`.
+   login both run on Supabase Auth (window.supabaseClient, see
+   js/supabase.js) — no localStorage user store anymore. On first signup
+   (once a session exists) a public.profiles row is created via
+   window.XploroAuth.ensureProfile(); login re-checks/creates it too, to
+   cover projects where email confirmation delays the first session.
+   Every other handler (OAuth buttons, forgot password) is still a
+   placeholder no-op — only the forms themselves are wired up.
+   Vanilla JS, no dependencies. Loaded with `defer`, after js/supabase.js.
    ========================================================================== */
 (function () {
   "use strict";
 
   const form = document.querySelector("[data-auth-form]");
-  if (!form) return;
+  if (!form || !window.supabaseClient) return;
 
-  const USERS_KEY = "xploroo-users";
-  const SESSION_KEY = "xploroo-session";
+  const client = window.supabaseClient;
 
-  function getUsers() {
-    try {
-      const raw = localStorage.getItem(USERS_KEY);
-      const parsed = raw ? JSON.parse(raw) : [];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch (_) {
-      return [];
+  function mapAuthError(message) {
+    const msg = (message || "").toLowerCase();
+    if (msg.includes("already registered") || msg.includes("already exists")) {
+      return "An account with this email already exists.";
     }
-  }
-
-  function saveUsers(users) {
-    try {
-      localStorage.setItem(USERS_KEY, JSON.stringify(users));
-    } catch (_) {}
-  }
-
-  function findUserByEmail(email) {
-    const normalized = email.trim().toLowerCase();
-    return getUsers().find((u) => u.email === normalized);
+    if (msg.includes("password")) {
+      return "Password is too weak. Please use at least 6 characters.";
+    }
+    if (msg.includes("invalid") && msg.includes("email")) {
+      return "Please enter a valid email address.";
+    }
+    if (msg.includes("invalid login credentials")) {
+      return "Invalid email or password.";
+    }
+    return message || "Something went wrong. Please try again.";
   }
 
   /* ------------------------------------------------------------------ */
@@ -64,29 +61,45 @@
   const confirmPasswordField = form.querySelector('[name="confirmPassword"]');
   const isSignupForm = !!(fullNameField && confirmPasswordField);
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     if (!form.reportValidity()) return;
+
+    submitBtn.disabled = true;
 
     if (isSignupForm) {
       const fullName = form.querySelector('[name="fullName"]').value.trim();
       const email = form.querySelector('[name="email"]').value.trim();
       const password = form.querySelector('[name="password"]').value;
 
-      if (findUserByEmail(email)) {
-        showMessage("An account with this email already exists.", "error");
+      const { data, error } = await client.auth.signUp({
+        email,
+        password,
+        options: { data: { full_name: fullName } },
+      });
+
+      if (error) {
+        showMessage(mapAuthError(error.message), "error");
+        submitBtn.disabled = false;
         return;
       }
 
-      const users = getUsers();
-      users.push({
-        fullName,
-        email: email.toLowerCase(),
-        password,
-        createdAt: new Date().toISOString(),
-      });
-      saveUsers(users);
+      // Supabase doesn't return an error for a pre-existing, already-
+      // confirmed email — as an anti-enumeration measure it responds with
+      // a user object whose `identities` array is empty instead.
+      if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+        showMessage("An account with this email already exists.", "error");
+        submitBtn.disabled = false;
+        return;
+      }
+
+      // If email confirmation is off, signUp already returns a session —
+      // create the profile row now. Otherwise login.html's first sign-in
+      // creates it (see the else-branch below).
+      if (data.session && data.user && window.XploroAuth) {
+        await window.XploroAuth.ensureProfile(data.user);
+      }
 
       showMessage("Account created successfully.", "success");
       form.querySelectorAll("input, button").forEach((el) => (el.disabled = true));
@@ -97,15 +110,17 @@
       const email = form.querySelector('[name="email"]').value.trim();
       const password = form.querySelector('[name="password"]').value;
 
-      const user = findUserByEmail(email);
-      if (!user || user.password !== password) {
-        showMessage("Invalid email or password.", "error");
+      const { data, error } = await client.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        showMessage(mapAuthError(error.message), "error");
+        submitBtn.disabled = false;
         return;
       }
 
-      try {
-        localStorage.setItem(SESSION_KEY, JSON.stringify({ fullName: user.fullName, email: user.email }));
-      } catch (_) {}
+      if (data.user && window.XploroAuth) {
+        await window.XploroAuth.ensureProfile(data.user);
+      }
 
       showMessage("Login successful. Redirecting…", "success");
       form.querySelectorAll("input, button").forEach((el) => (el.disabled = true));

@@ -441,8 +441,17 @@
   <script src="js/search-overlay.js" defer></script>
 
   <!-- Admin authentication (temporary, frontend-only) — powers the Admin
-       Logout button below. The route guard itself runs inline in <head>. -->
+       Logout button below. The route guard itself runs inline in <head>.
+       Separate from the Supabase client below: this protects the admin
+       panel itself, the Supabase session belongs to whichever
+       traveler/influencer is logged into this same browser. -->
   <script src="js/admin-auth.js" defer></script>
+
+  <!-- Supabase client (official CDN build) + shared config/auth helpers —
+       see js/supabase.js. Used only for the applicant email best-effort
+       lookup in js/admin.js. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
+  <script src="js/supabase.js" defer></script>
 
   <!-- Role system state (shared with every page in the role system) -->
   <script src="js/user-role.js" defer></script>

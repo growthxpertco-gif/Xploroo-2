@@ -1,47 +1,31 @@
 /* ==========================================================================
    XPLOROO · Account dashboard
    account.js — Renders account.html entirely from real state:
-     1. Session (localStorage "xploroo-session", written by js/auth.js on
-        login) — avatar initial, name, email. No session → bounce to
-        login.html; this page only makes sense for a logged-in user.
+     1. Supabase session (window.XploroAuth, see js/supabase.js) — avatar
+        initial, name, email. No session → bounce to login.html; this page
+        only makes sense for a logged-in user.
      2. Profile completion (localStorage "xploroo-profiles", keyed by
-        email) — Full Name / Phone / City, editable in place.
+        email) — Full Name / Phone / City, editable in place. This is a
+        separate, lighter-weight "complete your profile" feature from the
+        Supabase public.profiles row (full_name/email/role/
+        influencer_status) created at signup; out of scope for this
+        migration pass, left as-is.
      3. Role + Influencer application (window.XploroRole, see
         js/user-role.js) — role badges and the dynamic CTA/status panel,
         unchanged from before.
-   Logout clears only the session key, leaving the registered account
-   (xploroo-users) and saved profile (xploroo-profiles) untouched, then
-   redirects home — the same "session vs. account" split js/header.js's
-   mobile sidebar already relies on.
-   Vanilla JS, no dependencies. Loaded with `defer`, after user-role.js.
+   Logout signs out of Supabase, leaving the saved profile
+   (xploroo-profiles) untouched, then redirects home — same split
+   js/header.js's mobile sidebar relies on.
+   Vanilla JS, no dependencies. Loaded with `defer`, after js/supabase.js
+   and user-role.js.
    ========================================================================== */
 (function () {
   "use strict";
 
   const page = document.querySelector("[data-account-page]");
-  if (!page || !window.XploroRole) return;
+  if (!page || !window.XploroRole || !window.XploroAuth) return;
 
-  const SESSION_KEY = "xploroo-session";
   const PROFILES_KEY = "xploroo-profiles";
-
-  /* ------------------------------------------------------------------ */
-  /* Session — the page requires one; bounce out immediately if absent.  */
-  /* ------------------------------------------------------------------ */
-  function getSession() {
-    try {
-      const raw = localStorage.getItem(SESSION_KEY);
-      const parsed = raw ? JSON.parse(raw) : null;
-      return parsed && parsed.email ? parsed : null;
-    } catch (_) {
-      return null;
-    }
-  }
-
-  const session = getSession();
-  if (!session) {
-    window.location.href = "login.html";
-    return;
-  }
 
   /* ------------------------------------------------------------------ */
   /* Profile store — { [email]: { fullName, phone, city } }              */
@@ -68,10 +52,6 @@
     } catch (_) {}
   }
 
-  /* ------------------------------------------------------------------ */
-  /* Header — avatar initial, name (saved name > email prefix > "New     */
-  /* Traveler"), "Logged in as" email.                                   */
-  /* ------------------------------------------------------------------ */
   const avatarEl = page.querySelector("[data-account-avatar]");
   const nameEl = page.querySelector("[data-account-name]");
   const emailEl = page.querySelector("[data-account-email]");
@@ -86,13 +66,13 @@
     return prefix ? prefix.charAt(0).toUpperCase() + prefix.slice(1) : "";
   }
 
-  function renderHeader() {
-    const profile = getProfile(session.email);
-    const displayName = (profile && profile.fullName) || emailPrefixName(session.email) || "New Traveler";
+  function renderHeader(user) {
+    const profile = getProfile(user.email);
+    const displayName = (profile && profile.fullName) || emailPrefixName(user.email) || "New Traveler";
 
-    avatarEl.textContent = session.email.trim().charAt(0).toUpperCase();
+    avatarEl.textContent = user.email.trim().charAt(0).toUpperCase();
     nameEl.textContent = displayName;
-    emailEl.textContent = `Logged in as: ${session.email}`;
+    emailEl.textContent = `Logged in as: ${user.email}`;
   }
 
   /* ------------------------------------------------------------------ */
@@ -106,7 +86,7 @@
     edit: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
   };
 
-  function renderProfileForm(existing) {
+  function renderProfileForm(user, existing) {
     profileSection.innerHTML = `
       <form class="account-profile__form" data-profile-form novalidate>
         <h2 class="account-profile__title">Complete Your Profile</h2>
@@ -142,13 +122,13 @@
         return;
       }
 
-      saveProfile(session.email, { fullName, phone, city });
-      renderHeader();
-      renderProfileReadOnly({ fullName, phone, city });
+      saveProfile(user.email, { fullName, phone, city });
+      renderHeader(user);
+      renderProfileReadOnly(user, { fullName, phone, city });
     });
   }
 
-  function renderProfileReadOnly(profile) {
+  function renderProfileReadOnly(user, profile) {
     profileSection.innerHTML = `
       <div class="account-profile__card">
         <button class="account-profile__edit" type="button" data-profile-edit aria-label="Edit profile">${ICONS.edit}</button>
@@ -179,23 +159,23 @@
             <span class="account-profile__row-icon">${ICONS.email}</span>
             <div>
               <dt>Email Address</dt>
-              <dd>${session.email}</dd>
+              <dd>${user.email}</dd>
             </div>
           </div>
         </dl>
       </div>`;
 
     profileSection.querySelector("[data-profile-edit]").addEventListener("click", () => {
-      renderProfileForm(profile);
+      renderProfileForm(user, profile);
     });
   }
 
-  function renderProfile() {
-    const profile = getProfile(session.email);
+  function renderProfile(user) {
+    const profile = getProfile(user.email);
     if (profile && profile.fullName && profile.phone && profile.city) {
-      renderProfileReadOnly(profile);
+      renderProfileReadOnly(user, profile);
     } else {
-      renderProfileForm(profile);
+      renderProfileForm(user, profile);
     }
   }
 
@@ -274,16 +254,22 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Logout — clear the session only; account + profile data stay put.   */
+  /* Init — requires a Supabase session; bounce out immediately if none. */
   /* ------------------------------------------------------------------ */
-  logoutBtn.addEventListener("click", () => {
-    try {
-      localStorage.removeItem(SESSION_KEY);
-    } catch (_) {}
-    window.location.href = "index.html";
-  });
+  (async function init() {
+    const user = await window.XploroAuth.getUser();
+    if (!user) {
+      window.location.href = "login.html";
+      return;
+    }
 
-  renderHeader();
-  renderProfile();
-  renderRole();
+    logoutBtn.addEventListener("click", async () => {
+      await window.XploroAuth.signOut();
+      window.location.href = "index.html";
+    });
+
+    renderHeader(user);
+    renderProfile(user);
+    renderRole();
+  })();
 })();
