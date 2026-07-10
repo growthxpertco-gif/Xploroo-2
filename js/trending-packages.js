@@ -129,8 +129,8 @@
   });
 
   /* ------------------------------------------------------------------ */
-  /* 4. Card navigation — opt-in via `data-tp-href` (e.g. the Dubai card  */
-  /*    links to dubai-package.html). Cards without this attribute are    */
+  /* 4. Card navigation — opt-in via `data-tp-href` (e.g. the Iceland card */
+  /*    links to iceland-package.html). Cards without this attribute are  */
   /*    completely unaffected, so nothing changes for the rest of the     */
   /*    carousel until each destination gets its own dedicated page.      */
   /* ------------------------------------------------------------------ */

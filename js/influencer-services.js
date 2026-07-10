@@ -154,8 +154,25 @@
         cardEl._savedTimeout = window.setTimeout(() => {
           savedMsg.textContent = "";
         }, 2000);
+
+        showSavedToast();
       });
     });
+  }
+
+  // Desktop-only success toast (see [data-influencer-services-toast] in
+  // js/influencer-application.js + styles/influencer-approved.css) — purely
+  // additive on top of the unchanged per-card "Saved" text above; hidden
+  // entirely on mobile via CSS, so it never touches the mobile layout.
+  let toastTimeout = null;
+  function showSavedToast() {
+    const toast = document.querySelector("[data-influencer-services-toast]");
+    if (!toast) return;
+    toast.classList.add("is-visible");
+    window.clearTimeout(toastTimeout);
+    toastTimeout = window.setTimeout(() => {
+      toast.classList.remove("is-visible");
+    }, 2500);
   }
 
   window.XploroServices = { CATALOG, getMyServices, getServicesByUserId, saveService, renderCards };

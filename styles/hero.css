@@ -27,3 +27,17 @@
   padding-top: 28px; /* ~24-32px premium gap below the navbar */
   padding-bottom: var(--home-section-gap);
 }
+
+/* Desktop only — the slot machine grows ~30% larger at this breakpoint
+   (see hero-slot-machine.css); widen the hero's own container so it has
+   room to do so without being clipped by the standard `.container` utility
+   (max-width: var(--container-xl), 1200px). `.hero__inner` is unique to
+   this section (only used once, here), so this never affects `.container`
+   itself or any other page that uses it. Reuses the site's existing
+   "wide / hero shells" token rather than inventing a new width. Mobile
+   and tablet are untouched — this rule only exists inside this query. */
+@media (min-width: 1024px) {
+  .hero__inner {
+    max-width: var(--container-max);
+  }
+}

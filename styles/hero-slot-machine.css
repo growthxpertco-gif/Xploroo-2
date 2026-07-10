@@ -221,15 +221,25 @@
 .slot-machine__x::before { transform: translateY(-50%) rotate(45deg); }
 .slot-machine__x::after { transform: translateY(-50%) rotate(-45deg); }
 
+/* Mobile-only duplicate cabinet + connecting wires (see the mobile media
+   query below). Hidden by default — including on desktop — so their
+   existence never affects the desktop layout in any way; only unhidden
+   inside the `max-width: 1023px` query. */
+.slot-machine__wires,
+.slot-machine__cabinet--clone {
+  display: none;
+}
+
 /* -------------------------------------------------------------------------
    Mobile (<1024px) — compact single-row hanging cabinet. Same reel markup
-   as desktop (no HTML changes): the second reel row + its divider are
-   hidden here too (mirroring the desktop rule below, kept separate so the
-   two breakpoints never depend on each other), corner bolts are dropped,
-   the cabinet detaches from the marquee by a small gap, and two thin
-   metallic wires (marquee pseudo-elements) bridge that gap so the body
-   reads as suspended rather than empty space. Reel size/aspect-ratio is
-   untouched — only the surrounding spacing is tightened.
+   as desktop (no HTML changes to the primary cabinet): the second reel row
+   + its divider are hidden here too (mirroring the desktop rule below,
+   kept separate so the two breakpoints never depend on each other), and
+   corner bolts are dropped. The top marquee is removed entirely (no
+   semicircle on mobile), and a duplicate cabinet is shown directly below
+   the first, the two bridged by a small gap + two thin metallic wires so
+   the lower cabinet reads as hanging from the upper one. Reel
+   size/aspect-ratio is untouched — only the surrounding spacing changes.
    ------------------------------------------------------------------------- */
 @media (max-width: 1023px) {
   /* 1. One row only */
@@ -244,27 +254,39 @@
     display: none;
   }
 
-  /* 4. Gap instead of overlap: the cabinet no longer tucks under the
-     marquee, it hangs 14px below it. */
+  /* 4. Remove the top semicircle/capsule entirely — no reserved space left
+     behind; the cabinet now sits flush at the top of `.slot-machine`. */
+  .slot-machine__marquee {
+    display: none;
+  }
   .slot-machine__cabinet {
-    margin-top: 14px;
+    margin-top: 0;
   }
 
-  /* 5. Thin metallic support wires, one per side, bridging the gap. */
-  .slot-machine__marquee::before,
-  .slot-machine__marquee::after {
-    content: "";
+  /* 5. Duplicate cabinet + connecting wires, shown only here. */
+  .slot-machine__wires {
+    position: relative;
+    display: block;
+    height: 16px;
+    margin: 10px auto 0;
+  }
+  .slot-machine__wire {
     position: absolute;
-    bottom: -14px;
+    top: 0;
     width: 2px;
-    height: 14px;
+    height: 100%;
     border-radius: 2px;
     background: linear-gradient(180deg, #eef2f8 0%, #a7afc0 55%, #6b7280 100%);
     box-shadow: 0 0 4px rgba(210, 222, 255, 0.55), 0 0 2px rgba(255, 255, 255, 0.4);
     z-index: 3;
   }
-  .slot-machine__marquee::before { left: 20%; }
-  .slot-machine__marquee::after  { right: 20%; }
+  .slot-machine__wire--left { left: 20%; }
+  .slot-machine__wire--right { right: 20%; }
+
+  .slot-machine__cabinet--clone {
+    display: block;
+    margin-top: 0;
+  }
 
   /* 3 & 6 & 8. Denser glass panel + tighter reel gap now that only one row
      remains — no reserved space left below for a second row. */
@@ -281,18 +303,47 @@
    horizontal cabinet, with illuminated "X" separators between them and an
    asymmetric cyan-to-pink cabinet glow. Mobile markup/rules above are
    untouched; this only re-lays out the existing elements at this breakpoint.
+
+   Also desktop-only: the top marquee/semicircle is removed entirely, the
+   four corner bolts are removed, and the rectangular cabinet (frame,
+   border, glass body, padding, overall footprint) is enlarged ~30%. The
+   reel row itself is capped at its original pre-enlargement width and
+   re-centered, so the three reels keep their exact current size/position —
+   only the surrounding cabinet/glass space grows around them.
    ------------------------------------------------------------------------- */
 @media (min-width: 1024px) {
   .slot-machine {
-    max-width: 64rem;
+    max-width: 83.2rem; /* 64rem × 1.3 — ~30% larger overall footprint */
   }
 
-  /* Cabinet glow shifts from cyan on the left to pink on the right */
+  /* No top semicircle on desktop, and no leftover space where it was. */
+  .slot-machine__marquee {
+    display: none;
+  }
+
+  /* Cabinet glow shifts from cyan on the left to pink on the right; sits
+     flush at the top now that the marquee is gone; border thickness scaled
+     ~30% to match the enlarged frame. */
   .slot-machine__cabinet {
+    margin-top: 0;
+    padding: 2.6px; /* was 2px — ~30% thicker neon border frame */
     box-shadow:
       0 24px 60px rgba(0, 0, 0, 0.55),
       -50px 0 90px rgba(0, 229, 255, 0.22),
       50px 0 90px rgba(255, 77, 255, 0.2);
+  }
+  .slot-machine__cabinet::before {
+    inset: 2.6px; /* matches the scaled border padding above */
+  }
+
+  /* No corner nuts/bolts — clean, premium border. */
+  .slot-machine__bolt {
+    display: none;
+  }
+
+  /* Glass body padding scaled ~30% along with the rest of the frame. */
+  .slot-machine__glass {
+    padding: clamp(1.43rem, 1.17rem + 1.3vw, 2.08rem) clamp(1.3rem, 1.04rem + 1.3vw, 1.95rem) clamp(1.95rem, 1.56rem + 1.95vw, 2.925rem);
   }
 
   /* Only one reel row is shown at desktop; the second row and the row
@@ -300,6 +351,14 @@
   .slot-machine__reels .slot-machine__reel-row:last-of-type,
   .slot-machine__row-divider {
     display: none;
+  }
+
+  /* Reel area capped at its original (pre-enlargement) width and
+     re-centered inside the now-larger glass panel — the reels themselves
+     never grow, they simply gain more surrounding space on every side. */
+  .slot-machine__reels {
+    max-width: 60.75rem;
+    margin-inline: auto;
   }
 
   .slot-machine__reel-row {

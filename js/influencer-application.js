@@ -123,8 +123,27 @@
           <h2 class="influencer-services__title">My Services &amp; Pricing</h2>
           <p class="influencer-services__subtitle">Choose which services you offer and set your pricing. This will be shown on your public profile soon.</p>
         </header>
+
+        <!-- Desktop-only premium header (see styles/influencer-approved.css)
+             — hidden by default, shown only ≥1025px in place of the mobile
+             header above. Purely presentational; the mobile header/copy
+             above is untouched. -->
+        <header class="influencer-services__head influencer-services__head--desktop">
+          <div class="influencer-services__head-text">
+            <h2 class="influencer-services__title">Manage Your Services &amp; Pricing</h2>
+            <p class="influencer-services__subtitle">Enable the services you offer, set your pricing, and keep your profile updated for travelers.</p>
+          </div>
+          <span class="influencer-services__verified-badge">&#10003; Verified Influencer</span>
+        </header>
+
         <div class="influencer-services__grid" data-influencer-services-grid></div>
-      </section>`;
+      </section>
+
+      <!-- Desktop-only save toast (see styles/influencer-approved.css) —
+           shown briefly by influencer-services.js after a successful save;
+           hidden entirely on mobile, where the existing inline "Saved" text
+           on each card is unchanged. -->
+      <div class="influencer-services__toast" data-influencer-services-toast role="status" aria-live="polite">&#10003; Services Updated Successfully</div>`;
 
     if (window.XploroServices) {
       await window.XploroServices.renderCards(card.querySelector("[data-influencer-services-grid]"));

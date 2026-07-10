@@ -346,6 +346,40 @@
                   </div>
                 </div>
 
+                <!-- Mobile-only: hanging wires + duplicate cabinet. Hidden
+                     entirely on desktop (see styles/hero-slot-machine.css);
+                     the desktop layout only ever renders the single cabinet
+                     above, unchanged. -->
+                <div class="slot-machine__wires" aria-hidden="true">
+                  <span class="slot-machine__wire slot-machine__wire--left"></span>
+                  <span class="slot-machine__wire slot-machine__wire--right"></span>
+                </div>
+
+                <div class="slot-machine__cabinet slot-machine__cabinet--clone" aria-hidden="true">
+                  <span class="slot-machine__bolt slot-machine__bolt--tl"></span>
+                  <span class="slot-machine__bolt slot-machine__bolt--tr"></span>
+                  <span class="slot-machine__bolt slot-machine__bolt--bl"></span>
+                  <span class="slot-machine__bolt slot-machine__bolt--br"></span>
+
+                  <div class="slot-machine__glass">
+                    <div class="slot-machine__reels">
+                      <div class="slot-machine__reel-row">
+                        <div class="slot-machine__reel"><iframe src="reel-demo.html" title="Slot reel 1 (duplicate)" loading="lazy" scrolling="no"></iframe></div>
+                        <span class="slot-machine__x" aria-hidden="true"></span>
+                        <div class="slot-machine__reel"><iframe src="reel-demo%20-%20Copy.html" title="Slot reel 2 (duplicate)" loading="lazy" scrolling="no"></iframe></div>
+                        <span class="slot-machine__x" aria-hidden="true"></span>
+                        <div class="slot-machine__reel"><iframe src="reel-demo%20-%20Copy%20(2).html" title="Slot reel 3 (duplicate)" loading="lazy" scrolling="no"></iframe></div>
+                      </div>
+                      <div class="slot-machine__row-divider"></div>
+                      <div class="slot-machine__reel-row">
+                        <div class="slot-machine__reel"></div>
+                        <div class="slot-machine__reel"></div>
+                        <div class="slot-machine__reel"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
 
             </figure>
@@ -449,19 +483,20 @@
             <!-- Horizontal scroll / swipe / drag track (desktop); becomes a 2-col grid on mobile -->
             <ul class="tp-track" data-tp-track role="list">
 
+
               <li class="tp-slide">
-                <article class="tp-card" data-tp-card data-tp-href="dubai-package.html" aria-label="View Dubai package details">
+                <article class="tp-card" data-tp-card data-tp-href="iceland-package.html" aria-label="View Iceland package details">
                   <div class="tp-card__media tp-card__media--santorini">
-                    <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260707_145514.png.jpg.jpeg" alt="Dubai" />
-                    <button class="tp-card__wishlist" type="button" aria-label="Save Dubai &amp; Mykonos package" aria-pressed="false" data-tp-wishlist>
+                    <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG-20260704-WA0019.jpg.jpeg" alt="Iceland" />
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Iceland package" aria-pressed="false" data-tp-wishlist>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
                     </button>
                   </div>
                   <div class="tp-card__body">
-                    <h3 class="tp-card__destination">Dubai</h3>
-                    <p class="tp-card__duration">2N 3D</p>
+                    <h3 class="tp-card__destination">Iceland</h3>
+                    <p class="tp-card__duration">6N 7D</p>
                     <div class="tp-card__footer">
-                      <span class="tp-card__price"><span class="tp-card__price-amount">₹21,999</span><span class="tp-card__price-unit">/person</span></span>
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹7,25,000</span><span class="tp-card__price-unit">/person</span></span>
                     </div>
                   </div>
                 </article>
@@ -588,24 +623,6 @@
                     <p class="tp-card__duration">3N 4D</p>
                     <div class="tp-card__footer">
                       <span class="tp-card__price"><span class="tp-card__price-amount">₹24,999</span><span class="tp-card__price-unit">/person</span></span>
-                    </div>
-                  </div>
-                </article>
-              </li>
-
-              <li class="tp-slide">
-                <article class="tp-card" data-tp-card data-tp-href="iceland-package.html" aria-label="View Iceland package details">
-                  <div class="tp-card__media tp-card__media--santorini">
-                    <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG-20260704-WA0019.jpg.jpeg" alt="Iceland" />
-                    <button class="tp-card__wishlist" type="button" aria-label="Save Iceland package" aria-pressed="false" data-tp-wishlist>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
-                    </button>
-                  </div>
-                  <div class="tp-card__body">
-                    <h3 class="tp-card__destination">Iceland</h3>
-                    <p class="tp-card__duration">5N 6D</p>
-                    <div class="tp-card__footer">
-                      <span class="tp-card__price"><span class="tp-card__price-amount">₹74,999</span><span class="tp-card__price-unit">/person</span></span>
                     </div>
                   </div>
                 </article>
@@ -880,28 +897,28 @@
                 </article>
               </li>
 
-              <!-- 3. Dubai -->
+              <!-- 3. Iceland -->
               <li class="tp-slide">
-                <article class="tp-card" data-tp-card data-tp-href="dubai-package.html" aria-label="View Dubai package details">
+                <article class="tp-card" data-tp-card data-tp-href="iceland-package.html" aria-label="View Iceland package details">
                   <div class="tp-card__media tp-card__media--dubai">
-                    <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260707_145514.png.jpg.jpeg" alt="Dubai" />
-                    <button class="tp-card__wishlist" type="button" aria-label="Save Dubai skyline package" aria-pressed="false" data-tp-wishlist>
+                    <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG-20260704-WA0019.jpg.jpeg" alt="Iceland" />
+                    <button class="tp-card__wishlist" type="button" aria-label="Save Iceland Northern Lights package" aria-pressed="false" data-tp-wishlist>
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
                     </button>
                   </div>
                   <div class="tp-card__body">
-                    <span class="tp-card__badge tp-card__badge--urgency">2 Seats Left</span>
+                    <span class="tp-card__badge tp-card__badge--urgency">12 Guests Only</span>
                     <p class="tp-card__meta">
                       <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-                      <span>Dubai, UAE · 2N/3D</span>
+                      <span>Iceland &middot; 6N/7D</span>
                     </p>
                     <p class="tp-card__countdown" data-es-countdown data-hours="18">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
                       <span data-es-countdown-text>Ends in 18 Hours</span>
                     </p>
                     <div class="tp-card__footer">
-                      <span class="tp-card__price"><span class="tp-card__price-amount">₹21,999</span><span class="tp-card__price-unit">/person</span></span>
-                      <a class="tp-card__cta" href="dubai-package.html">Book Now</a>
+                      <span class="tp-card__price"><span class="tp-card__price-amount">₹7,25,000</span><span class="tp-card__price-unit">/person</span></span>
+                      <a class="tp-card__cta" href="iceland-package.html">Book Now</a>
                     </div>
                   </div>
                 </article>

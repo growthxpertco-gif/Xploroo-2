@@ -40,7 +40,6 @@
   /* here when their package pages are created.                          */
   /* ------------------------------------------------------------------ */
   const PACKAGES = {
-    dubai:     { name: "Dubai Escape",                   destination: "Dubai, UAE",        duration: "4 Days / 3 Nights", price: 49999,  image: "https://picsum.photos/seed/dubai-hero/600/600" },
     manali:    { name: "Manali Getaway",                 destination: "Manali, HP",        duration: "4 Days / 3 Nights", price: 18999,  image: "https://picsum.photos/seed/manali-hero/600/600" },
     goa:       { name: "Goa Beach Escape",               destination: "Goa, India",        duration: "3 Days / 2 Nights", price: 14999,  image: "https://picsum.photos/seed/goa-hero/600/600" },
     vietnam:   { name: "Vietnam Discovery",              destination: "Vietnam",           duration: "5 Days / 4 Nights", price: 36999,  image: "https://picsum.photos/seed/vietnam-hero/600/600" },
@@ -48,7 +47,7 @@
     jaipur:    { name: "Jaipur Heritage Trail",          destination: "Jaipur, Rajasthan", duration: "5 Days / 4 Nights", price: 21999,  image: "https://picsum.photos/seed/jaipur-hero/600/600" },
     kasol:     { name: "Kasol & Parvati Valley",         destination: "Kasol, HP",         duration: "4 Days / 3 Nights", price: 16999,  image: "https://picsum.photos/seed/kasol-hero/600/600" },
     phuket:    { name: "Phuket Island Escape",           destination: "Phuket, Thailand",  duration: "4 Days / 3 Nights", price: 31999,  image: "https://picsum.photos/seed/phuket-hero/600/600" },
-    iceland:   { name: "Iceland Northern Lights Escape", destination: "Iceland",           duration: "6 Days / 5 Nights", price: 109999, image: "https://picsum.photos/seed/iceland-hero/600/600" },
+    iceland:   { name: "Iceland Northern Lights Escape", destination: "Iceland",           duration: "6 Nights / 7 Days", price: 725000, image: "https://picsum.photos/seed/iceland-hero/600/600" },
     japan:     { name: "Japan Cherry Blossom Trail",     destination: "Japan",             duration: "6 Days / 5 Nights", price: 99999,  image: "https://picsum.photos/seed/japan-hero/600/600" },
     italy:     { name: "Italy Classic Escape",           destination: "Italy",             duration: "6 Days / 5 Nights", price: 89999,  image: "https://picsum.photos/seed/italy-hero/600/600" },
   };
@@ -145,8 +144,8 @@
 
   const slug = (
     hasQueryPackage ? params.get("package") :
-    hasQueryService ? "dubai" :
-    (slugFallback || "dubai")
+    hasQueryService ? "iceland" :
+    (slugFallback || "iceland")
   ).toLowerCase();
 
   const pkg = isRealInfluencerBooking
@@ -165,7 +164,7 @@
         price: SERVICES[serviceSlug].price,
         image: SERVICES[serviceSlug].image,
       }
-    : (PACKAGES[slug] || PACKAGES.dubai);
+    : (PACKAGES[slug] || PACKAGES.iceland);
 
   /* ------------------------------------------------------------------ */
   /* Element lookups                                                     */

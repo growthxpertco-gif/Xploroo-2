@@ -336,3 +336,80 @@
     aspect-ratio: 340 / 133;
   }
 }
+
+/* ==========================================================================
+   Mobile-only entrance + floating animation (<=768px). Purely additive —
+   no existing rule above is modified, and none of this runs above the
+   768px breakpoint, so desktop is completely untouched. Ticket-2 stays
+   fixed/centered (its own layout position is never animated); Ticket-1
+   and Ticket-3 start tucked behind its upper/lower edge and glide out to
+   their existing static resting position (the same -44px overlap already
+   defined above), then all three drift forever. Only `transform`
+   (translateY combined with each ticket's existing rotation) and
+   `opacity` are animated — never width/height/margin — so this stays on
+   the compositor for a smooth 60fps.
+   ========================================================================== */
+@media (max-width: 768px) {
+  .featured-experiences__ticket.ticket-1,
+  .featured-experiences__ticket.ticket-3 {
+    z-index: 1;
+  }
+  .featured-experiences__ticket.ticket-2 {
+    z-index: 2;
+  }
+
+  .ticket-1 .ticket,
+  .ticket-2 .ticket,
+  .ticket-3 .ticket {
+    will-change: transform, opacity;
+  }
+
+  /* Entrance — slow, luxurious ease, holds its start state during the
+     short delay (animation-fill-mode: both) so tickets 1/3 render already
+     tucked behind ticket 2 on first paint, before sliding out. */
+  .ticket-1 .ticket {
+    animation:
+      ticket-enter-up 1200ms 300ms ease-in-out both,
+      ticket-float-1 4.6s 1500ms ease-in-out infinite;
+  }
+  .ticket-2 .ticket {
+    animation: ticket-float-2 4s ease-in-out infinite;
+  }
+  .ticket-3 .ticket {
+    animation:
+      ticket-enter-down 1200ms 300ms ease-in-out both,
+      ticket-float-3 5.2s 1500ms ease-in-out infinite;
+  }
+
+  @keyframes ticket-enter-up {
+    0%   { transform: rotate(-5deg) translateY(48px); opacity: 0.6; }
+    100% { transform: rotate(-5deg) translateY(0); opacity: 1; }
+  }
+  @keyframes ticket-enter-down {
+    0%   { transform: rotate(5deg) translateY(-48px); opacity: 0.6; }
+    100% { transform: rotate(5deg) translateY(0); opacity: 1; }
+  }
+
+  /* Continuous float — Ticket 1 and Ticket 3 move in opposite phase
+     (6-8px swing), Ticket 2 barely drifts (2-3px), each on its own timing. */
+  @keyframes ticket-float-1 {
+    0%, 100% { transform: rotate(-5deg) translateY(-3.5px); }
+    50%      { transform: rotate(-5deg) translateY(3.5px); }
+  }
+  @keyframes ticket-float-2 {
+    0%, 100% { transform: rotate(0deg) translateY(-1.25px); }
+    50%      { transform: rotate(0deg) translateY(1.25px); }
+  }
+  @keyframes ticket-float-3 {
+    0%, 100% { transform: rotate(5deg) translateY(3.5px); }
+    50%      { transform: rotate(5deg) translateY(-3.5px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ticket-1 .ticket,
+    .ticket-2 .ticket,
+    .ticket-3 .ticket {
+      animation: none;
+    }
+  }
+}

@@ -209,3 +209,184 @@
   font-weight: var(--fw-semibold);
   color: var(--color-success);
 }
+
+/* -------------------------------------------------------------------------
+   DESKTOP-ONLY premium dashboard treatment (≥1025px). Everything below this
+   point is gated behind the same min-width the rest of the site already
+   uses to distinguish "desktop" from tablet/mobile (see header.css's
+   ≤1024px collapse), so every rule above stays exactly as-is for mobile —
+   nothing here overrides the base mobile styles at any narrower viewport.
+   ------------------------------------------------------------------------- */
+
+/* Desktop header variant — hidden by default (mobile keeps the original
+   `.influencer-services__head` above); swapped in only on desktop. */
+.influencer-services__head--desktop { display: none; }
+
+/* Desktop-only save toast — the mobile per-card "Saved" text is untouched;
+   this is a purely additive confirmation, invisible on mobile. */
+.influencer-services__toast {
+  display: none;
+  position: fixed;
+  left: 50%;
+  bottom: 2.5rem;
+  transform: translateX(-50%) translateY(12px);
+  z-index: var(--z-toast, 900);
+  padding: 0.85rem 1.5rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid color-mix(in srgb, var(--color-success) 45%, transparent);
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-lg);
+  color: var(--color-success);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+}
+
+@media (min-width: 1025px) {
+  .influencer-services__toast { display: block; }
+  .influencer-services__toast.is-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ---- Header: swap mobile copy for the premium desktop header ---- */
+  .influencer-services__head:not(.influencer-services__head--desktop) { display: none; }
+  .influencer-services__head--desktop {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-6);
+    text-align: left;
+    max-width: none;
+    margin-inline: 0;
+    margin-bottom: var(--space-7);
+  }
+  .influencer-services__head-text { max-width: 42rem; }
+  .influencer-services__head--desktop .influencer-services__subtitle { margin-inline: 0; }
+
+  .influencer-services__verified-badge {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1.15rem;
+    border-radius: var(--radius-pill);
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-semibold);
+    color: var(--color-success);
+    background: color-mix(in srgb, var(--color-success) 16%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-success) 40%, transparent);
+    white-space: nowrap;
+  }
+
+  /* ---- Page shell: break out of the narrow `.apply-container` reading
+     width (--container-md, 768px — sized for the application FORM, which
+     is unaffected) so the dashboard-style services grid has room to lay
+     out 2-3 real columns without overflowing. `:has()` scopes this to only
+     the approved/services state — the plain application-form container
+     (still shown to pending/rejected/new applicants) keeps its original
+     768px width untouched, as does everything below this breakpoint. ---- */
+  .apply-container:has(.influencer-services) {
+    max-width: 1700px;
+    padding-inline: clamp(2.5rem, 1.5rem + 3vw, 3.75rem); /* ~40-60px */
+  }
+
+  /* ---- Section: one premium glass container ---- */
+  .influencer-services {
+    padding: clamp(2rem, 1.6rem + 1.6vw, 3rem);
+    border-radius: 28px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+    box-shadow: var(--shadow-card);
+  }
+
+  /* ---- Grid: 2-up (small laptops/tablets), 3-up beyond 1400px.
+     `minmax(0, 1fr)` (rather than a bare `1fr`) is what actually stops the
+     overflow: an explicit `1fr` track's automatic minimum is `auto`
+     (content-based), so a row of cards whose content wants more room than
+     the container has would still overflow it even with equal fractional
+     tracks — `minmax(0, 1fr)` lets every column shrink to fit, guaranteeing
+     equal width/height cards with no horizontal scroll. ---- */
+  .influencer-services__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-6);
+  }
+}
+
+@media (min-width: 1400px) {
+  .influencer-services__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+/* ---- Cards: glass + gradient border + hover lift/glow ---- */
+@media (min-width: 1025px) {
+  .service-card {
+    position: relative;
+    border-radius: 22px;
+    background: var(--glass-bg-light);
+    box-shadow: var(--shadow-card);
+    transition:
+      transform var(--dur-base) var(--ease-out),
+      box-shadow var(--dur-base) var(--ease-out),
+      border-color var(--dur-fast) var(--ease-standard);
+  }
+  /* Soft gradient border via a masked ::before overlay, so the card's own
+     background/padding above is completely untouched. */
+  .service-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(139, 60, 240, 0.55), rgba(34, 211, 238, 0.35));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.55;
+    pointer-events: none;
+    transition: opacity var(--dur-base) var(--ease-out);
+  }
+  .service-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg), 0 0 28px rgba(91, 107, 255, 0.22);
+  }
+  .service-card:hover::before { opacity: 1; }
+  .service-card:has([data-service-enabled]:checked)::before { opacity: 0.9; }
+
+  .service-card__icon {
+    width: 3.25rem;
+    height: 3.25rem;
+    font-size: 1.6rem;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(135deg, rgba(139, 60, 240, 0.28), rgba(34, 211, 238, 0.18));
+    border: 1px solid var(--color-border-brand);
+  }
+
+  .service-card__save {
+    transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+  }
+  .service-card__save:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--glow-brand);
+  }
+
+  .service-card__toggle-track {
+    transition: background-color var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard);
+  }
+  .service-card__toggle:hover .service-card__toggle-track {
+    box-shadow: 0 0 0 4px rgba(139, 60, 240, 0.14);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-card,
+  .service-card::before,
+  .service-card__save,
+  .service-card__toggle-track,
+  .influencer-services__toast { transition-duration: 0.001ms; }
+}
