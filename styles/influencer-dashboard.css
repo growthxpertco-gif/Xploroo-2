@@ -127,6 +127,22 @@
   color: var(--color-primary-hover);
 }
 
+/* Unread-notifications count, shown only on the Notifications sidebar link */
+.dash-sidebar__badge {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.3rem;
+  height: 1.3rem;
+  padding-inline: 0.3rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-danger);
+  color: #fff;
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+}
+
 .dash-panels {
   min-width: 0;
 }

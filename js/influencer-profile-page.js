@@ -100,12 +100,27 @@
       </section>`;
   }
 
-  function experienceTemplate(key, saved, bookingId) {
+  function experienceTemplate(key, saved, bookingId, app) {
     const catalogEntry = CATALOG_BY_KEY[key];
     if (!catalogEntry) return "";
     const price = saved.price ? `&#8377;${escapeHtml(saved.price)} <span>onwards</span>` : "";
     const metaParts = [saved.duration, saved.date, saved.time, saved.location].filter(Boolean).map(escapeHtml);
     const metaHtml = metaParts.length ? `<p class="ifp-experience__desc">${metaParts.join(" &middot; ")}</p>` : "";
+
+    // Rich booking context for the real Influencer Booking workflow
+    // (js/booking.js reads this from sessionStorage — see wireBookingLinks
+    // below — to create a public.influencer_bookings row with real IDs,
+    // instead of the legacy hardcoded-catalog demo flow the static
+    // influencer pages like siya.html still use).
+    const bookingPayload = {
+      influencerId: app.user_id,
+      influencerName: app.full_name || "Xploroo Influencer",
+      influencerAvatar: app.avatar_url || "",
+      serviceKey: key,
+      serviceName: catalogEntry.name,
+      servicePrice: saved.price || "",
+      serviceDuration: saved.duration || "",
+    };
 
     return `
       <article class="ifp-experience" data-theme="${THEME_BY_KEY[key]}">
@@ -116,7 +131,7 @@
         <p class="ifp-experience__desc">${escapeHtml(catalogEntry.description)}</p>
         ${metaHtml}
         ${price ? `<p class="ifp-experience__price">${price}</p>` : ""}
-        <a class="ifp-experience__cta" href="booking.html?service=${SLUG_BY_KEY[key]}&influencer=${encodeURIComponent(bookingId)}">
+        <a class="ifp-experience__cta" href="booking.html?service=${SLUG_BY_KEY[key]}&influencer=${encodeURIComponent(bookingId)}" data-booking-payload='${escapeHtml(JSON.stringify(bookingPayload))}'>
           Book Now
           ${ARROW_SVG}
         </a>
@@ -126,7 +141,10 @@
   // Same stash-into-sessionStorage behaviour as js/influencer-profile.js
   // (which only wires up links present at DOMContentLoaded — these are
   // added later, once the Supabase fetch resolves, so it's re-implemented
-  // here for this page only).
+  // here for this page only). Also stashes the rich booking payload (real
+  // influencer id/name/avatar/service price/duration) so booking.html can
+  // switch into real Influencer Booking mode instead of the legacy demo
+  // catalog — see js/booking.js.
   function wireBookingLinks() {
     container.querySelectorAll('a[href*="booking.html?"]').forEach((link) => {
       link.addEventListener("click", () => {
@@ -137,6 +155,9 @@
           if (service) sessionStorage.setItem("xploroo-selected-service", service);
           if (influencer) sessionStorage.setItem("xploroo-selected-influencer", influencer);
           sessionStorage.removeItem("xploroo-selected-package");
+          if (link.dataset.bookingPayload) {
+            sessionStorage.setItem("xploroo-influencer-booking", link.dataset.bookingPayload);
+          }
         } catch (_) {
           /* URL/sessionStorage unavailable — query param path still works */
         }
@@ -176,7 +197,7 @@
     const experiencesHtml = window.XploroServices.CATALOG.map((service) => {
       const saved = services[service.key];
       if (!saved || !saved.enabled) return "";
-      return experienceTemplate(service.key, saved, bookingId);
+      return experienceTemplate(service.key, saved, bookingId, app);
     })
       .filter(Boolean)
       .join("");

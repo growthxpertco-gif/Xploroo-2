@@ -44,6 +44,119 @@
 
   <!-- Footer module (reusable across every page) -->
   <link rel="stylesheet" href="styles/footer.css" />
+
+  <!-- Dashboard Overview — four live summary cards inserted above the
+       sidebar/tabs. Kept inline (rather than a new stylesheet) since this
+       change is scoped to this page only. Reuses the same glass-card +
+       gradient-hairline recipe already used elsewhere on the site (see
+       .ifp-experience in styles/influencer-profile.css) for visual
+       consistency, entirely scoped under `.dash-overview*` — touches
+       nothing else on the page. -->
+  <style>
+    .dash-overview {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-5);
+      margin: var(--space-6) 0 var(--space-8);
+    }
+    @media (max-width: 720px) {
+      .dash-overview { grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
+    }
+
+    .dash-overview__card {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      padding: clamp(1.15rem, 0.95rem + 0.9vw, 1.6rem);
+      border-radius: var(--radius-2xl);
+      border: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+      backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+      box-shadow: var(--shadow-card);
+      transition:
+        transform var(--dur-base) var(--ease-out),
+        box-shadow var(--dur-base) var(--ease-out),
+        border-color var(--dur-base) var(--ease-standard);
+      animation: dash-overview-fade-in var(--dur-slower) var(--ease-out) both;
+    }
+    .dash-overview__card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--dov-grad-a), var(--dov-grad-b));
+    }
+    .dash-overview__card--balance    { --dov-grad-a: #a855f7; --dov-grad-b: #ec4899; --dov-glow-rgb: 168, 85, 247; }
+    .dash-overview__card--upcoming   { --dov-grad-a: #3b82f6; --dov-grad-b: #22d3ee; --dov-glow-rgb: 59, 130, 246; }
+    .dash-overview__card--services   { --dov-grad-a: #f97316; --dov-grad-b: #fbbf24; --dov-glow-rgb: 249, 115, 22; }
+    .dash-overview__card--withdrawal { --dov-grad-a: #22c55e; --dov-grad-b: #10b981; --dov-glow-rgb: 34, 197, 94; }
+
+    .dash-overview__card:nth-child(1) { animation-delay: 40ms; }
+    .dash-overview__card:nth-child(2) { animation-delay: 100ms; }
+    .dash-overview__card:nth-child(3) { animation-delay: 160ms; }
+    .dash-overview__card:nth-child(4) { animation-delay: 220ms; }
+
+    @keyframes dash-overview-fade-in {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .dash-overview__card { animation: none; }
+    }
+
+    .dash-overview__card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(var(--dov-glow-rgb), 0.45);
+      box-shadow: var(--shadow-lg), 0 0 32px rgba(var(--dov-glow-rgb), 0.25);
+    }
+
+    .dash-overview__emoji {
+      flex: none;
+      display: grid;
+      place-items: center;
+      width: 3.25rem;
+      height: 3.25rem;
+      border-radius: var(--radius-xl);
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, rgba(var(--dov-glow-rgb), 0.3), rgba(var(--dov-glow-rgb), 0.12));
+      border: 1px solid rgba(var(--dov-glow-rgb), 0.45);
+      transition: transform var(--dur-base) var(--ease-spring);
+    }
+    .dash-overview__card:hover .dash-overview__emoji { transform: scale(1.1) rotate(-4deg); }
+
+    .dash-overview__body { min-width: 0; }
+    .dash-overview__title {
+      margin: 0;
+      font-size: var(--fs-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-text-subtle);
+    }
+    .dash-overview__value {
+      margin: 0.2rem 0 0;
+      font-family: var(--font-display);
+      font-size: var(--fs-xl);
+      font-weight: var(--fw-bold);
+      color: var(--color-text-strong);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dash-overview__subtitle {
+      margin: 0.2rem 0 0;
+      font-size: var(--fs-2xs);
+      color: var(--color-text-subtle);
+    }
+
+    @media (max-width: 480px) {
+      .dash-overview__card { padding: 1rem; gap: var(--space-3); }
+      .dash-overview__emoji { width: 2.6rem; height: 2.6rem; font-size: 1.2rem; }
+      .dash-overview__value { font-size: var(--fs-lg); }
+    }
+  </style>
 </head>
 
 <body>
@@ -305,12 +418,56 @@
               </span>
             </header>
 
+            <!-- Dashboard Overview — four live summary cards, computed from
+                 Supabase (public.earnings / influencer_bookings /
+                 withdrawal_requests, via window.XploroEarnings /
+                 XploroInfluencerBookings / XploroWithdrawals) by the inline
+                 script at the bottom of this file. Purely additive: never
+                 touches the sidebar or any existing tab below. -->
+            <section class="dash-overview" aria-label="Dashboard overview" data-dash-overview>
+              <article class="dash-overview__card dash-overview__card--balance" data-overview-card="balance">
+                <span class="dash-overview__emoji" aria-hidden="true">&#128176;</span>
+                <div class="dash-overview__body">
+                  <p class="dash-overview__title">Available Balance</p>
+                  <p class="dash-overview__value" data-overview-value="balance">&#8377;0.00</p>
+                  <p class="dash-overview__subtitle">Updated in real time</p>
+                </div>
+              </article>
+
+              <article class="dash-overview__card dash-overview__card--upcoming" data-overview-card="upcoming">
+                <span class="dash-overview__emoji" aria-hidden="true">&#128197;</span>
+                <div class="dash-overview__body">
+                  <p class="dash-overview__title">Upcoming Bookings</p>
+                  <p class="dash-overview__value" data-overview-value="upcoming">0 Upcoming</p>
+                  <p class="dash-overview__subtitle">Updated in real time</p>
+                </div>
+              </article>
+
+              <article class="dash-overview__card dash-overview__card--services" data-overview-card="services">
+                <span class="dash-overview__emoji" aria-hidden="true">&#11088;</span>
+                <div class="dash-overview__body">
+                  <p class="dash-overview__title">Total Services Booked</p>
+                  <p class="dash-overview__value" data-overview-value="services">0 Services</p>
+                  <p class="dash-overview__subtitle">Updated in real time</p>
+                </div>
+              </article>
+
+              <article class="dash-overview__card dash-overview__card--withdrawal" data-overview-card="withdrawal">
+                <span class="dash-overview__emoji" aria-hidden="true">&#8987;</span>
+                <div class="dash-overview__body">
+                  <p class="dash-overview__title">Pending Withdrawal</p>
+                  <p class="dash-overview__value" data-overview-value="withdrawal">&#8377;0.00</p>
+                  <p class="dash-overview__subtitle">Updated in real time</p>
+                </div>
+              </article>
+            </section>
+
             <div class="dash-layout">
 
               <nav class="dash-sidebar" aria-label="Dashboard sections">
-                <button class="dash-sidebar__link" type="button" data-dash-tab="invites" aria-selected="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
-                  Collaboration Invites
+                <button class="dash-sidebar__link" type="button" data-dash-tab="bookings" aria-selected="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="m9 15 2 2 4-4"/></svg>
+                  Service Bookings
                 </button>
                 <button class="dash-sidebar__link" type="button" data-dash-tab="earnings" aria-selected="false">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><circle cx="16" cy="14" r="1.5" fill="currentColor" stroke="none"/></svg>
@@ -324,25 +481,14 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 17c0-1.7 1.3-3 3-3s3 1.3 3 3"/><path d="M14 10h4M14 14h4"/></svg>
                   KYC
                 </button>
-                <button class="dash-sidebar__link" type="button" data-dash-tab="content" aria-selected="false">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
-                  Content Tracker
-                </button>
                 <button class="dash-sidebar__link" type="button" data-dash-tab="calendar" aria-selected="false">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
                   Calendar
                 </button>
-                <button class="dash-sidebar__link" type="button" data-dash-tab="reviews" aria-selected="false">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7-5.4-4.7 7.1-.7L12 3Z"/></svg>
-                  Reviews
-                </button>
-                <button class="dash-sidebar__link" type="button" data-dash-tab="leaderboard" aria-selected="false">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M7 5H4a1 1 0 0 0-1 1v1a4 4 0 0 0 4 4M17 5h3a1 1 0 0 1 1 1v1a4 4 0 0 1-4 4"/></svg>
-                  Leaderboard
-                </button>
                 <button class="dash-sidebar__link" type="button" data-dash-tab="notifications" aria-selected="false">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
                   Notifications
+                  <span class="dash-sidebar__badge" data-notif-badge hidden>0</span>
                 </button>
                 <button class="dash-sidebar__link" type="button" data-dash-tab="support" aria-selected="false">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="2" y="13" width="5" height="7" rx="2"/><rect x="17" y="13" width="5" height="7" rx="2"/><path d="M20 20a4 4 0 0 1-4 4h-2"/></svg>
@@ -352,10 +498,10 @@
 
               <div class="dash-panels">
 
-                <section class="dash-panel is-active" data-dash-panel="invites">
-                  <h2 class="dash-panel__title">Collaboration Invites</h2>
-                  <p class="dash-panel__desc">Brand and Xploroo collaboration invites will land here.</p>
-                  <div data-dash-section="invites"></div>
+                <section class="dash-panel is-active" data-dash-panel="bookings">
+                  <h2 class="dash-panel__title">Service Bookings</h2>
+                  <p class="dash-panel__desc">Booking requests from travelers for your services — accept or decline each one.</p>
+                  <div data-dash-section="bookings"></div>
                 </section>
 
                 <section class="dash-panel" data-dash-panel="earnings">
@@ -376,33 +522,15 @@
                   <div data-dash-section="kyc"></div>
                 </section>
 
-                <section class="dash-panel" data-dash-panel="content">
-                  <h2 class="dash-panel__title">Content Tracker</h2>
-                  <p class="dash-panel__desc">Track the content you&rsquo;ve delivered for each collaboration.</p>
-                  <div data-dash-section="content"></div>
-                </section>
-
                 <section class="dash-panel" data-dash-panel="calendar">
                   <h2 class="dash-panel__title">Calendar</h2>
-                  <p class="dash-panel__desc">Upcoming trips, shoots, and deadlines in one place.</p>
+                  <p class="dash-panel__desc">Every accepted booking, marked on the date it&rsquo;s scheduled for.</p>
                   <div data-dash-section="calendar"></div>
-                </section>
-
-                <section class="dash-panel" data-dash-panel="reviews">
-                  <h2 class="dash-panel__title">Reviews</h2>
-                  <p class="dash-panel__desc">Feedback from brands and the Xploroo team.</p>
-                  <div data-dash-section="reviews"></div>
-                </section>
-
-                <section class="dash-panel" data-dash-panel="leaderboard">
-                  <h2 class="dash-panel__title">Leaderboard</h2>
-                  <p class="dash-panel__desc">See how you rank among Xploroo&rsquo;s creator community.</p>
-                  <div data-dash-section="leaderboard"></div>
                 </section>
 
                 <section class="dash-panel" data-dash-panel="notifications">
                   <h2 class="dash-panel__title">Notifications</h2>
-                  <p class="dash-panel__desc">Updates on your applications, invites, and payouts.</p>
+                  <p class="dash-panel__desc">Updates on your bookings, withdrawals, and KYC status.</p>
                   <div data-dash-section="notifications"></div>
                 </section>
 
@@ -536,16 +664,95 @@
   <!-- Influencer application state (Supabase-backed) -->
   <script src="js/influencer-applications.js" defer></script>
 
+  <!-- Influencer service bookings (Supabase-backed) + notifications +
+       earnings, used by the "Service Bookings"/"Earnings"/"Withdrawals" tabs
+       below -->
+  <script src="js/notifications.js" defer></script>
+  <script src="js/earnings.js" defer></script>
+  <script src="js/influencer-bookings.js" defer></script>
+
+  <!-- Withdrawals + KYC + Support data layers (Supabase-backed) -->
+  <script src="js/withdrawals.js" defer></script>
+  <script src="js/kyc.js" defer></script>
+  <script src="js/support-tickets.js" defer></script>
+
   <!-- Influencer dashboard behavior (gate + sidebar tabs) -->
   <script src="js/influencer-dashboard.js" defer></script>
 
-  <!-- Influencer dashboard section content (Invites, Earnings, Withdrawals,
-       KYC, Content Tracker, Calendar, Reviews, Leaderboard, Notifications,
-       Support) — renders into each panel independently of the tab switcher
-       above, so it never touches routing or the sidebar. -->
-  <script src="js/dash-sections.js" defer></script>
+  <!-- Each tab's real content (Supabase-backed) — every one renders into its
+       own panel independently of the tab switcher above and of each other,
+       so none of them touch routing or the sidebar. -->
+  <script src="js/dash-bookings.js" defer></script>
+  <script src="js/dash-earnings.js" defer></script>
+  <script src="js/dash-withdrawals.js" defer></script>
+  <script src="js/dash-kyc.js" defer></script>
+  <script src="js/dash-calendar.js" defer></script>
+  <script src="js/dash-notifications.js" defer></script>
+  <script src="js/dash-support.js" defer></script>
 
   <!-- Footer behavior (newsletter form) -->
   <script src="js/footer.js" defer></script>
+
+  <!-- Dashboard Overview — computes the four summary cards above from real
+       Supabase data (window.XploroAuth/XploroApplications/
+       XploroInfluencerBookings/XploroEarnings/XploroWithdrawals, all
+       already loaded by the deferred scripts above). Kept inline since this
+       change is scoped to this page only; waits for DOMContentLoaded so
+       every deferred script above (which all run before that event) has
+       already defined its window.Xploro* API. Independent of every other
+       panel/tab — only writes into `[data-overview-value]`. -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var overview = document.querySelector("[data-dash-overview]");
+      if (!overview || !window.XploroAuth || !window.XploroApplications || !window.XploroInfluencerBookings) return;
+
+      function formatMoney(n) {
+        var num = Number(n) || 0;
+        return "₹" + num.toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+
+      function setValue(key, text) {
+        var el = overview.querySelector('[data-overview-value="' + key + '"]');
+        if (el) el.textContent = text;
+      }
+
+      async function render() {
+        var user = await window.XploroAuth.getUser();
+        if (!user) return;
+        var application = await window.XploroApplications.getMyApplication();
+        if (!application || application.application_status !== "approved") return;
+
+        var bookings = await window.XploroInfluencerBookings.getBookingsForInfluencer();
+        var todayKey = new Date().toISOString().slice(0, 10);
+
+        var acceptedBookings = bookings.filter(function (b) { return b.booking_status === "Accepted"; });
+        var upcomingCount = acceptedBookings.filter(function (b) { return b.booking_date && b.booking_date >= todayKey; }).length;
+        var totalServicesCount = acceptedBookings.length;
+
+        setValue("upcoming", upcomingCount + " Upcoming");
+        setValue("services", totalServicesCount + " Services");
+
+        if (window.XploroWithdrawals) {
+          var available = await window.XploroWithdrawals.getAvailableBalance();
+          setValue("balance", formatMoney(available));
+
+          var withdrawals = await window.XploroWithdrawals.getMyWithdrawals();
+          var pendingWithdrawal = withdrawals
+            .filter(function (w) { return w.status === "Pending"; })
+            .reduce(function (sum, w) { return sum + Number(w.amount || 0); }, 0);
+          setValue("withdrawal", formatMoney(pendingWithdrawal));
+        }
+      }
+
+      render();
+
+      // Re-render whenever the influencer returns to this page after
+      // accepting/declining a booking or requesting a withdrawal elsewhere
+      // in the dashboard, so the cards never show stale values.
+      document.querySelectorAll("[data-dash-tab]").forEach(function (tabBtn) {
+        tabBtn.addEventListener("click", render);
+      });
+    });
+  </script>
 </body>
 </html>

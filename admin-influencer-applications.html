@@ -311,6 +311,8 @@
             <button class="admin-tabs__tab" type="button" role="tab" aria-selected="true" data-admin-tab="applications">Influencer Applications</button>
             <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="packages">Package Management</button>
             <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="payments">Influencer Payments</button>
+            <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="bookings">Influencer Bookings</button>
+            <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="tickets">Support Tickets</button>
             <span class="admin-tabs__indicator" data-admin-tab-indicator aria-hidden="true"></span>
           </div>
 
@@ -325,6 +327,14 @@
 
             <section class="admin-panel" data-admin-panel="payments">
               <div data-admin-payments-root></div>
+            </section>
+
+            <section class="admin-panel" data-admin-panel="bookings">
+              <div data-admin-bookings-root></div>
+            </section>
+
+            <section class="admin-panel" data-admin-panel="tickets">
+              <div data-admin-tickets-root></div>
             </section>
           </div>
 
@@ -456,6 +466,14 @@
   <!-- Influencer application state (Supabase-backed) -->
   <script src="js/influencer-applications.js" defer></script>
 
+  <!-- Influencer service bookings (Supabase-backed), used only by the
+       "Influencer Bookings" tab below -->
+  <script src="js/influencer-bookings.js" defer></script>
+
+  <!-- Support tickets (Supabase-backed), used only by the "Support Tickets"
+       tab below -->
+  <script src="js/support-tickets.js" defer></script>
+
   <!-- Admin tab switching (Influencer Applications / Package Management) -->
   <script src="js/admin-tabs.js" defer></script>
 
@@ -468,6 +486,12 @@
   <!-- Admin — Influencer Payments (local approval workflow, not yet wired
        to a real payout backend) -->
   <script src="js/admin-payments.js" defer></script>
+
+  <!-- Admin — Influencer Bookings (monitor-only, Supabase-backed) -->
+  <script src="js/admin-bookings.js" defer></script>
+
+  <!-- Admin — Support Tickets (Supabase-backed: open/reply/in-progress/resolve) -->
+  <script src="js/admin-support-tickets.js" defer></script>
 
   <!-- Footer behavior (newsletter form) -->
   <script src="js/footer.js" defer></script>

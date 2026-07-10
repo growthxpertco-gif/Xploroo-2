@@ -1,16 +1,33 @@
 /* ==========================================================================
    XPLOROO · Booking flow module
-   booking.js — Drives booking.html:
-     1. Reads `?package=<slug>` from the URL and populates the summary card
-        from the PACKAGES catalog below.
-     2. Live-recalculates the payment summary (travellers × price + taxes
-        − discount) whenever the traveller count or coupon changes.
-     3. Validates the traveller form, then stores the complete booking as
-        JSON in sessionStorage and redirects to payment.html.
-   The stored booking object (see buildBookingState) is the single payload a
-   future Razorpay/Stripe integration needs — amounts are kept in integer
-   rupees so a gateway "order create" call can consume them directly.
-   Vanilla JS, no dependencies. Loaded with `defer`.
+   booking.js — Drives booking.html in one of three mutually exclusive
+   modes, resolved once at the top and never re-checked:
+
+     1. Travel package booking (?package=<slug>) — UNCHANGED. Reads the
+        PACKAGES catalog, stores the booking as JSON in sessionStorage
+        ("xploroo-booking") on submit, and redirects to payment.html.
+
+     2. Legacy influencer-experience demo (?service=<slug>&influencer=<slug>,
+        from the static per-influencer pages like siya.html) — UNCHANGED.
+        Purely a display/demo flow against the hardcoded SERVICES/
+        INFLUENCERS catalogs below; still hands off to payment.html exactly
+        as before. Kept only because those static pages still link here.
+
+     3. Real Influencer Booking (Phase 6) — set when
+        sessionStorage["xploroo-influencer-booking"] holds a rich payload
+        (written by js/influencer-profile-page.js's Book Now click:
+        influencerId/influencerName/influencerAvatar/serviceName/
+        servicePrice/serviceDuration). Confirm Booking saves a row straight
+        to Supabase (public.influencer_bookings via
+        window.XploroInfluencerBookings, see js/influencer-bookings.js) —
+        no payment.html hand-off, no sessionStorage "xploroo-booking". This
+        is the only mode that ever writes to influencer_bookings.
+
+   Modes 1 and 2 are untouched from before this phase; only mode 3 and the
+   (mode-agnostic) null-guard on the summary image are new.
+   Vanilla JS, no dependencies. Loaded with `defer`, after js/supabase.js,
+   js/notifications.js and js/influencer-bookings.js (mode 3 dependencies —
+   modes 1/2 never call them).
    ========================================================================== */
 (function () {
   "use strict";
@@ -37,9 +54,9 @@
   };
 
   /* ------------------------------------------------------------------ */
-  /* Influencer service catalog — one entry per bookable experience type. */
-  /* Add new services here when future influencer pages need them; every  */
-  /* influencer page reuses this same booking.html + catalog.            */
+  /* Legacy influencer service catalog — demo-only, backs mode 2 (the      */
+  /* static per-influencer pages). Not used by mode 3 (real bookings),     */
+  /* which carries its own price/duration straight from Supabase.         */
   /* ------------------------------------------------------------------ */
   const SERVICES = {
     "meet-greet":     { name: "Meet & Greet",   price: 9999,  image: "https://picsum.photos/seed/meet-greet-hero/600/600" },
@@ -49,9 +66,7 @@
   };
 
   /* ------------------------------------------------------------------ */
-  /* Influencer directory — slug -> display name, one entry per influencer */
-  /* page. Add a new entry whenever a new influencer page is created; the  */
-  /* slug must match that page's `?influencer=` value.                    */
+  /* Legacy influencer directory — slug -> display name, backs mode 2.     */
   /* ------------------------------------------------------------------ */
   const INFLUENCERS = {
     vanshika:  "Vanshika Dharu",
@@ -83,34 +98,31 @@
   const TAX_RATE = 0.05; // 5% GST
 
   /* ------------------------------------------------------------------ */
-  /* Resolve the selected package OR influencer service. An influencer    */
-  /* service link (`?service=<slug>`) always wins when present — this is  */
-  /* the only branch point between the two flows; everything downstream   */
-  /* (totals, coupon, payment hand-off) is shared code.                   */
+  /* Resolve the booking mode. A real Influencer Booking payload always   */
+  /* wins over the legacy demo catalog when both happen to be present     */
+  /* (e.g. a stale sessionStorage entry from an earlier visit); an         */
+  /* explicit `?package=` on THIS navigation always wins over either.      */
   /* ------------------------------------------------------------------ */
   const params = new URLSearchParams(window.location.search);
   let slugFallback = null;
   let serviceSlugFallback = null;
   let influencerSlugFallback = null;
+  let richBookingPayload = null;
   try {
     // Written by package-details.js on Book Now click — survives hosts whose
     // clean-URL redirect strips the `?package=` query string.
     slugFallback = sessionStorage.getItem("xploroo-selected-package");
-    // Written by influencer-profile.js on Book Now click — same reasoning,
-    // for the `?service=` / `?influencer=` query strings used by influencer
-    // experience pages.
+    // Written by influencer-profile.js / influencer-profile-page.js on Book
+    // Now click — same reasoning, for `?service=`/`?influencer=`.
     serviceSlugFallback = sessionStorage.getItem("xploroo-selected-service");
     influencerSlugFallback = sessionStorage.getItem("xploroo-selected-influencer");
+    // Real Influencer Booking context — see js/influencer-profile-page.js.
+    const raw = sessionStorage.getItem("xploroo-influencer-booking");
+    richBookingPayload = raw ? JSON.parse(raw) : null;
   } catch (_) {
     /* sessionStorage unavailable — the query param path still works */
   }
 
-  // An explicit query string on THIS navigation always wins over a
-  // sessionStorage fallback from an earlier, unrelated visit — this stops a
-  // stale `xploroo-selected-service`/`xploroo-selected-package` (e.g. left
-  // over from booking an influencer service earlier in the same tab) from
-  // hijacking a fresh booking of the other type. The fallback is only ever
-  // consulted when the current URL is silent on both.
   const hasQueryService = params.has("service");
   const hasQueryPackage = params.has("package");
 
@@ -119,21 +131,37 @@
     hasQueryPackage ? "" :
     (serviceSlugFallback || "")
   ).toLowerCase();
-  const isServiceBooking = Object.prototype.hasOwnProperty.call(SERVICES, serviceSlug);
+  const isLegacyServiceBooking = !hasQueryPackage && Object.prototype.hasOwnProperty.call(SERVICES, serviceSlug);
 
-  const influencerSlug = (params.get("influencer") || (isServiceBooking ? influencerSlugFallback : "") || "").toLowerCase();
-  const influencerName = INFLUENCERS[influencerSlug] || "Xploroo Influencer";
+  // Real Influencer Booking wins whenever a valid rich payload exists and
+  // the current navigation isn't an explicit `?package=` link.
+  const isRealInfluencerBooking = !hasQueryPackage && !!(richBookingPayload && richBookingPayload.influencerId && richBookingPayload.serviceName);
+  const isInfluencerBooking = isRealInfluencerBooking || isLegacyServiceBooking;
+
+  const influencerSlug = (params.get("influencer") || (isLegacyServiceBooking ? influencerSlugFallback : "") || "").toLowerCase();
+  const influencerName = isRealInfluencerBooking
+    ? richBookingPayload.influencerName || "Xploroo Influencer"
+    : INFLUENCERS[influencerSlug] || "Xploroo Influencer";
 
   const slug = (
     hasQueryPackage ? params.get("package") :
     hasQueryService ? "dubai" :
     (slugFallback || "dubai")
   ).toLowerCase();
-  const pkg = isServiceBooking
+
+  const pkg = isRealInfluencerBooking
+    ? {
+        name: richBookingPayload.serviceName,
+        destination: influencerName, // shown under the "Influencer" label
+        duration: richBookingPayload.serviceDuration || richBookingPayload.serviceName, // shown under the "Service" label
+        price: Number(richBookingPayload.servicePrice) || 0,
+        image: richBookingPayload.influencerAvatar || "",
+      }
+    : isLegacyServiceBooking
     ? {
         name: SERVICES[serviceSlug].name,
-        destination: influencerName, // shown under the "Influencer" label
-        duration: SERVICES[serviceSlug].name, // shown under the "Service" label
+        destination: influencerName,
+        duration: SERVICES[serviceSlug].name,
         price: SERVICES[serviceSlug].price,
         image: SERVICES[serviceSlug].image,
       }
@@ -144,18 +172,27 @@
   /* ------------------------------------------------------------------ */
   const el = (name) => page.querySelector(`[data-bk="${name}"]`);
 
+  const mediaEl = el("media");
   const imageEl = el("image");
   const nameEls = page.querySelectorAll('[data-bk="name"]');
   const summaryTitleEl = el("summary-title");
   const destinationLabelEl = el("destination-label");
   const durationLabelEl = el("duration-label");
   const priceLabelEl = el("price-label");
+  const travelDateLabelEl = el("travel-date-label");
   const destinationEl = el("destination");
   const durationEl = el("duration");
   const priceEl = el("price");
   const bookingTypeRowEl = el("booking-type-row");
+  const preferredTimeRowEl = el("preferred-time-row");
+  const preferredTimeInput = el("preferred-time");
+  const notesRowEl = el("notes-row");
+  const notesDisplayEl = el("notes-display");
   const travellersDisplayEl = el("travellers-display");
   const totalDisplayEl = el("total-display");
+  const proceedLabelEl = el("proceed-label");
+  const influencerSuccessEl = el("influencer-success");
+  const bkLayoutEl = page.querySelector(".bk-layout");
 
   const travelDateInput = el("travel-date");
   const travellersInput = el("travellers");
@@ -163,8 +200,8 @@
   const couponApplyBtn = el("coupon-apply");
   const couponMessageEl = el("coupon-message");
 
-  const step2SectionEl = el("step2"); // Traveller Details — hidden for influencer service bookings
-  const step3SectionEl = el("step3"); // Additional Details — hidden for influencer service bookings
+  const step2SectionEl = el("step2"); // Traveller Details
+  const step3SectionEl = el("step3"); // Additional Details
 
   const payCostEl = el("pay-cost");
   const payTaxEl = el("pay-tax");
@@ -209,24 +246,28 @@
   durationEl.textContent = pkg.duration;
   priceEl.textContent = formatINR(pkg.price);
 
-  if (isServiceBooking) {
+  if (isInfluencerBooking) {
     // Simplified influencer-experience view: relabel the summary, show only
     // Influencer / Service / Price / Booking Type, and drop everything trip-
-    // related (image, travel date, traveller count, per-item total) plus the
-    // Traveller Details and Additional Details steps entirely — nothing here
-    // touches the regular package flow below.
-    if (summaryTitleEl) summaryTitleEl.textContent = "Booking Summary";
+    // related (traveller count, per-item total) — nothing here touches the
+    // regular package flow below.
+    if (summaryTitleEl) summaryTitleEl.textContent = isRealInfluencerBooking ? "Influencer Booking Summary" : "Booking Summary";
     if (destinationLabelEl) destinationLabelEl.textContent = "Influencer";
     if (durationLabelEl) durationLabelEl.textContent = "Service";
     if (priceLabelEl) priceLabelEl.textContent = "Price";
     if (bookingTypeRowEl) bookingTypeRowEl.hidden = false;
 
-    const mediaEl = page.querySelector(".bk-summary__media");
-    if (mediaEl) mediaEl.hidden = true;
-
-    const travelDateRow = travelDateInput.closest(".bk-summary__item");
-    if (travelDateRow) travelDateRow.hidden = true;
-    travelDateInput.required = false;
+    if (mediaEl) {
+      if (pkg.image) {
+        if (imageEl) {
+          imageEl.src = pkg.image;
+          imageEl.alt = pkg.name;
+        }
+        mediaEl.hidden = !isRealInfluencerBooking; // legacy demo flow keeps the image hidden, as before
+      } else {
+        mediaEl.hidden = true;
+      }
+    }
 
     const travellersDisplayRow = travellersDisplayEl.closest(".bk-summary__item");
     if (travellersDisplayRow) travellersDisplayRow.hidden = true;
@@ -234,18 +275,64 @@
     const totalDisplayRow = totalDisplayEl.closest(".bk-summary__item");
     if (totalDisplayRow) totalDisplayRow.hidden = true;
 
-    if (step2SectionEl) {
-      step2SectionEl.hidden = true;
-      step2SectionEl.querySelectorAll("input, select, textarea").forEach((f) => (f.required = false));
-    }
-    if (step3SectionEl) {
-      step3SectionEl.hidden = true;
-      step3SectionEl.querySelectorAll("input, select, textarea").forEach((f) => (f.required = false));
+    if (isRealInfluencerBooking) {
+      // Real Influencer Booking (Phase 6) — Preferred Date (reuses the
+      // Travel Date input, relabeled), Preferred Time and Notes for
+      // Influencer all stay visible/editable; everything else trip-related
+      // is dropped. Traveller Details is narrowed to Full Name/Email/Phone
+      // only; Additional Details is narrowed to Notes only.
+      if (travelDateLabelEl) travelDateLabelEl.textContent = "Preferred Date";
+      if (preferredTimeRowEl) preferredTimeRowEl.hidden = false;
+      if (preferredTimeInput) preferredTimeInput.required = true;
+      if (notesRowEl) notesRowEl.hidden = false;
+      if (proceedLabelEl) proceedLabelEl.textContent = "Confirm Booking";
+
+      if (step2SectionEl) {
+        step2SectionEl.querySelectorAll('[name="dob"], [name="gender"], [name="city"], [name="emergencyName"], [name="emergencyPhone"]').forEach((f) => {
+          const wrap = f.closest(".field");
+          if (wrap) wrap.hidden = true;
+          f.required = false;
+        });
+      }
+      if (step3SectionEl) {
+        const travellersRow = travellersInput.closest(".field");
+        if (travellersRow) travellersRow.hidden = true;
+        travellersInput.required = false;
+
+        const couponRow = couponInput.closest(".field");
+        if (couponRow) couponRow.hidden = true;
+
+        const notesField = step3SectionEl.querySelector('[name="specialRequests"]');
+        if (notesField) {
+          const label = notesField.closest(".field").querySelector(".field__label");
+          if (label) label.innerHTML = 'Notes for Influencer <span class="field__hint" style="display:inline">(optional)</span>';
+          notesField.addEventListener("input", () => {
+            if (notesDisplayEl) notesDisplayEl.textContent = notesField.value.trim() || "—";
+          });
+        }
+      }
+    } else {
+      // Legacy demo flow (static per-influencer pages) — unchanged: drop
+      // Traveller Details and Additional Details entirely.
+      const travelDateRow = travelDateInput.closest(".bk-summary__item");
+      if (travelDateRow) travelDateRow.hidden = true;
+      travelDateInput.required = false;
+
+      if (step2SectionEl) {
+        step2SectionEl.hidden = true;
+        step2SectionEl.querySelectorAll("input, select, textarea").forEach((f) => (f.required = false));
+      }
+      if (step3SectionEl) {
+        step3SectionEl.hidden = true;
+        step3SectionEl.querySelectorAll("input, select, textarea").forEach((f) => (f.required = false));
+      }
     }
   } else {
     // Regular package flow — unchanged: package image + full traveller form.
-    imageEl.src = pkg.image;
-    imageEl.alt = pkg.name;
+    if (imageEl) {
+      imageEl.src = pkg.image;
+      imageEl.alt = pkg.name;
+    }
   }
 
   // Default travel date: two weeks from today (user can change it).
@@ -300,7 +387,8 @@
   });
 
   /* ------------------------------------------------------------------ */
-  /* Proceed to payment                                                  */
+  /* Proceed — package/legacy flows keep going to payment.html; a real     */
+  /* Influencer Booking saves straight to Supabase instead.               */
   /* ------------------------------------------------------------------ */
   function buildBookingState() {
     const data = new FormData(form);
@@ -308,15 +396,13 @@
     return {
       // Kept as `package` (rather than a differently-shaped `service` key) so
       // payment.js — which reads `booking.package.*` unconditionally — keeps
-      // working unchanged for both flows. `bookingType`/`serviceSlug` let
-      // future code branch on an influencer-service booking without a schema
-      // change.
-      bookingType: isServiceBooking ? "service" : "package",
-      serviceSlug: isServiceBooking ? serviceSlug : null,
-      influencerSlug: isServiceBooking ? influencerSlug : null,
-      influencerName: isServiceBooking ? influencerName : null,
+      // working unchanged for both flows.
+      bookingType: isLegacyServiceBooking ? "service" : "package",
+      serviceSlug: isLegacyServiceBooking ? serviceSlug : null,
+      influencerSlug: isLegacyServiceBooking ? influencerSlug : null,
+      influencerName: isLegacyServiceBooking ? influencerName : null,
       package: {
-        slug: isServiceBooking ? serviceSlug : slug,
+        slug: isLegacyServiceBooking ? serviceSlug : slug,
         name: pkg.name,
         destination: pkg.destination,
         duration: pkg.duration,
@@ -347,12 +433,55 @@
     };
   }
 
-  form.addEventListener("submit", (e) => {
+  async function submitRealInfluencerBooking() {
+    if (!window.XploroInfluencerBookings || !window.XploroAuth) {
+      formErrorEl.textContent = "Something went wrong. Please refresh and try again.";
+      return;
+    }
+    const user = await window.XploroAuth.getUser();
+    if (!user) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    proceedBtn.disabled = true;
+    const data = new FormData(form);
+    const { error } = await window.XploroInfluencerBookings.createBooking({
+      influencerId: richBookingPayload.influencerId,
+      influencerName: influencerName,
+      serviceName: pkg.name,
+      servicePrice: pkg.price,
+      duration: pkg.duration,
+      bookingDate: travelDateInput.value,
+      preferredTime: preferredTimeInput ? preferredTimeInput.value : "",
+      notes: data.get("specialRequests") || "",
+    });
+    proceedBtn.disabled = false;
+
+    if (error) {
+      formErrorEl.textContent = "Failed to submit your booking. Please try again.";
+      return;
+    }
+
+    try {
+      sessionStorage.removeItem("xploroo-influencer-booking");
+    } catch (_) {}
+
+    if (bkLayoutEl) bkLayoutEl.hidden = true;
+    if (influencerSuccessEl) influencerSuccessEl.hidden = false;
+  }
+
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     formErrorEl.textContent = "";
 
     if (!form.reportValidity()) {
-      formErrorEl.textContent = "Please fill in all required traveller details above.";
+      formErrorEl.textContent = "Please fill in all required details above.";
+      return;
+    }
+
+    if (isRealInfluencerBooking) {
+      await submitRealInfluencerBooking();
       return;
     }
 

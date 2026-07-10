@@ -1,17 +1,18 @@
 /* ==========================================================================
    XPLOROO · Influencer dashboard — section content
-   dash-sections.css — Styles for the real content rendered by
-   js/dash-sections.js into each of the 10 dashboard panels (Collaboration
-   Invites, Earnings, Withdrawals, KYC, Content Tracker, Calendar, Reviews,
-   Leaderboard, Notifications, Support). Never touches `.dash-sidebar` or
-   the panel-switching mechanics owned by influencer-dashboard.css /
-   js/influencer-dashboard.js — purely the content that lives *inside* each
-   `.dash-panel`. Reuses the shared `.field` / `.input` / `.select` / `.btn`
-   system from utilities.css and `.status-pill` from role-shared.css.
-   Scoped under `.dash-empty`, `.dash-stat-*`, `.dash-table*`, and one
-   prefix per section (`.dash-invite-*`, `.dash-earn-*`, `.dash-wd-*`,
-   `.dash-kyc-*`, `.dash-content-*`, `.dash-cal-*`, `.dash-review-*`,
-   `.dash-lb-*`, `.dash-notif-*`, `.dash-ticket-*`).
+   dash-sections.css — Styles for the real, Supabase-backed content rendered
+   into each of the 7 dashboard panels (Service Bookings, Earnings,
+   Withdrawals, KYC, Calendar, Notifications, Support) by their own module
+   (js/dash-bookings.js, js/dash-earnings.js, js/dash-withdrawals.js,
+   js/dash-kyc.js, js/dash-calendar.js, js/dash-notifications.js,
+   js/dash-support.js). Never touches `.dash-sidebar` or the panel-switching
+   mechanics owned by influencer-dashboard.css / js/influencer-dashboard.js —
+   purely the content that lives *inside* each `.dash-panel`. Reuses the
+   shared `.field` / `.input` / `.select` / `.btn` system from utilities.css
+   and `.status-pill` from role-shared.css.
+   Scoped under `.dash-empty`, `.dash-stat-*`, `.dash-table*`, and one prefix
+   per section (`.dash-invite-*`, `.dash-wd-*`, `.dash-kyc-*`, `.dash-cal-*`,
+   `.dash-notif-*`, `.dash-ticket-*`).
    Load AFTER utilities.css, role-shared.css and influencer-dashboard.css.
    ========================================================================== */
 
@@ -127,7 +128,7 @@
 .dash-table tr:first-child td { border-top: none; }
 
 /* -------------------------------------------------------------------------
-   1. Collaboration Invites
+   Service Bookings (also reused by the Calendar day-details list)
    ------------------------------------------------------------------------- */
 .dash-invite-card {
   display: flex;
@@ -197,7 +198,7 @@
 }
 
 /* -------------------------------------------------------------------------
-   3. Withdrawals
+   Withdrawals
    ------------------------------------------------------------------------- */
 .dash-wd-warning {
   display: flex;
@@ -226,7 +227,7 @@
 }
 
 /* -------------------------------------------------------------------------
-   4. KYC
+   KYC
    ------------------------------------------------------------------------- */
 .dash-kyc__current {
   display: flex;
@@ -290,44 +291,7 @@
 .dash-upload__name { font-size: var(--fs-2xs); color: var(--color-text-subtle); }
 
 /* -------------------------------------------------------------------------
-   5. Content Tracker
-   ------------------------------------------------------------------------- */
-.dash-content-group {
-  padding: clamp(1.25rem, 1rem + 1vw, 1.75rem);
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--glass-border);
-  background: var(--color-surface-2);
-}
-.dash-content-group__title {
-  margin: 0 0 var(--space-4);
-  font-family: var(--font-display);
-  font-size: var(--fs-md);
-  color: var(--color-text-strong);
-}
-.dash-content-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-3);
-  padding: var(--space-3) 0;
-  border-top: 1px solid var(--glass-border);
-}
-.dash-content-row:first-of-type { border-top: none; padding-top: 0; }
-.dash-content-row__label {
-  flex: 0 0 9rem;
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-semibold);
-  color: var(--color-text-strong);
-}
-.dash-content-row__link {
-  flex: 1;
-  min-width: 10rem;
-  height: var(--control-height-sm);
-}
-.dash-content-row__save { flex: none; }
-
-/* -------------------------------------------------------------------------
-   6. Calendar
+   Calendar — day-details list (below the month grid)
    ------------------------------------------------------------------------- */
 .dash-cal-grid {
   display: grid;
@@ -360,58 +324,65 @@
 .dash-cal-card__desc { margin: 0.2rem 0 0; font-size: var(--fs-xs); color: var(--color-text-muted); }
 .dash-cal-card__type { margin-top: var(--space-2); }
 
-/* -------------------------------------------------------------------------
-   7. Reviews
-   ------------------------------------------------------------------------- */
-.dash-review-stars {
-  color: #f5b301;
-  font-size: var(--fs-sm);
-  letter-spacing: 0.1em;
-}
-.dash-review-card {
-  padding: clamp(1.1rem, 0.9rem + 0.7vw, 1.5rem);
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--glass-border);
-  background: var(--color-surface-2);
-}
-.dash-review-card__head {
+/* Calendar — real month grid */
+.dash-cal__head {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
+  margin-bottom: var(--space-5);
 }
-.dash-review-card__reviewer {
-  margin: 0;
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-semibold);
-  color: var(--color-text-strong);
+.dash-cal__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: var(--space-2);
 }
-.dash-review-card__comment {
-  margin: var(--space-3) 0 0;
-  font-size: var(--fs-sm);
-  line-height: 1.6;
-  color: var(--color-text-muted);
-}
-.dash-review-card__meta {
-  margin-top: var(--space-3);
+.dash-cal__weekdays span {
+  text-align: center;
   font-size: var(--fs-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   color: var(--color-text-subtle);
 }
-
-/* -------------------------------------------------------------------------
-   8. Leaderboard
-   ------------------------------------------------------------------------- */
-.dash-lb-me {
+.dash-cal__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
-  gap: var(--space-4);
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-2);
   margin-bottom: var(--space-6);
 }
-.dash-lb-row--me td { color: var(--violet-300); font-weight: var(--fw-bold); }
+.dash-cal__day {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  background: var(--color-surface-2);
+  color: var(--color-text-strong);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-standard), background-color var(--dur-fast) var(--ease-standard);
+}
+.dash-cal__day--empty { border: none; background: none; cursor: default; }
+.dash-cal__day--today { border-color: var(--color-border-brand); font-weight: var(--fw-bold); }
+.dash-cal__day--marked { background: var(--color-primary-subtle); }
+.dash-cal__day.is-selected { border-color: var(--color-primary); }
+.dash-cal__day:hover:not(.dash-cal__day--empty) { border-color: var(--color-border-brand); }
+.dash-cal__dot {
+  position: absolute;
+  bottom: 0.35rem;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background: var(--violet-300);
+}
+@media (max-width: 480px) {
+  .dash-cal__day { font-size: var(--fs-xs); }
+}
 
 /* -------------------------------------------------------------------------
-   9. Notifications
+   Notifications
    ------------------------------------------------------------------------- */
 .dash-notif-card {
   display: flex;
@@ -453,7 +424,7 @@
 }
 
 /* -------------------------------------------------------------------------
-   10. Support
+   Support
    ------------------------------------------------------------------------- */
 .dash-support__head {
   display: flex;

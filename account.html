@@ -314,6 +314,17 @@
                influencer-application.html once approved. -->
           <div data-account-services></div>
 
+          <!-- My Influencer Bookings — every influencer service booking this
+               traveler has made (public.influencer_bookings, Supabase-backed,
+               see js/influencer-bookings.js and js/account-bookings.js).
+               Independent of the profile/role sections above. -->
+          <section class="account-profile" data-account-bookings hidden>
+            <div class="account-profile__card">
+              <h2 class="account-profile__title">My Influencer Bookings</h2>
+              <div data-account-bookings-list></div>
+            </div>
+          </section>
+
           <button class="account-logout" type="button" data-account-logout>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
             Log Out
@@ -439,8 +450,15 @@
   <!-- Influencer application state (Supabase-backed) -->
   <script src="js/influencer-applications.js" defer></script>
 
+  <!-- Influencer service bookings (Supabase-backed), used only by "My
+       Influencer Bookings" below -->
+  <script src="js/influencer-bookings.js" defer></script>
+
   <!-- Account dashboard behavior -->
   <script src="js/account.js" defer></script>
+
+  <!-- "My Influencer Bookings" section content -->
+  <script src="js/account-bookings.js" defer></script>
 
   <!-- Footer behavior (newsletter form) -->
   <script src="js/footer.js" defer></script>

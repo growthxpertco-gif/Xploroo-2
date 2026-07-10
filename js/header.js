@@ -4,6 +4,8 @@
      1. Sticky glass effect (backdrop blur) once the page is scrolled.
      2. Fullscreen mobile menu (open/close, a11y, scroll-lock, focus).
      3. Dark/light theme toggle (visual state only, for now).
+     4. Logged-in account panels (mobile sidebar + desktop header) — swap
+        Log In / Sign Up for a Supabase-session-aware profile panel.
    Vanilla JS, no dependencies. Loaded with `defer`.
    ========================================================================== */
 (function () {
@@ -238,72 +240,75 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* 4. Mobile sidebar — logged-in account panel                         */
-  /*    Swaps the Log In / Sign Up buttons inside the mobile drawer's     */
-  /*    bottom bar for a compact glass account panel once a Supabase      */
-  /*    session exists (window.XploroAuth, see js/supabase.js). header.js */
-  /*    runs on every page, most of which don't declare the Supabase      */
-  /*    CDN/config <script> tags themselves, so this lazily injects them  */
-  /*    once if missing (see ensureSupabaseReady) rather than requiring   */
-  /*    every page to add them. The role badge reads the applicant's      */
-  /*    Supabase application row (window.XploroApplications, see          */
+  /* 4. Logged-in account panels (mobile sidebar + desktop header)       */
+  /*    Swaps the Log In / Sign Up buttons — inside the mobile drawer's   */
+  /*    bottom bar AND inside the desktop `.site-header__actions` —for a  */
+  /*    glass account panel once a Supabase session exists                */
+  /*    (window.XploroAuth, see js/supabase.js). header.js runs on every  */
+  /*    page, most of which don't declare the Supabase CDN/config         */
+  /*    <script> tags themselves, so this lazily injects them once if     */
+  /*    missing (see ensureSupabaseReady) rather than requiring every      */
+  /*    page to add them. The role badge reads the applicant's Supabase   */
+  /*    application row (window.XploroApplications, see                   */
   /*    js/influencer-applications.js), lazily loaded the same way.       */
-  /*    Desktop header actions are untouched — this is scoped to          */
-  /*    `.mobile-menu__actions` only.                                     */
+  /*    The two panels are fully independent DOM subtrees                */
+  /*    (`.mobile-menu__actions` vs `.site-header__actions`) sharing only  */
+  /*    these read-only helpers — neither one's markup touches the other. */
   /* ------------------------------------------------------------------ */
+  const SUPABASE_CDN_SRC = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js";
+  const SUPABASE_CONFIG_SRC = "js/supabase.js";
+  const APPLICATIONS_SRC = "js/influencer-applications.js";
+
+  function loadScriptOnce(src) {
+    return new Promise((resolve, reject) => {
+      const existing = document.querySelector(`script[src="${src}"]`);
+      if (existing) {
+        if (existing.dataset.loaded === "true") {
+          resolve();
+        } else {
+          existing.addEventListener("load", () => resolve());
+          existing.addEventListener("error", () => reject(new Error(`Failed to load ${src}`)));
+        }
+        return;
+      }
+      const s = document.createElement("script");
+      s.src = src;
+      s.addEventListener("load", () => {
+        s.dataset.loaded = "true";
+        resolve();
+      });
+      s.addEventListener("error", () => reject(new Error(`Failed to load ${src}`)));
+      document.head.appendChild(s);
+    });
+  }
+
+  async function ensureSupabaseReady() {
+    try {
+      if (typeof window.supabase === "undefined") {
+        await loadScriptOnce(SUPABASE_CDN_SRC);
+      }
+      if (!window.XploroAuth) {
+        await loadScriptOnce(SUPABASE_CONFIG_SRC);
+      }
+      if (!window.XploroApplications) {
+        await loadScriptOnce(APPLICATIONS_SRC);
+      }
+      return !!(window.XploroAuth && window.XploroApplications);
+    } catch (_) {
+      return false;
+    }
+  }
+
+  async function getRoleLabel() {
+    if (!window.XploroApplications) return "Traveler";
+    const application = await window.XploroApplications.getMyApplication();
+    return application && application.application_status === "approved" ? "Influencer" : "Traveler";
+  }
+
+  /* ---- 4a. Mobile sidebar panel ---------------------------------------- */
   const mobileActions = mobileMenu ? mobileMenu.querySelector(".mobile-menu__actions") : null;
 
   if (mobileActions) {
-    const SUPABASE_CDN_SRC = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js";
-    const SUPABASE_CONFIG_SRC = "js/supabase.js";
-    const APPLICATIONS_SRC = "js/influencer-applications.js";
-
-    function loadScriptOnce(src) {
-      return new Promise((resolve, reject) => {
-        const existing = document.querySelector(`script[src="${src}"]`);
-        if (existing) {
-          if (existing.dataset.loaded === "true") {
-            resolve();
-          } else {
-            existing.addEventListener("load", () => resolve());
-            existing.addEventListener("error", () => reject(new Error(`Failed to load ${src}`)));
-          }
-          return;
-        }
-        const s = document.createElement("script");
-        s.src = src;
-        s.addEventListener("load", () => {
-          s.dataset.loaded = "true";
-          resolve();
-        });
-        s.addEventListener("error", () => reject(new Error(`Failed to load ${src}`)));
-        document.head.appendChild(s);
-      });
-    }
-
-    async function ensureSupabaseReady() {
-      try {
-        if (typeof window.supabase === "undefined") {
-          await loadScriptOnce(SUPABASE_CDN_SRC);
-        }
-        if (!window.XploroAuth) {
-          await loadScriptOnce(SUPABASE_CONFIG_SRC);
-        }
-        if (!window.XploroApplications) {
-          await loadScriptOnce(APPLICATIONS_SRC);
-        }
-        return !!(window.XploroAuth && window.XploroApplications);
-      } catch (_) {
-        return false;
-      }
-    }
-
-    async function getRoleLabel() {
-      if (!window.XploroApplications) return "Traveler";
-      const application = await window.XploroApplications.getMyApplication();
-      return application && application.application_status === "approved" ? "Influencer" : "Traveler";
-    }
-
     const authButtons = Array.from(mobileActions.querySelectorAll(".btn-auth"));
 
     const panel = document.createElement("div");
@@ -330,7 +335,7 @@
     const avatarEl = panel.querySelector("[data-mobile-account-avatar]");
     const logoutBtn = panel.querySelector("[data-mobile-logout]");
 
-    async function renderAccountState() {
+    async function renderMobileAccountState() {
       const ready = await ensureSupabaseReady();
       const user = ready ? await window.XploroAuth.getUser() : null;
 
@@ -359,6 +364,92 @@
       window.location.href = "index.html";
     });
 
-    renderAccountState();
+    renderMobileAccountState();
+  }
+
+  /* ---- 4b. Desktop header panel ----------------------------------------
+     Scoped entirely to `.site-header__actions` (the search icon + Log In /
+     Sign Up cluster) — the mobile drawer above is a separate DOM subtree
+     and is never touched by this block. */
+  const desktopActions = header.querySelector(".site-header__actions");
+
+  if (desktopActions) {
+    const desktopAuthButtons = Array.from(desktopActions.querySelectorAll(".btn-auth"));
+
+    const desktopPanel = document.createElement("div");
+    desktopPanel.className = "desktop-account";
+    desktopPanel.hidden = true;
+    desktopPanel.innerHTML = `
+      <button class="desktop-account__toggle" type="button" data-desktop-account-toggle aria-haspopup="true" aria-expanded="false">
+        <span class="desktop-account__avatar" data-desktop-account-avatar aria-hidden="true"></span>
+        <span class="desktop-account__info">
+          <span class="desktop-account__name" data-desktop-account-name></span>
+          <span class="desktop-account__badge" data-desktop-account-badge></span>
+        </span>
+        <svg class="desktop-account__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="desktop-account__dropdown" data-desktop-account-dropdown>
+        <a class="desktop-account__dropdown-link" href="account.html">&#128100; View Profile</a>
+        <button class="desktop-account__dropdown-link" type="button" data-desktop-logout>&#128682; Logout</button>
+      </div>`;
+    desktopActions.appendChild(desktopPanel);
+
+    const dTogglebtn = desktopPanel.querySelector("[data-desktop-account-toggle]");
+    const dNameEl = desktopPanel.querySelector("[data-desktop-account-name]");
+    const dBadgeEl = desktopPanel.querySelector("[data-desktop-account-badge]");
+    const dAvatarEl = desktopPanel.querySelector("[data-desktop-account-avatar]");
+    const dLogoutBtn = desktopPanel.querySelector("[data-desktop-logout]");
+
+    function closeDesktopAccountMenu() {
+      desktopPanel.classList.remove("is-open");
+      dTogglebtn.setAttribute("aria-expanded", "false");
+    }
+
+    dTogglebtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = desktopPanel.classList.contains("is-open");
+      desktopPanel.classList.toggle("is-open", !isOpen);
+      dTogglebtn.setAttribute("aria-expanded", String(!isOpen));
+    });
+    document.addEventListener("click", (e) => {
+      if (desktopPanel.classList.contains("is-open") && !desktopPanel.contains(e.target)) {
+        closeDesktopAccountMenu();
+      }
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && desktopPanel.classList.contains("is-open")) closeDesktopAccountMenu();
+    });
+
+    dLogoutBtn.addEventListener("click", async () => {
+      if (window.XploroAuth) await window.XploroAuth.signOut();
+      window.location.href = "index.html";
+    });
+
+    async function renderDesktopAccountState() {
+      const ready = await ensureSupabaseReady();
+      const user = ready ? await window.XploroAuth.getUser() : null;
+
+      if (user) {
+        const displayName = (user.user_metadata && user.user_metadata.full_name) || user.email.split("@")[0];
+        const profile = await window.XploroAuth.getProfile(user.id);
+        desktopAuthButtons.forEach((btn) => (btn.hidden = true));
+        desktopPanel.hidden = false;
+        dNameEl.textContent = displayName;
+        dBadgeEl.textContent = await getRoleLabel();
+        // Same single source of truth as the mobile panel and account.html:
+        // public.profiles.avatar_url — falls back to the first-letter avatar.
+        if (profile && profile.avatar_url) {
+          dAvatarEl.innerHTML = `<img src="${profile.avatar_url}" alt="" />`;
+        } else {
+          dAvatarEl.textContent = displayName.trim().charAt(0).toUpperCase() || "?";
+        }
+      } else {
+        desktopAuthButtons.forEach((btn) => (btn.hidden = false));
+        desktopPanel.hidden = true;
+        closeDesktopAccountMenu();
+      }
+    }
+
+    renderDesktopAccountState();
   }
 })();

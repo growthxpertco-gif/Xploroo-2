@@ -36,6 +36,10 @@
   <!-- Booking flow module (booking.html + payment.html) -->
   <link rel="stylesheet" href="styles/booking.css" />
 
+  <!-- Role system — shared status-pill styles, used by the Influencer
+       Booking confirmation state below -->
+  <link rel="stylesheet" href="styles/role-shared.css" />
+
   <!-- Footer module (reusable across every page) -->
   <link rel="stylesheet" href="styles/footer.css" />
 </head>
@@ -293,6 +297,9 @@
                 </div>
 
                 <div class="bk-summary">
+                  <div class="bk-summary__media" data-bk="media">
+                    <img data-bk="image" alt="" />
+                  </div>
                   <div class="bk-summary__body">
                     <h3 class="bk-summary__name" data-bk="name"></h3>
                     <div class="bk-summary__grid">
@@ -305,7 +312,7 @@
                         <span class="bk-summary__value" data-bk="duration"></span>
                       </div>
                       <div class="bk-summary__item">
-                        <span class="bk-summary__label">Travel Date</span>
+                        <span class="bk-summary__label" data-bk="travel-date-label">Travel Date</span>
                         <input class="input input--sm" type="date" data-bk="travel-date" aria-label="Travel date" required />
                       </div>
                       <div class="bk-summary__item">
@@ -315,6 +322,14 @@
                       <div class="bk-summary__item" data-bk="booking-type-row" hidden>
                         <span class="bk-summary__label">Booking Type</span>
                         <span class="bk-summary__value" data-bk="booking-type">Influencer Experience</span>
+                      </div>
+                      <div class="bk-summary__item" data-bk="preferred-time-row" hidden>
+                        <span class="bk-summary__label">Preferred Time</span>
+                        <input class="input input--sm" type="time" data-bk="preferred-time" aria-label="Preferred time" />
+                      </div>
+                      <div class="bk-summary__item" data-bk="notes-row" hidden>
+                        <span class="bk-summary__label">Notes for Influencer</span>
+                        <span class="bk-summary__value" data-bk="notes-display">&mdash;</span>
                       </div>
                       <div class="bk-summary__item">
                         <span class="bk-summary__label">Travellers</span>
@@ -435,7 +450,7 @@
                 </dl>
 
                 <button class="bk-cta" type="submit" form="bk-form" data-bk="proceed">
-                  Proceed to Payment
+                  <span data-bk="proceed-label">Proceed to Payment</span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </button>
                 <p class="bk-form-error" data-bk="form-error" role="alert" aria-live="polite"></p>
@@ -447,6 +462,16 @@
               </div>
             </aside>
 
+          </div>
+
+          <!-- Influencer booking confirmation — shown instead of the form   -->
+          <!-- once Confirm Booking succeeds (influencer mode only; the      -->
+          <!-- package flow keeps redirecting to payment.html unchanged).    -->
+          <div class="bk-card" data-bk="influencer-success" style="text-align:center" hidden>
+            <h2 class="bk-card__title" style="margin-bottom:var(--space-3)">Booking Requested Successfully</h2>
+            <p style="color:var(--color-text-muted);margin-bottom:var(--space-4)">The influencer will accept or decline your request soon. You can track its status from your account.</p>
+            <span class="status-pill status-pill--pending" style="margin-bottom:var(--space-5);display:inline-flex">Pending Approval</span>
+            <div><a class="btn btn--gradient btn--pill" href="account.html">View My Bookings</a></div>
           </div>
         </div>
       </div>
@@ -560,7 +585,17 @@
   <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
   <script src="js/search-overlay.js" defer></script>
 
-  <!-- Booking flow behavior (summary, totals, coupon, proceed to payment) -->
+  <!-- Supabase client + data modules — only used by the real Influencer
+       Booking mode (see js/booking.js); the travel package flow never
+       touches these. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
+  <script src="js/supabase.js" defer></script>
+  <script src="js/notifications.js" defer></script>
+  <script src="js/earnings.js" defer></script>
+  <script src="js/influencer-bookings.js" defer></script>
+
+  <!-- Booking flow behavior (summary, totals, coupon, proceed to payment;
+       Confirm Booking + Supabase save for real Influencer Bookings) -->
   <script src="js/booking.js" defer></script>
 
   <!-- Footer behavior (newsletter form) -->
