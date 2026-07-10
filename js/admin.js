@@ -38,8 +38,8 @@
 
   function cardTemplate(app) {
     const initial = (app.full_name || "?").trim().charAt(0).toUpperCase();
-    const photoHtml = app.profile_picture
-      ? `<img class="admin-card__photo" src="${app.profile_picture}" alt="" />`
+    const photoHtml = app.avatar_url
+      ? `<img class="admin-card__photo" src="${app.avatar_url}" alt="" />`
       : `<span class="admin-card__photo" aria-hidden="true">${initial}</span>`;
 
     return `

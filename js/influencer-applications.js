@@ -15,9 +15,20 @@
    of the current prototype): only this file's internals would need to
    change.
 
-   Approving/rejecting also mirrors the result onto the applicant's
-   public.profiles row (role + influencer_status), keeping that record —
-   created at signup, see js/supabase.js's ensureProfile — in sync.
+   Every state change also mirrors onto the applicant's public.profiles
+   row (role + influencer_status — created at signup, see
+   js/supabase.js's ensureProfile), so profiles always matches the
+   influencer_applications status:
+     not applied yet -> role: "traveler",              influencer_status: "not_applied" (signup default)
+     pending          -> role: "traveler",              influencer_status: "pending"
+     approved         -> role: "traveler,influencer",   influencer_status: "approved"
+     rejected         -> role: "traveler",              influencer_status: "rejected"
+
+   Profile picture: public.profiles.avatar_url is the single source of
+   truth (see js/supabase.js) — this table has no picture column of its
+   own. getPendingApplications()/getApprovedApplications() below attach
+   each row's avatar_url from profiles so callers (admin.js,
+   influencers-dynamic.js) never query profiles themselves.
 
    Vanilla JS, no dependencies. Loaded with `defer`, after js/supabase.js.
    ========================================================================== */
@@ -41,14 +52,35 @@
     return data;
   }
 
+  function slugify(name) {
+    return (name || "influencer")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-+|-+$)/g, "") || "influencer";
+  }
+
+  // Ensures `base` is unique in influencer_applications.username, excluding
+  // the applicant's own row (so re-submitting keeps the same slug).
+  async function uniqueUsername(base, userId) {
+    let candidate = base;
+    let suffix = 2;
+    for (;;) {
+      const { data } = await client.from(TABLE).select("user_id").eq("username", candidate).maybeSingle();
+      if (!data || data.user_id === userId) return candidate;
+      candidate = `${base}-${suffix++}`;
+    }
+  }
+
   async function submitApplication(fields) {
     const user = window.XploroAuth ? await window.XploroAuth.getUser() : null;
     if (!user) return { data: null, error: new Error("Not signed in.") };
 
+    const username = await uniqueUsername(slugify(fields.fullName), user.id);
+
     const payload = {
       user_id: user.id,
       full_name: fields.fullName || "",
-      profile_picture: fields.profilePicture || null,
+      username,
       instagram_followers: fields.followers ? Number(fields.followers) : null,
       instagram_profile_link: fields.instagram || "",
       short_bio: fields.bio || "",
@@ -60,8 +92,28 @@
     };
 
     const { data, error } = await client.from(TABLE).upsert(payload, { onConflict: "user_id" }).select().maybeSingle();
-    if (error) console.error("[Xploroo] Failed to submit influencer application:", error.message);
+    if (error) {
+      console.error("[Xploroo] Failed to submit influencer application:", error.message);
+      return { data, error };
+    }
+
+    // Covers both a first-time submission and a rejected user applying
+    // again — either way the profile should now read "pending".
+    await syncProfile(user.id, "traveler", "pending");
+
+    // The profile picture (if the applicant chose one on this form) is
+    // stored once, on profiles.avatar_url — never duplicated here.
+    if (fields.profilePicture && window.XploroAuth) {
+      await window.XploroAuth.updateAvatar(user.id, fields.profilePicture);
+    }
+
     return { data, error };
+  }
+
+  async function attachAvatars(applications) {
+    if (!applications.length || !window.XploroAuth) return applications;
+    const avatars = await window.XploroAuth.getAvatarsByUserIds(applications.map((a) => a.user_id));
+    return applications.map((a) => ({ ...a, avatar_url: avatars.get(a.user_id) || null }));
   }
 
   async function getPendingApplications() {
@@ -74,7 +126,38 @@
       console.error("[Xploroo] Failed to load pending applications:", error.message);
       return [];
     }
-    return data || [];
+    return attachAvatars(data || []);
+  }
+
+  async function getApprovedApplications() {
+    const { data, error } = await client
+      .from(TABLE)
+      .select("*")
+      .eq("application_status", "approved")
+      .order("submitted_at", { ascending: false });
+    if (error) {
+      console.error("[Xploroo] Failed to load approved applications:", error.message);
+      return [];
+    }
+    return attachAvatars(data || []);
+  }
+
+  // Resolves the single reusable influencer-profile.html to a specific
+  // approved influencer, by ?id=<user_id> or ?username=<slug>. Returns null
+  // if not found or not approved (profile page then shows a not-found state).
+  async function getApprovedByIdOrUsername({ id, username }) {
+    let query = client.from(TABLE).select("*").eq("application_status", "approved");
+    query = id ? query.eq("user_id", id) : query.eq("username", username);
+
+    const { data, error } = await query.maybeSingle();
+    if (error) {
+      console.error("[Xploroo] Failed to load influencer profile:", error.message);
+      return null;
+    }
+    if (!data) return null;
+
+    const [withAvatar] = await attachAvatars([data]);
+    return withAvatar;
   }
 
   async function syncProfile(userId, role, influencerStatus) {
@@ -91,7 +174,7 @@
       console.error("[Xploroo] Failed to approve application:", error.message);
       return false;
     }
-    await syncProfile(application.user_id, "influencer", "approved");
+    await syncProfile(application.user_id, "traveler,influencer", "approved");
     return true;
   }
 
@@ -108,5 +191,13 @@
     return true;
   }
 
-  window.XploroApplications = { getMyApplication, submitApplication, getPendingApplications, approve, reject };
+  window.XploroApplications = {
+    getMyApplication,
+    submitApplication,
+    getPendingApplications,
+    getApprovedApplications,
+    getApprovedByIdOrUsername,
+    approve,
+    reject,
+  };
 })();

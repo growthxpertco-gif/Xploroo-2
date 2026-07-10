@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Manage your Xploroo profile, role, and Influencer application." />
-  <title>My Account | Xploroo</title>
+  <meta name="description" content="Book Meet & Greets, podcasts, blog shoots and more with Xploroo Influencers." />
+  <title>Influencer Profile | Xploroo</title>
 
   <!-- Apply the stored theme before first paint (avoids a flash of the
        wrong theme on reload). Dark is the default — this only ever adds
@@ -33,11 +33,9 @@
   <!-- Search overlay module (shared with every page) -->
   <link rel="stylesheet" href="styles/search-overlay.css" />
 
-  <!-- Role system — shared badge/status-pill styles -->
-  <link rel="stylesheet" href="styles/role-shared.css" />
-
-  <!-- Account dashboard module -->
-  <link rel="stylesheet" href="styles/account.css" />
+  <!-- Influencer Profile module — the master template shared with every
+       individual influencer page (siya.html, etc.) — reused unchanged -->
+  <link rel="stylesheet" href="styles/influencer-profile.css" />
 
   <!-- Footer module (reusable across every page) -->
   <link rel="stylesheet" href="styles/footer.css" />
@@ -73,7 +71,7 @@
 
         <!-- Left cluster: logo + theme toggle -->
         <div class="site-header__left">
-          <a class="brand" href="/" aria-label="Xploroo home">
+          <a class="brand" href="index.html" aria-label="Xploroo home">
             <span class="brand__name">Xploroo</span>
           </a>
 
@@ -157,7 +155,7 @@
         <!-- Top bar: logo + theme toggle (left), close (right) -->
         <div class="mobile-menu__topbar">
           <div class="mobile-menu__brand-group">
-            <a class="brand" href="/" aria-label="Xploroo home">
+            <a class="brand" href="index.html" aria-label="Xploroo home">
               <span class="brand__name">Xploroo</span>
             </a>
 
@@ -271,54 +269,13 @@
     </div>
 
     <!-- ============================================================= -->
-    <!-- MAIN — My Account                                             -->
+    <!-- MAIN — Influencer Profile (dynamic, driven by                 -->
+    <!-- js/influencer-profile-page.js from ?id= / ?username=)         -->
     <!-- ============================================================= -->
     <main class="main" id="main">
-      <div class="account-page" data-account-page>
-        <div class="account-container">
-
-          <header class="account-hero">
-            <h1 class="account-hero__title">My Account</h1>
-            <p class="account-hero__subtitle">Manage your profile and your Xploroo journey.</p>
-          </header>
-
-          <!-- Profile header — avatar, name and email are all rendered by
-               js/account.js from the logged-in Supabase session
-               (window.XploroAuth, see js/supabase.js). Role badges are
-               driven by the applicant's Supabase application row
-               (window.XploroApplications, see js/influencer-applications.js). -->
-          <section class="account-card">
-            <span class="account-card__avatar-wrap">
-              <span class="account-card__avatar" data-account-avatar aria-hidden="true"></span>
-              <button class="account-card__avatar-edit" type="button" data-account-avatar-edit aria-label="Change profile picture">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
-              </button>
-              <input class="sr-only" type="file" accept="image/*" data-account-avatar-input />
-            </span>
-            <div class="account-card__body">
-              <h2 class="account-card__name" data-account-name></h2>
-              <p class="account-card__email" data-account-email></p>
-              <div class="account-card__badges" data-account-badges></div>
-            </div>
-          </section>
-
-          <!-- Profile details — js/account.js swaps this between the
-               completion form and the read-only saved-profile card. -->
-          <section class="account-profile" data-account-profile></section>
-
-          <div class="account-panel" data-account-panel></div>
-
-          <!-- Manage Services shortcut — js/account.js shows this only for
-               approved Influencers (role === "influencer"), linking to the
-               existing "My Services & Pricing" section already built into
-               influencer-application.html once approved. -->
-          <div data-account-services></div>
-
-          <button class="account-logout" type="button" data-account-logout>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/></svg>
-            Log Out
-          </button>
-
+      <div class="ifp-page">
+        <div class="ifp-container" data-ifp-container>
+          <p class="ifp-loading" data-ifp-loading>Loading profile&hellip;</p>
         </div>
       </div>
     </main>
@@ -431,16 +388,15 @@
   <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
   <script src="js/search-overlay.js" defer></script>
 
-  <!-- Supabase client (official CDN build) + shared config/auth helpers —
-       see js/supabase.js. Required by js/account.js's session check. -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
+  <!-- Supabase client + data modules this page reads from -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="js/supabase.js" defer></script>
-
-  <!-- Influencer application state (Supabase-backed) -->
   <script src="js/influencer-applications.js" defer></script>
+  <script src="js/influencer-services.js" defer></script>
 
-  <!-- Account dashboard behavior -->
-  <script src="js/account.js" defer></script>
+  <!-- Loads the influencer from ?id=/?username= and renders the exact
+       siya.html layout dynamically -->
+  <script src="js/influencer-profile-page.js" defer></script>
 
   <!-- Footer behavior (newsletter form) -->
   <script src="js/footer.js" defer></script>

@@ -19,14 +19,21 @@
    one-line change per card — the tab-filtering logic here already
    supports it unchanged.
 
-   Vanilla JS, no dependencies. Loaded with `defer`, after js/supabase.js.
+   Profile pictures come from public.profiles.avatar_url — the single
+   source of truth for every avatar on the site (see js/supabase.js) —
+   via window.XploroApplications.getApprovedApplications(), which already
+   attaches each row's avatar_url. This file never queries Supabase
+   directly for it, so there's exactly one place that join lives.
+
+   Vanilla JS, no dependencies. Loaded with `defer`, after js/supabase.js
+   and js/influencer-applications.js.
    ========================================================================== */
 (function () {
   "use strict";
 
   const grid = document.querySelector("[data-ip-grid]");
   const tabsContainer = document.querySelector("[data-ip-tabs]");
-  if (!grid || !tabsContainer || !window.supabaseClient) return;
+  if (!grid || !tabsContainer || !window.XploroApplications) return;
 
   const NICHES = [
     { value: "all", label: "All" },
@@ -68,9 +75,14 @@
   }
 
   function cardTemplate(app) {
-    const mediaHtml = app.profile_picture
-      ? `<img class="ip-card__img" src="${app.profile_picture}" alt="" />`
+    const mediaHtml = app.avatar_url
+      ? `<img class="ip-card__img" src="${app.avatar_url}" alt="" />`
       : `<div class="ip-card__img ip-card__img--placeholder">${PLACEHOLDER_ICON}</div>`;
+
+    // Book Now always opens the one reusable influencer-profile.html for
+    // this influencer — never a hardcoded per-influencer page. Prefer the
+    // readable username slug, fall back to the raw user_id.
+    const profileHref = `influencer-profile.html?${app.username ? `username=${encodeURIComponent(app.username)}` : `id=${encodeURIComponent(app.user_id)}`}`;
 
     return `
       <article class="ip-card" data-ip-niche="${app.niche || "other"}" data-ip-dynamic aria-label="View ${app.full_name || "influencer"}&rsquo;s profile">
@@ -82,7 +94,7 @@
           <div class="ip-card__socials">
             ${app.instagram_profile_link ? `<a class="btn btn--outline btn--sm ip-card__social" href="${app.instagram_profile_link}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a>` : ""}
           </div>
-          <a class="btn btn--gradient btn--pill ip-card__book" href="#" data-ip-book>Book Now</a>
+          <a class="btn btn--gradient btn--pill ip-card__book" href="${profileHref}" data-ip-book>Book Now</a>
         </div>
       </article>`;
   }
@@ -118,23 +130,29 @@
   /* Load + render approved influencers.                                  */
   /* ------------------------------------------------------------------ */
   async function loadApprovedInfluencers() {
-    const { data, error } = await window.supabaseClient
-      .from("influencer_applications")
-      .select("full_name, profile_picture, instagram_followers, instagram_profile_link, short_bio, niche")
-      .eq("application_status", "approved")
-      .order("submitted_at", { ascending: false });
-
-    if (error) {
-      console.error("[Xploroo] Failed to load approved influencers:", error.message);
-      return;
-    }
-    if (!data || !data.length) return;
+    const data = await window.XploroApplications.getApprovedApplications();
+    if (!data.length) return;
 
     grid.insertAdjacentHTML("beforeend", data.map(cardTemplate).join(""));
 
-    // "Book Now" is deliberately not wired to anything yet.
-    grid.querySelectorAll("[data-ip-book]").forEach((btn) => {
-      btn.addEventListener("click", (e) => e.preventDefault());
+    // Booking handoff — before following "Book Now", persist the target
+    // influencer's id/username so influencer-profile.html can still recover
+    // it if a host's clean-URL redirect strips the query string (e.g. the
+    // `serve` dev server or Vercel's cleanUrls both 301 `/influencer-profile.html`
+    // to `/influencer-profile`, dropping `?id=`/`?username=`). Same pattern
+    // as js/package-details.js's booking.html handoff.
+    grid.querySelectorAll('a[href*="influencer-profile.html?"]').forEach((link) => {
+      link.addEventListener("click", () => {
+        try {
+          const url = new URL(link.href, window.location.href);
+          const id = url.searchParams.get("id");
+          const username = url.searchParams.get("username");
+          if (id) sessionStorage.setItem("xploroo-selected-profile-id", id);
+          if (username) sessionStorage.setItem("xploroo-selected-profile-username", username);
+        } catch (_) {
+          /* URL/sessionStorage unavailable — query param path still works */
+        }
+      });
     });
   }
 

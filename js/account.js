@@ -1,9 +1,13 @@
 /* ==========================================================================
    XPLOROO · Account dashboard
    account.js — Renders account.html entirely from real state:
-     1. Supabase session (window.XploroAuth, see js/supabase.js) — avatar
-        initial, name, email. No session → bounce to login.html; this page
-        only makes sense for a logged-in user.
+     1. Supabase session (window.XploroAuth, see js/supabase.js) — name,
+        email, and the profile picture (public.profiles.avatar_url, the
+        single source of truth used everywhere on the site — falls back
+        to the existing first-letter avatar when unset). The small edit
+        icon on the avatar opens a file picker, previews immediately, and
+        persists via XploroAuth.updateAvatar(). No session → bounce to
+        login.html; this page only makes sense for a logged-in user.
      2. Profile completion (localStorage "xploroo-profiles", keyed by
         email) — Full Name / Phone / City, editable in place. This is a
         separate, lighter-weight "complete your profile" feature from the
@@ -53,6 +57,8 @@
   }
 
   const avatarEl = page.querySelector("[data-account-avatar]");
+  const avatarEditBtn = page.querySelector("[data-account-avatar-edit]");
+  const avatarInput = page.querySelector("[data-account-avatar-input]");
   const nameEl = page.querySelector("[data-account-name]");
   const emailEl = page.querySelector("[data-account-email]");
   const badgesEl = page.querySelector("[data-account-badges]");
@@ -66,11 +72,24 @@
     return prefix ? prefix.charAt(0).toUpperCase() + prefix.slice(1) : "";
   }
 
-  function renderHeader(user) {
-    const profile = getProfile(user.email);
-    const displayName = (profile && profile.fullName) || emailPrefixName(user.email) || "New Traveler";
+  /* ------------------------------------------------------------------ */
+  /* Avatar — public.profiles.avatar_url is the single source of truth   */
+  /* for the profile picture everywhere on the site (see js/supabase.js).*/
+  /* Falls back to the existing first-letter avatar when none is set.    */
+  /* ------------------------------------------------------------------ */
+  function renderAvatar(avatarUrl, fallbackLetter) {
+    if (avatarUrl) {
+      avatarEl.innerHTML = `<img src="${avatarUrl}" alt="" />`;
+    } else {
+      avatarEl.textContent = fallbackLetter;
+    }
+  }
 
-    avatarEl.textContent = user.email.trim().charAt(0).toUpperCase();
+  function renderHeader(user, profile) {
+    const localProfile = getProfile(user.email);
+    const displayName = (localProfile && localProfile.fullName) || emailPrefixName(user.email) || "New Traveler";
+
+    renderAvatar(profile && profile.avatar_url, user.email.trim().charAt(0).toUpperCase());
     nameEl.textContent = displayName;
     emailEl.textContent = `Logged in as: ${user.email}`;
   }
@@ -261,7 +280,25 @@
       window.location.href = "index.html";
     });
 
-    renderHeader(user);
+    const supaProfile = await window.XploroAuth.getProfile(user.id);
+
+    if (avatarEditBtn && avatarInput) {
+      avatarEditBtn.addEventListener("click", () => avatarInput.click());
+      avatarInput.addEventListener("change", () => {
+        const file = avatarInput.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = async () => {
+          const dataUrl = String(reader.result || "");
+          renderAvatar(dataUrl, ""); // show the new photo immediately
+          await window.XploroAuth.updateAvatar(user.id, dataUrl);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    renderHeader(user, supaProfile);
     renderProfile(user);
     renderRole();
   })();

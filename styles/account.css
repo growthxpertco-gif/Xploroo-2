@@ -49,6 +49,10 @@
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   box-shadow: var(--shadow-card);
 }
+.account-card__avatar-wrap {
+  position: relative;
+  flex: none;
+}
 .account-card__avatar {
   flex: none;
   display: grid;
@@ -64,7 +68,31 @@
   font-size: var(--fs-xl);
   line-height: 1;
   box-shadow: var(--glow-brand);
+  overflow: hidden;
 }
+.account-card__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Small camera/pencil overlay, bottom-right of the avatar */
+.account-card__avatar-edit {
+  position: absolute;
+  right: -0.15rem;
+  bottom: -0.15rem;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  border: 2px solid var(--color-surface, var(--glass-bg));
+  background: var(--color-primary);
+  color: #fff;
+  cursor: pointer;
+  transition: var(--transition-colors);
+}
+.account-card__avatar-edit:hover { background: var(--color-primary-hover); }
+.account-card__avatar-edit svg { width: 0.85rem; height: 0.85rem; }
 .account-card__body {
   min-width: 0;
 }

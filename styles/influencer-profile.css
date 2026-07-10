@@ -18,6 +18,50 @@
 }
 
 /* -------------------------------------------------------------------------
+   Dynamic profile header — avatar, name-adjacent followers count and the
+   Instagram button. Only used by the dynamic influencer-profile.html
+   (siya.html and the other static pages have no markup for this block, so
+   it never renders there). Sits above .ifp-hero, reusing the same tokens.
+   ------------------------------------------------------------------------- */
+.ifp-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  animation: ifp-fade-in var(--dur-slower) var(--ease-out) both;
+}
+.ifp-profile__avatar {
+  width: 6.5rem;
+  height: 6.5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  background: var(--color-primary-subtle);
+  display: grid;
+  place-items: center;
+  color: var(--color-text-muted);
+}
+.ifp-profile__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.ifp-profile__avatar svg { width: 2.5rem; height: 2.5rem; }
+.ifp-profile__followers {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--color-text-muted);
+}
+.ifp-profile__instagram {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+}
+.ifp-profile__instagram svg { width: 1.05em; height: 1.05em; }
+
+/* -------------------------------------------------------------------------
    TOP SECTION — name + short intro only (no image, per spec)
    ------------------------------------------------------------------------- */
 .ifp-hero {
@@ -86,6 +130,12 @@
 .ifp-experience[data-theme="podcast-shoot"] { --ifp-grad-a: #3b82f6; --ifp-grad-b: #22d3ee; --ifp-glow-rgb: 59, 130, 246; }
 .ifp-experience[data-theme="blog-shoot"]    { --ifp-grad-a: #f97316; --ifp-grad-b: #fbbf24; --ifp-glow-rgb: 249, 115, 22; }
 .ifp-experience[data-theme="personal-event"]{ --ifp-grad-a: #22c55e; --ifp-grad-b: #10b981; --ifp-glow-rgb: 34, 197, 94; }
+/* Extra themes for the dynamic influencer-profile.html catalog (Event
+   Appearance / Travel Collaboration / Book Appointment) — additive only,
+   the four themes above (Siya's page) are untouched. */
+.ifp-experience[data-theme="event-appearance"]  { --ifp-grad-a: #22c55e; --ifp-grad-b: #10b981; --ifp-glow-rgb: 34, 197, 94; }
+.ifp-experience[data-theme="travel-collab"]     { --ifp-grad-a: #06b6d4; --ifp-grad-b: #6366f1; --ifp-glow-rgb: 6, 182, 212; }
+.ifp-experience[data-theme="book-appointment"]  { --ifp-grad-a: #ec4899; --ifp-grad-b: #a855f7; --ifp-glow-rgb: 236, 72, 153; }
 
 .ifp-experience[data-theme]::before {
   content: "";

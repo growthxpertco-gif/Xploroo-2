@@ -31,8 +31,10 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Upload Profile Picture — circular preview, stored as a data URL on   */
-  /* the application record for future use (no real file storage yet).   */
+  /* Upload Profile Picture — circular preview here; the data URL is      */
+  /* persisted to public.profiles.avatar_url on submit (see               */
+  /* js/influencer-applications.js), the single source of truth for the  */
+  /* picture everywhere on the site — this page keeps no copy of its own.*/
   /* ------------------------------------------------------------------ */
   let profilePictureDataUrl = "";
   const avatarInput = form.querySelector("[data-apply-avatar-input]");
@@ -104,7 +106,7 @@
   /* the application is approved this fully replaces the card; the form   */
   /* can never come back for this account.                                */
   /* ------------------------------------------------------------------ */
-  function renderApproved() {
+  async function renderApproved() {
     card.innerHTML = `
       <div class="influencer-success">
         <div class="influencer-success__illustration" aria-hidden="true">
@@ -125,7 +127,7 @@
       </section>`;
 
     if (window.XploroServices) {
-      window.XploroServices.renderCards(card.querySelector("[data-influencer-services-grid]"));
+      await window.XploroServices.renderCards(card.querySelector("[data-influencer-services-grid]"));
     }
   }
 
@@ -182,7 +184,7 @@
 
     if (status === "approved") {
       formView.hidden = true;
-      renderApproved();
+      await renderApproved();
       return;
     }
 

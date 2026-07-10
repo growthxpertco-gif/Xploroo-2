@@ -23,6 +23,16 @@
                              the row exists.
      signOut()      -> supabase.auth.signOut()
 
+   Profile picture — public.profiles.avatar_url is the single source of
+   truth for every avatar on the site (account page, mobile sidebar,
+   admin application cards, influencers.html cards, and anywhere else a
+   user's photo appears later). Nothing stores its own copy anymore.
+
+     getProfile(userId)        -> full profiles row (or null)
+     getAvatarsByUserIds(ids)  -> Map<userId, avatar_url> for batch lookups
+                                   (admin list, influencers.html grid)
+     updateAvatar(userId, url) -> persists a new avatar_url
+
    Vanilla JS (non-module), no bundler. Loaded with `defer`, after the
    Supabase CDN `<script>` tag.
    ========================================================================== */
@@ -82,5 +92,37 @@
     await client.auth.signOut();
   }
 
-  window.XploroAuth = { getSession, getUser, ensureProfile, signOut };
+  async function getProfile(userId) {
+    if (!userId) return null;
+    const { data, error } = await client.from("profiles").select("*").eq("id", userId).maybeSingle();
+    if (error) {
+      console.error("[Xploroo] getProfile failed:", error.message);
+      return null;
+    }
+    return data;
+  }
+
+  async function getAvatarsByUserIds(userIds) {
+    const ids = Array.from(new Set((userIds || []).filter(Boolean)));
+    if (!ids.length) return new Map();
+
+    const { data, error } = await client.from("profiles").select("id, avatar_url").in("id", ids);
+    if (error) {
+      console.error("[Xploroo] getAvatarsByUserIds failed:", error.message);
+      return new Map();
+    }
+    return new Map((data || []).map((row) => [row.id, row.avatar_url]));
+  }
+
+  async function updateAvatar(userId, avatarUrl) {
+    if (!userId) return false;
+    const { error } = await client.from("profiles").update({ avatar_url: avatarUrl }).eq("id", userId);
+    if (error) {
+      console.error("[Xploroo] updateAvatar failed:", error.message);
+      return false;
+    }
+    return true;
+  }
+
+  window.XploroAuth = { getSession, getUser, ensureProfile, signOut, getProfile, getAvatarsByUserIds, updateAvatar };
 })();

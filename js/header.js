@@ -336,11 +336,18 @@
 
       if (user) {
         const displayName = (user.user_metadata && user.user_metadata.full_name) || user.email.split("@")[0];
+        const profile = await window.XploroAuth.getProfile(user.id);
         authButtons.forEach((btn) => (btn.hidden = true));
         panel.hidden = false;
         nameEl.textContent = displayName;
         badgeEl.textContent = await getRoleLabel();
-        avatarEl.textContent = displayName.trim().charAt(0).toUpperCase() || "?";
+        // Single source of truth: public.profiles.avatar_url (see
+        // js/supabase.js) — falls back to the first-letter avatar.
+        if (profile && profile.avatar_url) {
+          avatarEl.innerHTML = `<img src="${profile.avatar_url}" alt="" />`;
+        } else {
+          avatarEl.textContent = displayName.trim().charAt(0).toUpperCase() || "?";
+        }
       } else {
         authButtons.forEach((btn) => (btn.hidden = false));
         panel.hidden = true;
