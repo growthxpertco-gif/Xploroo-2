@@ -295,57 +295,64 @@
                     <input class="input" type="text" name="fullName" autocomplete="name" placeholder="e.g. Aarav Sharma" required />
                   </label>
                   <label class="field">
-                    <span class="field__label">Followers Count</span>
-                    <input class="input" type="number" name="followers" min="0" step="1" placeholder="e.g. 25000" required />
+                    <span class="field__label">Instagram Followers</span>
+                    <input class="input" type="number" inputmode="numeric" name="followers" min="0" step="1" placeholder="e.g. 125000" data-apply-followers required />
                   </label>
 
                   <label class="field">
-                    <span class="field__label">Instagram Profile URL</span>
-                    <input class="input" type="url" name="instagram" placeholder="https://instagram.com/yourname" required />
+                    <span class="field__label">Instagram Profile Link</span>
+                    <input class="input" type="url" name="instagram" placeholder="https://instagram.com/username" required />
                   </label>
                   <label class="field">
-                    <span class="field__label">YouTube URL <span class="field__hint" style="display:inline">(optional)</span></span>
-                    <input class="input" type="url" name="youtube" placeholder="https://youtube.com/@yourname" />
-                  </label>
-
-                  <label class="field field--full">
-                    <span class="field__label">Other Social Links <span class="field__hint" style="display:inline">(optional)</span></span>
-                    <input class="input" type="text" name="otherLinks" placeholder="e.g. TikTok, X/Twitter, personal website" />
-                  </label>
-
-                  <label class="field">
-                    <span class="field__label">Primary Content Niche</span>
+                    <span class="field__label">Niche</span>
                     <select class="input select" name="niche" required>
                       <option value="" selected disabled>Select</option>
-                      <option value="travel">Travel</option>
-                      <option value="lifestyle">Lifestyle</option>
-                      <option value="food">Food</option>
-                      <option value="adventure">Adventure</option>
-                      <option value="photography">Photography</option>
+                      <option value="traveller">Traveller</option>
+                      <option value="content-creator">Content Creator</option>
+                      <option value="doctor">Doctor</option>
+                      <option value="fitness">Fitness</option>
                       <option value="fashion">Fashion</option>
-                      <option value="vlogging">Vlogging</option>
+                      <option value="food">Food</option>
+                      <option value="lifestyle">Lifestyle</option>
+                      <option value="technology">Technology</option>
+                      <option value="finance">Finance</option>
+                      <option value="business">Business</option>
+                      <option value="photography">Photography</option>
+                      <option value="videography">Videography</option>
+                      <option value="automobile">Automobile</option>
+                      <option value="education">Education</option>
+                      <option value="comedy">Comedy</option>
+                      <option value="gaming">Gaming</option>
+                      <option value="music">Music</option>
+                      <option value="dance">Dance</option>
+                      <option value="beauty">Beauty</option>
+                      <option value="parenting">Parenting</option>
+                      <option value="pets">Pets</option>
+                      <option value="adventure">Adventure</option>
+                      <option value="luxury">Luxury</option>
+                      <option value="wellness">Wellness</option>
                       <option value="other">Other</option>
                     </select>
-                  </label>
-                  <label class="field">
-                    <span class="field__label">City</span>
-                    <input class="input" type="text" name="city" autocomplete="address-level2" placeholder="e.g. Mumbai" required />
-                  </label>
-
-                  <label class="field field--full">
-                    <span class="field__label">Country</span>
-                    <input class="input" type="text" name="country" autocomplete="country-name" placeholder="e.g. India" required />
                   </label>
 
                   <label class="field field--full">
                     <span class="field__label">Short Bio</span>
-                    <textarea class="input" name="bio" rows="3" placeholder="A couple of sentences about you and your content." required></textarea>
+                    <textarea class="input" name="bio" rows="3" maxlength="250" placeholder="A couple of sentences about you and your content (max 250 characters)." required></textarea>
                   </label>
 
-                  <label class="field field--full">
-                    <span class="field__label">Why do you want to join Xploroo?</span>
-                    <textarea class="input" name="whyJoin" rows="4" placeholder="Tell us what draws you to Xploroo." required></textarea>
-                  </label>
+                  <div class="field field--full">
+                    <span class="field__label">Upload Profile Picture</span>
+                    <div class="apply-avatar-upload">
+                      <span class="apply-avatar-upload__preview" data-apply-avatar-preview aria-hidden="true">
+                        <svg class="apply-avatar-upload__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-apply-avatar-icon><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                      </span>
+                      <div class="apply-avatar-upload__actions">
+                        <button class="btn btn--glass btn--pill" type="button" data-apply-avatar-trigger>Choose Photo</button>
+                        <span class="apply-avatar-upload__name" data-apply-avatar-name>No file chosen</span>
+                      </div>
+                      <input class="sr-only" type="file" accept="image/*" name="profilePicture" data-apply-avatar-input />
+                    </div>
+                  </div>
 
                 </div>
 
@@ -466,8 +473,13 @@
   <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
   <script src="js/search-overlay.js" defer></script>
 
-  <!-- Role system state (shared with every page in the role system) -->
-  <script src="js/user-role.js" defer></script>
+  <!-- Supabase client (official CDN build) + shared config/auth helpers —
+       see js/supabase.js. Required so this page knows who's applying. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
+  <script src="js/supabase.js" defer></script>
+
+  <!-- Influencer application state (Supabase-backed) -->
+  <script src="js/influencer-applications.js" defer></script>
 
   <!-- My Services & Pricing (post-approval) — standalone module so future
        services can be added without touching the application flow. -->

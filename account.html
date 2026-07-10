@@ -284,8 +284,9 @@
 
           <!-- Profile header — avatar, name and email are all rendered by
                js/account.js from the logged-in Supabase session
-               (window.XploroAuth, see js/supabase.js). Role badges stay
-               driven by js/user-role.js, unchanged. -->
+               (window.XploroAuth, see js/supabase.js). Role badges are
+               driven by the applicant's Supabase application row
+               (window.XploroApplications, see js/influencer-applications.js). -->
           <section class="account-card">
             <span class="account-card__avatar" data-account-avatar aria-hidden="true"></span>
             <div class="account-card__body">
@@ -429,8 +430,8 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
   <script src="js/supabase.js" defer></script>
 
-  <!-- Role system state (shared with every page in the role system) -->
-  <script src="js/user-role.js" defer></script>
+  <!-- Influencer application state (Supabase-backed) -->
+  <script src="js/influencer-applications.js" defer></script>
 
   <!-- Account dashboard behavior -->
   <script src="js/account.js" defer></script>

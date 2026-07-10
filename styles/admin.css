@@ -153,6 +153,7 @@
   font-weight: var(--fw-bold);
   font-size: var(--fs-xl);
   line-height: 1;
+  object-fit: cover; /* only applies when rendered as <img> (uploaded photo) */
 }
 
 .admin-card__body { min-width: 0; flex: 1; }

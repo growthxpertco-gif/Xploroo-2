@@ -448,13 +448,13 @@
   <script src="js/admin-auth.js" defer></script>
 
   <!-- Supabase client (official CDN build) + shared config/auth helpers —
-       see js/supabase.js. Used only for the applicant email best-effort
-       lookup in js/admin.js. -->
+       see js/supabase.js. The Influencer Applications tab (js/admin.js)
+       reads/writes the influencer_applications table through it. -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
   <script src="js/supabase.js" defer></script>
 
-  <!-- Role system state (shared with every page in the role system) -->
-  <script src="js/user-role.js" defer></script>
+  <!-- Influencer application state (Supabase-backed) -->
+  <script src="js/influencer-applications.js" defer></script>
 
   <!-- Admin tab switching (Influencer Applications / Package Management) -->
   <script src="js/admin-tabs.js" defer></script>

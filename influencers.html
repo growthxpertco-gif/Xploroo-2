@@ -283,7 +283,13 @@
             <p class="influencers-page__subtitle">Travel with your favorite creators and book unforgettable experiences through their exclusive links.</p>
           </header>
 
-          <div class="ip-grid">
+          <!-- Niche filter tabs — built/wired by js/influencers-dynamic.js.
+               Filters both the Supabase-loaded cards below and (when a
+               specific niche is selected) hides the existing static cards,
+               which don't carry niche data yet. -->
+          <div class="ip-tabs" role="tablist" aria-label="Filter influencers by niche" data-ip-tabs></div>
+
+          <div class="ip-grid" data-ip-grid>
 
             <article class="ip-card" data-ip-href="first-influencer.html" role="link" tabindex="0" aria-label="View Vanshika Dharu's profile">
               <div class="ip-card__media">
@@ -883,6 +889,16 @@
 
   <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
   <script src="js/search-overlay.js" defer></script>
+
+  <!-- Supabase client (official CDN build) + shared config — see
+       js/supabase.js. Required to load approved influencers below. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
+  <script src="js/supabase.js" defer></script>
+
+  <!-- Niche tabs + approved-influencer cards loaded live from Supabase.
+       Renders alongside the existing static cards above without touching
+       them — see the file for how the two card sets coexist. -->
+  <script src="js/influencers-dynamic.js" defer></script>
 
   <!-- Influencer card click-through (only cards with data-ip-href) -->
   <script src="js/influencers-page.js" defer></script>

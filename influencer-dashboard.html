@@ -528,8 +528,13 @@
   <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
   <script src="js/search-overlay.js" defer></script>
 
-  <!-- Role system state (shared with every page in the role system) -->
-  <script src="js/user-role.js" defer></script>
+  <!-- Supabase client (official CDN build) + shared config/auth helpers —
+       see js/supabase.js. Required for the approval gate below. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
+  <script src="js/supabase.js" defer></script>
+
+  <!-- Influencer application state (Supabase-backed) -->
+  <script src="js/influencer-applications.js" defer></script>
 
   <!-- Influencer dashboard behavior (gate + sidebar tabs) -->
   <script src="js/influencer-dashboard.js" defer></script>

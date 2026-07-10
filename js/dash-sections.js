@@ -33,8 +33,7 @@
   "use strict";
 
   const page = document.querySelector("[data-dashboard-page]");
-  if (!page || !window.XploroRole) return;
-  if (window.XploroRole.getState().role !== "influencer") return;
+  if (!page || !window.XploroAuth || !window.XploroApplications) return;
 
   /* ------------------------------------------------------------------ */
   /* Storage helpers                                                      */
@@ -857,16 +856,25 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* Init                                                                 */
+  /* Init — independent async approval check (mirrors the gate in         */
+  /* js/influencer-dashboard.js) so this never renders real section       */
+  /* content for a visitor who isn't an approved Influencer.              */
   /* ------------------------------------------------------------------ */
-  renderInvites();
-  renderEarnings();
-  renderWithdrawals();
-  renderKyc();
-  renderContent();
-  renderCalendar();
-  renderReviews();
-  renderLeaderboard();
-  renderNotifications();
-  renderSupport();
+  (async function init() {
+    const user = await window.XploroAuth.getUser();
+    if (!user) return;
+    const application = await window.XploroApplications.getMyApplication();
+    if (!application || application.application_status !== "approved") return;
+
+    renderInvites();
+    renderEarnings();
+    renderWithdrawals();
+    renderKyc();
+    renderContent();
+    renderCalendar();
+    renderReviews();
+    renderLeaderboard();
+    renderNotifications();
+    renderSupport();
+  })();
 })();

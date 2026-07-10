@@ -10,20 +10,20 @@
         Supabase public.profiles row (full_name/email/role/
         influencer_status) created at signup; out of scope for this
         migration pass, left as-is.
-     3. Role + Influencer application (window.XploroRole, see
-        js/user-role.js) — role badges and the dynamic CTA/status panel,
-        unchanged from before.
+     3. Influencer application (window.XploroApplications, see
+        js/influencer-applications.js — Supabase-backed) — role badges and
+        the dynamic CTA/status panel.
    Logout signs out of Supabase, leaving the saved profile
    (xploroo-profiles) untouched, then redirects home — same split
    js/header.js's mobile sidebar relies on.
    Vanilla JS, no dependencies. Loaded with `defer`, after js/supabase.js
-   and user-role.js.
+   and js/influencer-applications.js.
    ========================================================================== */
 (function () {
   "use strict";
 
   const page = document.querySelector("[data-account-page]");
-  if (!page || !window.XploroRole || !window.XploroAuth) return;
+  if (!page || !window.XploroApplications || !window.XploroAuth) return;
 
   const PROFILES_KEY = "xploroo-profiles";
 
@@ -185,19 +185,19 @@
   const INFLUENCER_BADGE_SVG =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7-5.4-4.7 7.1-.7L12 2Z"/></svg>';
 
-  function renderRole() {
-    const state = window.XploroRole.getState();
-    const { role, application } = state;
+  async function renderRole() {
+    const application = await window.XploroApplications.getMyApplication();
+    const status = application ? application.application_status : "none";
 
     badgesEl.innerHTML = '<span class="role-badge">Traveler</span>';
-    if (role === "influencer") {
+    if (status === "approved") {
       badgesEl.innerHTML += `<span class="role-badge">${INFLUENCER_BADGE_SVG}Influencer</span>`;
     }
 
     // Manage Services shortcut — only for approved Influencers.
     servicesEl.innerHTML = "";
 
-    if (role === "influencer") {
+    if (status === "approved") {
       panelEl.innerHTML = `
         <section class="account-status">
           <h2 class="account-status__title">You&rsquo;re an Xploroo Influencer</h2>
@@ -214,7 +214,7 @@
       return;
     }
 
-    if (application.status === "pending") {
+    if (status === "pending") {
       panelEl.innerHTML = `
         <section class="account-status">
           <h2 class="account-status__title">Application Submitted Successfully</h2>
@@ -224,23 +224,16 @@
       return;
     }
 
-    if (application.status === "rejected") {
+    if (status === "rejected") {
       panelEl.innerHTML = `
         <section class="account-status">
           <h2 class="account-status__title">Application Rejected</h2>
           <p class="account-status__desc">This application wasn&rsquo;t approved, but you&rsquo;re welcome to apply again any time.</p>
           <span class="status-pill status-pill--rejected account-status__pill">Not Approved</span>
           <div class="account-status__action">
-            <button class="btn btn--gradient btn--pill" type="button" data-apply-again>Apply Again</button>
+            <a class="btn btn--gradient btn--pill" href="influencer-application.html">Apply Again</a>
           </div>
         </section>`;
-      const applyAgainBtn = panelEl.querySelector("[data-apply-again]");
-      if (applyAgainBtn) {
-        applyAgainBtn.addEventListener("click", () => {
-          window.XploroRole.resetApplication();
-          window.location.href = "influencer-application.html";
-        });
-      }
       return;
     }
 

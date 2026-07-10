@@ -12,8 +12,8 @@
    the single source of truth for saved packages, so a future integration
    (homepage, international/domestic packages pages, booking pages) can
    read from it without touching this admin UI — same pattern as
-   window.XploroRole (js/user-role.js) and window.XploroServices
-   (js/influencer-services.js).
+   window.XploroApplications (js/influencer-applications.js) and
+   window.XploroServices (js/influencer-services.js).
 
    Vanilla JS, no dependencies. Loaded with `defer`, after admin-tabs.js.
    ========================================================================== */

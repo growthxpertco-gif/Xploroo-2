@@ -131,29 +131,7 @@
   });
 
   /* ------------------------------------------------------------------ */
-  /* 2. Google OAuth — placeholder only.                                  */
-  /*    Future: kick off the Google Identity Services / OAuth redirect.   */
-  /* ------------------------------------------------------------------ */
-  document.querySelectorAll("[data-auth-google]").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      // Intentionally a no-op for now — see comment above.
-    });
-  });
-
-  /* ------------------------------------------------------------------ */
-  /* 3. Apple Sign In — placeholder only.                                 */
-  /*    Future: kick off the Sign in with Apple JS flow.                  */
-  /* ------------------------------------------------------------------ */
-  document.querySelectorAll("[data-auth-apple]").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault();
-      // Intentionally a no-op for now — see comment above.
-    });
-  });
-
-  /* ------------------------------------------------------------------ */
-  /* 4. Forgot Password — placeholder only.                               */
+  /* 2. Forgot Password — placeholder only.                               */
   /*    Future: link to a dedicated reset-password flow/page.             */
   /* ------------------------------------------------------------------ */
   document.querySelectorAll("[data-auth-forgot-password]").forEach((link) => {
@@ -164,7 +142,7 @@
   });
 
   /* ------------------------------------------------------------------ */
-  /* 5. Password visibility toggle — pure UI, no backend involved.        */
+  /* 3. Password visibility toggle — pure UI, no backend involved.        */
   /* ------------------------------------------------------------------ */
   document.querySelectorAll("[data-auth-toggle-password]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -178,7 +156,7 @@
   });
 
   /* ------------------------------------------------------------------ */
-  /* 6. Signup only — live "passwords match" hint. Pure client-side UX,   */
+  /* 4. Signup only — live "passwords match" hint. Pure client-side UX,   */
   /*    not an authentication feature.                                    */
   /* ------------------------------------------------------------------ */
   const password = form.querySelector('[name="password"]');

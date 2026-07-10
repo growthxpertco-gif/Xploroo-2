@@ -1,57 +1,68 @@
 /* ==========================================================================
    XPLOROO · Influencer application
    influencer-application.js — Drives influencer-application.html: shows the
-   form only when the visitor is eligible to apply (Traveler, no pending
-   application). On submit, saves the application via
-   XploroRole.submitApplication() (see js/user-role.js) and swaps in a
-   success state. Once the role is "influencer" (admin-approved), the
-   application form never renders again — instead this shows the
-   congratulations screen + the "My Services & Pricing" grid (see
-   js/influencer-services.js).
-   Vanilla JS, no dependencies. Loaded with `defer`, after user-role.js and
-   influencer-services.js.
+   form only when the visitor is eligible to apply (signed in, no pending
+   or approved application). On submit, saves the application via
+   window.XploroApplications.submitApplication() (see
+   js/influencer-applications.js, Supabase-backed) and swaps in a success
+   state. Once application_status is "approved", the application form
+   never renders again — instead this shows the congratulations screen +
+   the "My Services & Pricing" grid (see js/influencer-services.js).
+   Vanilla JS, no dependencies. Loaded with `defer`, after js/supabase.js,
+   js/influencer-applications.js and influencer-services.js.
    ========================================================================== */
 (function () {
   "use strict";
 
   const card = document.querySelector("[data-apply-card]");
-  if (!card || !window.XploroRole) return;
+  if (!card || !window.XploroAuth || !window.XploroApplications) return;
 
   const formView = card.querySelector("[data-apply-form-view]");
   const form = card.querySelector("[data-apply-form]");
 
   /* ------------------------------------------------------------------ */
-  /* Eligibility gate — decides whether the form, the approved screen, or */
-  /* a status message shows, based on the shared role state.              */
+  /* Instagram Followers — numeric input only.                            */
   /* ------------------------------------------------------------------ */
-  function renderGate() {
-    const state = window.XploroRole.getState();
+  const followersInput = form.querySelector("[data-apply-followers]");
+  if (followersInput) {
+    followersInput.addEventListener("input", () => {
+      followersInput.value = followersInput.value.replace(/[^0-9]/g, "");
+    });
+  }
 
-    if (state.role === "influencer") {
-      formView.hidden = true;
-      renderApproved();
-      return;
-    }
+  /* ------------------------------------------------------------------ */
+  /* Upload Profile Picture — circular preview, stored as a data URL on   */
+  /* the application record for future use (no real file storage yet).   */
+  /* ------------------------------------------------------------------ */
+  let profilePictureDataUrl = "";
+  const avatarInput = form.querySelector("[data-apply-avatar-input]");
+  const avatarTrigger = form.querySelector("[data-apply-avatar-trigger]");
+  const avatarPreview = form.querySelector("[data-apply-avatar-preview]");
+  const avatarName = form.querySelector("[data-apply-avatar-name]");
 
-    if (state.application.status === "pending") {
-      formView.hidden = true;
-      renderBlocked(
-        "Application Already Under Review",
-        "You&rsquo;ve already submitted an application and it&rsquo;s currently being reviewed. We&rsquo;ll be in touch soon.",
-        "pending",
-        "account.html",
-        "Back to My Account"
-      );
-      return;
-    }
+  if (avatarTrigger && avatarInput) {
+    avatarTrigger.addEventListener("click", () => avatarInput.click());
 
-    // status is "none" or "rejected" — eligible to apply
-    formView.hidden = false;
+    avatarInput.addEventListener("change", () => {
+      const file = avatarInput.files[0];
+      if (!file) {
+        avatarName.textContent = "No file chosen";
+        return;
+      }
+
+      avatarName.textContent = file.name;
+      const reader = new FileReader();
+      reader.onload = () => {
+        profilePictureDataUrl = String(reader.result || "");
+        avatarPreview.innerHTML = `<img src="${profilePictureDataUrl}" alt="" />`;
+      };
+      reader.readAsDataURL(file);
+    });
   }
 
   function renderBlocked(title, desc, pillState, backHref, backLabel) {
     const pillHtml = pillState
-      ? `<span class="status-pill status-pill--${pillState} apply-blocked__pill">Pending Approval</span>`
+      ? `<span class="status-pill status-pill--${pillState} apply-blocked__pill">${pillState === "pending" ? "Pending Approval" : "Not Approved"}</span>`
       : "";
     card.innerHTML = `
       <div class="apply-blocked">
@@ -63,9 +74,35 @@
   }
 
   /* ------------------------------------------------------------------ */
+  /* Rejected — its own message + an "Apply Again" button that reveals    */
+  /* the (empty) form right here, rather than navigating away. Submitting */
+  /* again overwrites the same row (upsert on user_id).                   */
+  /* ------------------------------------------------------------------ */
+  function renderRejected() {
+    card.innerHTML = `
+      <div class="apply-blocked">
+        <h2 class="apply-blocked__title">Application Rejected</h2>
+        <p class="apply-blocked__desc">This application wasn&rsquo;t approved, but you&rsquo;re welcome to apply again any time.</p>
+        <span class="status-pill status-pill--rejected apply-blocked__pill">Not Approved</span>
+        <button class="btn btn--gradient btn--pill apply-blocked__back" type="button" data-apply-again>Apply Again</button>
+      </div>`;
+
+    card.querySelector("[data-apply-again]").addEventListener("click", () => {
+      card.innerHTML = "";
+      card.appendChild(formView);
+      formView.hidden = false;
+      form.reset();
+      avatarName.textContent = "No file chosen";
+      avatarPreview.innerHTML =
+        '<svg class="apply-avatar-upload__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>';
+      profilePictureDataUrl = "";
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
   /* Approved — congratulations screen + "My Services & Pricing". Once     */
-  /* role is "influencer" this fully replaces the card; the application    */
-  /* form can never come back for this browser's session.                 */
+  /* the application is approved this fully replaces the card; the form   */
+  /* can never come back for this account.                                */
   /* ------------------------------------------------------------------ */
   function renderApproved() {
     card.innerHTML = `
@@ -95,23 +132,27 @@
   /* ------------------------------------------------------------------ */
   /* Submit — save the application, show the success state.               */
   /* ------------------------------------------------------------------ */
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     if (!form.reportValidity()) return;
 
+    const submitBtn = form.querySelector(".apply-submit");
+    submitBtn.disabled = true;
+
     const data = new FormData(form);
-    window.XploroRole.submitApplication({
+    const { error } = await window.XploroApplications.submitApplication({
       fullName: data.get("fullName") || "",
-      instagram: data.get("instagram") || "",
-      youtube: data.get("youtube") || "",
-      otherLinks: data.get("otherLinks") || "",
       followers: data.get("followers") || "",
+      instagram: data.get("instagram") || "",
       niche: data.get("niche") || "",
-      city: data.get("city") || "",
-      country: data.get("country") || "",
       bio: data.get("bio") || "",
-      whyJoin: data.get("whyJoin") || "",
+      profilePicture: profilePictureDataUrl,
     });
+
+    if (error) {
+      submitBtn.disabled = false;
+      return;
+    }
 
     card.innerHTML = `
       <div class="apply-success">
@@ -125,5 +166,45 @@
       </div>`;
   });
 
-  renderGate();
+  /* ------------------------------------------------------------------ */
+  /* Eligibility gate — decides whether the form, the approved screen, or */
+  /* a status message shows, based on the applicant's Supabase row.       */
+  /* ------------------------------------------------------------------ */
+  (async function renderGate() {
+    const user = await window.XploroAuth.getUser();
+    if (!user) {
+      window.location.href = "login.html";
+      return;
+    }
+
+    const application = await window.XploroApplications.getMyApplication();
+    const status = application ? application.application_status : "none";
+
+    if (status === "approved") {
+      formView.hidden = true;
+      renderApproved();
+      return;
+    }
+
+    if (status === "pending") {
+      formView.hidden = true;
+      renderBlocked(
+        "Application Already Under Review",
+        "You&rsquo;ve already submitted an application and it&rsquo;s currently being reviewed. We&rsquo;ll be in touch soon.",
+        "pending",
+        "account.html",
+        "Back to My Account"
+      );
+      return;
+    }
+
+    if (status === "rejected") {
+      formView.hidden = true;
+      renderRejected();
+      return;
+    }
+
+    // status === "none" — eligible to apply
+    formView.hidden = false;
+  })();
 })();

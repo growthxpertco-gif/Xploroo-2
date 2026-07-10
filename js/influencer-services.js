@@ -3,7 +3,7 @@
    influencer-services.js — Standalone module for the "My Services &
    Pricing" section shown to approved Influencers (rendered into
    influencer-application.html by js/influencer-application.js once
-   XploroRole reports role === "influencer"). Owns the service catalog
+   the application's Supabase status is "approved"). Owns the service catalog
    (CATALOG below) so adding a new service later is a one-line addition,
    and persists enabled/price/duration per service to localStorage
    ("xploroo-influencer-services"), keyed by service.

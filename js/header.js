@@ -245,17 +245,18 @@
   /*    runs on every page, most of which don't declare the Supabase      */
   /*    CDN/config <script> tags themselves, so this lazily injects them  */
   /*    once if missing (see ensureSupabaseReady) rather than requiring   */
-  /*    every page to add them. The role badge still reads the            */
-  /*    unmigrated "xploroo-user-role" storage js/user-role.js owns.      */
+  /*    every page to add them. The role badge reads the applicant's      */
+  /*    Supabase application row (window.XploroApplications, see          */
+  /*    js/influencer-applications.js), lazily loaded the same way.       */
   /*    Desktop header actions are untouched — this is scoped to          */
   /*    `.mobile-menu__actions` only.                                     */
   /* ------------------------------------------------------------------ */
   const mobileActions = mobileMenu ? mobileMenu.querySelector(".mobile-menu__actions") : null;
 
   if (mobileActions) {
-    const ROLE_KEY = "xploroo-user-role";
     const SUPABASE_CDN_SRC = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js";
     const SUPABASE_CONFIG_SRC = "js/supabase.js";
+    const APPLICATIONS_SRC = "js/influencer-applications.js";
 
     function loadScriptOnce(src) {
       return new Promise((resolve, reject) => {
@@ -281,7 +282,6 @@
     }
 
     async function ensureSupabaseReady() {
-      if (window.XploroAuth) return true;
       try {
         if (typeof window.supabase === "undefined") {
           await loadScriptOnce(SUPABASE_CDN_SRC);
@@ -289,20 +289,19 @@
         if (!window.XploroAuth) {
           await loadScriptOnce(SUPABASE_CONFIG_SRC);
         }
-        return !!window.XploroAuth;
+        if (!window.XploroApplications) {
+          await loadScriptOnce(APPLICATIONS_SRC);
+        }
+        return !!(window.XploroAuth && window.XploroApplications);
       } catch (_) {
         return false;
       }
     }
 
-    function getRoleLabel() {
-      try {
-        const raw = localStorage.getItem(ROLE_KEY);
-        const parsed = raw ? JSON.parse(raw) : null;
-        return parsed && parsed.role === "influencer" ? "Influencer" : "Traveler";
-      } catch (_) {
-        return "Traveler";
-      }
+    async function getRoleLabel() {
+      if (!window.XploroApplications) return "Traveler";
+      const application = await window.XploroApplications.getMyApplication();
+      return application && application.application_status === "approved" ? "Influencer" : "Traveler";
     }
 
     const authButtons = Array.from(mobileActions.querySelectorAll(".btn-auth"));
@@ -340,7 +339,7 @@
         authButtons.forEach((btn) => (btn.hidden = true));
         panel.hidden = false;
         nameEl.textContent = displayName;
-        badgeEl.textContent = getRoleLabel();
+        badgeEl.textContent = await getRoleLabel();
         avatarEl.textContent = displayName.trim().charAt(0).toUpperCase() || "?";
       } else {
         authButtons.forEach((btn) => (btn.hidden = false));

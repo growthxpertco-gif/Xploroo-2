@@ -39,6 +39,43 @@
 }
 
 /* -------------------------------------------------------------------------
+   Niche filter tabs (js/influencers-dynamic.js) — horizontally scrollable
+   pill row, additive only; doesn't touch anything below.
+   ------------------------------------------------------------------------- */
+.ip-tabs {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-6);
+  scrollbar-width: thin;
+}
+.ip-tab {
+  flex: none;
+  padding: 0.5rem 1.1rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: var(--transition-colors);
+}
+.ip-tab:hover {
+  color: var(--color-text-strong);
+  border-color: var(--color-border-strong);
+}
+.ip-tab[aria-selected="true"] {
+  background: var(--color-primary-subtle);
+  border-color: var(--color-border-brand);
+  color: var(--color-primary-hover);
+}
+
+/* -------------------------------------------------------------------------
    Responsive card grid
    Mobile: 1 col · Tablet (>=640px): 2 cols · Desktop (>=1024px): 4 cols
    ------------------------------------------------------------------------- */
@@ -93,6 +130,13 @@
   object-fit: cover;
   object-position: center;
 }
+/* Supabase-loaded cards with no uploaded photo yet (js/influencers-dynamic.js) */
+.ip-card__img--placeholder {
+  display: grid;
+  place-items: center;
+  color: var(--color-text-subtle);
+}
+.ip-card__img--placeholder svg { width: 2.5rem; height: 2.5rem; }
 
 .ip-card__body {
   flex: 1;

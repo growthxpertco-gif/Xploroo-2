@@ -152,45 +152,6 @@
 .auth-submit:hover { box-shadow: 0 16px 40px rgba(91, 107, 255, 0.5), 0 6px 18px rgba(139, 60, 240, 0.42); }
 
 /* -------------------------------------------------------------------------
-   Divider — "or continue with"
-   ------------------------------------------------------------------------- */
-.auth-divider {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-  margin: var(--space-6) 0 var(--space-5);
-  color: var(--color-text-subtle);
-  font-size: var(--fs-xs);
-  text-transform: uppercase;
-  letter-spacing: var(--ls-wider);
-}
-.auth-divider::before,
-.auth-divider::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: var(--gradient-hairline);
-}
-
-/* -------------------------------------------------------------------------
-   Social buttons
-   ------------------------------------------------------------------------- */
-.auth-social {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-3);
-}
-/* Matches .auth-grid's breakpoint above — below this width, two columns no
-   longer leave enough room for "Continue with Google/Apple" to fit without
-   forcing the row wider than the card (overflowing the form) or squashing
-   the two buttons to uneven widths. Stacking full-width keeps them exactly
-   as wide as the email/password inputs, like every other breakpoint below. */
-@media (max-width: 560px) {
-  .auth-social { grid-template-columns: 1fr; }
-}
-.auth-social__btn svg { width: 18px; height: 18px; }
-
-/* -------------------------------------------------------------------------
    Bottom switch line ("Don't have an account? Create Account")
    ------------------------------------------------------------------------- */
 .auth-switch {
