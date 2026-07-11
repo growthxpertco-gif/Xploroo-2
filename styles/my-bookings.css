@@ -1,0 +1,236 @@
+/* ==========================================================================
+   XPLOROO · My Bookings module
+   my-bookings.css — my-bookings.html only. Reuses the shared `.btn` /
+   `.status-pill` (role-shared.css) systems for every real control; this
+   file only owns the page shell, gate, tabs, and booking cards. Scoped
+   entirely under `.mb-*`. Load AFTER utilities.css and role-shared.css.
+   ========================================================================== */
+
+.mb-page {
+  padding-block: clamp(2.5rem, 1.6rem + 3vw, 4.5rem) var(--section-gap);
+}
+.mb-container {
+  max-width: var(--container-xl);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* -------------------------------------------------------------------------
+   Gate — shown instead of the page for signed-out visitors
+   ------------------------------------------------------------------------- */
+.mb-gate {
+  text-align: center;
+  max-width: 32rem;
+  margin-inline: auto;
+  padding: clamp(2.5rem, 2rem + 2vw, 3.5rem) clamp(1.5rem, 1.2rem + 1.5vw, 2.5rem);
+  border-radius: var(--radius-3xl);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+}
+.mb-gate__title { margin: 0; font-size: var(--fs-xl); }
+.mb-gate__desc { margin: var(--space-3) 0 var(--space-6); color: var(--color-text-muted); }
+
+/* -------------------------------------------------------------------------
+   Hero
+   ------------------------------------------------------------------------- */
+.mb-hero {
+  text-align: center;
+  max-width: 40rem;
+  margin-inline: auto;
+  margin-bottom: clamp(2rem, 1.6rem + 2vw, 3rem);
+}
+.mb-hero__title { margin: 0; font-size: var(--fs-3xl); }
+.mb-hero__subtitle { margin: var(--space-3) 0 0; color: var(--color-text-muted); }
+
+/* -------------------------------------------------------------------------
+   Tabs
+   ------------------------------------------------------------------------- */
+.mb-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  width: fit-content;
+  margin: 0 auto clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+  padding: 0.3rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+}
+.mb-tabs__tab {
+  position: relative;
+  padding: 0.65rem 1.35rem;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: none;
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-standard), background-color var(--dur-fast) var(--ease-standard);
+}
+.mb-tabs__tab:hover { color: var(--color-text-strong); }
+.mb-tabs__tab[aria-selected="true"] {
+  color: #fff;
+  background: var(--gradient-brand);
+  box-shadow: var(--glow-brand);
+}
+@media (max-width: 768px) {
+  .mb-tabs {
+    width: 100%;
+    gap: 0.35rem;
+  }
+  .mb-tabs__tab {
+    flex: 1 1 0%;
+    text-align: center;
+    padding-inline: 0.5rem;
+    font-size: clamp(0.75rem, 0.68rem + 0.5vw, 0.875rem);
+  }
+}
+
+.mb-panel { display: none; }
+.mb-panel.is-active { display: block; }
+
+/* -------------------------------------------------------------------------
+   Empty state
+   ------------------------------------------------------------------------- */
+.mb-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  text-align: center;
+  padding: clamp(2.5rem, 2rem + 2vw, 3.5rem);
+  border-radius: var(--radius-2xl);
+  border: 1px dashed var(--color-border);
+  color: var(--color-text-muted);
+}
+.mb-empty__icon {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--color-primary-subtle);
+  color: var(--violet-300);
+}
+.mb-empty__icon svg { width: 1.4rem; height: 1.4rem; }
+
+/* -------------------------------------------------------------------------
+   Booking cards
+   ------------------------------------------------------------------------- */
+.mb-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: var(--space-5);
+}
+
+.mb-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--glass-border);
+  background: var(--color-surface-2);
+  overflow: hidden;
+  transition: border-color var(--dur-fast) var(--ease-standard), box-shadow var(--dur-base) var(--ease-out);
+}
+.mb-card:hover {
+  border-color: var(--color-border-brand);
+  box-shadow: var(--shadow-card);
+}
+
+.mb-card__media { aspect-ratio: 16 / 9; overflow: hidden; }
+.mb-card__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.mb-card__img--placeholder {
+  display: grid;
+  place-items: center;
+  background: var(--color-primary-subtle);
+  color: var(--violet-300);
+}
+.mb-card__img--placeholder svg { width: 2rem; height: 2rem; }
+
+.mb-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding: clamp(1.1rem, 0.9rem + 0.7vw, 1.5rem);
+}
+
+.mb-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.mb-card__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  color: var(--color-text-strong);
+}
+.mb-card__subtitle {
+  margin: 0.15rem 0 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+.mb-card__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  flex: none;
+}
+
+.mb-card__influencer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.mb-card__avatar {
+  flex: none;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.mb-card__avatar--placeholder {
+  display: grid;
+  place-items: center;
+  background: var(--signup-gradient, var(--gradient-brand));
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+}
+
+.mb-card__meta {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: var(--space-3) var(--space-4);
+}
+.mb-card__meta dt {
+  font-size: var(--fs-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-subtle);
+}
+.mb-card__meta dd {
+  margin: 0.15rem 0 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+}
+
+.mb-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--glass-border);
+}
+
+.mb-card__details {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--glass-border);
+}

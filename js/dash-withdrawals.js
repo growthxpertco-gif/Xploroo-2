@@ -93,7 +93,7 @@
       <h3 class="dash-section-title">Withdrawal History</h3>
       <div class="dash-table-wrap">
         <table class="dash-table">
-          <thead><tr><th>Amount</th><th>Requested</th><th>Status</th></tr></thead>
+          <thead><tr><th>Amount</th><th>Requested</th><th>Status</th><th>Transaction Reference</th></tr></thead>
           <tbody>
             ${history
               .map(
@@ -102,6 +102,7 @@
                 <td>${formatMoney(w.amount)}</td>
                 <td>${formatDate(w.requested_at)}</td>
                 <td>${statusPill(w.status)}</td>
+                <td>${w.transaction_reference || "&mdash;"}</td>
               </tr>`
               )
               .join("")}

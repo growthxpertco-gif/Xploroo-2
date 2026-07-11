@@ -1,12 +1,19 @@
 /* ==========================================================================
    XPLOROO · Influencer withdrawals (Supabase-backed)
    withdrawals.js — public.withdrawal_requests, one row per withdrawal
-   request. Available Balance is never stored — it's always derived live
-   from earnings (window.XploroEarnings, see js/earnings.js) minus every
-   withdrawal already requested (Pending/Approved/Paid all reserve funds so
-   the same money can't be withdrawn twice while a request is in flight).
-   Vanilla JS, no dependencies. Loaded with `defer`, after js/supabase.js
-   and js/earnings.js.
+   request. Available Balance is never stored — it's always derived live as
+   Total Paid Earnings (window.XploroEarnings, see js/earnings.js) minus
+   Paid Withdrawals (Phase 9). Approving a request (status -> "Paid")
+   subtracts it from the balance automatically; rejecting one (status ->
+   "Rejected") never counted against the balance in the first place, so
+   nothing needs to be manually "restored".
+   Also the admin-side data layer for the Influencer Payments tab
+   (getAllWithdrawals/approveWithdrawal/rejectWithdrawal) — see
+   js/admin-withdrawals.js. Every approve/reject is a conditional update
+   (`.eq("status", "Pending")`) so a duplicate click or a second admin tab
+   can never process the same request twice.
+   Vanilla JS, no dependencies. Loaded with `defer`, after js/supabase.js,
+   js/earnings.js and js/notifications.js.
    ========================================================================== */
 (function () {
   "use strict";
@@ -30,16 +37,16 @@
     return data || [];
   }
 
-  // Available Balance = Paid earnings − everything already reserved by a
-  // non-rejected withdrawal request (Pending/Approved/Paid).
+  // Available Balance = Total Paid Earnings − Paid Withdrawals. Always
+  // derived from the two transaction tables, never a stored/manual number.
   async function getAvailableBalance() {
     if (!window.XploroEarnings) return 0;
     const [earnings, withdrawals] = await Promise.all([window.XploroEarnings.getMyEarnings(), getMyWithdrawals()]);
-    const paid = window.XploroEarnings.summarize(earnings).paid;
-    const reserved = withdrawals
-      .filter((w) => w.status !== "Rejected")
+    const paidEarnings = window.XploroEarnings.summarize(earnings).paid;
+    const paidWithdrawals = withdrawals
+      .filter((w) => w.status === "Paid")
       .reduce((sum, w) => sum + Number(w.amount || 0), 0);
-    return Math.max(0, paid - reserved);
+    return Math.max(0, paidEarnings - paidWithdrawals);
   }
 
   async function requestWithdrawal({ amount, bankAccountHolder, bankAccountNumber, bankIfsc, bankName, notes }) {
@@ -73,8 +80,77 @@
       console.error("[Xploroo] Failed to create withdrawal request:", error.message);
       return { data: null, error };
     }
+
+    if (window.XploroNotifications) {
+      window.XploroNotifications.create({
+        userId: user.id,
+        type: "withdrawal_submitted",
+        title: "Withdrawal Submitted",
+        message: `Your withdrawal request for ₹${requestedAmount.toLocaleString("en-IN")} has been submitted and is pending review.`,
+      });
+    }
+
     return { data, error: null };
   }
 
-  window.XploroWithdrawals = { getMyWithdrawals, getAvailableBalance, requestWithdrawal };
+  /* ---------------------------------------------------------------- */
+  /* Admin — Influencer Payments tab (see js/admin-withdrawals.js)      */
+  /* ---------------------------------------------------------------- */
+  async function getAllWithdrawals() {
+    const { data, error } = await client.from(TABLE).select("*").order("requested_at", { ascending: false });
+    if (error) {
+      console.error("[Xploroo] Failed to load all withdrawal requests:", error.message);
+      return [];
+    }
+    return data || [];
+  }
+
+  // Conditional update on status="Pending" so a duplicate click or a second
+  // admin tab can never approve/reject the same request twice — if another
+  // process already moved it out of Pending, `data` comes back null and the
+  // caller knows nothing happened.
+  async function approveWithdrawal(id, approvedBy) {
+    const { data, error } = await client
+      .from(TABLE)
+      .update({
+        status: "Paid",
+        approved_at: new Date().toISOString(),
+        approved_by: approvedBy || "Admin",
+      })
+      .eq("id", id)
+      .eq("status", "Pending")
+      .select()
+      .maybeSingle();
+    if (error) {
+      console.error("[Xploroo] Failed to approve withdrawal request:", error.message);
+      return { data: null, error };
+    }
+    if (!data) return { data: null, error: new Error("This request has already been processed.") };
+    return { data, error: null };
+  }
+
+  async function rejectWithdrawal(id) {
+    const { data, error } = await client
+      .from(TABLE)
+      .update({ status: "Rejected" })
+      .eq("id", id)
+      .eq("status", "Pending")
+      .select()
+      .maybeSingle();
+    if (error) {
+      console.error("[Xploroo] Failed to reject withdrawal request:", error.message);
+      return { data: null, error };
+    }
+    if (!data) return { data: null, error: new Error("This request has already been processed.") };
+    return { data, error: null };
+  }
+
+  window.XploroWithdrawals = {
+    getMyWithdrawals,
+    getAvailableBalance,
+    requestWithdrawal,
+    getAllWithdrawals,
+    approveWithdrawal,
+    rejectWithdrawal,
+  };
 })();

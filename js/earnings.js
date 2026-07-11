@@ -63,5 +63,17 @@
     return { total: paid + pending, paid, pending, cancelled: sum("Cancelled") };
   }
 
-  window.XploroEarnings = { createForBooking, setStatusForBooking, getMyEarnings, summarize };
+  // Admin-only: every influencer's earnings at once, so the Influencer
+  // Payments tab can compute each requester's Available Balance without a
+  // per-row query. Relies on the "Anyone can view earnings" select policy.
+  async function getAllEarnings() {
+    const { data, error } = await client.from(TABLE).select("*");
+    if (error) {
+      console.error("[Xploroo] Failed to load all earnings:", error.message);
+      return [];
+    }
+    return data || [];
+  }
+
+  window.XploroEarnings = { createForBooking, setStatusForBooking, getMyEarnings, getAllEarnings, summarize };
 })();

@@ -1,0 +1,63 @@
+/* ==========================================================================
+   XPLOROO · Package pages — native Share button
+   package-share.css — Positioning + toast for the "Share" pill injected by
+   js/package-share.js into every travel package page's hero
+   (`[data-pkg-hero]`). Reuses the shared `.btn`/`.btn--glass`/`.btn--pill`
+   system (utilities.css) for the button's look — this file only owns where
+   it sits and the copy-link success toast.
+
+   The button is anchored inside the hero's own top padding (`top` stays
+   below the hero's `padding-block` value), so it never overlaps the
+   breadcrumb row below it — no existing hero rule is touched.
+   Load AFTER utilities.css and package-details.css.
+   ========================================================================== */
+
+.pkg-hero { position: relative; }
+
+.pkg-share-btn {
+  position: absolute;
+  top: clamp(0.85rem, 0.55rem + 1vw, 1.3rem);
+  right: var(--container-pad);
+  z-index: 3;
+}
+.pkg-share-btn:hover { transform: translateY(-2px); }
+.pkg-share-btn:active { transform: translateY(0) scale(0.97); }
+
+@media (max-width: 768px) {
+  .pkg-share-btn {
+    position: static;
+    /* `.btn` is inline-flex, which margin:auto can't right-align — force a
+       block-level flex box here so the button docks to the right edge. */
+    display: flex;
+    width: fit-content;
+    margin: 0 0 var(--space-3) auto;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Copy-link success toast (Web Share API fallback)
+   ------------------------------------------------------------------------- */
+.pkg-share-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 2.5rem;
+  transform: translateX(-50%) translateY(12px);
+  z-index: var(--z-toast, 900);
+  padding: 0.85rem 1.5rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid color-mix(in srgb, var(--color-success) 45%, transparent);
+  background: var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-lg);
+  color: var(--color-success);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
+}
+.pkg-share-toast.is-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}

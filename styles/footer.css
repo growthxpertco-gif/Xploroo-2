@@ -147,6 +147,48 @@
 .footer-social__link:active { transform: translateY(-1px) scale(0.96); }
 
 /* -------------------------------------------------------------------------
+   "Growth Xpert" badge — glassmorphism pill, subtle brand gradient wash,
+   small hover lift. Sits centered between the social icons and the link
+   columns; opens WhatsApp in a new tab. Injected by js/footer.js so every
+   page gets it without duplicating markup across every HTML file.
+   ------------------------------------------------------------------------- */
+.footer-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: fit-content;
+  margin: 0 auto clamp(2rem, 1.6rem + 2vw, 3rem);
+  padding: 0.55rem 1.15rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--glass-border);
+  background:
+    linear-gradient(120deg, rgba(139, 60, 240, 0.16), rgba(91, 107, 255, 0.12), rgba(34, 211, 238, 0.14)),
+    var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  color: var(--color-text-strong);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(91, 107, 255, 0.16);
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-standard);
+}
+.footer-badge__icon {
+  font-size: 0.95em;
+  line-height: 1;
+}
+.footer-badge:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-border-strong);
+  box-shadow: 0 10px 24px rgba(91, 107, 255, 0.26);
+}
+.footer-badge:active { transform: translateY(0) scale(0.97); }
+
+/* -------------------------------------------------------------------------
    Footer link columns
    ------------------------------------------------------------------------- */
 .footer-links {

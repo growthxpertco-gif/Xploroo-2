@@ -29,6 +29,7 @@
     booking_created: "New Booking Received",
     booking_accepted: "Booking Accepted",
     booking_declined: "Booking Declined",
+    withdrawal_submitted: "Withdrawal Submitted",
     withdrawal_approved: "Withdrawal Approved",
     withdrawal_rejected: "Withdrawal Rejected",
     kyc_approved: "KYC Approved",

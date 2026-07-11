@@ -36,6 +36,9 @@
   <!-- Package Details module — the master template for every package page -->
   <link rel="stylesheet" href="styles/package-details.css" />
 
+  <!-- Package pages — native Share button (top-right of the hero) -->
+  <link rel="stylesheet" href="styles/package-share.css" />
+
   <!-- Footer module (reusable across every page) -->
   <link rel="stylesheet" href="styles/footer.css" />
 </head>
@@ -819,12 +822,12 @@
           <!-- Social icons -->
           <ul class="footer-social" role="list" aria-label="Xploroo on social media">
             <li>
-              <a class="footer-social__link" href="https://facebook.com/yourpage" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Facebook">
+              <a class="footer-social__link" href="https://www.facebook.com/share/1BcpUhZbZ2/e/1BcpUhZbZ2/" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Facebook">
                 <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H16.7V3.7C16.15 3.6 15.15 3.5 14 3.5c-2.4 0-4 1.45-4 4.1v2.3H7.3v3.1H10V21h3.5Z"/></svg>
               </a>
             </li>
             <li>
-              <a class="footer-social__link" href="https://instagram.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Instagram">
+              <a class="footer-social__link" href="https://www.instagram.com/xploroo.in?igsh=MXBqamI0aWxvNHdqNA==in?igsh=MXBqamI0aWxvNHdqNA==" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Instagram">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none"/><circle cx="12" cy="12" r="4" fill="none"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
               </a>
             </li>
@@ -900,6 +903,9 @@
 
   <!-- Package Details behavior — master template script -->
   <script src="js/package-details.js" defer></script>
+
+  <!-- Package pages — native Share button (dynamic title/desc/URL) -->
+  <script src="js/package-share.js" defer></script>
 
   <!-- Footer behavior (newsletter form) -->
   <script src="js/footer.js" defer></script>

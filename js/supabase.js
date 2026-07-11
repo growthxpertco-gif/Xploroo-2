@@ -124,5 +124,26 @@
     return true;
   }
 
-  window.XploroAuth = { getSession, getUser, ensureProfile, signOut, getProfile, getAvatarsByUserIds, updateAvatar };
+  async function getProfilesByUserIds(userIds) {
+    const ids = Array.from(new Set((userIds || []).filter(Boolean)));
+    if (!ids.length) return new Map();
+
+    const { data, error } = await client.from("profiles").select("id, full_name, email, avatar_url").in("id", ids);
+    if (error) {
+      console.error("[Xploroo] getProfilesByUserIds failed:", error.message);
+      return new Map();
+    }
+    return new Map((data || []).map((row) => [row.id, row]));
+  }
+
+  window.XploroAuth = {
+    getSession,
+    getUser,
+    ensureProfile,
+    signOut,
+    getProfile,
+    getAvatarsByUserIds,
+    getProfilesByUserIds,
+    updateAvatar,
+  };
 })();

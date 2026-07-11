@@ -308,13 +308,18 @@
                 <dd data-bk="pay-total"></dd>
               </dl>
 
-              <!-- Swap this disabled button for the Razorpay/Stripe checkout
-                   trigger when the gateway is integrated — the amounts above
-                   come from the `xploroo-booking` sessionStorage object. -->
-              <button class="bk-cta" type="button" disabled>
+              <!-- No real payment gateway yet, so this click IS the
+                   confirmation event: js/payment.js saves the booking to
+                   Supabase (public.travel_bookings) and swaps in the
+                   success panel below. Swap this handler for the real
+                   Razorpay/Stripe checkout call when the gateway is
+                   integrated — the amounts above still come from the
+                   `xploroo-booking` sessionStorage object either way. -->
+              <button class="bk-cta" type="button" data-bk="pay-btn">
                 Pay Securely
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
               </button>
+              <p class="bk-form-error" data-bk="pay-error" role="alert" aria-live="polite"></p>
 
               <p class="bk-pay__note">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></svg>
@@ -328,6 +333,20 @@
               <p class="bk-pay__row" style="justify-content:flex-start">Start by choosing a package and filling in your details.</p>
               <a class="bk-cta" href="packages.html">
                 Browse Packages
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+            </div>
+
+            <!-- Shown after a successful (simulated) payment — booking is
+                 already saved to Supabase by the time this appears. -->
+            <div class="bk-pay" data-bk="success" hidden style="text-align:center">
+              <span class="bk-payment__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              </span>
+              <h2 class="bk-pay__title">Booking Confirmed!</h2>
+              <p class="bk-pay__row" style="justify-content:center">Booking ID: <strong data-bk="success-id"></strong></p>
+              <a class="bk-cta" href="my-bookings.html">
+                View My Bookings
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
               </a>
             </div>
@@ -366,12 +385,12 @@
           <!-- Social icons -->
           <ul class="footer-social" role="list" aria-label="Xploroo on social media">
             <li>
-              <a class="footer-social__link" href="https://facebook.com/yourpage" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Facebook">
+              <a class="footer-social__link" href="https://www.facebook.com/share/1BcpUhZbZ2/e/1BcpUhZbZ2/" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Facebook">
                 <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H16.7V3.7C16.15 3.6 15.15 3.5 14 3.5c-2.4 0-4 1.45-4 4.1v2.3H7.3v3.1H10V21h3.5Z"/></svg>
               </a>
             </li>
             <li>
-              <a class="footer-social__link" href="https://instagram.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Instagram">
+              <a class="footer-social__link" href="https://www.www.instagram.xplo/oo.in?igph=MXBqooI0aWxvNHdqNA==in?igsh=MXBqamI0aWxvNHdqNA==" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Instagram">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none"/><circle cx="12" cy="12" r="4" fill="none"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
               </a>
             </li>
@@ -445,7 +464,17 @@
   <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
   <script src="js/search-overlay.js" defer></script>
 
-  <!-- Payment page behavior (renders the stored booking summary) -->
+  <!-- Supabase client (official CDN build) + shared config/auth helpers —
+       see js/supabase.js. Required so js/payment.js can save the confirmed
+       booking to public.travel_bookings under the signed-in traveler. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
+  <script src="js/supabase.js" defer></script>
+
+  <!-- Travel package bookings (Supabase-backed) -->
+  <script src="js/travel-bookings.js" defer></script>
+
+  <!-- Payment page behavior (renders the stored booking summary, saves the
+       booking on confirm) -->
   <script src="js/payment.js" defer></script>
 
   <!-- Footer behavior (newsletter form) -->

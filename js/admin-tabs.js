@@ -1,14 +1,13 @@
 /* ==========================================================================
    XPLOROO · Admin — tab switching
-   admin-tabs.js — Drives the "Influencer Applications" / "Package
-   Management" tab bar on admin-influencer-applications.html. Mirrors the
-   existing search-overlay tab pattern (js/search-overlay.js): one
-   `aria-selected` tab at a time, a sliding underline indicator, and a
-   matching `.is-active` panel. Purely a UI switcher — knows nothing about
-   applications or packages, so either panel's own module can change
-   independently.
+   admin-tabs.js — Drives the admin section tab bar on
+   admin-influencer-applications.html. Mirrors the existing search-overlay
+   tab pattern (js/search-overlay.js): one `aria-selected` tab at a time, a
+   sliding underline indicator, and a matching `.is-active` panel. Purely a
+   UI switcher — knows nothing about any tab's content, so each panel's own
+   module can change independently.
    Vanilla JS, no dependencies. Loaded with `defer`, before admin.js and
-   admin-packages.js.
+   admin-withdrawals.js.
    ========================================================================== */
 (function () {
   "use strict";
