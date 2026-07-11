@@ -83,6 +83,30 @@
   .admin-tabs__indicator { transition: none; }
 }
 
+/* Mobile (<768px) — tabs no longer wrap/get clipped; the bar becomes a
+   horizontally scrollable strip instead, with the scrollbar itself hidden
+   so it still reads as a clean tab bar. Desktop layout above is untouched:
+   this query only adds overflow/scroll behavior and stops tabs shrinking. */
+@media (max-width: 767px) {
+  .admin-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* legacy Edge/IE */
+  }
+  .admin-tabs::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+  .admin-tabs__tab {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+}
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .admin-tabs { scroll-behavior: auto; }
+}
+
 .admin-panel { display: none; }
 .admin-panel.is-active { display: block; }
 

@@ -60,9 +60,8 @@
   border-radius: var(--radius-3xl, 28px);
   background: linear-gradient(160deg, var(--sm-cyan) 0%, var(--sm-pink) 100%);
   box-shadow:
-    0 24px 60px rgba(0, 0, 0, 0.55),
-    0 0 30px rgba(34, 211, 238, 0.18),
-    0 0 30px rgba(239, 84, 180, 0.14);
+    0 0 36px rgba(34, 211, 238, 0.216),
+    0 0 36px rgba(239, 84, 180, 0.168);
 }
 .slot-machine__cabinet::before {
   content: "";
@@ -328,9 +327,8 @@
     margin-top: 0;
     padding: 2.6px; /* was 2px — ~30% thicker neon border frame */
     box-shadow:
-      0 24px 60px rgba(0, 0, 0, 0.55),
-      -50px 0 90px rgba(0, 229, 255, 0.22),
-      50px 0 90px rgba(255, 77, 255, 0.2);
+      -50px 0 108px rgba(0, 229, 255, 0.264),
+      50px 0 108px rgba(255, 77, 255, 0.24);
   }
   .slot-machine__cabinet::before {
     inset: 2.6px; /* matches the scaled border padding above */

@@ -180,8 +180,35 @@
   /* the application is approved this fully replaces the card; the form   */
   /* can never come back for this account.                                */
   /* ------------------------------------------------------------------ */
-  async function renderApproved() {
+  function visibilityStatusText(visible) {
+    return visible ? "🟢 ON — Visible on Xploroo" : "⚪ OFF — Hidden from Xploroo";
+  }
+
+  async function renderApproved(application) {
+    // Phase 12 — Public Profile Visibility, independent of approval. Never
+    // stored anywhere but influencer_applications.public_visibility itself
+    // (default true) — toggling it only changes whether
+    // getApprovedApplications()/getApprovedByIdOrUsername() include this
+    // row; nothing about approval, services, or bookings is touched.
+    const isVisible = application.public_visibility !== false;
+
     card.innerHTML = `
+      <section class="visibility-card" data-visibility-card>
+        <div class="visibility-card__text">
+          <h2 class="visibility-card__title">Public Profile Visibility</h2>
+          <p class="visibility-card__subtitle">Control whether your profile appears publicly on the Xploroo Influencers page. You can hide your profile anytime without losing your verified influencer status.</p>
+        </div>
+        <div class="visibility-card__control">
+          <label class="visibility-card__toggle">
+            <input type="checkbox" data-visibility-toggle-input ${isVisible ? "checked" : ""} aria-label="Public profile visibility" />
+            <span class="visibility-card__toggle-track" aria-hidden="true">
+              <span class="visibility-card__toggle-thumb"></span>
+            </span>
+          </label>
+          <span class="visibility-card__status${isVisible ? " visibility-card__status--on" : ""}" data-visibility-status>${visibilityStatusText(isVisible)}</span>
+        </div>
+      </section>
+
       <div class="influencer-success">
         <div class="influencer-success__illustration" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/><circle cx="12" cy="12" r="4.5"/></svg>
@@ -219,6 +246,27 @@
            hidden entirely on mobile, where the existing inline "Saved" text
            on each card is unchanged. -->
       <div class="influencer-services__toast" data-influencer-services-toast role="status" aria-live="polite">&#10003; Services Updated Successfully</div>`;
+
+    const toggleInput = card.querySelector("[data-visibility-toggle-input]");
+    const statusEl = card.querySelector("[data-visibility-status]");
+    if (toggleInput) {
+      toggleInput.addEventListener("change", async () => {
+        const next = toggleInput.checked;
+        toggleInput.disabled = true;
+        const { error } = await window.XploroApplications.setPublicVisibility(next);
+        toggleInput.disabled = false;
+
+        if (error) {
+          // Revert the switch visually — the DB write never happened.
+          toggleInput.checked = !next;
+          window.alert("Something went wrong updating your visibility. Please try again.");
+          return;
+        }
+
+        statusEl.textContent = visibilityStatusText(next);
+        statusEl.classList.toggle("visibility-card__status--on", next);
+      });
+    }
 
     if (window.XploroServices) {
       await window.XploroServices.renderCards(card.querySelector("[data-influencer-services-grid]"));
@@ -272,7 +320,7 @@
 
     if (status === "approved") {
       formView.hidden = true;
-      await renderApproved();
+      await renderApproved(application);
       return;
     }
 

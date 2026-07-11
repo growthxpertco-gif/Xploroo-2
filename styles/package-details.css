@@ -893,7 +893,7 @@
     color: #fff;
   }
   .pkg-info-card__label { font-size: var(--fs-2xs); }
-  .pkg-info-card__value { font-size: var(--fs-base); color: #fff; }
+  .pkg-info-card__value { font-size: var(--fs-base); color: var(--color-text-strong); }
 
   /* Each capsule gets its own accent — confined to the icon square, the
      thin top line, and a soft matching outer glow. The capsule background
@@ -1221,4 +1221,36 @@
 .pkg-related__link:hover {
   color: var(--violet-200);
   transform: translateX(2px);
+}
+
+/* ==========================================================================
+   LIGHT THEME — a few elements below use their own hardcoded (dark-theme)
+   literal colors rather than the shared variables.css tokens, so they don't
+   re-theme automatically and need explicit overrides here when
+   [data-theme="light"] is set on <html>.
+   ========================================================================== */
+
+/* Hero gallery frame — the 0.4-opacity white border reads as a soft photo
+   frame against the dark page, but disappears against a white one. */
+:root[data-theme="light"] .pkg-gallery__hero {
+  border-color: rgba(17, 17, 23, 0.16);
+}
+
+/* Mobile sticky booking bar — its own opaque dark bar (not tied to
+   --color-surface), same treatment as header.css's mobile menu panel. */
+:root[data-theme="light"] .pkg-sticky-bar {
+  background: var(--glass-bg-strong);
+}
+
+/* Mobile compact hero CTA — intentionally a plain white pill with dark
+   text (not a branded gradient surface), so on a white page it would
+   otherwise disappear just like header.css's Log In pill; invert it to a
+   dark pill so it still reads clearly on white. */
+:root[data-theme="light"] .pkg-cta--hero {
+  background: #111116;
+  color: #ffffff;
+}
+:root[data-theme="light"] .pkg-cta--hero:hover,
+:root[data-theme="light"] .pkg-cta--hero:active {
+  color: #ffffff;
 }

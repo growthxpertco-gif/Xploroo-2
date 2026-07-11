@@ -8,8 +8,110 @@
    what's unique to these two sections. Reuses the shared `.field` /
    `.input` / `.btn` system from utilities.css for every real form control.
    Scoped entirely under `.influencer-success-*` / `.influencer-services-*` /
-   `.service-card-*`. Load AFTER utilities.css and influencer-application.css.
+   `.service-card-*` / `.visibility-card-*`. Load AFTER utilities.css and
+   influencer-application.css.
    ========================================================================== */
+
+/* -------------------------------------------------------------------------
+   Public Profile Visibility (Phase 12) — sits above everything else on the
+   approved screen. Same glass-card shell as `.influencer-services__grid`'s
+   siblings; the toggle itself is a larger version of `.service-card__toggle`
+   below, reusing the identical checkbox/track/thumb technique and the same
+   gradient-on-checked treatment for visual consistency.
+   ------------------------------------------------------------------------- */
+.visibility-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  margin-bottom: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+  padding: clamp(1.25rem, 1rem + 1.4vw, 1.75rem) clamp(1.5rem, 1.1rem + 1.6vw, 2rem);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-card);
+}
+.visibility-card__text { flex: 1; min-width: 16rem; }
+.visibility-card__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  color: var(--color-text-strong);
+}
+.visibility-card__subtitle {
+  margin: var(--space-2) 0 0;
+  max-width: 48ch;
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: var(--color-text-muted);
+}
+
+.visibility-card__control {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Large premium iOS-style switch — same hidden-checkbox technique as
+   .service-card__toggle below, just scaled up. */
+.visibility-card__toggle {
+  position: relative;
+  display: inline-flex;
+  cursor: pointer;
+}
+.visibility-card__toggle input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.visibility-card__toggle-track {
+  display: block;
+  width: 4rem;
+  height: 2.25rem;
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-hover);
+  border: 1px solid var(--glass-border);
+  transition: background-color var(--dur-base) var(--ease-standard), border-color var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-standard);
+}
+.visibility-card__toggle-thumb {
+  display: block;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: 0.24rem;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+  transition: transform var(--dur-base) var(--ease-standard);
+}
+.visibility-card__toggle input:checked ~ .visibility-card__toggle-track {
+  background: linear-gradient(120deg, #6a79ff, #22d3ee);
+  border-color: transparent;
+  box-shadow: var(--glow-brand);
+}
+.visibility-card__toggle input:checked ~ .visibility-card__toggle-track .visibility-card__toggle-thumb {
+  transform: translateX(1.75rem);
+}
+.visibility-card__toggle input:focus-visible ~ .visibility-card__toggle-track {
+  box-shadow: var(--glow-focus);
+}
+.visibility-card__toggle input:disabled ~ .visibility-card__toggle-track {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.visibility-card__status {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+.visibility-card__status--on { color: var(--color-success); }
 
 /* -------------------------------------------------------------------------
    Congratulations section

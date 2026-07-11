@@ -318,3 +318,12 @@
   border-color: rgba(239, 68, 68, 0.4);
 }
 .account-logout svg { width: 18px; height: 18px; }
+
+/* ============================================================================
+   LIGHT THEME — .account-profile__edit's hover border is a hardcoded
+   translucent-white literal, not a shared token, so it becomes invisible
+   against the light hover surface unless overridden here.
+   ============================================================================ */
+:root[data-theme="light"] .account-profile__edit:hover {
+  border-color: rgba(17, 17, 23, 0.3);
+}

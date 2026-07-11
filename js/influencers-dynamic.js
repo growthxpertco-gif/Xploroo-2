@@ -62,6 +62,7 @@
     { value: "luxury", label: "Luxury" },
     { value: "wellness", label: "Wellness" },
     { value: "astrologer", label: "Astrologer" },
+    { value: "sports", label: "Sports" },
     { value: "other", label: "Other" },
   ];
 

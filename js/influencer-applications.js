@@ -128,6 +128,13 @@
       verification_submitted_at: null,
       verified_at: null,
       verified_by: null,
+      // Phase 12 — public visibility is a separate concern from approval
+      // (see getApprovedApplications()/getApprovedByIdOrUsername() below).
+      // Reset to ON on every (re-)submission so a previously-hidden
+      // applicant who was rejected and reapplies starts visible again once
+      // re-approved, matching "public_visibility should automatically be
+      // ON" for a first-time approval.
+      public_visibility: true,
     };
 
     const { data, error } = await client.from(TABLE).upsert(payload, { onConflict: "user_id" }).select().maybeSingle();
@@ -168,11 +175,20 @@
     return attachAvatars(data || []);
   }
 
+  // Phase 12 — approval (application_status) and public visibility
+  // (public_visibility) are two independent switches; a page only ever
+  // shows an influencer when BOTH are true. Every public-facing reader
+  // (influencers.html's grid, influencer-profile.html) goes through this
+  // function or getApprovedByIdOrUsername() below, so this is the single
+  // place that rule is enforced — admin's getPendingApplications() is
+  // deliberately untouched, since admins must still see/manage a hidden
+  // applicant.
   async function getApprovedApplications() {
     const { data, error } = await client
       .from(TABLE)
       .select("*")
       .eq("application_status", "approved")
+      .eq("public_visibility", true)
       .order("submitted_at", { ascending: false });
     if (error) {
       console.error("[Xploroo] Failed to load approved applications:", error.message);
@@ -182,10 +198,12 @@
   }
 
   // Resolves the single reusable influencer-profile.html to a specific
-  // approved influencer, by ?id=<user_id> or ?username=<slug>. Returns null
-  // if not found or not approved (profile page then shows a not-found state).
+  // approved AND publicly-visible influencer, by ?id=<user_id> or
+  // ?username=<slug>. Returns null if not found, not approved, or hidden
+  // (profile page then shows a not-found state) — a visitor gets no signal
+  // distinguishing "never existed" from "hidden", by design.
   async function getApprovedByIdOrUsername({ id, username }) {
-    let query = client.from(TABLE).select("*").eq("application_status", "approved");
+    let query = client.from(TABLE).select("*").eq("application_status", "approved").eq("public_visibility", true);
     query = id ? query.eq("user_id", id) : query.eq("username", username);
 
     const { data, error } = await query.maybeSingle();
@@ -202,6 +220,30 @@
   async function syncProfile(userId, role, influencerStatus) {
     const { error } = await client.from("profiles").update({ role, influencer_status: influencerStatus }).eq("id", userId);
     if (error) console.error("[Xploroo] Failed to sync profile after review:", error.message);
+  }
+
+  // Phase 12 — self-service Public Profile Visibility toggle, shown on the
+  // "Manage Your Services & Pricing" screen. Completely independent of
+  // application_status: hiding a profile never touches approval, KYC,
+  // verification, services, or bookings — it only changes whether
+  // getApprovedApplications()/getApprovedByIdOrUsername() (above) include
+  // this row. Scoped to the caller's own row via `.eq("user_id", ...)` so
+  // an influencer can only ever toggle their own visibility.
+  async function setPublicVisibility(visible) {
+    const user = window.XploroAuth ? await window.XploroAuth.getUser() : null;
+    if (!user) return { data: null, error: new Error("Not signed in.") };
+
+    const { data, error } = await client
+      .from(TABLE)
+      .update({ public_visibility: !!visible })
+      .eq("user_id", user.id)
+      .select()
+      .maybeSingle();
+    if (error) {
+      console.error("[Xploroo] Failed to update public visibility:", error.message);
+      return { data: null, error };
+    }
+    return { data, error: null };
   }
 
   // Phase 10 — the applicant confirms they've added the verification code
@@ -280,6 +322,7 @@
     getApprovedByIdOrUsername,
     submitVerification,
     verifyOwnership,
+    setPublicVisibility,
     approve,
     reject,
   };

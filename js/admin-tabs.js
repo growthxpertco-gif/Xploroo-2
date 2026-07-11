@@ -30,6 +30,10 @@
     tabs.forEach((t) => t.setAttribute("aria-selected", String(t === tabEl)));
     panels.forEach((p) => p.classList.toggle("is-active", p.dataset.adminPanel === key));
     moveIndicator(tabEl);
+    // On mobile the tab bar scrolls horizontally (styles/admin.css); if the
+    // newly-selected tab is partially off-screen, bring it fully into view.
+    // No-op on desktop, where the bar never overflows.
+    tabEl.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
   }
 
   tabs.forEach((tabEl) => {

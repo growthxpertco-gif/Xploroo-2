@@ -199,6 +199,17 @@
 }
 .hiw-cta__secondary:hover { text-decoration-color: currentColor; }
 
+/* -------------------------------------------------------------------------
+   LIGHT THEME — literal white values above assume a dark canvas; re-theme
+   them so they stay visible against the white page/card surfaces.
+   ------------------------------------------------------------------------- */
+:root[data-theme="light"] .hiw-steps::before {
+  background: linear-gradient(180deg, rgba(17, 17, 23, 0.22), rgba(17, 17, 23, 0.04));
+}
+:root[data-theme="light"] .hiw-cta__secondary {
+  text-decoration-color: rgba(17, 17, 23, 0.35);
+}
+
 @keyframes hiw-fade-in {
   from { opacity: 0; transform: translateY(22px); }
   to   { opacity: 1; transform: translateY(0); }

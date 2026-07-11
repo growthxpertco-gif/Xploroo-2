@@ -158,6 +158,12 @@
   filter: invert(0.7);
   cursor: pointer;
 }
+/* Light theme: the input surface flips light, so the native icon (already
+   dark by default) needs no inversion — inverting it here would wash it
+   out against the now-light field background. */
+:root[data-theme="light"] .bk-page input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: none;
+}
 
 /* Coupon row — input + apply button side by side */
 .bk-coupon {
