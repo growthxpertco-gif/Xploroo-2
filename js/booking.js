@@ -50,6 +50,25 @@
     iceland:   { name: "Iceland Northern Lights Escape", destination: "Iceland",           duration: "6 Nights / 7 Days", price: 725000, image: "https://picsum.photos/seed/iceland-hero/600/600" },
     japan:     { name: "Japan Cherry Blossom Trail",     destination: "Japan",             duration: "6 Days / 5 Nights", price: 99999,  image: "https://picsum.photos/seed/japan-hero/600/600" },
     italy:     { name: "Italy Classic Escape",           destination: "Italy",             duration: "6 Days / 5 Nights", price: 89999,  image: "https://picsum.photos/seed/italy-hero/600/600" },
+
+    // International listing (international-packages.html)
+    bali:        { name: "Bali Retreat",           destination: "Bali, Indonesia",                   duration: "6 Days / 5 Nights", price: 48999,  image: "https://picsum.photos/seed/bali-hero/600/600" },
+    maldives:    { name: "Maldives Luxury",         destination: "Maldives",                          duration: "5 Days / 4 Nights", price: 89999,  image: "https://picsum.photos/seed/maldives-hero/600/600" },
+    switzerland: { name: "Switzerland Explorer",    destination: "Interlaken, Switzerland",           duration: "7 Days / 6 Nights", price: 124999, image: "https://picsum.photos/seed/switzerland-hero/600/600" },
+    paris:       { name: "Paris Getaway",           destination: "Paris, France",                     duration: "6 Days / 5 Nights", price: 99999,  image: "https://picsum.photos/seed/paris-hero/600/600" },
+    turkey:      { name: "Turkey Highlights",       destination: "Istanbul & Cappadocia, Turkey",     duration: "6 Days / 5 Nights", price: 74999,  image: "https://picsum.photos/seed/turkey-hero/600/600" },
+    london:      { name: "London City Tour",        destination: "London, United Kingdom",            duration: "5 Days / 4 Nights", price: 109999, image: "https://picsum.photos/seed/london-hero/600/600" },
+
+    // Domestic listing (domestic-packages.html)
+    kashmir:   { name: "Kashmir Valley Escape",     destination: "Srinagar & Gulmarg, India",         duration: "6 Days / 5 Nights", price: 24999,  image: "https://picsum.photos/seed/kashmir-hero/600/600" },
+    ladakh:    { name: "Ladakh Adventure",          destination: "Leh, India",                        duration: "7 Days / 6 Nights", price: 34999,  image: "https://picsum.photos/seed/ladakh-hero/600/600" },
+    kerala:    { name: "Kerala Backwaters",         destination: "Munnar & Alleppey, India",          duration: "5 Days / 4 Nights", price: 22999,  image: "https://picsum.photos/seed/kerala-hero/600/600" },
+    rajasthan: { name: "Rajasthan Royal Trail",     destination: "Jaipur, Udaipur & Jodhpur, India",  duration: "6 Days / 5 Nights", price: 27999,  image: "https://picsum.photos/seed/rajasthan-hero/600/600" },
+    andaman:   { name: "Andaman Island Escape",     destination: "Port Blair & Havelock, India",      duration: "5 Days / 4 Nights", price: 29999,  image: "https://picsum.photos/seed/andaman-hero/600/600" },
+    himachal:  { name: "Himachal Hill Trail",       destination: "Manali & Shimla, India",            duration: "6 Days / 5 Nights", price: 19999,  image: "https://picsum.photos/seed/himachal-hero/600/600" },
+    meghalaya: { name: "Meghalaya Living Roots",    destination: "Shillong & Cherrapunji, India",     duration: "5 Days / 4 Nights", price: 23999,  image: "https://picsum.photos/seed/meghalaya-hero/600/600" },
+    coorg:     { name: "Coorg Coffee Trails",       destination: "Coorg, Karnataka, India",           duration: "4 Days / 3 Nights", price: 16999,  image: "https://picsum.photos/seed/coorg-hero/600/600" },
+    sikkim:    { name: "Sikkim Mountain Escape",    destination: "Gangtok & Pelling, India",          duration: "6 Days / 5 Nights", price: 25999,  image: "https://picsum.photos/seed/sikkim-hero/600/600" },
   };
 
   /* ------------------------------------------------------------------ */

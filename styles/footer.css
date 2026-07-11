@@ -35,6 +35,18 @@
 }
 
 /* -------------------------------------------------------------------------
+   Brand — reuses .brand/.brand__logo/.brand__name from header.css so the
+   logo + wordmark stay pixel-identical (same size, gap, colour, gradient,
+   light/dark handling) between header and footer. Only display/centering
+   lives here.
+   ------------------------------------------------------------------------- */
+.footer-brand {
+  display: flex;
+  width: fit-content;
+  margin: 0 auto clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+}
+
+/* -------------------------------------------------------------------------
    Newsletter
    ------------------------------------------------------------------------- */
 .footer-newsletter {
