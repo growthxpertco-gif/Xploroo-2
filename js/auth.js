@@ -6,8 +6,8 @@
    (once a session exists) a public.profiles row is created via
    window.XploroAuth.ensureProfile(); login re-checks/creates it too, to
    cover projects where email confirmation delays the first session.
-   Every other handler (OAuth buttons, forgot password) is still a
-   placeholder no-op — only the forms themselves are wired up.
+   "Forgot Password?" is a real link straight to forgot-password.html (see
+   js/forgot-password.js + js/reset-password.js) — nothing to wire up here.
    Vanilla JS, no dependencies. Loaded with `defer`, after js/supabase.js.
    ========================================================================== */
 (function () {
@@ -18,19 +18,26 @@
 
   const client = window.supabaseClient;
 
-  function mapAuthError(message) {
-    const msg = (message || "").toLowerCase();
+  function mapAuthError(err) {
+    const message = (err && err.message) || (typeof err === "string" ? err : "");
+    const msg = message.toLowerCase();
+    if (msg.includes("failed to fetch") || msg.includes("networkerror") || msg.includes("load failed")) {
+      return "Network error. Please check your connection and try again.";
+    }
+    if (msg.includes("rate limit") || msg.includes("too many") || (err && err.status === 429)) {
+      return "Too many attempts. Please wait a few minutes and try again.";
+    }
     if (msg.includes("already registered") || msg.includes("already exists")) {
       return "An account with this email already exists.";
-    }
-    if (msg.includes("password")) {
-      return "Password is too weak. Please use at least 6 characters.";
     }
     if (msg.includes("invalid") && msg.includes("email")) {
       return "Please enter a valid email address.";
     }
     if (msg.includes("invalid login credentials")) {
       return "Invalid email or password.";
+    }
+    if (msg.includes("password")) {
+      return "Password is too weak. Please use at least 6 characters.";
     }
     return message || "Something went wrong. Please try again.";
   }
@@ -63,86 +70,84 @@
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    if (submitBtn.disabled) return; // guards against a duplicate in-flight request
 
     if (!form.reportValidity()) return;
 
     submitBtn.disabled = true;
 
-    if (isSignupForm) {
-      const fullName = form.querySelector('[name="fullName"]').value.trim();
-      const email = form.querySelector('[name="email"]').value.trim();
-      const password = form.querySelector('[name="password"]').value;
+    try {
+      if (isSignupForm) {
+        const fullName = form.querySelector('[name="fullName"]').value.trim();
+        const email = form.querySelector('[name="email"]').value.trim();
+        const password = form.querySelector('[name="password"]').value;
 
-      const { data, error } = await client.auth.signUp({
-        email,
-        password,
-        options: { data: { full_name: fullName } },
-      });
+        const { data, error } = await client.auth.signUp({
+          email,
+          password,
+          options: { data: { full_name: fullName } },
+        });
 
-      if (error) {
-        showMessage(mapAuthError(error.message), "error");
-        submitBtn.disabled = false;
-        return;
+        if (error) {
+          showMessage(mapAuthError(error), "error");
+          submitBtn.disabled = false;
+          return;
+        }
+
+        // Supabase doesn't return an error for a pre-existing, already-
+        // confirmed email — as an anti-enumeration measure it responds with
+        // a user object whose `identities` array is empty instead.
+        if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+          showMessage("An account with this email already exists.", "error");
+          submitBtn.disabled = false;
+          return;
+        }
+
+        // If email confirmation is off, signUp already returns a session —
+        // create the profile row now. Otherwise login.html's first sign-in
+        // creates it (see the else-branch below).
+        if (data.session && data.user && window.XploroAuth) {
+          await window.XploroAuth.ensureProfile(data.user);
+        }
+
+        showMessage("Account created successfully.", "success");
+        form.querySelectorAll("input, button").forEach((el) => (el.disabled = true));
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 2000);
+      } else {
+        const email = form.querySelector('[name="email"]').value.trim();
+        const password = form.querySelector('[name="password"]').value;
+
+        const { data, error } = await client.auth.signInWithPassword({ email, password });
+
+        if (error) {
+          showMessage(mapAuthError(error), "error");
+          submitBtn.disabled = false;
+          return;
+        }
+
+        if (data.user && window.XploroAuth) {
+          await window.XploroAuth.ensureProfile(data.user);
+        }
+
+        showMessage("Login successful. Redirecting…", "success");
+        form.querySelectorAll("input, button").forEach((el) => (el.disabled = true));
+        setTimeout(() => {
+          window.location.href = "account.html";
+        }, 1200);
       }
-
-      // Supabase doesn't return an error for a pre-existing, already-
-      // confirmed email — as an anti-enumeration measure it responds with
-      // a user object whose `identities` array is empty instead.
-      if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
-        showMessage("An account with this email already exists.", "error");
-        submitBtn.disabled = false;
-        return;
-      }
-
-      // If email confirmation is off, signUp already returns a session —
-      // create the profile row now. Otherwise login.html's first sign-in
-      // creates it (see the else-branch below).
-      if (data.session && data.user && window.XploroAuth) {
-        await window.XploroAuth.ensureProfile(data.user);
-      }
-
-      showMessage("Account created successfully.", "success");
-      form.querySelectorAll("input, button").forEach((el) => (el.disabled = true));
-      setTimeout(() => {
-        window.location.href = "login.html";
-      }, 2000);
-    } else {
-      const email = form.querySelector('[name="email"]').value.trim();
-      const password = form.querySelector('[name="password"]').value;
-
-      const { data, error } = await client.auth.signInWithPassword({ email, password });
-
-      if (error) {
-        showMessage(mapAuthError(error.message), "error");
-        submitBtn.disabled = false;
-        return;
-      }
-
-      if (data.user && window.XploroAuth) {
-        await window.XploroAuth.ensureProfile(data.user);
-      }
-
-      showMessage("Login successful. Redirecting…", "success");
-      form.querySelectorAll("input, button").forEach((el) => (el.disabled = true));
-      setTimeout(() => {
-        window.location.href = "account.html";
-      }, 1200);
+    } catch (err) {
+      // A thrown exception here means the request never reached Supabase
+      // (e.g. offline) — reportValidity() already ruled out empty/malformed
+      // fields, so anything caught here is a genuine network failure.
+      showMessage(mapAuthError(err), "error");
+      submitBtn.disabled = false;
     }
   });
 
   /* ------------------------------------------------------------------ */
-  /* 2. Forgot Password — placeholder only.                               */
-  /*    Future: link to a dedicated reset-password flow/page.             */
-  /* ------------------------------------------------------------------ */
-  document.querySelectorAll("[data-auth-forgot-password]").forEach((link) => {
-    link.addEventListener("click", (e) => {
-      e.preventDefault();
-      // Intentionally a no-op for now — see comment above.
-    });
-  });
-
-  /* ------------------------------------------------------------------ */
-  /* 3. Password visibility toggle — pure UI, no backend involved.        */
+  /* 2. Password visibility toggle — pure UI, no backend involved.        */
   /* ------------------------------------------------------------------ */
   document.querySelectorAll("[data-auth-toggle-password]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -156,7 +161,7 @@
   });
 
   /* ------------------------------------------------------------------ */
-  /* 4. Signup only — live "passwords match" hint. Pure client-side UX,   */
+  /* 3. Signup only — live "passwords match" hint. Pure client-side UX,   */
   /*    not an authentication feature.                                    */
   /* ------------------------------------------------------------------ */
   const password = form.querySelector('[name="password"]');

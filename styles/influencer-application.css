@@ -142,7 +142,7 @@
   margin-top: var(--space-5);
 }
 .apply-success__back {
-  display: inline-block;
+  display: inline-flex;
   margin-top: var(--space-6);
 }
 
@@ -168,6 +168,74 @@
   margin-top: var(--space-5);
 }
 .apply-blocked__back {
-  display: inline-block;
+  display: inline-flex;
   margin-top: var(--space-6);
+}
+
+/* -------------------------------------------------------------------------
+   Instagram Ownership Verification (Phase 10) — shown right after submit,
+   and again for a returning applicant who hasn't confirmed the code yet.
+   Mirrors .apply-blocked's centered layout; only the code box + actions
+   are new.
+   ------------------------------------------------------------------------- */
+.apply-verify {
+  text-align: center;
+  padding: clamp(1rem, 0.6rem + 1.4vw, 1.5rem) 0;
+}
+.apply-verify__icon {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: var(--color-primary-subtle);
+  border: 1px solid var(--color-border-brand);
+  color: var(--violet-300);
+}
+.apply-verify__icon svg { width: 1.6rem; height: 1.6rem; }
+.apply-verify__title {
+  margin: var(--space-5) 0 0;
+  font-size: var(--fs-xl);
+}
+.apply-verify__desc {
+  margin: var(--space-3) auto 0;
+  max-width: 44ch;
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}
+
+.apply-verify__code-box {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-6);
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-border-brand);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--glow-brand);
+}
+.apply-verify__code {
+  font-family: var(--font-mono);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.08em;
+  color: var(--color-text-strong);
+}
+@media (max-width: 480px) {
+  .apply-verify__code-box {
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+  }
+}
+
+.apply-verify__confirm {
+  display: block;
+  width: fit-content;
+  margin: var(--space-6) auto 0;
 }

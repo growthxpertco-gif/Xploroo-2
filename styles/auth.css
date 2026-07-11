@@ -167,3 +167,47 @@
   text-decoration: none;
 }
 .auth-switch a:hover { color: var(--violet-200); }
+
+/* -------------------------------------------------------------------------
+   Result state — forgot-password.html's post-submit success screen, and
+   reset-password.html's invalid/expired-link gate. Mirrors the
+   `.apply-success`/`.apply-blocked` pattern used elsewhere on the site.
+   ------------------------------------------------------------------------- */
+.auth-result {
+  text-align: center;
+  padding: clamp(1rem, 0.6rem + 1.4vw, 1.5rem) 0;
+}
+.auth-result__icon {
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: 0 auto;
+  border-radius: 50%;
+}
+.auth-result__icon svg { width: 1.6rem; height: 1.6rem; }
+.auth-result__icon--success {
+  background: color-mix(in srgb, var(--color-success) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-success) 40%, transparent);
+  color: var(--color-success);
+}
+.auth-result__icon--error {
+  background: color-mix(in srgb, var(--color-danger) 16%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-danger) 40%, transparent);
+  color: var(--color-danger);
+}
+.auth-result__title {
+  margin: var(--space-5) 0 0;
+  font-size: var(--fs-xl);
+}
+.auth-result__desc {
+  margin: var(--space-3) auto 0;
+  max-width: 40ch;
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}
+.auth-result__back {
+  display: inline-flex;
+  margin-top: var(--space-6);
+}

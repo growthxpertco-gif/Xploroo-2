@@ -45,7 +45,7 @@
   color: var(--color-text-muted);
 }
 .dash-gate__pill { margin-top: var(--space-5); }
-.dash-gate__action { display: inline-block; margin-top: var(--space-6); }
+.dash-gate__action { display: inline-flex; margin-top: var(--space-6); }
 
 /* -------------------------------------------------------------------------
    Header

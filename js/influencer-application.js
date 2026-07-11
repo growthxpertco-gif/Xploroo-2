@@ -62,16 +62,90 @@
     });
   }
 
-  function renderBlocked(title, desc, pillState, backHref, backLabel) {
-    const pillHtml = pillState
-      ? `<span class="status-pill status-pill--${pillState} apply-blocked__pill">${pillState === "pending" ? "Pending Approval" : "Not Approved"}</span>`
-      : "";
+  /* ------------------------------------------------------------------ */
+  /* Phase 10 — Instagram Ownership Verification                          */
+  /* ------------------------------------------------------------------ */
+  async function copyVerificationCode(code, btn) {
+    const originalLabel = btn.innerHTML;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(code);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = code;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+    } catch (_) {
+      /* Clipboard unavailable — still tell the user something happened. */
+    }
+    btn.innerHTML = "&#9989; Copied!";
+    setTimeout(() => {
+      btn.innerHTML = originalLabel;
+    }, 1800);
+  }
+
+  // Fresh submission, or a returning applicant who hasn't confirmed the
+  // code yet — shows the code + "I've Added the Code" confirmation.
+  function renderVerificationRequired(application) {
+    card.innerHTML = `
+      <div class="apply-verify">
+        <span class="apply-verify__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M7 8h10M7 12h6M7 16h3"/></svg>
+        </span>
+        <h2 class="apply-verify__title">Instagram Verification Required</h2>
+        <p class="apply-verify__desc">To verify that you own this Instagram account, temporarily add the verification code below to your Instagram Bio.</p>
+
+        <div class="apply-verify__code-box">
+          <span class="apply-verify__code">${application.verification_code}</span>
+          <button class="btn btn--glass btn--pill btn--sm apply-verify__copy" type="button" data-apply-copy-code>&#128203; Copy Code</button>
+        </div>
+
+        <button class="btn btn--gradient btn--pill apply-verify__confirm" type="button" data-apply-confirm-verification>&#9989; I&rsquo;ve Added the Code</button>
+        <a class="btn btn--glass btn--pill apply-blocked__back" href="account.html">Back to My Account</a>
+      </div>`;
+
+    const copyBtn = card.querySelector("[data-apply-copy-code]");
+    copyBtn.addEventListener("click", () => copyVerificationCode(application.verification_code, copyBtn));
+
+    const confirmBtn = card.querySelector("[data-apply-confirm-verification]");
+    confirmBtn.addEventListener("click", async () => {
+      confirmBtn.disabled = true;
+      const { error } = await window.XploroApplications.submitVerification(application);
+      if (error) {
+        confirmBtn.disabled = false;
+        window.alert("Something went wrong. Please try again.");
+        return;
+      }
+      renderVerificationSubmitted();
+    });
+  }
+
+  // Applicant confirmed the code is in their bio — waiting on the admin's
+  // manual check now, nothing left for the applicant to do here.
+  function renderVerificationSubmitted() {
     card.innerHTML = `
       <div class="apply-blocked">
-        <h2 class="apply-blocked__title">${title}</h2>
-        <p class="apply-blocked__desc">${desc}</p>
-        ${pillHtml}
-        <a class="btn btn--gradient btn--pill apply-blocked__back" href="${backHref}">${backLabel}</a>
+        <h2 class="apply-blocked__title">Verification Submitted</h2>
+        <p class="apply-blocked__desc">We&rsquo;re checking your Instagram bio for the verification code. This usually doesn&rsquo;t take long &mdash; we&rsquo;ll be in touch soon.</p>
+        <span class="status-pill status-pill--info apply-blocked__pill">Verification Submitted</span>
+        <a class="btn btn--glass btn--pill apply-blocked__back" href="account.html">Back to My Account</a>
+      </div>`;
+  }
+
+  // Admin confirmed the code was found in the bio — ownership verified,
+  // application now just needs the admin's final Approve/Reject decision.
+  function renderVerified() {
+    card.innerHTML = `
+      <div class="apply-blocked">
+        <h2 class="apply-blocked__title">Instagram Verified</h2>
+        <p class="apply-blocked__desc">Your Instagram ownership has been verified. Your application is now awaiting final approval.</p>
+        <span class="status-pill status-pill--approved apply-blocked__pill">Verified</span>
+        <a class="btn btn--glass btn--pill apply-blocked__back" href="account.html">Back to My Account</a>
       </div>`;
   }
 
@@ -116,6 +190,7 @@
         <p class="influencer-success__subtitle">Welcome to the Xploroo Influencer Community.</p>
         <p class="influencer-success__message">You&rsquo;re now an official Xploroo Influencer. Get ready to travel the world, collaborate with exciting brands, connect with travelers, and earn through unforgettable experiences.</p>
         <span class="influencer-success__badge">&#10003; Verified Xploroo Influencer</span>
+        <p class="influencer-success__message">Your Instagram account has been verified successfully. You may now remove the verification code from your Instagram Bio.</p>
       </div>
 
       <section class="influencer-services" data-influencer-services>
@@ -160,31 +235,25 @@
     const submitBtn = form.querySelector(".apply-submit");
     submitBtn.disabled = true;
 
-    const data = new FormData(form);
-    const { error } = await window.XploroApplications.submitApplication({
-      fullName: data.get("fullName") || "",
-      followers: data.get("followers") || "",
-      instagram: data.get("instagram") || "",
-      niche: data.get("niche") || "",
-      bio: data.get("bio") || "",
+    const formData = new FormData(form);
+    const { data, error } = await window.XploroApplications.submitApplication({
+      fullName: formData.get("fullName") || "",
+      followers: formData.get("followers") || "",
+      instagram: formData.get("instagram") || "",
+      niche: formData.get("niche") || "",
+      bio: formData.get("bio") || "",
       profilePicture: profilePictureDataUrl,
     });
 
-    if (error) {
+    if (error || !data) {
       submitBtn.disabled = false;
       return;
     }
 
-    card.innerHTML = `
-      <div class="apply-success">
-        <span class="apply-success__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-        </span>
-        <h2 class="apply-success__title">Application Submitted Successfully.</h2>
-        <p class="apply-success__desc">Your application is under review.</p>
-        <span class="status-pill status-pill--pending apply-success__pill">Pending Approval</span>
-        <a class="btn btn--glass btn--pill apply-success__back" href="account.html">Back to My Account</a>
-      </div>`;
+    // Application submitted — instead of a plain "Pending Approval" screen,
+    // go straight into the Phase 10 Instagram ownership verification step
+    // (submitApplication() already generated a fresh verification_code).
+    renderVerificationRequired(data);
   });
 
   /* ------------------------------------------------------------------ */
@@ -209,13 +278,16 @@
 
     if (status === "pending") {
       formView.hidden = true;
-      renderBlocked(
-        "Application Already Under Review",
-        "You&rsquo;ve already submitted an application and it&rsquo;s currently being reviewed. We&rsquo;ll be in touch soon.",
-        "pending",
-        "account.html",
-        "Back to My Account"
-      );
+      // Phase 10 — a "pending" application always sits in one of three
+      // Instagram ownership verification sub-states until it's finally
+      // approved/rejected.
+      if (application.verification_status === "Verified") {
+        renderVerified();
+      } else if (application.verification_status === "Verification Submitted") {
+        renderVerificationSubmitted();
+      } else {
+        renderVerificationRequired(application);
+      }
       return;
     }
 

@@ -30,6 +30,15 @@
    each row's avatar_url from profiles so callers (admin.js,
    influencers-dynamic.js) never query profiles themselves.
 
+   Phase 10 — Instagram Ownership Verification: `application_status` itself
+   is untouched (still exactly "pending" | "approved" | "rejected", so every
+   existing "approved" gate across the site keeps working unmodified). A
+   parallel `verification_status` column ("Verification Required" ->
+   "Verification Submitted" -> "Verified") tracks the applicant's proof of
+   Instagram bio ownership, and approve() now refuses to run unless
+   verification_status is "Verified" — see submitVerification()/
+   verifyOwnership()/approve() below.
+
    Vanilla JS, no dependencies. Loaded with `defer`, after js/supabase.js.
    ========================================================================== */
 (function () {
@@ -50,6 +59,27 @@
       return null;
     }
     return data;
+  }
+
+  // Phase 10 — Instagram Ownership Verification. Every application gets a
+  // unique "XP-#####" code (retried on the rare collision, guarded by the
+  // `influencer_applications_verification_code_key` unique index) that the
+  // applicant must temporarily add to their Instagram bio before an admin
+  // can verify and approve the application. See submitApplication(),
+  // submitVerification() and verifyOwnership() below.
+  function generateVerificationCode() {
+    const digits = Math.floor(10000 + Math.random() * 90000);
+    return `XP-${digits}`;
+  }
+
+  async function uniqueVerificationCode() {
+    for (let attempt = 0; attempt < 8; attempt++) {
+      const candidate = generateVerificationCode();
+      const { data } = await client.from(TABLE).select("id").eq("verification_code", candidate).maybeSingle();
+      if (!data) return candidate;
+    }
+    // Astronomically unlikely fallback — still unique enough in practice.
+    return `${generateVerificationCode()}-${Date.now().toString(36).toUpperCase()}`;
   }
 
   function slugify(name) {
@@ -76,6 +106,7 @@
     if (!user) return { data: null, error: new Error("Not signed in.") };
 
     const username = await uniqueUsername(slugify(fields.fullName), user.id);
+    const verificationCode = await uniqueVerificationCode();
 
     const payload = {
       user_id: user.id,
@@ -89,6 +120,14 @@
       submitted_at: new Date().toISOString(),
       reviewed_at: null,
       reviewed_by: null,
+      // Phase 10 — every (re-)submission starts a fresh Instagram ownership
+      // verification cycle, so a resubmission after a rejection can't reuse
+      // a stale/removed code.
+      verification_code: verificationCode,
+      verification_status: "Verification Required",
+      verification_submitted_at: null,
+      verified_at: null,
+      verified_by: null,
     };
 
     const { data, error } = await client.from(TABLE).upsert(payload, { onConflict: "user_id" }).select().maybeSingle();
@@ -165,17 +204,59 @@
     if (error) console.error("[Xploroo] Failed to sync profile after review:", error.message);
   }
 
+  // Phase 10 — the applicant confirms they've added the verification code
+  // to their Instagram bio. This never approves anything by itself; it just
+  // hands the application to the admin queue for a manual bio check.
+  async function submitVerification(application) {
+    const { data, error } = await client
+      .from(TABLE)
+      .update({ verification_status: "Verification Submitted", verification_submitted_at: new Date().toISOString() })
+      .eq("id", application.id)
+      .eq("verification_status", "Verification Required")
+      .select()
+      .maybeSingle();
+    if (error) {
+      console.error("[Xploroo] Failed to submit Instagram verification:", error.message);
+      return { data: null, error };
+    }
+    return { data, error: null };
+  }
+
+  // Admin-only: confirms the verification code was found in the applicant's
+  // Instagram bio. Conditional on the row still being "Verification
+  // Submitted" so a duplicate click can't double-process it.
+  async function verifyOwnership(application) {
+    const { data, error } = await client
+      .from(TABLE)
+      .update({ verification_status: "Verified", verified_at: new Date().toISOString(), verified_by: "Admin" })
+      .eq("id", application.id)
+      .eq("verification_status", "Verification Submitted")
+      .select()
+      .maybeSingle();
+    if (error) {
+      console.error("[Xploroo] Failed to verify Instagram ownership:", error.message);
+      return { data: null, error };
+    }
+    return { data, error: null };
+  }
+
   async function approve(application) {
+    // Approval rule (Phase 10): an application can only be approved once
+    // its Instagram ownership has been verified by an admin.
+    if (!application || application.verification_status !== "Verified") {
+      return { ok: false, error: "This Instagram account has not been verified." };
+    }
+
     const { error } = await client
       .from(TABLE)
       .update({ application_status: "approved", reviewed_at: new Date().toISOString(), reviewed_by: "Admin" })
       .eq("id", application.id);
     if (error) {
       console.error("[Xploroo] Failed to approve application:", error.message);
-      return false;
+      return { ok: false, error: error.message };
     }
     await syncProfile(application.user_id, "traveler,influencer", "approved");
-    return true;
+    return { ok: true };
   }
 
   async function reject(application) {
@@ -197,6 +278,8 @@
     getPendingApplications,
     getApprovedApplications,
     getApprovedByIdOrUsername,
+    submitVerification,
+    verifyOwnership,
     approve,
     reject,
   };
