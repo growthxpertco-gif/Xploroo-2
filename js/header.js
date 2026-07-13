@@ -349,7 +349,7 @@
         // Single source of truth: public.profiles.avatar_url (see
         // js/supabase.js) — falls back to the first-letter avatar.
         if (profile && profile.avatar_url) {
-          avatarEl.innerHTML = `<img src="${profile.avatar_url}" alt="" />`;
+          avatarEl.innerHTML = `<img src="${window.XploroSecurity.sanitizeUrl(profile.avatar_url, { allowData: true })}" alt="" />`;
         } else {
           avatarEl.textContent = displayName.trim().charAt(0).toUpperCase() || "?";
         }
@@ -439,7 +439,7 @@
         // Same single source of truth as the mobile panel and account.html:
         // public.profiles.avatar_url — falls back to the first-letter avatar.
         if (profile && profile.avatar_url) {
-          dAvatarEl.innerHTML = `<img src="${profile.avatar_url}" alt="" />`;
+          dAvatarEl.innerHTML = `<img src="${window.XploroSecurity.sanitizeUrl(profile.avatar_url, { allowData: true })}" alt="" />`;
         } else {
           dAvatarEl.textContent = displayName.trim().charAt(0).toUpperCase() || "?";
         }

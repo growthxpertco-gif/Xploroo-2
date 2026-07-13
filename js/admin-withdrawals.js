@@ -68,9 +68,8 @@
 
   function cardTemplate(w, profile, availableBalance) {
     const initial = esc((profile.full_name || "?").trim().charAt(0).toUpperCase());
-    // TODO(security): validate this is an http(s) URL before rendering as src
     const photoHtml = profile.avatar_url
-      ? `<img class="admin-card__photo" src="${profile.avatar_url}" alt="" />`
+      ? `<img class="admin-card__photo" src="${window.XploroSecurity.sanitizeUrl(profile.avatar_url, { allowData: true })}" alt="" />`
       : `<span class="admin-card__photo" aria-hidden="true">${initial}</span>`;
 
     const actionsHtml =
@@ -126,36 +125,19 @@
   }
 
   async function render() {
-    const withdrawals = await window.XploroWithdrawals.getAllWithdrawals();
+    // Phase 20 — perf/security: withdrawal_requests (bank account details)
+    // is no longer publicly readable via RLS — this now goes through
+    // admin-api (service role), which also joins profile + available
+    // balance server-side so no separate round trips are needed here.
+    const { ok, data: body } = await window.XploroAdminAuth.callAdminApi("get-all-withdrawals", {});
+    const withdrawals = (ok && body && body.data) || [];
     if (!withdrawals.length) {
       renderEmpty();
       return;
     }
 
-    const influencerIds = Array.from(new Set(withdrawals.map((w) => w.influencer_id)));
-    const [profiles, allEarnings, allWithdrawals] = await Promise.all([
-      window.XploroAuth.getProfilesByUserIds(influencerIds),
-      window.XploroEarnings ? window.XploroEarnings.getAllEarnings() : [],
-      // Reuse the list we already have instead of a second round trip.
-      Promise.resolve(withdrawals),
-    ]);
-
-    // Available Balance per influencer = Total Paid Earnings − Paid
-    // Withdrawals, same derived formula as the influencer's own dashboard
-    // (js/withdrawals.js getAvailableBalance) — computed here in bulk so the
-    // list doesn't fire one query per card.
-    function balanceFor(influencerId) {
-      const paidEarnings = allEarnings
-        .filter((e) => e.influencer_id === influencerId && e.status === "Paid")
-        .reduce((sum, e) => sum + Number(e.amount || 0), 0);
-      const paidWithdrawals = allWithdrawals
-        .filter((w) => w.influencer_id === influencerId && w.status === "Paid")
-        .reduce((sum, w) => sum + Number(w.amount || 0), 0);
-      return Math.max(0, paidEarnings - paidWithdrawals);
-    }
-
     root.innerHTML = `<div class="admin-list">${withdrawals
-      .map((w) => cardTemplate(w, profiles.get(w.influencer_id) || {}, balanceFor(w.influencer_id)))
+      .map((w) => cardTemplate(w, w.profile || {}, w.availableBalance))
       .join("")}</div>`;
 
     root.querySelectorAll("[data-wd-approve]").forEach((btn) => {

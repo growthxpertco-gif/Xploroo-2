@@ -15,6 +15,8 @@
   const mount = page.querySelector('[data-dash-section="support"]');
   if (!mount) return;
 
+  const esc = window.XploroSecurity.escapeHtml;
+
   const ICON_TICKET =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="2" y="13" width="5" height="7" rx="2"/><rect x="17" y="13" width="5" height="7" rx="2"/></svg>';
 
@@ -42,11 +44,11 @@
         <div class="dash-ticket-form__grid">
           <label class="field">
             <span class="field__label">Full Name</span>
-            <input class="input" type="text" name="fullName" value="${(profile && profile.full_name) || ""}" required />
+            <input class="input" type="text" name="fullName" value="${esc(profile && profile.full_name)}" required />
           </label>
           <label class="field">
             <span class="field__label">Email</span>
-            <input class="input" type="email" name="email" value="${(user && user.email) || ""}" required />
+            <input class="input" type="email" name="email" value="${esc(user && user.email)}" required />
           </label>
           <label class="field">
             <span class="field__label">Phone Number</span>
@@ -84,9 +86,9 @@
             (t) => `
           <article class="dash-ticket-card">
             <div>
-              <h4 class="dash-ticket-card__subject">${t.subject}</h4>
-              <p class="dash-ticket-card__meta">${t.priority} Priority &middot; ${formatDate(t.created_at)}</p>
-              ${t.admin_reply ? `<p class="dash-ticket-card__meta" style="margin-top:var(--space-2);color:var(--color-text-strong)">Reply: ${t.admin_reply}</p>` : ""}
+              <h4 class="dash-ticket-card__subject">${esc(t.subject)}</h4>
+              <p class="dash-ticket-card__meta">${esc(t.priority)} Priority &middot; ${formatDate(t.created_at)}</p>
+              ${t.admin_reply ? `<p class="dash-ticket-card__meta" style="margin-top:var(--space-2);color:var(--color-text-strong)">Reply: ${esc(t.admin_reply)}</p>` : ""}
             </div>
             ${statusPill(t.status)}
           </article>`

@@ -76,12 +76,13 @@
   }
 
   function cardTemplate(service, saved) {
+    const esc = window.XploroSecurity.escapeHtml;
     const enabled = !!(saved && saved.enabled);
-    const price = saved && saved.price != null ? saved.price : "";
-    const duration = saved && saved.duration != null ? saved.duration : "";
-    const date = saved && saved.date != null ? saved.date : "";
-    const time = saved && saved.time != null ? saved.time : "";
-    const location = saved && saved.location != null ? saved.location : "";
+    const price = esc(saved && saved.price != null ? saved.price : "");
+    const duration = esc(saved && saved.duration != null ? saved.duration : "");
+    const date = esc(saved && saved.date != null ? saved.date : "");
+    const time = esc(saved && saved.time != null ? saved.time : "");
+    const location = esc(saved && saved.location != null ? saved.location : "");
     return `
       <article class="service-card" data-service-card="${service.key}">
         <div class="service-card__head">

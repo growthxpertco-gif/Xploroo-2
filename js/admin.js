@@ -44,10 +44,12 @@
 
   function nicheLabel(value) {
     if (!value) return "&mdash;";
-    return value
-      .split("-")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
+    return esc(
+      value
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ")
+    );
   }
 
   function verificationPill(status) {
@@ -57,9 +59,8 @@
   }
 
   function actionsHtml(app) {
-    // TODO(security): validate this is an http(s) URL before rendering as href
     const openInstagramHtml = app.instagram_profile_link
-      ? `<a class="btn btn--glass btn--pill" href="${app.instagram_profile_link}" target="_blank" rel="noopener noreferrer">Open Instagram</a>`
+      ? `<a class="btn btn--glass btn--pill" href="${window.XploroSecurity.sanitizeUrl(app.instagram_profile_link)}" target="_blank" rel="noopener noreferrer">Open Instagram</a>`
       : "";
 
     if (app.verification_status === "Verified") {
@@ -92,9 +93,8 @@
 
   function cardTemplate(app) {
     const initial = esc((app.full_name || "?").trim().charAt(0).toUpperCase());
-    // TODO(security): validate this is an http(s) URL before rendering as src
     const photoHtml = app.avatar_url
-      ? `<img class="admin-card__photo" src="${app.avatar_url}" alt="" />`
+      ? `<img class="admin-card__photo" src="${window.XploroSecurity.sanitizeUrl(app.avatar_url, { allowData: true })}" alt="" />`
       : `<span class="admin-card__photo" aria-hidden="true">${initial}</span>`;
 
     return `
@@ -115,8 +115,7 @@
           <div class="admin-card__links">
             ${
               app.instagram_profile_link
-                ? // TODO(security): validate this is an http(s) URL before rendering as href
-                  `<a href="${app.instagram_profile_link}" target="_blank" rel="noopener noreferrer">Instagram Profile</a>`
+                ? `<a href="${window.XploroSecurity.sanitizeUrl(app.instagram_profile_link)}" target="_blank" rel="noopener noreferrer">Instagram Profile</a>`
                 : ""
             }
           </div>

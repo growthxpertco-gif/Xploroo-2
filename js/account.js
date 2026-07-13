@@ -80,9 +80,7 @@
   /* ------------------------------------------------------------------ */
   function renderAvatar(avatarUrl, fallbackLetter) {
     if (avatarUrl) {
-      // TODO(security): validate this is an http(s) URL (or data: URL from
-      // our own upload flow) before rendering as src
-      avatarEl.innerHTML = `<img src="${avatarUrl}" alt="" />`;
+      avatarEl.innerHTML = `<img src="${window.XploroSecurity.sanitizeUrl(avatarUrl, { allowData: true })}" alt="" />`;
     } else {
       avatarEl.textContent = fallbackLetter;
     }

@@ -57,6 +57,34 @@ window.XploroSecurity = {
       .replace(/'/g, "&#39;");
   },
 
+  // Sanitizes a database-sourced value used as an href/src (e.g.
+  // instagram_profile_link, package_image) before it's interpolated into
+  // innerHTML. escapeHtml() alone isn't enough here — it stops HTML/attribute
+  // breakout, but a value like `javascript:alert(document.cookie)` is valid,
+  // fully-escaped attribute text that still executes when clicked/loaded.
+  // This only allows http(s) links and (for images) data: URLs; anything
+  // else — javascript:, vbscript:, data:text/html, malformed input — is
+  // replaced with a harmless "#" so the link/image simply does nothing
+  // instead of running attacker script.
+  sanitizeUrl: function (value, options) {
+    var opts = options || {};
+    var allowData = !!opts.allowData;
+    var str = String(value || "").trim();
+    if (!str) return "";
+    try {
+      // A protocol-relative or bare-path URL has no scheme to check, and
+      // the URL constructor requires a base for those — resolve against
+      // location.origin only to classify the scheme; the returned value
+      // is still the original (trimmed) string, never the resolved one.
+      var resolved = new URL(str, window.location.origin);
+      if (resolved.protocol === "http:" || resolved.protocol === "https:") return str;
+      if (allowData && resolved.protocol === "data:" && /^data:image\//i.test(str)) return str;
+    } catch (_) {
+      /* malformed URL — falls through to the safe default below */
+    }
+    return "#";
+  },
+
   // Client-side first line of defense for file uploads (avatar/KYC docs,
   // both stored as base64 data URLs — see profiles.avatar_url /
   // kyc_submissions.*_url). The <input accept> attribute is only a UI hint

@@ -19,6 +19,8 @@
   const mount = page.querySelector('[data-dash-section="calendar"]');
   if (!mount) return;
 
+  const esc = window.XploroSecurity.escapeHtml;
+
   const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   function toDateKey(d) {
@@ -54,8 +56,8 @@
               <span class="dash-cal-card__date-month">${new Date(dateKey).toLocaleDateString(undefined, { month: "short" })}</span>
             </div>
             <div>
-              <h3 class="dash-cal-card__title">${b.service_name}</h3>
-              <p class="dash-cal-card__desc">${b.traveler_name || "Traveler"} &middot; ${b.preferred_time || "Time TBD"}</p>
+              <h3 class="dash-cal-card__title">${esc(b.service_name)}</h3>
+              <p class="dash-cal-card__desc">${esc(b.traveler_name) || "Traveler"} &middot; ${esc(b.preferred_time) || "Time TBD"}</p>
               <span class="dash-cal-card__type">${statusPill(b.booking_status)}</span>
             </div>
           </article>`

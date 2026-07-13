@@ -21,6 +21,8 @@
   const mount = page.querySelector('[data-dash-section="bookings"]');
   if (!mount) return;
 
+  const esc = window.XploroSecurity.escapeHtml;
+
   const ICON_INBOX =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/></svg>';
 
@@ -62,16 +64,16 @@
       <article class="dash-invite-card" data-booking-card="${booking.booking_id}">
         <div class="dash-invite-card__head">
           <div>
-            <h3 class="dash-invite-card__name">${booking.traveler_name || "Traveler"}</h3>
-            <p class="dash-invite-card__destination">${booking.service_name}</p>
+            <h3 class="dash-invite-card__name">${esc(booking.traveler_name) || "Traveler"}</h3>
+            <p class="dash-invite-card__destination">${esc(booking.service_name)}</p>
           </div>
           ${statusPill(booking.booking_status)}
         </div>
         <dl class="dash-invite-card__meta">
           <div><dt>Date</dt><dd>${formatDate(booking.booking_date)}</dd></div>
-          <div><dt>Time</dt><dd>${booking.preferred_time || "&mdash;"}</dd></div>
+          <div><dt>Time</dt><dd>${esc(booking.preferred_time) || "&mdash;"}</dd></div>
           <div><dt>Price</dt><dd>${formatMoney(booking.service_price)}</dd></div>
-          <div><dt>Duration</dt><dd>${booking.duration || "&mdash;"}</dd></div>
+          <div><dt>Duration</dt><dd>${esc(booking.duration) || "&mdash;"}</dd></div>
         </dl>
         ${actionsHtml}
       </article>`;

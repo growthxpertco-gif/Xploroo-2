@@ -23,6 +23,7 @@
 
   const gate = page.querySelector("[data-mb-gate]");
   const content = page.querySelector("[data-mb-content]");
+  const esc = window.XploroSecurity.escapeHtml;
 
   const ICON_INBOX =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/></svg>';
@@ -68,7 +69,7 @@
     const shortId = String(b.booking_id).slice(0, 8).toUpperCase();
     const canReview = b.booking_status === "Completed";
     const mediaHtml = b.package_image
-      ? `<img class="mb-card__img" src="${b.package_image}" alt="" />`
+      ? `<img class="mb-card__img" src="${window.XploroSecurity.sanitizeUrl(b.package_image, { allowData: true })}" alt="" />`
       : `<div class="mb-card__img mb-card__img--placeholder" aria-hidden="true">${ICON_INBOX}</div>`;
 
     return `
@@ -76,7 +77,7 @@
         <div class="mb-card__media">${mediaHtml}</div>
         <div class="mb-card__body">
           <div class="mb-card__head">
-            <h3 class="mb-card__title">${b.package_name}</h3>
+            <h3 class="mb-card__title">${esc(b.package_name)}</h3>
             <div class="mb-card__pills">
               ${statusPill(b.booking_status, BOOKING_STATUS_MAP)}
               ${statusPill(b.payment_status, PAYMENT_STATUS_MAP)}
@@ -96,12 +97,12 @@
           </div>
           <div class="mb-card__details" data-mb-details hidden>
             <dl class="mb-card__meta">
-              <div><dt>Destination</dt><dd>${b.destination || "&mdash;"}</dd></div>
-              <div><dt>Duration</dt><dd>${b.duration || "&mdash;"}</dd></div>
-              <div><dt>Traveler</dt><dd>${b.traveler_full_name || "&mdash;"}</dd></div>
-              <div><dt>Contact</dt><dd>${b.traveler_email || "&mdash;"} ${b.traveler_phone ? "&middot; " + b.traveler_phone : ""}</dd></div>
-              ${b.coupon_code ? `<div><dt>Coupon</dt><dd>${b.coupon_code}</dd></div>` : ""}
-              ${b.special_requests ? `<div><dt>Special Requests</dt><dd>${b.special_requests}</dd></div>` : ""}
+              <div><dt>Destination</dt><dd>${esc(b.destination) || "&mdash;"}</dd></div>
+              <div><dt>Duration</dt><dd>${esc(b.duration) || "&mdash;"}</dd></div>
+              <div><dt>Traveler</dt><dd>${esc(b.traveler_full_name) || "&mdash;"}</dd></div>
+              <div><dt>Contact</dt><dd>${esc(b.traveler_email) || "&mdash;"} ${b.traveler_phone ? "&middot; " + esc(b.traveler_phone) : ""}</dd></div>
+              ${b.coupon_code ? `<div><dt>Coupon</dt><dd>${esc(b.coupon_code)}</dd></div>` : ""}
+              ${b.special_requests ? `<div><dt>Special Requests</dt><dd>${esc(b.special_requests)}</dd></div>` : ""}
             </dl>
           </div>
         </div>
@@ -125,8 +126,8 @@
   /* ------------------------------------------------------------------ */
   function influencerCardTemplate(b) {
     const avatarHtml = b.influencer_avatar_url
-      ? `<img class="mb-card__avatar" src="${b.influencer_avatar_url}" alt="" />`
-      : `<div class="mb-card__avatar mb-card__avatar--placeholder" aria-hidden="true">${(b.influencer_name || "?").trim().charAt(0).toUpperCase()}</div>`;
+      ? `<img class="mb-card__avatar" src="${window.XploroSecurity.sanitizeUrl(b.influencer_avatar_url, { allowData: true })}" alt="" />`
+      : `<div class="mb-card__avatar mb-card__avatar--placeholder" aria-hidden="true">${esc((b.influencer_name || "?").trim().charAt(0).toUpperCase())}</div>`;
 
     return `
       <article class="mb-card mb-card--influencer" data-mb-card>
@@ -135,8 +136,8 @@
             <div class="mb-card__influencer">
               ${avatarHtml}
               <div>
-                <h3 class="mb-card__title">${b.influencer_name}</h3>
-                <p class="mb-card__subtitle">${b.service_name}</p>
+                <h3 class="mb-card__title">${esc(b.influencer_name)}</h3>
+                <p class="mb-card__subtitle">${esc(b.service_name)}</p>
               </div>
             </div>
             <div class="mb-card__pills">
@@ -146,9 +147,9 @@
           </div>
           <dl class="mb-card__meta">
             <div><dt>Date</dt><dd>${formatDate(b.booking_date)}</dd></div>
-            <div><dt>Time</dt><dd>${b.preferred_time || "&mdash;"}</dd></div>
+            <div><dt>Time</dt><dd>${esc(b.preferred_time) || "&mdash;"}</dd></div>
             <div><dt>Amount</dt><dd>${formatMoney(b.service_price)}</dd></div>
-            <div><dt>Duration</dt><dd>${b.duration || "&mdash;"}</dd></div>
+            <div><dt>Duration</dt><dd>${esc(b.duration) || "&mdash;"}</dd></div>
           </dl>
           <div class="mb-card__actions">
             <button class="btn btn--glass btn--pill" type="button" data-mb-toggle>View Details</button>
@@ -156,7 +157,7 @@
           <div class="mb-card__details" data-mb-details hidden>
             <dl class="mb-card__meta">
               <div><dt>Booked On</dt><dd>${formatDateTime(b.created_at)}</dd></div>
-              ${b.notes ? `<div><dt>Notes</dt><dd>${b.notes}</dd></div>` : ""}
+              ${b.notes ? `<div><dt>Notes</dt><dd>${esc(b.notes)}</dd></div>` : ""}
             </dl>
           </div>
         </div>

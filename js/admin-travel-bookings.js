@@ -86,7 +86,11 @@
   }
 
   async function render() {
-    const bookings = await window.XploroTravelBookings.getAllBookings();
+    // Phase 20 — security: travel_bookings (traveler full name/email/phone)
+    // is no longer publicly readable via RLS — reads now go through
+    // admin-api (service role).
+    const { ok, data: body } = await window.XploroAdminAuth.callAdminApi("get-all-travel-bookings", {});
+    const bookings = (ok && body && body.data) || [];
     if (!bookings.length) {
       renderEmpty();
       return;

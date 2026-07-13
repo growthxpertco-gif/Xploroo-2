@@ -79,7 +79,11 @@
   }
 
   async function render() {
-    const tickets = await window.XploroSupportTickets.getAllTickets();
+    // Phase 20 — security: support_tickets (name/email/phone/description)
+    // is no longer publicly readable via RLS — reads now go through
+    // admin-api (service role).
+    const { ok, data: body } = await window.XploroAdminAuth.callAdminApi("get-all-tickets", {});
+    const tickets = (ok && body && body.data) || [];
     if (!tickets.length) {
       renderEmpty();
       return;

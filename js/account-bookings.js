@@ -20,6 +20,8 @@
   const list = page.querySelector("[data-account-bookings-list]");
   if (!section || !list) return;
 
+  const esc = window.XploroSecurity.escapeHtml;
+
   function formatDate(iso) {
     if (!iso) return "—";
     try {
@@ -44,7 +46,7 @@
     return `
       <div class="account-profile__row">
         <div>
-          <dt>${b.influencer_name} &mdash; ${b.service_name}</dt>
+          <dt>${esc(b.influencer_name)} &mdash; ${esc(b.service_name)}</dt>
           <dd>${formatDate(b.booking_date)} &middot; ${formatMoney(b.service_price)} &middot; ${statusPill(b.booking_status)}</dd>
         </div>
       </div>`;

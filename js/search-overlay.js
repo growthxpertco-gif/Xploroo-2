@@ -237,16 +237,14 @@
   /* existing search-overlay.css visuals/animations apply unchanged.      */
   /* ------------------------------------------------------------------ */
   function cardMarkup(item) {
-    // TODO(security): validate this is an http(s) URL before rendering as src
     const imageTag = item.image
-      ? `<img class="search-result__image" src="${item.image}" alt="" />`
+      ? `<img class="search-result__image" src="${window.XploroSecurity.sanitizeUrl(item.image, { allowData: true })}" alt="" />`
       : `<span class="search-result__image" aria-hidden="true"></span>`;
     const metaParts = item.meta.map((m, i) =>
       i === 0 ? `<span>${esc(m)}</span>` : `<span class="search-result__meta-dot" aria-hidden="true"></span><span>${esc(m)}</span>`
     );
     return `
-      <!-- TODO(security): validate this is a same-origin/relative or http(s) URL before rendering as href (item.href can come from a DB page_url column) -->
-      <a class="search-result" href="${item.href}">
+      <a class="search-result" href="${window.XploroSecurity.sanitizeUrl(item.href)}">
         ${imageTag}
         <div class="search-result__body">
           <span class="search-result__title">${esc(item.title)}</span>

@@ -79,9 +79,8 @@
   }
 
   function cardTemplate(app) {
-    // TODO(security): validate this is an http(s) URL before rendering as src
     const mediaHtml = app.avatar_url
-      ? `<img class="ip-card__img" src="${app.avatar_url}" alt="" />`
+      ? `<img class="ip-card__img" src="${window.XploroSecurity.sanitizeUrl(app.avatar_url, { allowData: true })}" alt="" />`
       : `<div class="ip-card__img ip-card__img--placeholder">${PLACEHOLDER_ICON}</div>`;
 
     // Book Now always opens the one reusable influencer-profile.html for
@@ -99,8 +98,7 @@
           <div class="ip-card__socials">
             ${
               app.instagram_profile_link
-                ? // TODO(security): validate this is an http(s) URL before rendering as href
-                  `<a class="btn btn--outline btn--sm ip-card__social" href="${app.instagram_profile_link}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a>`
+                ? `<a class="btn btn--outline btn--sm ip-card__social" href="${window.XploroSecurity.sanitizeUrl(app.instagram_profile_link)}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a>`
                 : ""
             }
           </div>
