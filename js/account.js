@@ -283,7 +283,7 @@
 
     if (avatarEditBtn && avatarInput) {
       avatarEditBtn.addEventListener("click", () => avatarInput.click());
-      avatarInput.addEventListener("change", () => {
+      avatarInput.addEventListener("change", async () => {
         const file = avatarInput.files[0];
         if (!file) return;
 
@@ -294,13 +294,15 @@
           return;
         }
 
+        // Phase 21 — perf: show an instant local preview (no DB write yet)
+        // while the file uploads to Storage in the background, then persist
+        // only the short returned URL — never the raw file bytes.
         const reader = new FileReader();
-        reader.onload = async () => {
-          const dataUrl = String(reader.result || "");
-          renderAvatar(dataUrl, ""); // show the new photo immediately
-          await window.XploroAuth.updateAvatar(user.id, dataUrl);
-        };
+        reader.onload = () => renderAvatar(String(reader.result || ""), "");
         reader.readAsDataURL(file);
+
+        const publicUrl = await window.XploroAuth.uploadAvatarFile(user.id, file);
+        if (publicUrl) await window.XploroAuth.updateAvatar(user.id, publicUrl);
       });
     }
 

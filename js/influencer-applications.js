@@ -200,9 +200,13 @@
   // deliberately untouched, since admins must still see/manage a hidden
   // applicant.
   async function getApprovedApplications() {
+    // Phase 21 — perf: influencers.html's grid (and the search overlay's
+    // Influencers tab) only ever read these fields — select("*") was
+    // pulling every column, including several never rendered here
+    // (verification_code, reviewed_by, etc.).
     const { data, error } = await client
       .from(TABLE)
-      .select("*")
+      .select("user_id, username, full_name, instagram_followers, short_bio, instagram_profile_link, niche")
       .eq("application_status", "approved")
       .eq("public_visibility", true)
       .order("submitted_at", { ascending: false });

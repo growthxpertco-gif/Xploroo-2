@@ -129,7 +129,19 @@
         const data = await res.json().catch(() => ({}));
 
         if (!res.ok || !data.token) {
-          showError(data.error || "Invalid username or password.");
+          // Distinguish "wrong credentials" from every other failure mode
+          // (rate-limited, server error, malformed response) instead of
+          // collapsing them all into the same misleading message — makes a
+          // real backend/deployment problem immediately diagnosable instead
+          // of looking identical to a typo'd password.
+          if (res.status === 401) {
+            showError(data.error || "Invalid username or password.");
+          } else if (res.status === 429) {
+            showError(data.error || "Too many attempts. Please try again later.");
+          } else {
+            console.error("[Xploroo Admin] Unexpected admin-login response:", res.status, data);
+            showError(data.error || `Login failed (server error ${res.status}). Please try again.`);
+          }
           if (submitBtn) submitBtn.disabled = false;
           return;
         }

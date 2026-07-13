@@ -78,9 +78,16 @@
     return `${num} Followers`;
   }
 
-  function cardTemplate(app) {
+  // Phase 21 — perf: the first row (roughly the widest common column count)
+  // renders eagerly so it doesn't wait an extra round-trip to start
+  // loading — everything below the fold is lazy-loaded instead, since it
+  // isn't visible until the user scrolls anyway.
+  const EAGER_CARD_COUNT = 4;
+
+  function cardTemplate(app, index) {
+    const loadingAttr = index < EAGER_CARD_COUNT ? "" : ' loading="lazy"';
     const mediaHtml = app.avatar_url
-      ? `<img class="ip-card__img" src="${window.XploroSecurity.sanitizeUrl(app.avatar_url, { allowData: true })}" alt="" />`
+      ? `<img class="ip-card__img" src="${window.XploroSecurity.sanitizeUrl(app.avatar_url, { allowData: true })}" alt=""${loadingAttr} />`
       : `<div class="ip-card__img ip-card__img--placeholder">${PLACEHOLDER_ICON}</div>`;
 
     // Book Now always opens the one reusable influencer-profile.html for
@@ -141,7 +148,7 @@
     const data = await window.XploroApplications.getApprovedApplications();
     if (!data.length) return;
 
-    grid.insertAdjacentHTML("beforeend", data.map(cardTemplate).join(""));
+    grid.insertAdjacentHTML("beforeend", data.map((app, i) => cardTemplate(app, i)).join(""));
 
     // Booking handoff — before following "Book Now", persist the target
     // influencer's id/username so influencer-profile.html can still recover

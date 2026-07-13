@@ -223,6 +223,32 @@ window.XploroSecurity = {
     return true;
   }
 
+  // Phase 21 — perf: uploads the file to the public 'avatars' Storage
+  // bucket (path <userId>/avatar.<ext>, upsert so re-uploading replaces
+  // the same object) and returns its public URL — the caller then persists
+  // that short URL via updateAvatar(), instead of the old approach of
+  // reading the whole file as a base64 data URL and storing it directly in
+  // the database row. Storage RLS restricts writes to the caller's own
+  // <userId> folder, so this can safely run with the anon-key client.
+  async function uploadAvatarFile(userId, file) {
+    if (!userId || !file) return null;
+    const extByType = { "image/png": "png", "image/gif": "gif", "image/webp": "webp" };
+    const ext = extByType[file.type] || "jpg";
+    const path = `${userId}/avatar.${ext}`;
+    const { error: uploadError } = await client.storage.from("avatars").upload(path, file, {
+      contentType: file.type,
+      upsert: true,
+    });
+    if (uploadError) {
+      console.error("[Xploroo] uploadAvatarFile failed:", uploadError.message);
+      return null;
+    }
+    const { data } = client.storage.from("avatars").getPublicUrl(path);
+    // Cache-bust so the browser doesn't keep showing the previous photo at
+    // the same URL after a re-upload (upsert reuses the same object path).
+    return data.publicUrl + "?t=" + Date.now();
+  }
+
   async function getProfilesByUserIds(userIds) {
     const ids = Array.from(new Set((userIds || []).filter(Boolean)));
     if (!ids.length) return new Map();
@@ -244,5 +270,6 @@ window.XploroSecurity = {
     getAvatarsByUserIds,
     getProfilesByUserIds,
     updateAvatar,
+    uploadAvatarFile,
   };
 })();

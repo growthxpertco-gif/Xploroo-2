@@ -38,6 +38,7 @@
   /* picture everywhere on the site — this page keeps no copy of its own.*/
   /* ------------------------------------------------------------------ */
   let profilePictureDataUrl = "";
+  let profilePictureFile = null;
   const avatarInput = form.querySelector("[data-apply-avatar-input]");
   const avatarTrigger = form.querySelector("[data-apply-avatar-trigger]");
   const avatarPreview = form.querySelector("[data-apply-avatar-preview]");
@@ -62,6 +63,7 @@
       }
 
       avatarName.textContent = file.name;
+      profilePictureFile = file;
       const reader = new FileReader();
       reader.onload = () => {
         profilePictureDataUrl = String(reader.result || "");
@@ -292,6 +294,16 @@
     const submitBtn = form.querySelector(".apply-submit");
     submitBtn.disabled = true;
 
+    // Phase 21 — perf: upload to Storage only now, at actual submit time
+    // (same moment the old base64 value was persisted), so an abandoned
+    // form never writes a picture — only a completed submission does,
+    // exactly as before.
+    let profilePictureUrl = "";
+    if (profilePictureFile) {
+      const user = await window.XploroAuth.getUser();
+      if (user) profilePictureUrl = (await window.XploroAuth.uploadAvatarFile(user.id, profilePictureFile)) || "";
+    }
+
     const formData = new FormData(form);
     const { data, error } = await window.XploroApplications.submitApplication({
       fullName: formData.get("fullName") || "",
@@ -299,7 +311,7 @@
       instagram: formData.get("instagram") || "",
       niche: formData.get("niche") || "",
       bio: formData.get("bio") || "",
-      profilePicture: profilePictureDataUrl,
+      profilePicture: profilePictureUrl,
     });
 
     if (error || !data) {
