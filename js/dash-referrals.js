@@ -19,6 +19,7 @@
   if (!mount) return;
 
   const formatINR = (n) => "₹" + Math.round(Number(n) || 0).toLocaleString("en-IN");
+  const esc = window.XploroSecurity.escapeHtml;
 
   function renderPending() {
     mount.innerHTML = `<div class="dash-empty"><p>Setting up your referral code&hellip;</p></div>`;
@@ -37,10 +38,10 @@
         <div class="referral-panel__code-card">
           <div class="referral-panel__code-block">
             <p class="referral-panel__label">Your Referral Code</p>
-            <p class="referral-panel__code">${stats.code}</p>
+            <p class="referral-panel__code">${esc(stats.code)}</p>
           </div>
           <div class="referral-panel__link-row">
-            <input class="input referral-panel__link-input" type="text" readonly value="${stats.link}" data-referral-link aria-label="Referral link" />
+            <input class="input referral-panel__link-input" type="text" readonly value="${esc(stats.link)}" data-referral-link aria-label="Referral link" />
             <button class="btn btn--outline btn--sm" type="button" data-referral-copy>Copy Link</button>
             <button class="btn btn--primary btn--sm" type="button" data-referral-share>Share</button>
           </div>

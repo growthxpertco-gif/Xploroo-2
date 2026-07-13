@@ -20,6 +20,7 @@
   if (!root || !window.XploroReferrals || !window.supabaseClient) return;
 
   const client = window.supabaseClient;
+  const esc = window.XploroSecurity.escapeHtml;
   const formatINR = (n) => "₹" + Math.round(Number(n) || 0).toLocaleString("en-IN");
 
   const ICON_GIFT =
@@ -69,13 +70,13 @@
   settingsForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const data = new FormData(settingsForm);
-    const { error } = await window.XploroReferrals.updateSettings({
+    const { ok } = await window.XploroAdminAuth.callAdminApi("update-referral-settings", {
       customerDiscountPercent: data.get("customerDiscountPercent"),
       influencerCommissionPercent: data.get("influencerCommissionPercent"),
     });
     settingsMessage.classList.remove("admin-announce-message--success", "admin-announce-message--error");
-    settingsMessage.textContent = error ? "Failed to save settings." : "✅ Settings saved.";
-    settingsMessage.classList.add(error ? "admin-announce-message--error" : "admin-announce-message--success");
+    settingsMessage.textContent = ok ? "✅ Settings saved." : "Failed to save settings.";
+    settingsMessage.classList.add(ok ? "admin-announce-message--success" : "admin-announce-message--error");
   });
 
   /* ------------------------------------------------------------------ */
@@ -123,8 +124,8 @@
           <article class="admin-card">
             <div class="admin-card__body">
               <div class="admin-card__head">
-                <h2 class="admin-card__name">${nameById.get(s.influencerId) || "Unnamed Influencer"}</h2>
-                <span class="status-pill status-pill--info">${s.code}</span>
+                <h2 class="admin-card__name">${esc(nameById.get(s.influencerId)) || "Unnamed Influencer"}</h2>
+                <span class="status-pill status-pill--info">${esc(s.code)}</span>
               </div>
               <dl class="admin-card__meta">
                 <div><dt>Referral Bookings</dt><dd>${s.bookingsCount}</dd></div>
@@ -154,7 +155,7 @@
         btn.disabled = true;
         const ids = btn.dataset.commissionIds.split(",").filter(Boolean);
         for (const id of ids) {
-          await window.XploroReferrals.markCommissionPaid(id);
+          await window.XploroAdminAuth.callAdminApi("mark-commission-paid", { commissionId: id });
         }
         renderTable();
       });

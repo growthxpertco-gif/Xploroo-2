@@ -31,6 +31,8 @@
   const ICON_INBOX =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v10m0 0-4-4m4 4 4-4"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>';
 
+  const esc = window.XploroSecurity.escapeHtml;
+
   function renderEmpty() {
     root.innerHTML = `
       <div class="admin-empty">
@@ -65,7 +67,8 @@
   }
 
   function cardTemplate(w, profile, availableBalance) {
-    const initial = (profile.full_name || "?").trim().charAt(0).toUpperCase();
+    const initial = esc((profile.full_name || "?").trim().charAt(0).toUpperCase());
+    // TODO(security): validate this is an http(s) URL before rendering as src
     const photoHtml = profile.avatar_url
       ? `<img class="admin-card__photo" src="${profile.avatar_url}" alt="" />`
       : `<span class="admin-card__photo" aria-hidden="true">${initial}</span>`;
@@ -90,9 +93,9 @@
         : w.status === "Paid"
         ? `
         <dl class="admin-card__meta">
-          <div><dt>Approved By</dt><dd>${w.approved_by || "Admin"}</dd></div>
+          <div><dt>Approved By</dt><dd>${esc(w.approved_by) || "Admin"}</dd></div>
           <div><dt>Approved On</dt><dd>${formatDate(w.approved_at)}</dd></div>
-          <div><dt>Transaction Reference</dt><dd>${w.transaction_reference || "&mdash;"}</dd></div>
+          <div><dt>Transaction Reference</dt><dd>${esc(w.transaction_reference) || "&mdash;"}</dd></div>
         </dl>`
         : "";
 
@@ -101,19 +104,19 @@
         ${photoHtml}
         <div class="admin-card__body">
           <div class="admin-card__head">
-            <h2 class="admin-card__name">${profile.full_name || "Unnamed Influencer"}</h2>
+            <h2 class="admin-card__name">${esc(profile.full_name) || "Unnamed Influencer"}</h2>
             ${statusPill(w.status)}
           </div>
-          <p class="pay-card__service">${profile.email || "&mdash;"}</p>
+          <p class="pay-card__service">${esc(profile.email) || "&mdash;"}</p>
 
           <dl class="admin-card__meta">
             <div><dt>Amount Requested</dt><dd>${formatMoney(w.amount)}</dd></div>
             <div><dt>Available Balance</dt><dd>${formatMoney(availableBalance)}</dd></div>
             <div><dt>Payment Method</dt><dd>Bank Transfer</dd></div>
-            <div><dt>Bank Account Holder</dt><dd>${w.bank_account_holder || "&mdash;"}</dd></div>
-            <div><dt>Bank Name</dt><dd>${w.bank_name || "&mdash;"}</dd></div>
-            <div><dt>Account Number</dt><dd>${maskAccountNumber(w.bank_account_number)}</dd></div>
-            <div><dt>IFSC Code</dt><dd>${w.bank_ifsc || "&mdash;"}</dd></div>
+            <div><dt>Bank Account Holder</dt><dd>${esc(w.bank_account_holder) || "&mdash;"}</dd></div>
+            <div><dt>Bank Name</dt><dd>${esc(w.bank_name) || "&mdash;"}</dd></div>
+            <div><dt>Account Number</dt><dd>${esc(maskAccountNumber(w.bank_account_number))}</dd></div>
+            <div><dt>IFSC Code</dt><dd>${esc(w.bank_ifsc) || "&mdash;"}</dd></div>
             <div><dt>Request Date</dt><dd>${formatDate(w.requested_at)}</dd></div>
           </dl>
 
@@ -159,20 +162,11 @@
       btn.addEventListener("click", async () => {
         btn.disabled = true;
         const id = btn.dataset.wdApprove;
-        const w = withdrawals.find((item) => item.id === id);
-        const { data, error } = await window.XploroWithdrawals.approveWithdrawal(id);
-        if (error) {
+        const { ok, error } = await window.XploroAdminAuth.callAdminApi("approve-withdrawal", { withdrawalId: id });
+        if (!ok) {
           btn.disabled = false;
-          window.alert(error.message || "Failed to approve this withdrawal.");
+          window.alert(error || "Failed to approve this withdrawal.");
           return;
-        }
-        if (window.XploroNotifications && w) {
-          window.XploroNotifications.create({
-            userId: w.influencer_id,
-            type: "withdrawal_approved",
-            title: "Withdrawal Approved",
-            message: `Your withdrawal request for ${formatMoney(w.amount).replace(/&#8377;/, "₹")} has been approved and paid.`,
-          });
         }
         render();
       });
@@ -194,25 +188,14 @@
       btn.addEventListener("click", async () => {
         btn.disabled = true;
         const id = btn.dataset.wdRejectConfirm;
-        const w = withdrawals.find((item) => item.id === id);
         const reasonEl = root.querySelector(`[data-wd-reject-reason="${id}"]`);
         const reason = reasonEl ? reasonEl.value.trim() : "";
 
-        const { error } = await window.XploroWithdrawals.rejectWithdrawal(id);
-        if (error) {
+        const { ok, error } = await window.XploroAdminAuth.callAdminApi("reject-withdrawal", { withdrawalId: id, reason });
+        if (!ok) {
           btn.disabled = false;
-          window.alert(error.message || "Failed to reject this withdrawal.");
+          window.alert(error || "Failed to reject this withdrawal.");
           return;
-        }
-        if (window.XploroNotifications && w) {
-          window.XploroNotifications.create({
-            userId: w.influencer_id,
-            type: "withdrawal_rejected",
-            title: "Withdrawal Rejected",
-            message: reason
-              ? `Your withdrawal request for ${formatMoney(w.amount).replace(/&#8377;/, "₹")} was rejected: ${reason}`
-              : `Your withdrawal request for ${formatMoney(w.amount).replace(/&#8377;/, "₹")} was rejected. The amount remains available in your balance.`,
-          });
         }
         render();
       });

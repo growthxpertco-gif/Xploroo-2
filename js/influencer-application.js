@@ -19,6 +19,7 @@
 
   const formView = card.querySelector("[data-apply-form-view]");
   const form = card.querySelector("[data-apply-form]");
+  const esc = window.XploroSecurity.escapeHtml;
 
   /* ------------------------------------------------------------------ */
   /* Instagram Followers — numeric input only.                            */
@@ -52,11 +53,19 @@
         return;
       }
 
+      const check = window.XploroSecurity.validateUploadFile(file, { maxSizeMB: 5 });
+      if (!check.ok) {
+        window.alert(check.error);
+        avatarInput.value = "";
+        avatarName.textContent = "No file chosen";
+        return;
+      }
+
       avatarName.textContent = file.name;
       const reader = new FileReader();
       reader.onload = () => {
         profilePictureDataUrl = String(reader.result || "");
-        avatarPreview.innerHTML = `<img src="${profilePictureDataUrl}" alt="" />`;
+        avatarPreview.innerHTML = `<img src="${window.XploroSecurity.escapeHtml(profilePictureDataUrl)}" alt="" />`;
       };
       reader.readAsDataURL(file);
     });
@@ -101,7 +110,7 @@
         <p class="apply-verify__desc">To verify that you own this Instagram account, temporarily add the verification code below to your Instagram Bio.</p>
 
         <div class="apply-verify__code-box">
-          <span class="apply-verify__code">${application.verification_code}</span>
+          <span class="apply-verify__code">${esc(application.verification_code)}</span>
           <button class="btn btn--glass btn--pill btn--sm apply-verify__copy" type="button" data-apply-copy-code>&#128203; Copy Code</button>
         </div>
 

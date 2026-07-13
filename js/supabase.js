@@ -36,6 +36,49 @@
    Vanilla JS (non-module), no bundler. Loaded with `defer`, after the
    Supabase CDN `<script>` tag.
    ========================================================================== */
+
+// Phase 20 — security hardening. Shared HTML-escaping helper used by every
+// render function sitewide (dash-*.js, admin-*.js, and public pages) that
+// interpolates database-sourced strings (names, bios, messages, notes,
+// subjects, etc.) into innerHTML. Defined standalone, outside the IIFE
+// below, so it's available even on the rare page where the Supabase client
+// itself fails to initialize. Escaping the 5 characters that can start a
+// new tag/attribute/entity is sufficient for safe interpolation inside
+// HTML text content and quoted attribute values, which is the only context
+// this codebase's template strings ever use.
+window.XploroSecurity = {
+  escapeHtml: function (value) {
+    if (value == null) return "";
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  },
+
+  // Client-side first line of defense for file uploads (avatar/KYC docs,
+  // both stored as base64 data URLs — see profiles.avatar_url /
+  // kyc_submissions.*_url). The <input accept> attribute is only a UI hint
+  // any user can bypass, so the real enforcement is a matching CHECK
+  // constraint on each column (MIME-type allowlist + size cap) — this just
+  // gives the user an immediate, friendly error instead of a failed save.
+  // Never includes image/svg+xml (SVG can carry embedded scripts).
+  validateUploadFile: function (file, options) {
+    var opts = options || {};
+    var allowedTypes = opts.allowedTypes || ["image/jpeg", "image/png", "image/gif", "image/webp"];
+    var maxSizeMB = opts.maxSizeMB || 5;
+    if (!file) return { ok: false, error: "No file selected." };
+    if (allowedTypes.indexOf(file.type) === -1) {
+      return { ok: false, error: "Unsupported file type. Please upload a " + allowedTypes.join(", ") + " file." };
+    }
+    if (file.size > maxSizeMB * 1024 * 1024) {
+      return { ok: false, error: "File is too large. Maximum size is " + maxSizeMB + "MB." };
+    }
+    return { ok: true };
+  },
+};
+
 (function () {
   "use strict";
 

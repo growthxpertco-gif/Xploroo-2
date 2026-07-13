@@ -22,6 +22,8 @@
   const ICON_INBOX =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/></svg>';
 
+  const esc = window.XploroSecurity.escapeHtml;
+
   function emptyState(message) {
     return `<div class="dash-empty"><span class="dash-empty__icon" aria-hidden="true">${ICON_INBOX}</span><p>${message}</p></div>`;
   }
@@ -76,7 +78,7 @@
           </label>
           <label class="field">
             <span class="field__label">Bank Account (verified)</span>
-            <input class="input" type="text" value="${kycApproved ? `${kyc.bank_name || ""} &middot; ${kyc.bank_account_number || ""}` : "Not verified yet"}" disabled />
+            <input class="input" type="text" value="${kycApproved ? `${esc(kyc.bank_name)} &middot; ${esc(kyc.bank_account_number)}` : "Not verified yet"}" disabled />
           </label>
           <label class="field field--full">
             <span class="field__label">Notes <span class="field__hint" style="display:inline">(optional)</span></span>
@@ -102,7 +104,7 @@
                 <td>${formatMoney(w.amount)}</td>
                 <td>${formatDate(w.requested_at)}</td>
                 <td>${statusPill(w.status)}</td>
-                <td>${w.transaction_reference || "&mdash;"}</td>
+                <td>${esc(w.transaction_reference) || "&mdash;"}</td>
               </tr>`
               )
               .join("")}

@@ -1,13 +1,16 @@
 /* ==========================================================================
    XPLOROO · Forgot Password
-   forgot-password.js — Drives forgot-password.html using Supabase Auth's
-   official resetPasswordForEmail() flow. No custom email system, no
-   password storage, no localStorage — Supabase emails the reset link and
-   redirects the user to reset-password.html with a recovery session.
-
-   Security: never reveals whether an email address has an account. Every
-   syntactically valid submission ends in the same generic success screen,
-   even if Supabase's response implies the address doesn't exist.
+   forgot-password.js — Drives forgot-password.html. Before sending anything,
+   asks the check-email-exists Supabase Edge Function (server-side, holds
+   the service role key — never exposed here) whether the entered address
+   has an Xploroo account:
+     - exists   -> calls Supabase Auth's resetPasswordForEmail(), shows the
+                   "reset link sent" success screen.
+     - !exists  -> never calls resetPasswordForEmail(), shows
+                   "This email is not registered with Xploroo."
+   No custom email system, no password storage, no localStorage — Supabase
+   emails the reset link and redirects the user to reset-password.html with
+   a recovery session.
    Vanilla JS, no dependencies. Loaded with `defer`, after js/supabase.js.
    ========================================================================== */
 (function () {
@@ -54,7 +57,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
         </span>
         <h2 class="auth-result__title">&#9989; Password reset link sent.</h2>
-        <p class="auth-result__desc">Please check your email inbox and spam folder.</p>
+        <p class="auth-result__desc">Please check your email.</p>
         <a class="btn btn--gradient btn--pill btn--lg auth-result__back" href="login.html">Return to Login</a>
       </div>`;
   }
@@ -72,34 +75,44 @@
     if (!form.reportValidity()) return;
 
     submitBtn.disabled = true;
-    showMessage("Sending reset link…", "success");
+    showMessage("Checking…", "success");
 
     try {
+      // Server-side existence check (check-email-exists Edge Function) —
+      // holds the service role key only in its own environment, never in
+      // this file or any frontend bundle. Determines whether we're allowed
+      // to call resetPasswordForEmail() at all.
+      const { data: checkData, error: checkError } = await client.functions.invoke("check-email-exists", {
+        body: { email },
+      });
+
+      if (checkError) {
+        showMessage(friendlyError(checkError), "error");
+        submitBtn.disabled = false;
+        return;
+      }
+
+      if (!checkData || checkData.exists !== true) {
+        showMessage("This email is not registered with Xploroo.", "error");
+        submitBtn.disabled = false;
+        return;
+      }
+
+      showMessage("Sending reset link…", "success");
+
       const { error } = await client.auth.resetPasswordForEmail(email, {
         redirectTo: "https://growthxpertco-gif.github.io/Xploroo-2/reset-password.html",
       });
 
       if (error) {
-        const msg = (error.message || "").toLowerCase();
-        // Only surface errors that are about the request itself (bad
-        // format, rate limited) — anything else (including a hypothetical
-        // "user not found") still falls through to the generic success
-        // screen so this page never confirms/denies account existence.
-        if (msg.includes("rate limit") || msg.includes("too many") || error.status === 429) {
-          showMessage(friendlyError(error), "error");
-          submitBtn.disabled = false;
-          return;
-        }
-        if (msg.includes("valid email") || msg.includes("invalid email") || msg.includes("unable to validate email")) {
-          showMessage(friendlyError(error), "error");
-          submitBtn.disabled = false;
-          return;
-        }
+        showMessage(friendlyError(error), "error");
+        submitBtn.disabled = false;
+        return;
       }
 
       renderSuccess();
     } catch (err) {
-      // A thrown exception here means the request never reached Supabase.
+      // A thrown exception here means a request never reached Supabase.
       showMessage(friendlyError(err), "error");
       submitBtn.disabled = false;
     }

@@ -1,1 +1,8 @@
 /.claude
+
+# Never commit secrets/credentials, even if one is added locally later.
+.env
+.env.*
+*.pem
+*.key
+supabase/.temp

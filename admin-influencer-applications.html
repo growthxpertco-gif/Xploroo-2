@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://ryljttolhnvyynkfwuju.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Review and approve Xploroo Influencer applications." />
   <title>Influencer Applications | Xploroo Admin</title>
@@ -28,7 +30,10 @@
   <script>
     (function () {
       try {
-        if (sessionStorage.getItem("xploroo-admin-session") !== "true") {
+        var raw = sessionStorage.getItem("xploroo-admin-session");
+        var parsed = raw ? JSON.parse(raw) : null;
+        var valid = parsed && parsed.token && parsed.expiresAt && new Date(parsed.expiresAt) > new Date();
+        if (!valid) {
           window.location.replace("admin-login.html");
         }
       } catch (_) {

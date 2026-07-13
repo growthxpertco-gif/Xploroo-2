@@ -18,6 +18,8 @@
   const ICON_INBOX =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>';
 
+  const esc = window.XploroSecurity.escapeHtml;
+
   function renderEmpty() {
     root.innerHTML = `
       <div class="admin-empty">
@@ -46,24 +48,24 @@
       <article class="admin-card" data-admin-ticket-card="${t.id}">
         <div class="admin-card__body">
           <div class="admin-card__head">
-            <h2 class="admin-card__name">${t.subject}</h2>
+            <h2 class="admin-card__name">${esc(t.subject)}</h2>
             ${statusPill(t.status)}
           </div>
 
           <dl class="admin-card__meta">
-            <div><dt>Ticket ID</dt><dd>${t.id.slice(0, 8)}</dd></div>
-            <div><dt>Influencer</dt><dd>${t.full_name || "&mdash;"}</dd></div>
-            <div><dt>Email</dt><dd>${t.email || "&mdash;"}</dd></div>
-            <div><dt>Phone</dt><dd>${t.phone || "&mdash;"}</dd></div>
-            <div><dt>Priority</dt><dd>${t.priority}</dd></div>
+            <div><dt>Ticket ID</dt><dd>${esc(t.id.slice(0, 8))}</dd></div>
+            <div><dt>Influencer</dt><dd>${esc(t.full_name) || "&mdash;"}</dd></div>
+            <div><dt>Email</dt><dd>${esc(t.email) || "&mdash;"}</dd></div>
+            <div><dt>Phone</dt><dd>${esc(t.phone) || "&mdash;"}</dd></div>
+            <div><dt>Priority</dt><dd>${esc(t.priority)}</dd></div>
             <div><dt>Date</dt><dd>${formatDate(t.created_at)}</dd></div>
           </dl>
 
-          <p style="margin-top:var(--space-4);font-size:var(--fs-sm);color:var(--color-text-muted)">${t.description || ""}</p>
+          <p style="margin-top:var(--space-4);font-size:var(--fs-sm);color:var(--color-text-muted)">${esc(t.description) || ""}</p>
 
           <label class="field" style="margin-top:var(--space-4)">
             <span class="field__label">Reply</span>
-            <textarea class="input" rows="2" data-ticket-reply-input="${t.id}" placeholder="Write a reply&hellip;">${t.admin_reply || ""}</textarea>
+            <textarea class="input" rows="2" data-ticket-reply-input="${t.id}" placeholder="Write a reply&hellip;">${esc(t.admin_reply) || ""}</textarea>
           </label>
 
           <div class="admin-card__actions">
@@ -89,14 +91,14 @@
       btn.addEventListener("click", async () => {
         btn.disabled = true;
         const input = root.querySelector(`[data-ticket-reply-input="${btn.dataset.ticketReply}"]`);
-        await window.XploroSupportTickets.updateTicket(btn.dataset.ticketReply, { admin_reply: input.value.trim() });
+        await window.XploroAdminAuth.callAdminApi("update-ticket", { ticketId: btn.dataset.ticketReply, adminReply: input.value.trim() });
         render();
       });
     });
     root.querySelectorAll("[data-ticket-status]").forEach((btn) => {
       btn.addEventListener("click", async () => {
         btn.disabled = true;
-        await window.XploroSupportTickets.updateTicket(btn.dataset.ticketStatus, { status: btn.dataset.status });
+        await window.XploroAdminAuth.callAdminApi("update-ticket", { ticketId: btn.dataset.ticketStatus, status: btn.dataset.status });
         render();
       });
     });

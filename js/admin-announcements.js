@@ -27,6 +27,8 @@
   const ICON_MEGAPHONE =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3Z"/><path d="M11.6 16.8 13 22h-3.6l-1.2-5"/></svg>';
 
+  const esc = window.XploroSecurity.escapeHtml;
+
   function formatDateTime(iso) {
     if (!iso) return "&mdash;";
     try {
@@ -120,10 +122,10 @@
           <article class="admin-card">
             <div class="admin-card__body">
               <div class="admin-card__head">
-                <h2 class="admin-card__name">${a.title}</h2>
-                ${typePill(a.type)}
+                <h2 class="admin-card__name">${esc(a.title)}</h2>
+                ${typePill(esc(a.type))}
               </div>
-              <p style="margin:var(--space-2) 0 var(--space-4);font-size:var(--fs-sm);color:var(--color-text-muted)">${a.message}</p>
+              <p style="margin:var(--space-2) 0 var(--space-4);font-size:var(--fs-sm);color:var(--color-text-muted)">${esc(a.message)}</p>
               <dl class="admin-card__meta">
                 <div><dt>Sent</dt><dd>${formatDateTime(a.created_at)}</dd></div>
                 <div><dt>Total Influencers</dt><dd>${totalInfluencers}</dd></div>
@@ -150,9 +152,9 @@
     submitBtn.disabled = true;
     showMessage("Sending…", "success");
 
-    const { error } = await window.XploroAnnouncements.create({ title, message: msg, type });
-    if (error) {
-      showMessage("Something went wrong. Please try again.", "error");
+    const { ok, error } = await window.XploroAdminAuth.callAdminApi("create-announcement", { title, message: msg, type });
+    if (!ok) {
+      showMessage(error || "Something went wrong. Please try again.", "error");
       submitBtn.disabled = false;
       return;
     }

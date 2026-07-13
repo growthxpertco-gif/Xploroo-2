@@ -69,6 +69,8 @@
   const PLACEHOLDER_ICON =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>';
 
+  const esc = window.XploroSecurity.escapeHtml;
+
   function formatFollowers(n) {
     const num = Number(n) || 0;
     if (num >= 1000000) return `${(num / 1000000).toFixed(1).replace(/\.0$/, "")}M Followers`;
@@ -77,6 +79,7 @@
   }
 
   function cardTemplate(app) {
+    // TODO(security): validate this is an http(s) URL before rendering as src
     const mediaHtml = app.avatar_url
       ? `<img class="ip-card__img" src="${app.avatar_url}" alt="" />`
       : `<div class="ip-card__img ip-card__img--placeholder">${PLACEHOLDER_ICON}</div>`;
@@ -87,14 +90,19 @@
     const profileHref = `influencer-profile.html?${app.username ? `username=${encodeURIComponent(app.username)}` : `id=${encodeURIComponent(app.user_id)}`}`;
 
     return `
-      <article class="ip-card" data-ip-niche="${app.niche || "other"}" data-ip-dynamic aria-label="View ${app.full_name || "influencer"}&rsquo;s profile">
+      <article class="ip-card" data-ip-niche="${esc(app.niche) || "other"}" data-ip-dynamic aria-label="View ${esc(app.full_name) || "influencer"}&rsquo;s profile">
         <div class="ip-card__media">${mediaHtml}</div>
         <div class="ip-card__body">
-          <h3 class="ip-card__name">${app.full_name || "Xploroo Influencer"}</h3>
-          <p class="ip-card__bio">${app.short_bio || ""}</p>
+          <h3 class="ip-card__name">${esc(app.full_name) || "Xploroo Influencer"}</h3>
+          <p class="ip-card__bio">${esc(app.short_bio) || ""}</p>
           <p class="ip-card__followers">${formatFollowers(app.instagram_followers)}</p>
           <div class="ip-card__socials">
-            ${app.instagram_profile_link ? `<a class="btn btn--outline btn--sm ip-card__social" href="${app.instagram_profile_link}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a>` : ""}
+            ${
+              app.instagram_profile_link
+                ? // TODO(security): validate this is an http(s) URL before rendering as href
+                  `<a class="btn btn--outline btn--sm ip-card__social" href="${app.instagram_profile_link}" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a>`
+                : ""
+            }
           </div>
           <a class="btn btn--gradient btn--pill ip-card__book" href="${profileHref}" data-ip-book>Book Now</a>
         </div>

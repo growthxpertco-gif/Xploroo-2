@@ -30,6 +30,7 @@
   if (!page || !window.XploroApplications) return;
 
   const listEl = page.querySelector("[data-admin-list]");
+  const esc = window.XploroSecurity.escapeHtml;
 
   function renderEmpty() {
     listEl.innerHTML = `
@@ -56,6 +57,7 @@
   }
 
   function actionsHtml(app) {
+    // TODO(security): validate this is an http(s) URL before rendering as href
     const openInstagramHtml = app.instagram_profile_link
       ? `<a class="btn btn--glass btn--pill" href="${app.instagram_profile_link}" target="_blank" rel="noopener noreferrer">Open Instagram</a>`
       : "";
@@ -89,7 +91,8 @@
   }
 
   function cardTemplate(app) {
-    const initial = (app.full_name || "?").trim().charAt(0).toUpperCase();
+    const initial = esc((app.full_name || "?").trim().charAt(0).toUpperCase());
+    // TODO(security): validate this is an http(s) URL before rendering as src
     const photoHtml = app.avatar_url
       ? `<img class="admin-card__photo" src="${app.avatar_url}" alt="" />`
       : `<span class="admin-card__photo" aria-hidden="true">${initial}</span>`;
@@ -99,18 +102,23 @@
         ${photoHtml}
         <div class="admin-card__body">
           <div class="admin-card__head">
-            <h2 class="admin-card__name">${app.full_name || "Unnamed Applicant"}</h2>
+            <h2 class="admin-card__name">${esc(app.full_name) || "Unnamed Applicant"}</h2>
             ${verificationPill(app.verification_status)}
           </div>
 
           <dl class="admin-card__meta">
             <div><dt>Instagram Followers</dt><dd>${app.instagram_followers != null ? app.instagram_followers : "&mdash;"}</dd></div>
             <div><dt>Niche</dt><dd>${nicheLabel(app.niche)}</dd></div>
-            <div><dt>Verification Code</dt><dd>${app.verification_code || "&mdash;"}</dd></div>
+            <div><dt>Verification Code</dt><dd>${esc(app.verification_code) || "&mdash;"}</dd></div>
           </dl>
 
           <div class="admin-card__links">
-            ${app.instagram_profile_link ? `<a href="${app.instagram_profile_link}" target="_blank" rel="noopener noreferrer">Instagram Profile</a>` : ""}
+            ${
+              app.instagram_profile_link
+                ? // TODO(security): validate this is an http(s) URL before rendering as href
+                  `<a href="${app.instagram_profile_link}" target="_blank" rel="noopener noreferrer">Instagram Profile</a>`
+                : ""
+            }
           </div>
 
           ${actionsHtml(app)}
@@ -132,10 +140,10 @@
       btn.addEventListener("click", async () => {
         btn.disabled = true;
         const app = applications.find((a) => a.id === btn.dataset.adminVerify);
-        const { error } = await window.XploroApplications.verifyOwnership(app);
-        if (error) {
+        const { ok, error } = await window.XploroAdminAuth.callAdminApi("verify-ownership", { applicationId: app.id });
+        if (!ok) {
           btn.disabled = false;
-          window.alert(error.message || "Failed to verify this application.");
+          window.alert(error || "Failed to verify this application.");
           return;
         }
         render();
@@ -146,7 +154,7 @@
       btn.addEventListener("click", async () => {
         btn.disabled = true;
         const app = applications.find((a) => a.id === btn.dataset.adminApprove);
-        const { ok, error } = await window.XploroApplications.approve(app);
+        const { ok, error } = await window.XploroAdminAuth.callAdminApi("approve-application", { applicationId: app.id });
         if (!ok) {
           btn.disabled = false;
           window.alert(error || "This Instagram account has not been verified.");
@@ -159,7 +167,7 @@
       btn.addEventListener("click", async () => {
         btn.disabled = true;
         const app = applications.find((a) => a.id === btn.dataset.adminReject);
-        await window.XploroApplications.reject(app);
+        await window.XploroAdminAuth.callAdminApi("reject-application", { applicationId: app.id });
         render();
       });
     });

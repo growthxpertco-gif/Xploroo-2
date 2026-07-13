@@ -52,6 +52,8 @@
   let lastFocused = null;
   let activeTab = tabs.length ? tabs[0].dataset.searchTab : null;
 
+  const esc = window.XploroSecurity.escapeHtml;
+
   /* ------------------------------------------------------------------ */
   /* Lazy Supabase loader — same URLs/pattern as js/header.js's           */
   /* ensureSupabaseReady, duplicated here because most pages that render  */
@@ -235,15 +237,19 @@
   /* existing search-overlay.css visuals/animations apply unchanged.      */
   /* ------------------------------------------------------------------ */
   function cardMarkup(item) {
+    // TODO(security): validate this is an http(s) URL before rendering as src
     const imageTag = item.image
       ? `<img class="search-result__image" src="${item.image}" alt="" />`
       : `<span class="search-result__image" aria-hidden="true"></span>`;
-    const metaParts = item.meta.map((m, i) => (i === 0 ? `<span>${m}</span>` : `<span class="search-result__meta-dot" aria-hidden="true"></span><span>${m}</span>`));
+    const metaParts = item.meta.map((m, i) =>
+      i === 0 ? `<span>${esc(m)}</span>` : `<span class="search-result__meta-dot" aria-hidden="true"></span><span>${esc(m)}</span>`
+    );
     return `
+      <!-- TODO(security): validate this is a same-origin/relative or http(s) URL before rendering as href (item.href can come from a DB page_url column) -->
       <a class="search-result" href="${item.href}">
         ${imageTag}
         <div class="search-result__body">
-          <span class="search-result__title">${item.title}</span>
+          <span class="search-result__title">${esc(item.title)}</span>
           <span class="search-result__meta">${metaParts.join("")}</span>
         </div>
         <span class="search-result__cta" aria-hidden="true">

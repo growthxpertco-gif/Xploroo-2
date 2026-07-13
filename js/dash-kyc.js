@@ -118,6 +118,22 @@
           nameEl.textContent = "No file chosen";
           return;
         }
+
+        // Selfie must be a real photo; the ID documents may also be a PDF
+        // scan. Never SVG (can carry embedded scripts) or any non-allowed
+        // type — matches the CHECK constraint on kyc_submissions.*_url.
+        const allowedTypes =
+          key === "selfieUrl"
+            ? ["image/jpeg", "image/png", "image/gif", "image/webp"]
+            : ["image/jpeg", "image/png", "image/gif", "image/webp", "application/pdf"];
+        const check = window.XploroSecurity.validateUploadFile(file, { allowedTypes, maxSizeMB: 5 });
+        if (!check.ok) {
+          window.alert(check.error);
+          input.value = "";
+          nameEl.textContent = "No file chosen";
+          return;
+        }
+
         nameEl.textContent = file.name;
         uploads[key] = await readFileAsDataUrl(file);
       });

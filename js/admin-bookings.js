@@ -20,6 +20,8 @@
   const ICON_INBOX =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>';
 
+  const esc = window.XploroSecurity.escapeHtml;
+
   function renderEmpty() {
     root.innerHTML = `
       <div class="admin-empty">
@@ -53,13 +55,13 @@
       <article class="admin-card" data-admin-booking-card="${b.booking_id}">
         <div class="admin-card__body">
           <div class="admin-card__head">
-            <h2 class="admin-card__name">${b.influencer_name} &mdash; ${b.service_name}</h2>
+            <h2 class="admin-card__name">${esc(b.influencer_name)} &mdash; ${esc(b.service_name)}</h2>
             ${statusPill(b.booking_status)}
           </div>
 
           <dl class="admin-card__meta">
-            <div><dt>Booking ID</dt><dd>${b.booking_id.slice(0, 8)}</dd></div>
-            <div><dt>Traveler</dt><dd>${b.traveler_name || "&mdash;"}</dd></div>
+            <div><dt>Booking ID</dt><dd>${esc(b.booking_id.slice(0, 8))}</dd></div>
+            <div><dt>Traveler</dt><dd>${esc(b.traveler_name) || "&mdash;"}</dd></div>
             <div><dt>Price</dt><dd>${formatMoney(b.service_price)}</dd></div>
             <div><dt>Booking Date</dt><dd>${formatDate(b.booking_date)}</dd></div>
           </dl>

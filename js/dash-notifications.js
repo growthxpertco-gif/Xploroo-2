@@ -31,6 +31,8 @@
   const ICON_CLOSE =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>';
 
+  const esc = window.XploroSecurity.escapeHtml;
+
   function emptyState() {
     return `<div class="dash-empty"><span class="dash-empty__icon" aria-hidden="true">${ICON_BELL}</span><p>No notifications yet.</p></div>`;
   }
@@ -75,7 +77,7 @@
     const badgeHtml = item.is_read
       ? '<span class="status-pill status-pill--approved">Read</span>'
       : '<span class="status-pill status-pill--pending">Unread</span>';
-    const typeHtml = item.typeLabel ? `<span class="status-pill status-pill--info">${item.typeLabel}</span>` : "";
+    const typeHtml = item.typeLabel ? `<span class="status-pill status-pill--info">${esc(item.typeLabel)}</span>` : "";
     const dismissHtml =
       item.source === "announcement"
         ? `<button class="dash-notif-card__dismiss" type="button" data-notif-dismiss="${item.id}" aria-label="Dismiss announcement">${ICON_CLOSE}</button>`
@@ -84,8 +86,8 @@
     return `
       <article class="dash-notif-card ${item.is_read ? "" : "dash-notif-card--unread"}" data-notif-card="${item.id}" data-notif-source="${item.source}">
         <div class="dash-notif-card__body">
-          <h3 class="dash-notif-card__title">${!item.is_read ? '<span class="dash-notif-card__dot" aria-hidden="true"></span>' : ""}${item.title}</h3>
-          <p class="dash-notif-card__message">${item.message}</p>
+          <h3 class="dash-notif-card__title">${!item.is_read ? '<span class="dash-notif-card__dot" aria-hidden="true"></span>' : ""}${esc(item.title)}</h3>
+          <p class="dash-notif-card__message">${esc(item.message)}</p>
           <p class="dash-notif-card__date">
             ${new Date(item.created_at).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}
             ${typeHtml} ${badgeHtml}

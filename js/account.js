@@ -30,6 +30,7 @@
   if (!page || !window.XploroApplications || !window.XploroAuth) return;
 
   const PROFILES_KEY = "xploroo-profiles";
+  const esc = window.XploroSecurity.escapeHtml;
 
   /* ------------------------------------------------------------------ */
   /* Profile store — { [email]: { fullName, phone, city } }              */
@@ -79,6 +80,8 @@
   /* ------------------------------------------------------------------ */
   function renderAvatar(avatarUrl, fallbackLetter) {
     if (avatarUrl) {
+      // TODO(security): validate this is an http(s) URL (or data: URL from
+      // our own upload flow) before rendering as src
       avatarEl.innerHTML = `<img src="${avatarUrl}" alt="" />`;
     } else {
       avatarEl.textContent = fallbackLetter;
@@ -111,15 +114,15 @@
         <h2 class="account-profile__title">Complete Your Profile</h2>
         <label class="field">
           <span class="field__label">Full Name</span>
-          <input class="input" type="text" name="fullName" placeholder="e.g. Aarav Sharma" value="${existing ? existing.fullName : ""}" required />
+          <input class="input" type="text" name="fullName" placeholder="e.g. Aarav Sharma" value="${existing ? esc(existing.fullName) : ""}" required />
         </label>
         <label class="field">
           <span class="field__label">Phone Number</span>
-          <input class="input" type="tel" name="phone" placeholder="e.g. 98765 43210" value="${existing ? existing.phone : ""}" required />
+          <input class="input" type="tel" name="phone" placeholder="e.g. 98765 43210" value="${existing ? esc(existing.phone) : ""}" required />
         </label>
         <label class="field">
           <span class="field__label">City</span>
-          <input class="input" type="text" name="city" placeholder="e.g. Mumbai" value="${existing ? existing.city : ""}" required />
+          <input class="input" type="text" name="city" placeholder="e.g. Mumbai" value="${existing ? esc(existing.city) : ""}" required />
         </label>
         <p class="account-profile__error" data-profile-error></p>
         <button class="btn btn--gradient btn--pill btn--lg account-profile__save" type="submit">Save Profile</button>
@@ -157,28 +160,28 @@
             <span class="account-profile__row-icon">${ICONS.name}</span>
             <div>
               <dt>Full Name</dt>
-              <dd>${profile.fullName}</dd>
+              <dd>${esc(profile.fullName)}</dd>
             </div>
           </div>
           <div class="account-profile__row">
             <span class="account-profile__row-icon">${ICONS.phone}</span>
             <div>
               <dt>Phone Number</dt>
-              <dd>${profile.phone}</dd>
+              <dd>${esc(profile.phone)}</dd>
             </div>
           </div>
           <div class="account-profile__row">
             <span class="account-profile__row-icon">${ICONS.city}</span>
             <div>
               <dt>City</dt>
-              <dd>${profile.city}</dd>
+              <dd>${esc(profile.city)}</dd>
             </div>
           </div>
           <div class="account-profile__row">
             <span class="account-profile__row-icon">${ICONS.email}</span>
             <div>
               <dt>Email Address</dt>
-              <dd>${user.email}</dd>
+              <dd>${esc(user.email)}</dd>
             </div>
           </div>
         </dl>
@@ -285,6 +288,13 @@
       avatarInput.addEventListener("change", () => {
         const file = avatarInput.files[0];
         if (!file) return;
+
+        const check = window.XploroSecurity.validateUploadFile(file, { maxSizeMB: 5 });
+        if (!check.ok) {
+          window.alert(check.error);
+          avatarInput.value = "";
+          return;
+        }
 
         const reader = new FileReader();
         reader.onload = async () => {
