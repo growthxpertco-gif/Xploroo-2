@@ -48,17 +48,32 @@
   const client = window.supabaseClient;
   const TABLE = "influencer_applications";
 
+  // Phase 18 — perf: getMyApplication() is independently called from ~10
+  // files on influencer-dashboard.html alone (header.js, every dash-*.js
+  // gate check, the inline overview script). It never changes within a
+  // page's lifecycle except via this same user's own submitApplication/
+  // setPublicVisibility/submitVerification calls below, so cache the
+  // in-flight/resolved promise and invalidate it on those writes.
+  let myApplicationPromise = null;
+
   async function getMyApplication() {
     if (!window.XploroAuth) return null;
-    const user = await window.XploroAuth.getUser();
-    if (!user) return null;
-
-    const { data, error } = await client.from(TABLE).select("*").eq("user_id", user.id).maybeSingle();
-    if (error) {
-      console.error("[Xploroo] Failed to load influencer application:", error.message);
-      return null;
+    if (!myApplicationPromise) {
+      myApplicationPromise = (async () => {
+        const user = await window.XploroAuth.getUser();
+        if (!user) return null;
+        const { data, error } = await client.from(TABLE).select("*").eq("user_id", user.id).maybeSingle();
+        if (error) {
+          console.error("[Xploroo] Failed to load influencer application:", error.message);
+          return null;
+        }
+        return data;
+      })().catch((err) => {
+        myApplicationPromise = null;
+        throw err;
+      });
     }
-    return data;
+    return myApplicationPromise;
   }
 
   // Phase 10 — Instagram Ownership Verification. Every application gets a
@@ -153,6 +168,7 @@
       await window.XploroAuth.updateAvatar(user.id, fields.profilePicture);
     }
 
+    myApplicationPromise = null;
     return { data, error };
   }
 
@@ -243,6 +259,7 @@
       console.error("[Xploroo] Failed to update public visibility:", error.message);
       return { data: null, error };
     }
+    myApplicationPromise = null;
     return { data, error: null };
   }
 
@@ -261,6 +278,7 @@
       console.error("[Xploroo] Failed to submit Instagram verification:", error.message);
       return { data: null, error };
     }
+    myApplicationPromise = null;
     return { data, error: null };
   }
 

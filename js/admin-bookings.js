@@ -58,10 +58,10 @@
           </div>
 
           <dl class="admin-card__meta">
+            <div><dt>Booking ID</dt><dd>${b.booking_id.slice(0, 8)}</dd></div>
             <div><dt>Traveler</dt><dd>${b.traveler_name || "&mdash;"}</dd></div>
             <div><dt>Price</dt><dd>${formatMoney(b.service_price)}</dd></div>
             <div><dt>Booking Date</dt><dd>${formatDate(b.booking_date)}</dd></div>
-            <div><dt>Payment Status</dt><dd>${statusPill(b.payment_status)}</dd></div>
           </dl>
         </div>
       </article>`;

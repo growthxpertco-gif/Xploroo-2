@@ -93,19 +93,34 @@
   /* ------------------------------------------------------------------ */
   /* Influencer dashboard — Service Bookings tab.                         */
   /* ------------------------------------------------------------------ */
+  // Phase 18 — perf: getBookingsForInfluencer() is independently called
+  // from dash-bookings.js, dash-calendar.js and the inline dashboard-
+  // overview script on influencer-dashboard.html. Cached for the page's
+  // lifecycle only, invalidated on setStatus below so an accept/decline is
+  // always reflected immediately (never stale).
+  let bookingsForInfluencerPromise = null;
+
   async function getBookingsForInfluencer() {
-    const user = window.XploroAuth ? await window.XploroAuth.getUser() : null;
-    if (!user) return [];
-    const { data, error } = await client
-      .from(TABLE)
-      .select("*")
-      .eq("influencer_user_id", user.id)
-      .order("created_at", { ascending: false });
-    if (error) {
-      console.error("[Xploroo] Failed to load influencer bookings:", error.message);
-      return [];
+    if (!bookingsForInfluencerPromise) {
+      bookingsForInfluencerPromise = (async () => {
+        const user = window.XploroAuth ? await window.XploroAuth.getUser() : null;
+        if (!user) return [];
+        const { data, error } = await client
+          .from(TABLE)
+          .select("*")
+          .eq("influencer_user_id", user.id)
+          .order("created_at", { ascending: false });
+        if (error) {
+          console.error("[Xploroo] Failed to load influencer bookings:", error.message);
+          return [];
+        }
+        return attachTravelerNames(data || []);
+      })().catch((err) => {
+        bookingsForInfluencerPromise = null;
+        throw err;
+      });
     }
-    return attachTravelerNames(data || []);
+    return bookingsForInfluencerPromise;
   }
 
   async function setStatus(bookingId, influencerId, serviceName, travelerUserId, status) {
@@ -114,6 +129,7 @@
       console.error(`[Xploroo] Failed to ${status.toLowerCase()} booking:`, error.message);
       return false;
     }
+    bookingsForInfluencerPromise = null;
     if (window.XploroNotifications) {
       await window.XploroNotifications.create({
         userId: travelerUserId,

@@ -33,27 +33,45 @@
       status: "Pending",
     });
     if (error) console.error("[Xploroo] Failed to create earnings record:", error.message);
+    myEarningsPromise = null;
   }
 
   // Called from the influencer's own session (dash-bookings.js accept/decline).
   async function setStatusForBooking(bookingId, status) {
     const { error } = await client.from(TABLE).update({ status }).eq("booking_id", bookingId);
     if (error) console.error("[Xploroo] Failed to update earnings status:", error.message);
+    myEarningsPromise = null;
   }
 
+  // Phase 18 — perf: getMyEarnings() is independently called from
+  // dash-earnings.js AND (via withdrawals.js's getAvailableBalance) the
+  // inline dashboard-overview script on the same page load. Cached for the
+  // page's lifecycle only, and invalidated on every write above/below so a
+  // booking accept/decline or withdrawal never leaves stale earnings data
+  // behind.
+  let myEarningsPromise = null;
+
   async function getMyEarnings() {
-    const user = window.XploroAuth ? await window.XploroAuth.getUser() : null;
-    if (!user) return [];
-    const { data, error } = await client
-      .from(TABLE)
-      .select("*")
-      .eq("influencer_id", user.id)
-      .order("created_at", { ascending: false });
-    if (error) {
-      console.error("[Xploroo] Failed to load earnings:", error.message);
-      return [];
+    if (!myEarningsPromise) {
+      myEarningsPromise = (async () => {
+        const user = window.XploroAuth ? await window.XploroAuth.getUser() : null;
+        if (!user) return [];
+        const { data, error } = await client
+          .from(TABLE)
+          .select("*")
+          .eq("influencer_id", user.id)
+          .order("created_at", { ascending: false });
+        if (error) {
+          console.error("[Xploroo] Failed to load earnings:", error.message);
+          return [];
+        }
+        return data || [];
+      })().catch((err) => {
+        myEarningsPromise = null;
+        throw err;
+      });
     }
-    return data || [];
+    return myEarningsPromise;
   }
 
   function summarize(earnings) {

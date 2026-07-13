@@ -22,19 +22,34 @@
   const client = window.supabaseClient;
   const TABLE = "withdrawal_requests";
 
+  // Phase 18 — perf: getMyWithdrawals() is independently called from
+  // dash-withdrawals.js and (directly, plus again via getAvailableBalance)
+  // the inline dashboard-overview script on influencer-dashboard.html.
+  // Cached for the page's lifecycle only, invalidated on requestWithdrawal
+  // below so a fresh request is never masked by a stale list.
+  let myWithdrawalsPromise = null;
+
   async function getMyWithdrawals() {
-    const user = window.XploroAuth ? await window.XploroAuth.getUser() : null;
-    if (!user) return [];
-    const { data, error } = await client
-      .from(TABLE)
-      .select("*")
-      .eq("influencer_id", user.id)
-      .order("requested_at", { ascending: false });
-    if (error) {
-      console.error("[Xploroo] Failed to load withdrawal requests:", error.message);
-      return [];
+    if (!myWithdrawalsPromise) {
+      myWithdrawalsPromise = (async () => {
+        const user = window.XploroAuth ? await window.XploroAuth.getUser() : null;
+        if (!user) return [];
+        const { data, error } = await client
+          .from(TABLE)
+          .select("*")
+          .eq("influencer_id", user.id)
+          .order("requested_at", { ascending: false });
+        if (error) {
+          console.error("[Xploroo] Failed to load withdrawal requests:", error.message);
+          return [];
+        }
+        return data || [];
+      })().catch((err) => {
+        myWithdrawalsPromise = null;
+        throw err;
+      });
     }
-    return data || [];
+    return myWithdrawalsPromise;
   }
 
   // Available Balance = Total Paid Earnings − Paid Withdrawals. Always
@@ -90,6 +105,7 @@
       });
     }
 
+    myWithdrawalsPromise = null;
     return { data, error: null };
   }
 

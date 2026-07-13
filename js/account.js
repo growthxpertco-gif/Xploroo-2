@@ -280,8 +280,6 @@
       window.location.href = "index.html";
     });
 
-    const supaProfile = await window.XploroAuth.getProfile(user.id);
-
     if (avatarEditBtn && avatarInput) {
       avatarEditBtn.addEventListener("click", () => avatarInput.click());
       avatarInput.addEventListener("change", () => {
@@ -298,8 +296,15 @@
       });
     }
 
-    renderHeader(user, supaProfile);
+    // Phase 18 — perf: renderProfile()/renderRole() don't need supaProfile
+    // (renderProfile reads the separate localStorage profile; renderRole
+    // fetches its own application data), so render them immediately instead
+    // of waiting on getProfile() first. getProfile() and getMyApplication()
+    // (inside renderRole) then run concurrently rather than sequentially.
     renderProfile(user);
     renderRole();
+
+    const supaProfile = await window.XploroAuth.getProfile(user.id);
+    renderHeader(user, supaProfile);
   })();
 })();

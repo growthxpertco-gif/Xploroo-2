@@ -54,19 +54,45 @@
   window.supabaseClient = window.supabaseClient || window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   const client = window.supabaseClient;
 
+  // Phase 18 — perf: getSession()/getUser() are called dozens of times per
+  // page load (header.js alone calls getUser() twice, and nearly every
+  // dash-*.js / data-layer module calls it again). The underlying auth
+  // state cannot change within a single page's lifecycle except via
+  // signOut() (which reloads the page) or a fresh sign-in, so it's safe to
+  // cache the in-flight/resolved promise and share it across every caller.
+  let sessionPromise = null;
+  let userPromise = null;
+
   async function getSession() {
-    const { data, error } = await client.auth.getSession();
-    if (error) {
-      console.error("[Xploroo] getSession failed:", error.message);
-      return null;
+    if (!sessionPromise) {
+      sessionPromise = client.auth.getSession().then(
+        ({ data, error }) => {
+          if (error) {
+            console.error("[Xploroo] getSession failed:", error.message);
+            return null;
+          }
+          return data.session;
+        },
+        (err) => {
+          sessionPromise = null;
+          throw err;
+        }
+      );
     }
-    return data.session;
+    return sessionPromise;
   }
 
   async function getUser() {
-    const { data, error } = await client.auth.getUser();
-    if (error) return null;
-    return data.user;
+    if (!userPromise) {
+      userPromise = client.auth.getUser().then(
+        ({ data, error }) => (error ? null : data.user),
+        (err) => {
+          userPromise = null;
+          throw err;
+        }
+      );
+    }
+    return userPromise;
   }
 
   async function ensureProfile(user) {
@@ -90,6 +116,8 @@
 
   async function signOut() {
     await client.auth.signOut();
+    sessionPromise = null;
+    userPromise = null;
   }
 
   async function getProfile(userId) {

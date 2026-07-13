@@ -109,6 +109,7 @@
           <dl class="admin-card__meta">
             <div><dt>Amount Requested</dt><dd>${formatMoney(w.amount)}</dd></div>
             <div><dt>Available Balance</dt><dd>${formatMoney(availableBalance)}</dd></div>
+            <div><dt>Payment Method</dt><dd>Bank Transfer</dd></div>
             <div><dt>Bank Account Holder</dt><dd>${w.bank_account_holder || "&mdash;"}</dd></div>
             <div><dt>Bank Name</dt><dd>${w.bank_name || "&mdash;"}</dd></div>
             <div><dt>Account Number</dt><dd>${maskAccountNumber(w.bank_account_number)}</dd></div>

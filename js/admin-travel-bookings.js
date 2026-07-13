@@ -63,6 +63,7 @@
           </div>
 
           <dl class="admin-card__meta">
+            <div><dt>Booking ID</dt><dd>${b.booking_id.slice(0, 8)}</dd></div>
             <div><dt>Traveler</dt><dd>${b.traveler_full_name || "&mdash;"}</dd></div>
             <div><dt>Destination</dt><dd>${b.destination || "&mdash;"}</dd></div>
             <div><dt>Travel Date</dt><dd>${formatDate(b.travel_date)}</dd></div>
