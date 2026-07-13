@@ -298,6 +298,15 @@
       return { ok: false, error: error.message };
     }
     await syncProfile(application.user_id, "traveler,influencer", "approved");
+
+    // Phase 17 — every approved influencer automatically gets a permanent
+    // referral code. Idempotent (see ensureCodeForInfluencer), so
+    // re-approving an influencer who was previously rejected never
+    // generates a second code.
+    if (window.XploroReferrals) {
+      window.XploroReferrals.ensureCodeForInfluencer(application.user_id);
+    }
+
     return { ok: true };
   }
 

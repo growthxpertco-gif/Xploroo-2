@@ -70,10 +70,10 @@
 
         <!-- Left cluster: logo + theme toggle -->
         <div class="site-header__left">
-          <a class="brand" href="/" aria-label="Xploroo home">
+          <div class="brand">
             <img class="brand__logo" src="https://ik.imagekit.io/mg0v9kccj/1000166489-removebg-previewDDF.png" alt="" />
-            <span class="brand__name">Xploroo</span>
-          </a>
+            <a class="brand__link" href="/" aria-label="Xploroo home"><span class="brand__name">Xploroo</span></a>
+          </div>
 
           <!-- Dark / Light toggle (switches the site-wide theme) -->
           <button
@@ -126,7 +126,7 @@
               <a class="main-nav__link" href="influencers.html">Influencers</a>
             </li>
             <li class="main-nav__item">
-              <a class="main-nav__link" href="/partner-with-us">Partner With Us</a>
+              <a class="main-nav__link" href="merch.html">Merch</a>
             </li>
           </ul>
         </nav>
@@ -297,6 +297,10 @@
                   <dt>Discount</dt>
                   <dd data-bk="pay-discount"></dd>
                 </div>
+                <div class="bk-pay__row bk-pay__row--discount" data-bk="pay-referral-discount-row" hidden>
+                  <dt>Referral Discount</dt>
+                  <dd data-bk="pay-referral-discount"></dd>
+                </div>
                 <div class="bk-pay__row">
                   <dt>Taxes &amp; Fees (5% GST)</dt>
                   <dd data-bk="pay-tax"></dd>
@@ -366,10 +370,10 @@
         <div class="site-footer__container">
 
           <!-- Brand -->
-          <a class="brand footer-brand" href="index.html" aria-label="Xploroo home">
+          <div class="brand footer-brand">
             <img class="brand__logo" src="https://ik.imagekit.io/mg0v9kccj/1000166489-removebg-previewDDF.png" alt="" />
-            <span class="brand__name">Xploroo</span>
-          </a>
+            <a class="brand__link" href="index.html" aria-label="Xploroo home"><span class="brand__name">Xploroo</span></a>
+          </div>
 
           <!-- Newsletter -->
           <div class="footer-newsletter">
@@ -477,6 +481,12 @@
        booking to public.travel_bookings under the signed-in traveler. -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
   <script src="js/supabase.js" defer></script>
+
+  <!-- Notifications + Referral & discount system (Supabase-backed) — a
+       successful payment may generate a referral commission + notify the
+       referring influencer (see js/travel-bookings.js) -->
+  <script src="js/notifications.js" defer></script>
+  <script src="js/referral.js" defer></script>
 
   <!-- Travel package bookings (Supabase-backed) -->
   <script src="js/travel-bookings.js" defer></script>

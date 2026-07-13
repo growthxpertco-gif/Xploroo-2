@@ -74,10 +74,10 @@
 
         <!-- Left cluster: logo + theme toggle -->
         <div class="site-header__left">
-          <a class="brand" href="/" aria-label="Xploroo home">
+          <div class="brand">
             <img class="brand__logo" src="https://ik.imagekit.io/mg0v9kccj/1000166489-removebg-previewDDF.png" alt="" />
-            <span class="brand__name">Xploroo</span>
-          </a>
+            <a class="brand__link" href="/" aria-label="Xploroo home"><span class="brand__name">Xploroo</span></a>
+          </div>
 
           <!-- Dark / Light toggle (switches the site-wide theme) -->
           <button
@@ -130,7 +130,7 @@
               <a class="main-nav__link" href="influencers.html">Influencers</a>
             </li>
             <li class="main-nav__item">
-              <a class="main-nav__link" href="/partner-with-us">Partner With Us</a>
+              <a class="main-nav__link" href="merch.html">Merch</a>
             </li>
           </ul>
         </nav>
@@ -412,6 +412,14 @@
                     </span>
                     <span class="bk-coupon__message" data-bk="coupon-message" role="status" aria-live="polite"></span>
                   </label>
+                  <label class="field">
+                    <span class="field__label">Referral Code or Link <span class="field__hint" style="display:inline">(optional)</span></span>
+                    <span class="bk-coupon">
+                      <input class="input" type="text" name="referral" data-bk="referral" placeholder="e.g. GX8D2KP" autocomplete="off" />
+                      <button class="bk-coupon__apply" type="button" data-bk="referral-apply">Apply</button>
+                    </span>
+                    <span class="bk-coupon__message" data-bk="referral-message" role="status" aria-live="polite"></span>
+                  </label>
                   <label class="field field--full">
                     <span class="field__label">Special Requests <span class="field__hint" style="display:inline">(optional)</span></span>
                     <textarea class="input" name="specialRequests" rows="4" placeholder="Dietary needs, accessibility, celebrations&hellip;"></textarea>
@@ -434,6 +442,10 @@
                   <div class="bk-pay__row bk-pay__row--discount" data-bk="pay-discount-row" hidden>
                     <dt>Discount</dt>
                     <dd data-bk="pay-discount"></dd>
+                  </div>
+                  <div class="bk-pay__row bk-pay__row--discount" data-bk="pay-referral-discount-row" hidden>
+                    <dt>Referral Discount</dt>
+                    <dd data-bk="pay-referral-discount"></dd>
                   </div>
                   <div class="bk-pay__row">
                     <dt>Taxes &amp; Fees (5% GST)</dt>
@@ -484,10 +496,10 @@
         <div class="site-footer__container">
 
           <!-- Brand -->
-          <a class="brand footer-brand" href="index.html" aria-label="Xploroo home">
+          <div class="brand footer-brand">
             <img class="brand__logo" src="https://ik.imagekit.io/mg0v9kccj/1000166489-removebg-previewDDF.png" alt="" />
-            <span class="brand__name">Xploroo</span>
-          </a>
+            <a class="brand__link" href="index.html" aria-label="Xploroo home"><span class="brand__name">Xploroo</span></a>
+          </div>
 
           <!-- Newsletter -->
           <div class="footer-newsletter">
@@ -598,6 +610,10 @@
   <script src="js/notifications.js" defer></script>
   <script src="js/earnings.js" defer></script>
   <script src="js/influencer-bookings.js" defer></script>
+
+  <!-- Referral & discount system (Supabase-backed) — powers the Referral
+       Code/Link field below -->
+  <script src="js/referral.js" defer></script>
 
   <!-- Booking flow behavior (summary, totals, coupon, proceed to payment;
        Confirm Booking + Supabase save for real Influencer Bookings) -->

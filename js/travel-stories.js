@@ -91,14 +91,22 @@
     dragMoved = false;
     startX = e.clientX;
     startScrollLeft = track.scrollLeft;
-    track.setPointerCapture(e.pointerId);
     track.classList.add("is-dragging");
   }
 
   function onPointerMove(e) {
     if (!isDragging) return;
     const delta = e.clientX - startX;
-    if (Math.abs(delta) > 4) dragMoved = true;
+    if (Math.abs(delta) > 4) {
+      // Only take pointer capture once an actual drag is confirmed — doing
+      // this unconditionally on pointerdown (the previous behavior) made
+      // the browser retarget every subsequent click at `track` itself
+      // instead of whatever card/link was under the cursor, silently
+      // breaking desktop card navigation even for a plain, non-dragging
+      // click. Touch is unaffected either way (see the early return above).
+      if (!dragMoved) track.setPointerCapture(e.pointerId);
+      dragMoved = true;
+    }
     track.scrollLeft = startScrollLeft - delta;
   }
 

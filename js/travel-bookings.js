@@ -53,6 +53,22 @@
       console.error("[Xploroo] Failed to create travel booking:", error.message);
       return { data: null, error };
     }
+
+    // Phase 17 — referral commission is generated ONLY here, after the
+    // booking row above has already been successfully inserted (i.e. only
+    // after "payment" succeeds), never before. No-ops entirely if this
+    // booking didn't carry a validated referral (fields.referral is null).
+    if (window.XploroReferrals && fields.referral) {
+      await window.XploroReferrals.recordReferralForBooking({
+        bookingId: data.booking_id,
+        customerId: user.id,
+        referral: fields.referral,
+        originalAmount: fields.cost != null ? Number(fields.cost) : payload.total_amount,
+        discountAmount: fields.referralDiscountAmount != null ? Number(fields.referralDiscountAmount) : 0,
+        finalAmount: payload.total_amount,
+      });
+    }
+
     return { data, error: null };
   }
 
@@ -86,5 +102,28 @@
     return data || [];
   }
 
-  window.XploroTravelBookings = { createBooking, getMyBookings, getAllBookings };
+  // Admin-only: marks a booking Refunded and, if it carried a referral,
+  // automatically reverses the associated commission (see
+  // js/referral.js's reverseCommissionForBooking) — a refunded booking
+  // must never leave a live commission behind. Conditional on the row not
+  // already being Refunded, so a duplicate click is a harmless no-op.
+  async function markRefunded(bookingId) {
+    const { data, error } = await client
+      .from(TABLE)
+      .update({ payment_status: "Refunded", booking_status: "Refunded" })
+      .eq("booking_id", bookingId)
+      .neq("payment_status", "Refunded")
+      .select()
+      .maybeSingle();
+    if (error) {
+      console.error("[Xploroo] Failed to mark booking refunded:", error.message);
+      return { data: null, error };
+    }
+    if (data && window.XploroReferrals) {
+      await window.XploroReferrals.reverseCommissionForBooking(bookingId);
+    }
+    return { data, error: null };
+  }
+
+  window.XploroTravelBookings = { createBooking, getMyBookings, getAllBookings, markRefunded };
 })();

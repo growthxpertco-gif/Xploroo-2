@@ -53,6 +53,7 @@
   }
 
   function cardTemplate(b) {
+    const canRefund = b.payment_status === "Paid";
     return `
       <article class="admin-card" data-admin-travel-booking-card="${b.booking_id}">
         <div class="admin-card__body">
@@ -69,6 +70,14 @@
             <div><dt>Total Amount</dt><dd>${formatMoney(b.total_amount)}</dd></div>
             <div><dt>Payment Status</dt><dd>${statusPill(b.payment_status)}</dd></div>
           </dl>
+
+          ${
+            canRefund
+              ? `<div class="admin-card__actions">
+                   <button class="btn btn--danger btn--pill" type="button" data-admin-refund="${b.booking_id}">Mark Refunded</button>
+                 </div>`
+              : ""
+          }
         </div>
       </article>`;
   }
@@ -80,6 +89,17 @@
       return;
     }
     root.innerHTML = `<div class="admin-list">${bookings.map(cardTemplate).join("")}</div>`;
+
+    // Refunding also reverses any referral commission tied to this booking
+    // (see js/travel-bookings.js's markRefunded()) — never leaves a live
+    // commission behind on a refunded booking.
+    root.querySelectorAll("[data-admin-refund]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        btn.disabled = true;
+        await window.XploroTravelBookings.markRefunded(btn.dataset.adminRefund);
+        render();
+      });
+    });
   }
 
   render();

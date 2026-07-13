@@ -421,6 +421,81 @@
   margin: var(--space-2) 0 0;
   font-size: var(--fs-2xs);
   color: var(--color-text-subtle);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Dismiss (×) — announcement cards only; hides from this influencer's own
+   feed without touching the broadcast itself. */
+.dash-notif-card__dismiss {
+  flex: none;
+  align-self: flex-start;
+  width: 1.75rem;
+  height: 1.75rem;
+  display: grid;
+  place-items: center;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text-subtle);
+  cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease-standard), color var(--dur-fast) var(--ease-standard);
+}
+.dash-notif-card__dismiss:hover {
+  background: var(--color-surface-hover);
+  color: var(--color-danger);
+}
+.dash-notif-card__dismiss svg { width: 14px; height: 14px; }
+
+/* -------------------------------------------------------------------------
+   Referral Program — code + link card. Reuses .dash-overview for the four
+   stat cards below it (see js/dash-referrals.js); only the code/link panel
+   itself is new here.
+   ------------------------------------------------------------------------- */
+.referral-panel__code-card {
+  padding: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-card);
+}
+.referral-panel__label {
+  margin: 0;
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-subtle);
+}
+.referral-panel__code {
+  margin: 0.3rem 0 0;
+  font-family: var(--font-mono, monospace);
+  font-size: var(--fs-2xl, var(--fs-xl));
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.08em;
+  color: var(--color-text-strong);
+}
+.referral-panel__link-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+.referral-panel__link-input {
+  flex: 1 1 16rem;
+  min-width: 0;
+  font-family: var(--font-mono, monospace);
+  font-size: var(--fs-sm);
+}
+.referral-panel__copy-message {
+  margin: var(--space-3) 0 0;
+  min-height: 1em;
+  font-size: var(--fs-xs);
+  color: var(--color-success);
 }
 
 /* -------------------------------------------------------------------------

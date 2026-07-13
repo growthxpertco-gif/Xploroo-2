@@ -94,10 +94,10 @@
 
         <!-- Left cluster: logo + theme toggle -->
         <div class="site-header__left">
-          <a class="brand" href="/" aria-label="Xploroo home">
+          <div class="brand">
             <img class="brand__logo" src="https://ik.imagekit.io/mg0v9kccj/1000166489-removebg-previewDDF.png" alt="" />
-            <span class="brand__name">Xploroo</span>
-          </a>
+            <a class="brand__link" href="/" aria-label="Xploroo home"><span class="brand__name">Xploroo</span></a>
+          </div>
 
           <!-- Dark / Light toggle (switches the site-wide theme) -->
           <button
@@ -150,7 +150,7 @@
               <a class="main-nav__link" href="influencers.html">Influencers</a>
             </li>
             <li class="main-nav__item">
-              <a class="main-nav__link" href="/partner-with-us">Partner With Us</a>
+              <a class="main-nav__link" href="merch.html">Merch</a>
             </li>
           </ul>
         </nav>
@@ -1272,7 +1272,7 @@
 
               <li class="ts-slide">
                 <article class="ts-card">
-                  <a class="ts-card__link" href="/stories/exploring-kashmir-in-winter">
+                  <a class="ts-card__link" href="travel-stories.html">
                     <div class="ts-card__media">
                       <img class="ts-card__img" src="https://ik.imagekit.io/mg0v9kccj/kalen-emsley-Bkci_8qcdvQ-unsplash.jpg" alt="Exploring Kashmir in Winter" />
                       <span class="ts-card__category">Mountains</span>
@@ -1288,7 +1288,7 @@
 
               <li class="ts-slide">
                 <article class="ts-card">
-                  <a class="ts-card__link" href="/stories/a-weekend-in-goa">
+                  <a class="ts-card__link" href="travel-stories.html">
                     <div class="ts-card__media">
                       <img class="ts-card__img" src="https://ik.imagekit.io/mg0v9kccj/pexels-meleesten-8037061.jpg" alt="A Weekend in Goa" />
                       <span class="ts-card__category">Beaches</span>
@@ -1304,7 +1304,7 @@
 
               <li class="ts-slide">
                 <article class="ts-card">
-                  <a class="ts-card__link" href="/stories/hidden-gems-of-bali">
+                  <a class="ts-card__link" href="travel-stories.html">
                     <div class="ts-card__media">
                       <img class="ts-card__img" src="https://ik.imagekit.io/mg0v9kccj/pexels-faikackmerd-33243110.jpg" alt="Hidden Gems of Bali" />
                       <span class="ts-card__category">Islands</span>
@@ -1320,7 +1320,7 @@
 
               <li class="ts-slide">
                 <article class="ts-card">
-                  <a class="ts-card__link" href="/stories/dubai-in-3-days">
+                  <a class="ts-card__link" href="travel-stories.html">
                     <div class="ts-card__media">
                       <img class="ts-card__img" src="https://ik.imagekit.io/mg0v9kccj/pexels-davidgari-18325968.jpg" alt="Dubai in 3 Days" />
                       <span class="ts-card__category">City</span>
@@ -1336,7 +1336,7 @@
 
               <li class="ts-slide">
                 <article class="ts-card">
-                  <a class="ts-card__link" href="/stories/trekking-through-ladakh">
+                  <a class="ts-card__link" href="travel-stories.html">
                     <div class="ts-card__media">
                       <img class="ts-card__img" src="https://ik.imagekit.io/mg0v9kccj/pexels-sanskar-vyas-64833207-27593915.jpg" alt="Trekking Through Ladakh" />
                       <span class="ts-card__category">Adventure</span>
@@ -1352,7 +1352,7 @@
 
               <li class="ts-slide">
                 <article class="ts-card">
-                  <a class="ts-card__link" href="/stories/sunrise-at-tiger-hill">
+                  <a class="ts-card__link" href="travel-stories.html">
                     <div class="ts-card__media">
                       <img class="ts-card__img" src="https://ik.imagekit.io/mg0v9kccj/pexels-anna-rynkowska-118639719-15169342.jpg" alt="Sunrise at Tiger Hill" />
                       <span class="ts-card__category">Hill Stations</span>
@@ -1368,7 +1368,7 @@
 
               <li class="ts-slide">
                 <article class="ts-card">
-                  <a class="ts-card__link" href="/stories/luxury-escape-to-maldives">
+                  <a class="ts-card__link" href="travel-stories.html">
                     <div class="ts-card__media">
                       <img class="ts-card__img" src="https://ik.imagekit.io/mg0v9kccj/pexels-pixabay-38238.jpg" alt="Luxury Escape to Maldives" />
                       <span class="ts-card__category">Luxury</span>
@@ -1384,7 +1384,7 @@
 
               <li class="ts-slide">
                 <article class="ts-card">
-                  <a class="ts-card__link" href="/stories/paris-for-first-time-travelers">
+                  <a class="ts-card__link" href="travel-stories.html">
                     <div class="ts-card__media">
                       <img class="ts-card__img" src="https://ik.imagekit.io/mg0v9kccj/pexels-narin-chauhan-295714705-16467359.jpg" alt="Paris for First-Time Travelers" />
                       <span class="ts-card__category">Guide</span>
@@ -1414,10 +1414,10 @@
         <div class="site-footer__container">
 
           <!-- Brand -->
-          <a class="brand footer-brand" href="index.html" aria-label="Xploroo home">
+          <div class="brand footer-brand">
             <img class="brand__logo" src="https://ik.imagekit.io/mg0v9kccj/1000166489-removebg-previewDDF.png" alt="" />
-            <span class="brand__name">Xploroo</span>
-          </a>
+            <a class="brand__link" href="index.html" aria-label="Xploroo home"><span class="brand__name">Xploroo</span></a>
+          </div>
 
           <!-- Newsletter -->
           <div class="footer-newsletter">
@@ -1521,6 +1521,14 @@
 
   <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
   <script src="js/search-overlay.js" defer></script>
+
+  <!-- Supabase client + Referral & Discount System — captures ?ref=CODE on
+       the homepage (the referral link format is the site root, see
+       js/referral.js) and stores it for the rest of the browsing session. -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
+  <script src="js/supabase.js" defer></script>
+  <script src="js/referral.js" defer></script>
+  <script src="js/referral-capture.js" defer></script>
 
   <!-- Trending Packages behavior (drag/swipe carousel, wishlist) -->
   <script src="js/trending-packages.js" defer></script>

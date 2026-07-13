@@ -76,7 +76,7 @@
 
     try {
       const { error } = await client.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password.html`,
+        redirectTo: "https://growthxpertco-gif.github.io/Xploroo-2/reset-password.html",
       });
 
       if (error) {

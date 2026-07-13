@@ -217,6 +217,9 @@
   const couponInput = el("coupon");
   const couponApplyBtn = el("coupon-apply");
   const couponMessageEl = el("coupon-message");
+  const referralInput = el("referral");
+  const referralApplyBtn = el("referral-apply");
+  const referralMessageEl = el("referral-message");
 
   const step2SectionEl = el("step2"); // Traveller Details
   const step3SectionEl = el("step3"); // Additional Details
@@ -225,6 +228,8 @@
   const payTaxEl = el("pay-tax");
   const payDiscountRow = el("pay-discount-row");
   const payDiscountEl = el("pay-discount");
+  const payReferralDiscountRow = el("pay-referral-discount-row");
+  const payReferralDiscountEl = el("pay-referral-discount");
   const payTotalEl = el("pay-total");
 
   const form = el("form");
@@ -243,6 +248,14 @@
 
   let activeCoupon = null; // { code, type, value }
 
+  // Phase 17 — Referral & Discount System. `activeReferral` is set once a
+  // code/link is resolved against public.referral_codes (see
+  // js/referral.js); `referralDiscountPercent` is fetched once from
+  // public.referral_settings on load (falls back to 0, i.e. no discount,
+  // until it arrives — computeTotals()/render() are re-run once it does).
+  let activeReferral = null; // { code, influencerId }
+  let referralDiscountPercent = 0;
+
   function computeTotals() {
     const travellers = getTravellers();
     const cost = pkg.price * travellers;
@@ -252,8 +265,9 @@
         ? Math.round(cost * (activeCoupon.value / 100))
         : Math.min(activeCoupon.value, cost);
     }
-    const tax = Math.round((cost - discount) * TAX_RATE);
-    return { travellers, cost, discount, tax, total: cost - discount + tax };
+    const referralDiscount = activeReferral ? Math.round((cost - discount) * (referralDiscountPercent / 100)) : 0;
+    const tax = Math.round((cost - discount - referralDiscount) * TAX_RATE);
+    return { travellers, cost, discount, referralDiscount, tax, total: cost - discount - referralDiscount + tax };
   }
 
   /* ------------------------------------------------------------------ */
@@ -369,6 +383,10 @@
     payTaxEl.textContent = formatINR(t.tax);
     payDiscountRow.hidden = t.discount <= 0;
     payDiscountEl.textContent = "−" + formatINR(t.discount);
+    if (payReferralDiscountRow) {
+      payReferralDiscountRow.hidden = t.referralDiscount <= 0;
+      payReferralDiscountEl.textContent = "−" + formatINR(t.referralDiscount);
+    }
     payTotalEl.textContent = formatINR(t.total);
   }
 
@@ -403,6 +421,75 @@
     }
     render();
   });
+
+  /* ------------------------------------------------------------------ */
+  /* Referral — accepts either a raw code (GX8D2KP) or a full referral      */
+  /* link (…/?ref=GX8D2KP); validated server-side against                  */
+  /* public.referral_codes on every apply (js/referral.js). Self-referral   */
+  /* (an influencer trying to use their own code) is blocked here too, not  */
+  /* just at booking-creation time, so the customer gets immediate feedback.*/
+  /* ------------------------------------------------------------------ */
+  async function applyReferral(raw) {
+    referralMessageEl.classList.remove("is-success", "is-error");
+
+    if (!raw) {
+      activeReferral = null;
+      referralMessageEl.textContent = "";
+      render();
+      return;
+    }
+    if (!window.XploroReferrals) return;
+
+    const resolved = await window.XploroReferrals.resolveReferral(raw);
+    if (!resolved) {
+      activeReferral = null;
+      referralMessageEl.textContent = "Invalid referral code.";
+      referralMessageEl.classList.add("is-error");
+      render();
+      return;
+    }
+
+    const user = window.XploroAuth ? await window.XploroAuth.getUser() : null;
+    if (user && user.id === resolved.influencerId) {
+      activeReferral = null;
+      referralMessageEl.textContent = "You cannot use your own referral code.";
+      referralMessageEl.classList.add("is-error");
+      render();
+      return;
+    }
+
+    activeReferral = resolved;
+    referralMessageEl.textContent = `Referral code ${resolved.code} applied.`;
+    referralMessageEl.classList.add("is-success");
+    render();
+  }
+
+  if (referralApplyBtn) {
+    referralApplyBtn.addEventListener("click", () => applyReferral(referralInput.value.trim()));
+  }
+
+  // Load the configured discount %, then auto-fill + auto-apply a referral
+  // captured earlier in this browsing session (see js/referral-capture.js)
+  // — "continue using it until booking is completed", surviving navigation
+  // between pages without ever touching localStorage.
+  (async function initReferral() {
+    if (!window.XploroReferrals) return;
+    const settings = await window.XploroReferrals.getSettings();
+    referralDiscountPercent = Number(settings.customer_discount_percent) || 0;
+
+    let capturedCode = null;
+    try {
+      const raw = sessionStorage.getItem("xploroo-referral");
+      capturedCode = raw ? JSON.parse(raw).code : null;
+    } catch (_) {}
+
+    if (capturedCode && referralInput && !referralInput.value) {
+      referralInput.value = capturedCode;
+      await applyReferral(capturedCode);
+    } else {
+      render();
+    }
+  })();
 
   /* ------------------------------------------------------------------ */
   /* Proceed — package/legacy flows keep going to payment.html; a real     */
@@ -441,9 +528,11 @@
       },
       specialRequests: data.get("specialRequests") || "",
       coupon: activeCoupon ? activeCoupon.code : null,
+      referral: activeReferral ? { code: activeReferral.code, influencerId: activeReferral.influencerId } : null,
       amounts: {
         cost: t.cost,
         discount: t.discount,
+        referralDiscount: t.referralDiscount,
         tax: t.tax,
         total: t.total,
         currency: "INR",

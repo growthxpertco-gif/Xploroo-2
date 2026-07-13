@@ -241,3 +241,56 @@
   margin: 0 0 var(--space-6);
   font-size: var(--fs-3xl);
 }
+
+/* ============================================================================
+   DESKTOP ONLY (>=1024px) — more premium/spacious rhythm and distribution.
+   Nothing here touches font-family, font-size, color, text content, images,
+   the Timeline's own layout, or the Founder Journey page's content — this
+   only adjusts section spacing, max-widths/alignment, and (Founder's
+   Journey only) pairs the existing intro text beside the existing card
+   instead of stacking both centered. Mobile/tablet (<1024px) are untouched:
+   every rule the section/element/typography rules above already declare
+   stays exactly as-is below this breakpoint.
+   ============================================================================ */
+@media (min-width: 1024px) {
+  /* More generous vertical rhythm between sections. */
+  .about-page__section {
+    padding-block: clamp(5.5rem, 4.2rem + 3vw, 8.5rem);
+  }
+
+  /* Slightly wider hero + section-head text columns so they read less
+     cramped on a wide screen, while staying at a comfortable line length. */
+  .ap-hero { max-width: 50rem; }
+  .ap-section-head { max-width: 46rem; }
+
+  /* Mission card: a touch wider and more generously padded so it reads as
+     a premium centerpiece rather than a narrow strip on a wide screen. */
+  .ap-mission {
+    max-width: 58rem;
+    padding: clamp(2.75rem, 2rem + 2.5vw, 3.75rem);
+  }
+
+  /* Why Xploroo — same 4-column grid, just more breathing room between
+     cards; grid rows already stretch each card to equal height. */
+  .ap-features {
+    gap: var(--space-7);
+  }
+
+  /* Founder's Journey — pairs the existing section intro (left) with the
+     existing founder card (right) instead of stacking both centered, so
+     the section fills the desktop width. The card itself and the content
+     of founder-journey.html are untouched — only the position of the
+     intro + card changes. */
+  .about-page__section--founder .about-page__container {
+    max-width: 68.75rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: var(--space-10);
+  }
+  .about-page__section--founder .ap-section-head {
+    max-width: none;
+    margin: 0;
+    text-align: left;
+  }
+}

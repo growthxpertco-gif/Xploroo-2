@@ -92,10 +92,10 @@
 
         <!-- Left cluster: logo + theme toggle -->
         <div class="site-header__left">
-          <a class="brand" href="/" aria-label="Xploroo home">
+          <div class="brand">
             <img class="brand__logo" src="https://ik.imagekit.io/mg0v9kccj/1000166489-removebg-previewDDF.png" alt="" />
-            <span class="brand__name">Xploroo</span>
-          </a>
+            <a class="brand__link" href="/" aria-label="Xploroo home"><span class="brand__name">Xploroo</span></a>
+          </div>
 
           <!-- Dark / Light toggle (switches the site-wide theme) -->
           <button
@@ -148,7 +148,7 @@
               <a class="main-nav__link" href="influencers.html">Influencers</a>
             </li>
             <li class="main-nav__item">
-              <a class="main-nav__link" href="/partner-with-us">Partner With Us</a>
+              <a class="main-nav__link" href="merch.html">Merch</a>
             </li>
           </ul>
         </nav>
@@ -306,12 +306,57 @@
             <button class="btn btn--glass btn--pill" type="button" data-admin-logout>Admin Logout</button>
           </header>
 
+          <!-- Live user statistics (Supabase-backed, public.profiles) — see
+               js/admin-analytics.js. Reuses the same premium summary-card
+               recipe as the Influencer Dashboard's overview cards
+               (.dash-overview in influencer-dashboard.html), scoped here as
+               .admin-overview so this page stays self-contained. -->
+          <section class="admin-overview" aria-label="User statistics" data-admin-overview>
+            <article class="admin-overview__card admin-overview__card--users" data-overview-card="users">
+              <span class="admin-overview__emoji" aria-hidden="true">&#128101;</span>
+              <div class="admin-overview__body">
+                <p class="admin-overview__title">Total Registered Users</p>
+                <p class="admin-overview__value" data-overview-value="users">&mdash;</p>
+                <p class="admin-overview__subtitle">Live from Supabase</p>
+              </div>
+            </article>
+
+            <article class="admin-overview__card admin-overview__card--travellers" data-overview-card="travellers">
+              <span class="admin-overview__emoji" aria-hidden="true">&#129394;</span>
+              <div class="admin-overview__body">
+                <p class="admin-overview__title">Total Travellers</p>
+                <p class="admin-overview__value" data-overview-value="travellers">&mdash;</p>
+                <p class="admin-overview__subtitle">Live from Supabase</p>
+              </div>
+            </article>
+
+            <article class="admin-overview__card admin-overview__card--influencers" data-overview-card="influencers">
+              <span class="admin-overview__emoji" aria-hidden="true">&#11088;</span>
+              <div class="admin-overview__body">
+                <p class="admin-overview__title">Total Influencers</p>
+                <p class="admin-overview__value" data-overview-value="influencers">&mdash;</p>
+                <p class="admin-overview__subtitle">Approved only</p>
+              </div>
+            </article>
+
+            <article class="admin-overview__card admin-overview__card--pending" data-overview-card="pending">
+              <span class="admin-overview__emoji" aria-hidden="true">&#8987;</span>
+              <div class="admin-overview__body">
+                <p class="admin-overview__title">Pending Influencer Applications</p>
+                <p class="admin-overview__value" data-overview-value="pending">&mdash;</p>
+                <p class="admin-overview__subtitle">Awaiting review</p>
+              </div>
+            </article>
+          </section>
+
           <div class="admin-tabs" role="tablist" aria-label="Admin sections" data-admin-tabs>
             <button class="admin-tabs__tab" type="button" role="tab" aria-selected="true" data-admin-tab="applications">Influencer Applications</button>
             <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="payments">Influencer Payments</button>
             <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="bookings">Influencer Bookings</button>
             <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="travel-bookings">Travel Bookings</button>
             <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="tickets">Support Tickets</button>
+            <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="announcements">📢 Announcements</button>
+            <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="referrals">🎁 Referral Management</button>
             <span class="admin-tabs__indicator" data-admin-tab-indicator aria-hidden="true"></span>
           </div>
 
@@ -335,6 +380,14 @@
             <section class="admin-panel" data-admin-panel="tickets">
               <div data-admin-tickets-root></div>
             </section>
+
+            <section class="admin-panel" data-admin-panel="announcements">
+              <div data-admin-announcements-root></div>
+            </section>
+
+            <section class="admin-panel" data-admin-panel="referrals">
+              <div data-admin-referrals-root></div>
+            </section>
           </div>
 
         </div>
@@ -349,10 +402,10 @@
         <div class="site-footer__container">
 
           <!-- Brand -->
-          <a class="brand footer-brand" href="index.html" aria-label="Xploroo home">
+          <div class="brand footer-brand">
             <img class="brand__logo" src="https://ik.imagekit.io/mg0v9kccj/1000166489-removebg-previewDDF.png" alt="" />
-            <span class="brand__name">Xploroo</span>
-          </a>
+            <a class="brand__link" href="index.html" aria-label="Xploroo home"><span class="brand__name">Xploroo</span></a>
+          </div>
 
           <!-- Newsletter -->
           <div class="footer-newsletter">
@@ -468,6 +521,10 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
   <script src="js/supabase.js" defer></script>
 
+  <!-- Live user statistics for the summary cards above (Supabase-backed,
+       public.profiles only — see .admin-overview) -->
+  <script src="js/admin-analytics.js" defer></script>
+
   <!-- Influencer application state (Supabase-backed) -->
   <script src="js/influencer-applications.js" defer></script>
 
@@ -486,6 +543,14 @@
   <script src="js/withdrawals.js" defer></script>
   <script src="js/notifications.js" defer></script>
 
+  <!-- Admin Broadcast Announcements (Supabase-backed), used only by the
+       "Announcements" tab below -->
+  <script src="js/announcements.js" defer></script>
+
+  <!-- Referral & Discount System (Supabase-backed) — also gives approve()
+       below the ability to auto-generate a referral code -->
+  <script src="js/referral.js" defer></script>
+
   <!-- Admin tab switching (Influencer Applications / Influencer Payments / …) -->
   <script src="js/admin-tabs.js" defer></script>
 
@@ -503,6 +568,12 @@
 
   <!-- Admin — Support Tickets (Supabase-backed: open/reply/in-progress/resolve) -->
   <script src="js/admin-support-tickets.js" defer></script>
+
+  <!-- Admin — Broadcast Announcements (Supabase-backed: send + history) -->
+  <script src="js/admin-announcements.js" defer></script>
+
+  <!-- Admin — Referral Management (Supabase-backed: settings + performance) -->
+  <script src="js/admin-referrals.js" defer></script>
 
   <!-- Footer behavior (newsletter form) -->
   <script src="js/footer.js" defer></script>

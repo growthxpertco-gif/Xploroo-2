@@ -351,11 +351,14 @@
     display: none;
   }
 
-  /* Reel area capped at its original (pre-enlargement) width and
-     re-centered inside the now-larger glass panel — the reels themselves
-     never grow, they simply gain more surrounding space on every side. */
+  /* Reel area — sized to fill most of the enlarged glass panel instead of
+     staying capped at its pre-enlargement width (that cap was leaving a
+     large empty margin inside the cabinet). Widened ~30% (60.75rem ×
+     1.3 ≈ 78.975rem) so each of the three reel windows grows ~30% wider
+     (and, via their existing `aspect-ratio: 4/5`, proportionally taller)
+     while remaining centered with the same relative gap between them. */
   .slot-machine__reels {
-    max-width: 60.75rem;
+    max-width: 78.975rem;
     margin-inline: auto;
   }
 

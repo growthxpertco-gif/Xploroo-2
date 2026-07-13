@@ -112,6 +112,15 @@
   filter: drop-shadow(0 2px 20px rgba(124, 92, 255, 0.6));
 }
 
+/* Header + footer logo only — ~30% larger than the base .brand__logo size.
+   Scoped to these two contexts (not the bare .brand__logo class) so the
+   mobile sidebar's own logo, where it exists, is left completely alone. */
+.site-header__left .brand__logo,
+.footer-brand .brand__logo {
+  width: 52px;
+  height: 52px;
+}
+
 /* --------------------------------------------------------------------------
    Dark / light toggle (visual only)
    -------------------------------------------------------------------------- */
@@ -1023,7 +1032,12 @@
      equal 1fr flanks on .site-header__inner above */
   .site-header__left { order: 2; justify-self: center; }
   .brand__name { font-size: 2.112rem; }
-  .brand__logo { width: 32px; height: 32px; }
+  /* Header + footer only (not the mobile sidebar's own logo, if present) */
+  .site-header__left .brand__logo,
+  .footer-brand .brand__logo {
+    width: 42px;
+    height: 42px;
+  }
   .theme-toggle { display: none; }           /* not part of the mobile header */
 
   /* Right zone — search icon */

@@ -30,6 +30,119 @@
   margin-bottom: clamp(2rem, 1.6rem + 2vw, 3rem);
 }
 .admin-hero__intro { min-width: 0; }
+
+/* -------------------------------------------------------------------------
+   Live user statistics — same premium summary-card recipe as the
+   Influencer Dashboard's overview cards (.dash-overview, inline <style> in
+   influencer-dashboard.html): glass card, gradient top hairline, emoji
+   chip, fade-in-and-stagger on load, lift-on-hover. Duplicated here as
+   .admin-overview (rather than shared) so each page's stylesheet stays
+   self-contained, matching how every other admin/dashboard module in this
+   codebase already works. Values are populated by js/admin-analytics.js.
+   ------------------------------------------------------------------------- */
+.admin-overview {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-5);
+  margin-bottom: clamp(2rem, 1.6rem + 2vw, 3rem);
+}
+@media (max-width: 720px) {
+  .admin-overview { grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
+}
+
+.admin-overview__card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: clamp(1.15rem, 0.95rem + 0.9vw, 1.6rem);
+  border-radius: var(--radius-2xl);
+  border: 1px solid var(--glass-border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-standard);
+  animation: admin-overview-fade-in var(--dur-slower) var(--ease-out) both;
+}
+.admin-overview__card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--aov-grad-a), var(--aov-grad-b));
+}
+.admin-overview__card--users        { --aov-grad-a: #a855f7; --aov-grad-b: #ec4899; --aov-glow-rgb: 168, 85, 247; }
+.admin-overview__card--travellers   { --aov-grad-a: #3b82f6; --aov-grad-b: #22d3ee; --aov-glow-rgb: 59, 130, 246; }
+.admin-overview__card--influencers  { --aov-grad-a: #f97316; --aov-grad-b: #fbbf24; --aov-glow-rgb: 249, 115, 22; }
+.admin-overview__card--pending      { --aov-grad-a: #22c55e; --aov-grad-b: #10b981; --aov-glow-rgb: 34, 197, 94; }
+
+.admin-overview__card:nth-child(1) { animation-delay: 40ms; }
+.admin-overview__card:nth-child(2) { animation-delay: 100ms; }
+.admin-overview__card:nth-child(3) { animation-delay: 160ms; }
+.admin-overview__card:nth-child(4) { animation-delay: 220ms; }
+
+@keyframes admin-overview-fade-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .admin-overview__card { animation: none; }
+}
+
+.admin-overview__card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(var(--aov-glow-rgb), 0.45);
+  box-shadow: var(--shadow-lg), 0 0 32px rgba(var(--aov-glow-rgb), 0.25);
+}
+
+.admin-overview__emoji {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: var(--radius-xl);
+  font-size: 1.5rem;
+  background: linear-gradient(135deg, rgba(var(--aov-glow-rgb), 0.3), rgba(var(--aov-glow-rgb), 0.12));
+  border: 1px solid rgba(var(--aov-glow-rgb), 0.45);
+  transition: transform var(--dur-base) var(--ease-spring);
+}
+.admin-overview__card:hover .admin-overview__emoji { transform: scale(1.1) rotate(-4deg); }
+
+.admin-overview__body { min-width: 0; }
+.admin-overview__title {
+  margin: 0;
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-subtle);
+}
+.admin-overview__value {
+  margin: 0.2rem 0 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  color: var(--color-text-strong);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.admin-overview__subtitle {
+  margin: 0.2rem 0 0;
+  font-size: var(--fs-2xs);
+  color: var(--color-text-subtle);
+}
+
+@media (max-width: 480px) {
+  .admin-overview__card { padding: 1rem; gap: var(--space-3); }
+  .admin-overview__emoji { width: 2.6rem; height: 2.6rem; font-size: 1.2rem; }
+  .admin-overview__value { font-size: var(--fs-lg); }
+}
 .admin-hero__title {
   margin: 0;
   font-size: clamp(2rem, 1.6rem + 2vw, 2.75rem);
@@ -238,6 +351,20 @@
   flex-wrap: wrap;
   gap: var(--space-3);
 }
+
+/* -------------------------------------------------------------------------
+   Announcements tab — inline send-status message. Same recipe as
+   .auth-message (auth.css), duplicated here since admin.css never loads
+   auth.css.
+   ------------------------------------------------------------------------- */
+.admin-announce-message {
+  margin: var(--space-4) 0 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+.admin-announce-message:empty { display: none; }
+.admin-announce-message--success { color: var(--color-success); }
+.admin-announce-message--error { color: var(--color-danger); }
 
 .admin-card__reviewed {
   margin-top: var(--space-4);

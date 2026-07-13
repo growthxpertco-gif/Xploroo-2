@@ -51,6 +51,15 @@
   discountRow.hidden = booking.amounts.discount <= 0;
   el("pay-discount").textContent = "−" + formatINR(booking.amounts.discount);
 
+  // Referral discount — separate line item from the coupon discount above,
+  // mirroring the same row already shown on booking.html.
+  const referralDiscountRow = el("pay-referral-discount-row");
+  const referralDiscountAmount = (booking.amounts && booking.amounts.referralDiscount) || 0;
+  if (referralDiscountRow) {
+    referralDiscountRow.hidden = referralDiscountAmount <= 0;
+    el("pay-referral-discount").textContent = "−" + formatINR(referralDiscountAmount);
+  }
+
   el("pay-total").textContent = formatINR(booking.amounts.total);
 
   /* ------------------------------------------------------------------ */
@@ -88,6 +97,9 @@
         travelerPhone: booking.traveller && booking.traveller.phone,
         specialRequests: booking.specialRequests,
         couponCode: booking.coupon,
+        cost: booking.amounts.cost,
+        referral: booking.referral || null,
+        referralDiscountAmount: referralDiscountAmount,
       });
 
       if (error || !data) {
