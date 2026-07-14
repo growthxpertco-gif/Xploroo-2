@@ -15,7 +15,7 @@
   const client = window.supabaseClient;
   const TABLE = "notifications";
 
-  async function create({ userId, type, title, message, relatedBookingId }) {
+  async function create({ userId, type, title, message, relatedBookingId, relatedVipBookingId }) {
     if (!userId || !type || !title) return null;
     // Deliberately no .select() after insert: the creator (e.g. a traveler
     // notifying the influencer they just booked) usually isn't the
@@ -29,6 +29,7 @@
       title,
       message: message || "",
       related_booking_id: relatedBookingId || null,
+      related_vip_booking_id: relatedVipBookingId || null,
     });
     if (error) {
       console.error("[Xploroo] Failed to create notification:", error.message);

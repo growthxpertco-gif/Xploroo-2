@@ -500,6 +500,14 @@
   --btn-border: transparent;
 }
 
+/* Approve-style action (e.g. admin "Approve" button) — reuses the existing
+   success token, same recipe as .btn--danger above. */
+.btn--success {
+  --btn-bg: var(--color-success);
+  --btn-fg: var(--white);
+  --btn-border: transparent;
+}
+
 /* Sizes */
 .btn--sm { height: var(--control-height-sm); padding-inline: var(--space-4); font-size: var(--fs-xs); }
 .btn--lg { height: var(--control-height-lg); padding-inline: var(--space-6); font-size: var(--fs-base); }

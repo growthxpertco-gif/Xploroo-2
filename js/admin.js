@@ -67,7 +67,7 @@
       return `
         <div class="admin-card__actions">
           ${openInstagramHtml}
-          <button class="btn btn--primary btn--pill" type="button" data-admin-approve="${app.id}">Approve</button>
+          <button class="btn btn--success btn--pill" type="button" data-admin-approve="${app.id}">Approve</button>
           <button class="btn btn--danger btn--pill" type="button" data-admin-reject="${app.id}">Reject</button>
         </div>`;
     }

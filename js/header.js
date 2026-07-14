@@ -452,4 +452,38 @@
 
     renderDesktopAccountState();
   }
+
+  /* ------------------------------------------------------------------ */
+  /* 5. VIP Experiences nav link (Phase 22) — injected here at runtime    */
+  /* rather than baked into every page's HTML, so all 69+ pages pick it   */
+  /* up without a per-file edit. Placed right after "Influencers" in      */
+  /* both the desktop nav and the mobile menu (sidebar).                  */
+  /* ------------------------------------------------------------------ */
+  (function injectVipNavLink() {
+    function insertAfterHref(list, afterHref, li) {
+      if (!list) return;
+      const target = Array.from(list.children).find((item) => {
+        const link = item.querySelector("a[href]");
+        return link && link.getAttribute("href") === afterHref;
+      });
+      if (target) target.insertAdjacentElement("afterend", li);
+      else list.appendChild(li);
+    }
+
+    const desktopList = document.querySelector(".main-nav__list");
+    if (desktopList && !desktopList.querySelector('a[href="vip.html"]')) {
+      const li = document.createElement("li");
+      li.className = "main-nav__item";
+      li.innerHTML = '<a class="main-nav__link" href="vip.html">&#11088; VIP Experiences</a>';
+      insertAfterHref(desktopList, "influencers.html", li);
+    }
+
+    const mobileList = document.querySelector(".mobile-menu__list");
+    if (mobileList && !mobileList.querySelector('a[href="vip.html"]')) {
+      const li = document.createElement("li");
+      li.className = "mobile-menu__item";
+      li.innerHTML = '<a class="mobile-menu__link" href="vip.html">&#11088; VIP Experiences</a>';
+      insertAfterHref(mobileList, "influencers.html", li);
+    }
+  })();
 })();

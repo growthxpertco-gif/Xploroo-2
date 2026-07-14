@@ -362,6 +362,7 @@
             <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="tickets">Support Tickets</button>
             <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="announcements">📢 Announcements</button>
             <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="referrals">🎁 Referral Management</button>
+            <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="vip-bookings">⭐ VIP Bookings</button>
             <span class="admin-tabs__indicator" data-admin-tab-indicator aria-hidden="true"></span>
           </div>
 
@@ -392,6 +393,10 @@
 
             <section class="admin-panel" data-admin-panel="referrals">
               <div data-admin-referrals-root></div>
+            </section>
+
+            <section class="admin-panel" data-admin-panel="vip-bookings">
+              <div data-admin-vip-bookings-root></div>
             </section>
           </div>
 
@@ -579,6 +584,9 @@
 
   <!-- Admin — Referral Management (Supabase-backed: settings + performance) -->
   <script src="js/admin-referrals.js" defer></script>
+
+  <!-- Admin — VIP Bookings (Phase 22, Supabase-backed via admin-api: approve/reject/complete/cancel) -->
+  <script src="js/admin-vip-bookings.js" defer></script>
 
   <!-- Footer behavior (newsletter form) -->
   <script src="js/footer.js" defer></script>

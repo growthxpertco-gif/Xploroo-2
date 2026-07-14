@@ -31,9 +31,12 @@
   let bookingsByDate = new Map();
 
   function statusPill(status) {
-    if (status === "Accepted") return '<span class="status-pill status-pill--approved">Accepted</span>';
-    if (status === "Declined") return '<span class="status-pill status-pill--rejected">Declined</span>';
-    return '<span class="status-pill status-pill--pending">Pending</span>';
+    // Phase 22 — also covers VIP booking statuses (Approved/Rejected/
+    // Completed/Cancelled) now merged into this same calendar; same visual
+    // treatment as the existing Accepted/Declined/Pending values.
+    if (status === "Accepted" || status === "Approved" || status === "Completed") return `<span class="status-pill status-pill--approved">${esc(status)}</span>`;
+    if (status === "Declined" || status === "Rejected" || status === "Cancelled") return `<span class="status-pill status-pill--rejected">${esc(status)}</span>`;
+    return `<span class="status-pill status-pill--pending">${esc(status)}</span>`;
   }
 
   function renderDetails(container, dateKey) {
@@ -117,7 +120,14 @@
   }
 
   async function render() {
-    const bookings = await window.XploroInfluencerBookings.getBookingsForInfluencer();
+    // Phase 22 — the calendar now also marks Approved VIP bookings assigned
+    // to this influencer, fetched alongside the existing service bookings
+    // (independent queries, run in parallel — no new sequential round trip).
+    const [bookings, vipBookings] = await Promise.all([
+      window.XploroInfluencerBookings.getBookingsForInfluencer(),
+      window.XploroVip ? window.XploroVip.getBookingsForInfluencer() : Promise.resolve([]),
+    ]);
+
     bookingsByDate = new Map();
     bookings
       .filter((b) => b.booking_status === "Accepted" && b.booking_date)
@@ -125,6 +135,20 @@
         const key = b.booking_date;
         if (!bookingsByDate.has(key)) bookingsByDate.set(key, []);
         bookingsByDate.get(key).push(b);
+      });
+
+    vipBookings
+      .filter((b) => b.booking_status === "Approved" && b.travel_date)
+      .forEach((b) => {
+        const key = b.travel_date;
+        const normalized = {
+          service_name: `VIP ${b.vip_package === "vlog" ? "Vlog Experience" : "Meet & Greet"} — ${b.booking_type}`,
+          traveler_name: b.customer_name,
+          preferred_time: "",
+          booking_status: b.booking_status,
+        };
+        if (!bookingsByDate.has(key)) bookingsByDate.set(key, []);
+        bookingsByDate.get(key).push(normalized);
       });
 
     renderMonth();
