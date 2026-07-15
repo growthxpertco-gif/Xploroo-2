@@ -1,0 +1,57 @@
+/* ==========================================================================
+   XPLOROO · VIP Profile module (Phase 23)
+   vip-profile.css — Additive rules only for vip-profile.html. The profile
+   header (photo/followers/Instagram) and hero (name/about) reuse
+   styles/influencer-profile.css `.ifp-*` classes completely unmodified.
+   The VIP Experiences cards themselves reuse styles/trending-packages.css
+   `.tp-*` classes completely unmodified — this file only styles the new
+   Gallery grid and the VIP Experiences section head that wraps them.
+   Scoped entirely under `.vip-*` so it never touches any other page.
+   ========================================================================== */
+
+.vip-gallery {
+  margin: 0 0 clamp(3rem, 2.2rem + 3vw, 4.5rem);
+}
+.vip-gallery__title {
+  margin: 0 0 var(--space-4);
+  font-size: var(--fs-xl);
+  text-align: center;
+}
+.vip-gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: var(--space-3);
+}
+.vip-gallery__item {
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  background: var(--color-primary-subtle);
+}
+.vip-gallery__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.vip-experiences-head {
+  text-align: center;
+  margin-bottom: var(--space-7);
+}
+.vip-experiences-head__title {
+  margin: 0;
+  font-size: var(--fs-3xl);
+}
+.vip-experiences-head__subtitle {
+  margin: var(--space-2) auto 0;
+  max-width: 48ch;
+  color: var(--color-text-muted);
+}
+
+.vip-experiences-empty {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: var(--space-6) 0;
+}

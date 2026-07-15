@@ -454,10 +454,11 @@
   }
 
   /* ------------------------------------------------------------------ */
-  /* 5. VIP Experiences nav link (Phase 22) — injected here at runtime    */
-  /* rather than baked into every page's HTML, so all 69+ pages pick it   */
-  /* up without a per-file edit. Placed right after "Influencers" in      */
-  /* both the desktop nav and the mobile menu (sidebar).                  */
+  /* 5. VIP nav link (Phase 23) — injected here at runtime rather than    */
+  /* baked into every page's HTML, so all 69+ pages pick it up without a  */
+  /* per-file edit. Deep-links straight to the new "⭐ VIP" tab on         */
+  /* influencers.html (see js/influencers-dynamic.js) — VIP personalities */
+  /* are just a filter on the same page now, not a separate hub page.     */
   /* ------------------------------------------------------------------ */
   (function injectVipNavLink() {
     function insertAfterHref(list, afterHref, li) {
@@ -470,19 +471,21 @@
       else list.appendChild(li);
     }
 
+    const VIP_HREF = "vip.html";
+
     const desktopList = document.querySelector(".main-nav__list");
-    if (desktopList && !desktopList.querySelector('a[href="vip.html"]')) {
+    if (desktopList && !desktopList.querySelector(`a[href="${VIP_HREF}"]`)) {
       const li = document.createElement("li");
       li.className = "main-nav__item";
-      li.innerHTML = '<a class="main-nav__link" href="vip.html">&#11088; VIP Experiences</a>';
+      li.innerHTML = `<a class="main-nav__link" href="${VIP_HREF}">&#11088; VIP</a>`;
       insertAfterHref(desktopList, "influencers.html", li);
     }
 
     const mobileList = document.querySelector(".mobile-menu__list");
-    if (mobileList && !mobileList.querySelector('a[href="vip.html"]')) {
+    if (mobileList && !mobileList.querySelector(`a[href="${VIP_HREF}"]`)) {
       const li = document.createElement("li");
       li.className = "mobile-menu__item";
-      li.innerHTML = '<a class="mobile-menu__link" href="vip.html">&#11088; VIP Experiences</a>';
+      li.innerHTML = `<a class="mobile-menu__link" href="${VIP_HREF}">VIP</a>`;
       insertAfterHref(mobileList, "influencers.html", li);
     }
   })();

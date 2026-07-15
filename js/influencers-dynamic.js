@@ -37,6 +37,7 @@
 
   const NICHES = [
     { value: "all", label: "All" },
+    { value: "vip", label: "⭐ VIP" },
     { value: "traveller", label: "Traveller" },
     { value: "content-creator", label: "Content Creator" },
     { value: "doctor", label: "Doctor" },
@@ -93,10 +94,13 @@
     // Book Now always opens the one reusable influencer-profile.html for
     // this influencer — never a hardcoded per-influencer page. Prefer the
     // readable username slug, fall back to the raw user_id.
-    const profileHref = `influencer-profile.html?${app.username ? `username=${encodeURIComponent(app.username)}` : `id=${encodeURIComponent(app.user_id)}`}`;
+    const idParam = app.username ? `username=${encodeURIComponent(app.username)}` : `id=${encodeURIComponent(app.user_id)}`;
+    const profileHref = `influencer-profile.html?${idParam}`;
+
+    const niche = esc(app.niche) || "other";
 
     return `
-      <article class="ip-card" data-ip-niche="${esc(app.niche) || "other"}" data-ip-dynamic aria-label="View ${esc(app.full_name) || "influencer"}&rsquo;s profile">
+      <article class="ip-card" data-ip-niche="${niche}" data-ip-dynamic aria-label="View ${esc(app.full_name) || "influencer"}&rsquo;s profile">
         <div class="ip-card__media">${mediaHtml}</div>
         <div class="ip-card__body">
           <h3 class="ip-card__name">${esc(app.full_name) || "Xploroo Influencer"}</h3>
@@ -120,17 +124,23 @@
   function applyFilter(activeValue) {
     Array.from(grid.querySelectorAll(".ip-card")).forEach((card) => {
       if (activeValue === "all") {
-        card.hidden = false;
+        // "All" tab shows real influencers only (no VIP showcase cards)
+        card.hidden = card.dataset.ipNiche === "vip";
         return;
       }
-      // Static cards (no data-ip-niche yet) only ever show under "All".
+      // Other niches show only cards matching that niche
       card.hidden = card.dataset.ipNiche !== activeValue;
     });
   }
 
-  function buildTabs() {
+  function initialNiche() {
+    const requested = new URLSearchParams(window.location.search).get("niche");
+    return requested && NICHES.some((n) => n.value === requested) ? requested : "all";
+  }
+
+  function buildTabs(activeValue) {
     tabsContainer.innerHTML = NICHES.map(
-      (n, i) => `<button class="ip-tab" type="button" role="tab" data-ip-tab="${n.value}" aria-selected="${i === 0}">${n.label}</button>`
+      (n) => `<button class="ip-tab" type="button" role="tab" data-ip-tab="${n.value}" aria-selected="${n.value === activeValue}">${n.label}</button>`
     ).join("");
 
     tabsContainer.querySelectorAll("[data-ip-tab]").forEach((btn) => {
@@ -142,21 +152,58 @@
   }
 
   /* ------------------------------------------------------------------ */
+  /* VIP showcase cards — static, non-interactive sample personalities.    */
+  /* ------------------------------------------------------------------ */
+  const VIP_SHOWCASE = [
+    { name: "Salman Khan", image: "https://picsum.photos/seed/salman-khan/300/300" },
+    { name: "Shah Rukh Khan", image: "https://picsum.photos/seed/shah-rukh-khan/300/300" },
+    { name: "Ranveer Singh", image: "https://picsum.photos/seed/ranveer-singh/300/300" },
+    { name: "Virat Kohli", image: "https://picsum.photos/seed/virat-kohli/300/300" },
+  ];
+
+  function vipShowcaseCardTemplate(personality) {
+    return `
+      <article class="ip-card" data-ip-niche="vip" aria-label="VIP personality: ${esc(personality.name)}">
+        <div class="ip-card__media">
+          <img class="ip-card__img" src="${window.XploroSecurity.sanitizeUrl(personality.image, { allowData: true })}" alt="" loading="lazy" />
+        </div>
+        <div class="ip-card__body">
+          <h3 class="ip-card__name">${esc(personality.name)}</h3>
+          <p class="ip-card__bio">VIP Celebrity Showcase</p>
+          <p class="ip-card__followers">VIP Exclusive</p>
+          <div class="ip-card__socials"></div>
+        </div>
+      </article>`;
+  }
+
+  function renderVIPShowcase() {
+    grid.insertAdjacentHTML("afterbegin", VIP_SHOWCASE.map((p) => vipShowcaseCardTemplate(p)).join(""));
+  }
+
+  /* ------------------------------------------------------------------ */
   /* Load + render approved influencers.                                  */
   /* ------------------------------------------------------------------ */
-  async function loadApprovedInfluencers() {
+  async function loadApprovedInfluencers(activeValue) {
+    // Render VIP showcase cards first
+    renderVIPShowcase();
+
     const data = await window.XploroApplications.getApprovedApplications();
-    if (!data.length) return;
+    if (!data.length) {
+      applyFilter(activeValue);
+      return;
+    }
 
     grid.insertAdjacentHTML("beforeend", data.map((app, i) => cardTemplate(app, i)).join(""));
+    applyFilter(activeValue);
 
     // Booking handoff — before following "Book Now", persist the target
-    // influencer's id/username so influencer-profile.html can still recover
-    // it if a host's clean-URL redirect strips the query string (e.g. the
-    // `serve` dev server or Vercel's cleanUrls both 301 `/influencer-profile.html`
-    // to `/influencer-profile`, dropping `?id=`/`?username=`). Same pattern
-    // as js/package-details.js's booking.html handoff.
-    grid.querySelectorAll('a[href*="influencer-profile.html?"]').forEach((link) => {
+    // influencer's id/username so influencer-profile.html/vip-profile.html
+    // can still recover it if a host's clean-URL redirect strips the query
+    // string (e.g. the `serve` dev server or Vercel's cleanUrls both 301
+    // `/influencer-profile.html` to `/influencer-profile`, dropping
+    // `?id=`/`?username=`). Same pattern as js/package-details.js's
+    // booking.html handoff.
+    grid.querySelectorAll('a[href*="influencer-profile.html?"], a[href*="vip-profile.html?"]').forEach((link) => {
       link.addEventListener("click", () => {
         try {
           const url = new URL(link.href, window.location.href);
@@ -171,6 +218,7 @@
     });
   }
 
-  buildTabs();
-  loadApprovedInfluencers();
+  const activeNiche = initialNiche();
+  buildTabs(activeNiche);
+  loadApprovedInfluencers(activeNiche);
 })();

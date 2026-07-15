@@ -5,8 +5,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://ryljttolhnvyynkfwuju.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Xploroo VIP Experiences — exclusive Meet & Greet and Vlog experiences with your favourite influencers." />
-  <title>VIP Experiences | Xploroo</title>
+  <meta name="description" content="Exclusive VIP travel experiences with celebrity personalities." />
+  <title>VIP Packages · Xploroo</title>
 
   <!-- Apply the stored theme before first paint (avoids a flash of the
        wrong theme on reload). Dark is the default — this only ever adds
@@ -29,16 +29,16 @@
   <link rel="stylesheet" href="styles/base.css" />
   <link rel="stylesheet" href="styles/utilities.css" />
 
-  <!-- Header module (shared with every page) -->
+  <!-- Header module (shared with the homepage) -->
   <link rel="stylesheet" href="styles/header.css" />
 
   <!-- Search overlay module (shared with every page) -->
   <link rel="stylesheet" href="styles/search-overlay.css" />
 
-  <!-- VIP Experiences module (Phase 22) -->
-  <link rel="stylesheet" href="styles/vip.css" />
+  <!-- Package listing page (shared with international-packages.html) -->
+  <link rel="stylesheet" href="styles/package-listing.css" />
 
-  <!-- Footer module (reusable across every page) -->
+  <!-- Footer module (shared with the homepage) -->
   <link rel="stylesheet" href="styles/footer.css" />
 </head>
 
@@ -49,7 +49,7 @@
   <div class="app-shell">
 
     <!-- ============================================================= -->
-    <!-- 1. STICKY HEADER                                              -->
+    <!-- STICKY HEADER (identical to the homepage)                     -->
     <!-- ============================================================= -->
     <header class="site-header" data-header data-sticky>
       <div class="site-header__inner">
@@ -158,7 +158,6 @@
         <div class="mobile-menu__topbar">
           <div class="mobile-menu__brand-group">
             <a class="brand" href="index.html" aria-label="Xploroo home">
-
               <span class="brand__name">Xploroo</span>
             </a>
 
@@ -272,52 +271,80 @@
     </div>
 
     <!-- ============================================================= -->
-    <!-- MAIN — VIP Home                                               -->
+    <!-- MAIN                                                          -->
     <!-- ============================================================= -->
     <main class="main" id="main">
-      <div class="vip-page" data-vip-page>
-        <div class="vip-container">
+      <section class="package-listing" aria-labelledby="vip-packages-title" data-section="package-listing">
+        <div class="package-listing__container">
 
-          <!-- Gate — shown instead of the page unless signed in. Every
-               logged-in user can access VIP for now (Phase 22 — no
-               membership lock yet); this only requires a session, same
-               gate pattern as my-bookings.html. -->
-          <div class="mb-gate" data-vip-gate hidden>
-            <h1 class="mb-gate__title">Sign In Required</h1>
-            <p class="mb-gate__desc">Log in to explore Xploroo VIP Experiences.</p>
-            <a class="btn btn--gradient btn--pill" href="login.html">Log In</a>
-          </div>
+          <header class="package-listing__head">
+            <h1 class="package-listing__title" id="vip-packages-title">⭐ VIP Packages</h1>
+            <p class="package-listing__subtitle">Exclusive travel experiences with celebrity personalities.</p>
+          </header>
 
-          <div data-vip-content hidden>
-            <header class="vip-hero">
-              <span class="vip-hero__eyebrow">&#11088; XPLOROO VIP</span>
-              <h1 class="vip-hero__title">VIP Experiences</h1>
-              <p class="vip-hero__subtitle">Exclusive, once-in-a-lifetime moments with the creators you follow — hand-curated by Xploroo.</p>
-            </header>
+          <div class="pkg-grid">
 
-            <div class="vip-cards">
-              <a class="vip-card" href="vip-meet-greet.html">
-                <span class="vip-card__icon" aria-hidden="true">&#129309;</span>
-                <h2 class="vip-card__title">Meet &amp; Greet Package</h2>
-                <p class="vip-card__desc">A private, in-person meetup with your favourite influencer — solo, as a couple, or with the whole family.</p>
-                <span class="btn btn--gradient btn--pill vip-card__cta">Explore Meet &amp; Greet</span>
+            <article class="pkg-card">
+              <a class="pkg-card__media" href="dubai-vip-package.html" aria-label="View Dubai VIP package">
+                <img class="pkg-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260707_145514.png.jpg.jpeg?updatedAt=1783417163324" alt="Dubai" />
               </a>
+              <div class="pkg-card__body">
+                <h3 class="pkg-card__name"><a href="dubai-vip-package.html">Dubai VIP</a></h3>
+                <p class="pkg-card__destination">Luxury Desert &amp; City Experience</p>
+                <p class="pkg-card__duration">5 Days / 4 Nights</p>
+                <p class="pkg-card__price">Price on Request</p>
+                <a class="pkg-card__link" href="dubai-vip-package.html">View Package <span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </article>
 
-              <a class="vip-card" href="vip-vlog.html">
-                <span class="vip-card__icon" aria-hidden="true">&#127909;</span>
-                <h2 class="vip-card__title">Vlog With Your Favourite Influencer</h2>
-                <p class="vip-card__desc">Star in your own travel vlog — book it with your favourite creator, or without, and choose your style.</p>
-                <span class="btn btn--gradient btn--pill vip-card__cta">Explore Vlog Experience</span>
+            <article class="pkg-card">
+              <a class="pkg-card__media" href="iceland-vip-package.html" aria-label="View Iceland VIP package">
+                <img class="pkg-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG-20260704-WA0019.jpg.jpeg?updatedAt=1783347238975" alt="Iceland" />
               </a>
-            </div>
+              <div class="pkg-card__body">
+                <h3 class="pkg-card__name"><a href="iceland-vip-package.html">Iceland VIP</a></h3>
+                <p class="pkg-card__destination">Northern Lights &amp; Glacier Adventure</p>
+                <p class="pkg-card__duration">7 Days / 6 Nights</p>
+                <p class="pkg-card__price">Price on Request</p>
+                <a class="pkg-card__link" href="iceland-vip-package.html">View Package <span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </article>
+
+            <article class="pkg-card">
+              <a class="pkg-card__media" href="singapore-vip-package.html" aria-label="View Singapore VIP package">
+                <img class="pkg-card__img" src="https://ik.imagekit.io/mg0v9kccj/file_00000000e94471fab9ac9f8acff218c0.png?updatedAt=1783417163302" alt="Singapore" />
+              </a>
+              <div class="pkg-card__body">
+                <h3 class="pkg-card__name"><a href="singapore-vip-package.html">Singapore VIP</a></h3>
+                <p class="pkg-card__destination">Modern City &amp; Asian Culture</p>
+                <p class="pkg-card__duration">4 Days / 3 Nights</p>
+                <p class="pkg-card__price">Price on Request</p>
+                <a class="pkg-card__link" href="singapore-vip-package.html">View Package <span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </article>
+
+            <article class="pkg-card">
+              <a class="pkg-card__media" href="japan-vip-package.html" aria-label="View Japan VIP package">
+                <img class="pkg-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG-20260706-WA0001.jpg.jpeg?updatedAt=1783347238979" alt="Japan" />
+              </a>
+              <div class="pkg-card__body">
+                <h3 class="pkg-card__name"><a href="japan-vip-package.html">Japan VIP</a></h3>
+                <p class="pkg-card__destination">Traditional &amp; Modern Japan</p>
+                <p class="pkg-card__duration">8 Days / 7 Nights</p>
+                <p class="pkg-card__price">Price on Request</p>
+                <a class="pkg-card__link" href="japan-vip-package.html">View Package <span aria-hidden="true">&rarr;</span></a>
+              </div>
+            </article>
+
           </div>
 
         </div>
-      </div>
+      </section>
+
     </main>
 
     <!-- ============================================================= -->
-    <!-- FOOTER                                                        -->
+    <!-- FOOTER (identical to the homepage)                            -->
     <!-- ============================================================= -->
     <footer class="site-footer" data-footer>
       <div class="site-footer__panel">
@@ -351,12 +378,12 @@
           <!-- Social icons -->
           <ul class="footer-social" role="list" aria-label="Xploroo on social media">
             <li>
-              <a class="footer-social__link" href="https://facebook.com/yourpage" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Facebook">
+              <a class="footer-social__link" href="https://www.facebook.com/share/1BcpUhZbZ2/" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Facebook">
                 <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H16.7V3.7C16.15 3.6 15.15 3.5 14 3.5c-2.4 0-4 1.45-4 4.1v2.3H7.3v3.1H10V21h3.5Z"/></svg>
               </a>
             </li>
             <li>
-              <a class="footer-social__link" href="https://instagram.com/yourusername" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Instagram">
+              <a class="footer-social__link" href="https://www.instagram.com/xploroo.in" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Instagram">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none"/><circle cx="12" cy="12" r="4" fill="none"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
               </a>
             </li>
@@ -417,28 +444,26 @@
               <li><a href="refund-policy.html">Refund Policy</a></li>
             </ul>
           </div>
-
         </div>
       </div>
     </footer>
 
   </div>
 
-  <!-- Header behavior (sticky blur, mobile menu, theme toggle) -->
-  <script src="js/header.js" defer></script>
+  <!-- Global theme toggle (light/dark) -->
+  <script src="js/theme-toggle.js" defer></script>
 
-  <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
-  <script src="js/search-overlay.js" defer></script>
-
-  <!-- Supabase client (official CDN build) + shared config/auth helpers —
-       see js/supabase.js. -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
+  <!-- Auth state & user context (shared by all pages) -->
   <script src="js/supabase.js" defer></script>
 
-  <!-- VIP Home behavior (session gate only — the two cards are plain links) -->
-  <script src="js/vip-home.js" defer></script>
+  <!-- Newsletter form (shared across all pages) -->
+  <script src="js/newsletter.js" defer></script>
 
-  <!-- Footer behavior (newsletter form) -->
-  <script src="js/footer.js" defer></script>
+  <!-- Main header/nav module (shared across all pages) -->
+  <script src="js/header.js" defer></script>
+
+  <!-- Search overlay (shared across all pages) -->
+  <script src="js/search.js" defer></script>
+
 </body>
 </html>

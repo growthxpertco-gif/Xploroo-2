@@ -44,12 +44,6 @@
     withdrawal_submitted: "Withdrawal Submitted",
     withdrawal_approved: "Withdrawal Approved",
     withdrawal_rejected: "Withdrawal Rejected",
-    vip_booking_created: "New VIP Booking",
-    vip_booking_approved: "VIP Booking Approved",
-    vip_booking_rejected: "VIP Booking Rejected",
-    vip_booking_completed: "VIP Booking Completed",
-    vip_booking_cancelled: "VIP Booking Cancelled",
-    vip_booking_updated: "VIP Booking Updated",
     kyc_approved: "KYC Approved",
     kyc_rejected: "KYC Rejected",
   };

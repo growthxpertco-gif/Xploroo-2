@@ -180,6 +180,50 @@
 }
 
 /* -------------------------------------------------------------------------
+   Pending verification code box — shown inside .account-status while the
+   application is pending (see js/account.js's renderPendingVerificationCard).
+   Mirrors .apply-pending-verification__code-box's styling.
+   ------------------------------------------------------------------------- */
+.account-status__code-section {
+  margin: var(--space-5) 0;
+}
+.account-status__code-label {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+.account-status__code-box {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-brand);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--glow-brand);
+}
+.account-status__code {
+  font-family: var(--font-mono);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.15em;
+  color: var(--color-text-strong);
+}
+@media (max-width: 480px) {
+  .account-status__code-box {
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: var(--space-5);
+  }
+}
+
+/* -------------------------------------------------------------------------
    Profile details — completion form <-> read-only saved-profile card.
    js/account.js swaps the inner markup of .account-profile between the
    two; both share the same glass-card shell defined here.

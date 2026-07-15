@@ -362,7 +362,7 @@
             <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="tickets">Support Tickets</button>
             <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="announcements">📢 Announcements</button>
             <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="referrals">🎁 Referral Management</button>
-            <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="vip-bookings">⭐ VIP Bookings</button>
+            <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="vip-personalities">⭐ VIP Personalities</button>
             <span class="admin-tabs__indicator" data-admin-tab-indicator aria-hidden="true"></span>
           </div>
 
@@ -395,8 +395,8 @@
               <div data-admin-referrals-root></div>
             </section>
 
-            <section class="admin-panel" data-admin-panel="vip-bookings">
-              <div data-admin-vip-bookings-root></div>
+            <section class="admin-panel" data-admin-panel="vip-personalities">
+              <div data-admin-vip-personalities-root></div>
             </section>
           </div>
 
@@ -531,12 +531,16 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
   <script src="js/supabase.js" defer></script>
 
+  <!-- Influencer application state (Supabase-backed) — loaded before
+       admin-analytics.js because its Pending Influencer Applications count
+       reuses window.XploroApplications.getPendingApplications() (the same
+       call the Influencer Applications tab below makes) instead of a
+       separate query, so both always agree on what "pending" means. -->
+  <script src="js/influencer-applications.js" defer></script>
+
   <!-- Live user statistics for the summary cards above (Supabase-backed,
        public.profiles only — see .admin-overview) -->
   <script src="js/admin-analytics.js" defer></script>
-
-  <!-- Influencer application state (Supabase-backed) -->
-  <script src="js/influencer-applications.js" defer></script>
 
   <!-- Influencer service bookings (Supabase-backed), used only by the
        "Influencer Bookings" tab below -->
@@ -585,8 +589,8 @@
   <!-- Admin — Referral Management (Supabase-backed: settings + performance) -->
   <script src="js/admin-referrals.js" defer></script>
 
-  <!-- Admin — VIP Bookings (Phase 22, Supabase-backed via admin-api: approve/reject/complete/cancel) -->
-  <script src="js/admin-vip-bookings.js" defer></script>
+  <!-- Admin — VIP Personalities (Phase 23, Supabase-backed via admin-api: toggle is_vip_personality + manage vip_packages) -->
+  <script src="js/admin-vip-personalities.js" defer></script>
 
   <!-- Footer behavior (newsletter form) -->
   <script src="js/footer.js" defer></script>

@@ -205,7 +205,100 @@
   const INFLUENCER_BADGE_SVG =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7-5.4-4.7 7.1-.7L12 2Z"/></svg>';
 
+  /* ------------------------------------------------------------------ */
+  /* Pending verification card — copy code + "I Have Added the Code".    */
+  /* Reuses the existing verification_status field (Verification         */
+  /* Required -> Verification Submitted -> Verified) that                */
+  /* submitVerification() already writes — no new column needed. This    */
+  /* only ever touches verification_status/verification_submitted_at,    */
+  /* never application_status, so the application stays "pending" until  */
+  /* an admin approves it.                                                */
+  /* ------------------------------------------------------------------ */
+  async function copyVerificationCode(code, btn) {
+    const originalLabel = btn.innerHTML;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(code);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = code;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+    } catch (_) {
+      /* Clipboard unavailable — still tell the user something happened. */
+    }
+    btn.innerHTML = "&#9989; Copied!";
+    setTimeout(() => {
+      btn.innerHTML = originalLabel;
+    }, 1800);
+  }
+
+  function renderPendingVerificationCard(application) {
+    // "Verification Required" -> code not submitted yet, show the confirm
+    // button. Anything past that ("Verification Submitted" / "Verified")
+    // -> already confirmed, show the disabled "Code Submitted" state.
+    // Either way application_status stays "pending" and this card stays
+    // visible until an admin approves it.
+    const alreadySubmitted = application.verification_status && application.verification_status !== "Verification Required";
+
+    panelEl.innerHTML = `
+      <section class="account-status">
+        <h2 class="account-status__title">&#127881; One Final Step Before Review</h2>
+        <p class="account-status__desc">Your application has been received successfully.</p>
+        <p class="account-status__desc">To verify that you are the real owner of the Instagram account, please add the verification code below to your Instagram bio.</p>
+
+        <div class="account-status__code-section">
+          <span class="account-status__code-label">Verification Code</span>
+          <div class="account-status__code-box">
+            <span class="account-status__code">${esc(application.verification_code || "")}</span>
+            <button class="btn btn--glass btn--pill btn--sm" type="button" data-account-copy-code>&#128203; Copy Code</button>
+          </div>
+        </div>
+
+        ${
+          alreadySubmitted
+            ? `<button class="btn btn--glass btn--pill account-status__action" type="button" disabled>&#9989; Code Submitted</button>
+               <p class="account-status__desc">Our team will now verify your Instagram bio. You can remove the code after your application has been approved.</p>`
+            : `<button class="btn btn--gradient btn--pill account-status__action" type="button" data-account-confirm-code>&#9989; I Have Added the Code</button>`
+        }
+      </section>`;
+
+    const copyBtn = panelEl.querySelector("[data-account-copy-code]");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", () => copyVerificationCode(application.verification_code, copyBtn));
+    }
+
+    const confirmBtn = panelEl.querySelector("[data-account-confirm-code]");
+    if (confirmBtn) {
+      confirmBtn.addEventListener("click", async () => {
+        confirmBtn.disabled = true;
+        const { error } = await window.XploroApplications.submitVerification(application);
+        if (error) {
+          confirmBtn.disabled = false;
+          window.alert("Something went wrong. Please try again.");
+          return;
+        }
+        // Re-render from fresh Supabase data so the button state (and any
+        // other panel) always reflects what actually got written.
+        renderRole();
+      });
+    }
+  }
+
   async function renderRole() {
+    // Always fetch fresh application data from Supabase, never use cached data.
+    // This ensures the Account page shows the current status after re-applications,
+    // profile visibility changes, or admin actions. Invalidate the cache here
+    // so renderRole can be called independently and always get fresh data.
+    if (window.XploroApplications && window.XploroApplications.invalidateMyApplicationCache) {
+      window.XploroApplications.invalidateMyApplicationCache();
+    }
+
     const application = await window.XploroApplications.getMyApplication();
     const status = application ? application.application_status : "none";
 
@@ -235,12 +328,7 @@
     }
 
     if (status === "pending") {
-      panelEl.innerHTML = `
-        <section class="account-status">
-          <h2 class="account-status__title">Application Submitted Successfully</h2>
-          <p class="account-status__desc">Your application is under review. We&rsquo;ll let you know as soon as it&rsquo;s been looked at.</p>
-          <span class="status-pill status-pill--pending account-status__pill">Pending Approval</span>
-        </section>`;
+      renderPendingVerificationCard(application);
       return;
     }
 
@@ -287,7 +375,13 @@
         const file = avatarInput.files[0];
         if (!file) return;
 
-        const check = window.XploroSecurity.validateUploadFile(file, { maxSizeMB: 5 });
+        // Phase 30 — profile pictures are restricted to JPG/JPEG/PNG/WEBP
+        // (no GIF), matching the same restriction on the application form's
+        // upload and the dashboard's "Change Profile Picture" control.
+        const check = window.XploroSecurity.validateUploadFile(file, {
+          allowedTypes: ["image/jpeg", "image/png", "image/webp"],
+          maxSizeMB: 5,
+        });
         if (!check.ok) {
           window.alert(check.error);
           avatarInput.value = "";

@@ -1,0 +1,51 @@
+/* ==========================================================================
+   XPLOROO · VIP Package module (Phase 23)
+   vip-package.css — Additive rules only for vip-package.html. Every other
+   visual (.pkg-hero, .pkg-container, .pkg-info-card, .pkg-cta, .pkg-tabs,
+   .pkg-included, .pkg-pricing, .pkg-sticky-bar, etc.) reuses
+   styles/package-details.css completely unmodified. This file only adds
+   the FAQ accordion, which travel package pages don't have.
+   Scoped entirely under `.vip-faq*` so it never touches any package page.
+   ========================================================================== */
+
+.vip-faq {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.vip-faq__item {
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  background: var(--glass-bg);
+  overflow: hidden;
+}
+.vip-faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-strong);
+  font-family: var(--font-body);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-medium);
+  text-align: left;
+}
+.vip-faq__question svg {
+  flex: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.vip-faq__item[open] .vip-faq__question svg {
+  transform: rotate(180deg);
+}
+.vip-faq__answer {
+  margin: 0;
+  padding: 0 var(--space-5) var(--space-4);
+  color: var(--color-text-muted);
+}

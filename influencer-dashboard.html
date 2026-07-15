@@ -493,10 +493,6 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
                   Calendar
                 </button>
-                <button class="dash-sidebar__link" type="button" data-dash-tab="vip" aria-selected="false">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 2.9 6.6 7.1.7-5.4 4.7 1.6 7-6.2-3.7-6.2 3.7 1.6-7-5.4-4.7 7.1-.7L12 2Z"/></svg>
-                  Upcoming VIP Events
-                </button>
                 <button class="dash-sidebar__link" type="button" data-dash-tab="notifications" aria-selected="false">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
                   Notifications
@@ -505,6 +501,10 @@
                 <button class="dash-sidebar__link" type="button" data-dash-tab="support" aria-selected="false">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="2" y="13" width="5" height="7" rx="2"/><rect x="17" y="13" width="5" height="7" rx="2"/><path d="M20 20a4 4 0 0 1-4 4h-2"/></svg>
                   Support
+                </button>
+                <button class="dash-sidebar__link" type="button" data-dash-tab="profile-picture" aria-selected="false">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+                  Profile Picture
                 </button>
               </nav>
 
@@ -546,12 +546,6 @@
                   <div data-dash-section="calendar"></div>
                 </section>
 
-                <section class="dash-panel" data-dash-panel="vip">
-                  <h2 class="dash-panel__title">&#11088; Upcoming VIP Events</h2>
-                  <p class="dash-panel__desc">VIP Meet &amp; Greet and Vlog bookings assigned to you.</p>
-                  <div data-dash-section="vip"></div>
-                </section>
-
                 <section class="dash-panel" data-dash-panel="notifications">
                   <h2 class="dash-panel__title">Notifications</h2>
                   <p class="dash-panel__desc">Updates on your bookings, withdrawals, and KYC status.</p>
@@ -562,6 +556,17 @@
                   <h2 class="dash-panel__title">Support</h2>
                   <p class="dash-panel__desc">Reach the Xploroo creator support team.</p>
                   <div data-dash-section="support"></div>
+                </section>
+
+                <!-- Phase 30 — Profile Picture management. Reads/writes the
+                     same public.profiles.avatar_url used everywhere else on
+                     the site (see js/dash-profile-picture.js), so a change
+                     here shows up immediately on influencer cards, the
+                     public profile page, and the admin panel. -->
+                <section class="dash-panel" data-dash-panel="profile-picture">
+                  <h2 class="dash-panel__title">Profile Picture</h2>
+                  <p class="dash-panel__desc">Your photo as it appears across Xploroo — influencer cards, your public profile, and the admin panel.</p>
+                  <div data-dash-section="profile-picture"></div>
                 </section>
 
               </div>
@@ -711,10 +716,6 @@
        "Referral Program" tab below -->
   <script src="js/referral.js" defer></script>
 
-  <!-- VIP bookings (Supabase-backed, Phase 22), used by the "Upcoming VIP
-       Events" tab and merged into the Calendar tab below -->
-  <script src="js/vip.js" defer></script>
-
   <!-- Influencer dashboard behavior (gate + sidebar tabs) -->
   <script src="js/influencer-dashboard.js" defer></script>
 
@@ -729,7 +730,7 @@
   <script src="js/dash-notifications.js" defer></script>
   <script src="js/dash-support.js" defer></script>
   <script src="js/dash-referrals.js" defer></script>
-  <script src="js/dash-vip.js" defer></script>
+  <script src="js/dash-profile-picture.js" defer></script>
 
   <!-- Footer behavior (newsletter form) -->
   <script src="js/footer.js" defer></script>

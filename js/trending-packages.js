@@ -9,8 +9,15 @@
 (function () {
   "use strict";
 
-  const carousel = document.querySelector("[data-tp-carousel]");
-  if (!carousel) return;
+  // Phase 23 — factored the wiring into a named function, exposed as
+  // window.XploroTrendingPackages.init(), so pages that inject their
+  // .tp-carousel markup asynchronously (e.g. vip-profile.html, built after
+  // a Supabase fetch resolves) can invoke it once the markup actually
+  // exists in the DOM. index.html's static carousel is unaffected — it
+  // still self-initializes below exactly as before.
+  function initTpCarousel(carousel) {
+  if (!carousel || carousel.dataset.tpInitialized) return;
+  carousel.dataset.tpInitialized = "true";
 
   const track = carousel.querySelector("[data-tp-track]");
   const prevBtn = carousel.querySelector("[data-tp-prev]");
@@ -164,4 +171,8 @@
       goToDestination();
     });
   });
+  }
+
+  initTpCarousel(document.querySelector("[data-tp-carousel]"));
+  window.XploroTrendingPackages = { init: initTpCarousel };
 })();

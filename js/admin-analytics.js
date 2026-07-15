@@ -8,17 +8,26 @@
      Total Registered Users        -> count(*) of every row
      Total Travellers              -> count where role contains "traveler"
      Total Influencers             -> count where influencer_status = "approved"
-     Pending Influencer Applications -> count where influencer_status = "pending"
 
-   Every query uses Supabase's `{ count: "exact", head: true }` mode, which
-   asks Postgres for a row count only — no rows are downloaded — so this
-   stays cheap even as the user base grows.
+   Pending Influencer Applications is the one exception: it must always
+   match the "Influencer Applications" tab below exactly, so instead of an
+   independent profiles.influencer_status query (which can drift out of
+   sync with influencer_applications.application_status — the actual field
+   admin.js's table filters on), this reuses
+   window.XploroApplications.getPendingApplications() — the very same call
+   admin.js makes — and just takes its length. One query, one definition of
+   "pending", never duplicated.
+
+   The other three counts still use Supabase's `{ count: "exact", head: true }`
+   mode, which asks Postgres for a row count only — no rows are downloaded —
+   so those stay cheap even as the user base grows.
 
    Refreshed once on load (so the counts always reflect the latest Supabase
    state after a page refresh, per spec) and again a moment after any
    Approve/Reject click in the Influencer Applications tab, so the numbers
    also update live in the same session without requiring a manual reload.
-   Vanilla JS, no dependencies. Loaded with `defer`, after js/supabase.js.
+   Vanilla JS, no dependencies. Loaded with `defer`, after js/supabase.js and
+   js/influencer-applications.js.
    ========================================================================== */
 (function () {
   "use strict";
@@ -45,6 +54,12 @@
     return count || 0;
   }
 
+  async function countPendingApplications() {
+    if (!window.XploroApplications) return null;
+    const applications = await window.XploroApplications.getPendingApplications();
+    return applications.length;
+  }
+
   function setValue(key, count) {
     const el = valueEls[key];
     if (!el) return;
@@ -56,7 +71,7 @@
       countRows((q) => q),
       countRows((q) => q.like("role", "%traveler%")),
       countRows((q) => q.eq("influencer_status", "approved")),
-      countRows((q) => q.eq("influencer_status", "pending")),
+      countPendingApplications(),
     ]);
 
     setValue("users", totalUsers);

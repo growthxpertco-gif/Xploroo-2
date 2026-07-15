@@ -123,6 +123,22 @@
     const username = await uniqueUsername(slugify(fields.fullName), user.id);
     const verificationCode = await uniqueVerificationCode();
 
+    // The influencer_applications table has a BEFORE UPDATE trigger
+    // (protect_application_admin_fields) that blocks any non-admin change to
+    // application_status/reviewed_at/reviewed_by/verified_at/verified_by,
+    // plus setting verification_status to "Verified" — those stay
+    // admin-only, enforced server-side via the admin-api Edge Function's
+    // service_role. It carries one narrow, explicit exception: the row's
+    // own owner may flip application_status from "rejected" back to
+    // "pending", provided the same statement also resets reviewed_at/
+    // reviewed_by/verified_at/verified_by to null and verification_status
+    // back to "Verification Required" — i.e. exactly what a legitimate
+    // re-application needs to do. Sending these values is required for
+    // Apply Again to actually take effect (a plain upsert that omits them
+    // only ever creates/updates the user-editable columns, leaving a
+    // previously-rejected row's application_status stuck on "rejected").
+    // For a brand-new applicant this is just an INSERT — the trigger only
+    // fires on UPDATE — so these are simply the correct starting values.
     const payload = {
       user_id: user.id,
       full_name: fields.fullName || "",
@@ -131,25 +147,15 @@
       instagram_profile_link: fields.instagram || "",
       short_bio: fields.bio || "",
       niche: fields.niche || "",
+      verification_code: verificationCode,
+      public_visibility: true,
       application_status: "pending",
-      submitted_at: new Date().toISOString(),
       reviewed_at: null,
       reviewed_by: null,
-      // Phase 10 — every (re-)submission starts a fresh Instagram ownership
-      // verification cycle, so a resubmission after a rejection can't reuse
-      // a stale/removed code.
-      verification_code: verificationCode,
-      verification_status: "Verification Required",
-      verification_submitted_at: null,
       verified_at: null,
       verified_by: null,
-      // Phase 12 — public visibility is a separate concern from approval
-      // (see getApprovedApplications()/getApprovedByIdOrUsername() below).
-      // Reset to ON on every (re-)submission so a previously-hidden
-      // applicant who was rejected and reapplies starts visible again once
-      // re-approved, matching "public_visibility should automatically be
-      // ON" for a first-time approval.
-      public_visibility: true,
+      verification_status: "Verification Required",
+      verification_submitted_at: null,
     };
 
     const { data, error } = await client.from(TABLE).upsert(payload, { onConflict: "user_id" }).select().maybeSingle();
@@ -158,8 +164,9 @@
       return { data, error };
     }
 
-    // Covers both a first-time submission and a rejected user applying
-    // again — either way the profile should now read "pending".
+    // Mirror the same "pending" status onto profiles.influencer_status —
+    // application_status itself was already written above (this call is
+    // purely the profiles-table mirror, not the source of truth).
     await syncProfile(user.id, "traveler", "pending");
 
     // The profile picture (if the applicant chose one on this form) is
@@ -206,7 +213,7 @@
     // (verification_code, reviewed_by, etc.).
     const { data, error } = await client
       .from(TABLE)
-      .select("user_id, username, full_name, instagram_followers, short_bio, instagram_profile_link, niche")
+      .select("user_id, username, full_name, instagram_followers, short_bio, instagram_profile_link, niche, is_vip_personality")
       .eq("application_status", "approved")
       .eq("public_visibility", true)
       .order("submitted_at", { ascending: false });
@@ -345,6 +352,13 @@
     return true;
   }
 
+  // Clear the cached application promise. Called when data is known to be
+  // stale (e.g. returning to Account page after re-application) to force a
+  // fresh fetch from Supabase on the next getMyApplication() call.
+  function invalidateMyApplicationCache() {
+    myApplicationPromise = null;
+  }
+
   window.XploroApplications = {
     getMyApplication,
     submitApplication,
@@ -356,5 +370,6 @@
     setPublicVisibility,
     approve,
     reject,
+    invalidateMyApplicationCache,
   };
 })();

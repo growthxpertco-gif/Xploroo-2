@@ -291,6 +291,52 @@
 .dash-upload__name { font-size: var(--fs-2xs); color: var(--color-text-subtle); }
 
 /* -------------------------------------------------------------------------
+   Profile Picture tab (Phase 30) — circular preview + "Change Profile
+   Picture" trigger, mirroring the same visual language as
+   .apply-avatar-upload on the application form for consistency.
+   ------------------------------------------------------------------------- */
+.dash-avatar-upload {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.dash-avatar-upload__preview {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #8b3cf0 0%, #5b6bff 48%, #22d3ee 100%);
+  border: 2px solid var(--glass-border);
+  color: #fff;
+}
+.dash-avatar-upload__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.dash-avatar-upload__preview svg { width: 1.8rem; height: 1.8rem; }
+.dash-avatar-upload__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.dash-avatar-upload__name {
+  font-size: var(--fs-xs);
+  color: var(--color-text-subtle);
+}
+.dash-avatar-upload__message {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+
+/* -------------------------------------------------------------------------
    Calendar — day-details list (below the month grid)
    ------------------------------------------------------------------------- */
 .dash-cal-grid {

@@ -36,7 +36,14 @@
   /* persisted to public.profiles.avatar_url on submit (see               */
   /* js/influencer-applications.js), the single source of truth for the  */
   /* picture everywhere on the site — this page keeps no copy of its own.*/
+  /* Phase 30 — mandatory: the application cannot be submitted without a  */
+  /* photo. Validated via setCustomValidity() on the (visually hidden)    */
+  /* file input, checked at submit time against profilePictureDataUrl     */
+  /* rather than the input's native .files — that variable is also set    */
+  /* by "Apply Again"'s pre-fill from a previously-uploaded photo, so a   */
+  /* re-application doesn't force re-choosing a file every time.          */
   /* ------------------------------------------------------------------ */
+  const AVATAR_ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
   let profilePictureDataUrl = "";
   let profilePictureFile = null;
   const avatarInput = form.querySelector("[data-apply-avatar-input]");
@@ -54,7 +61,7 @@
         return;
       }
 
-      const check = window.XploroSecurity.validateUploadFile(file, { maxSizeMB: 5 });
+      const check = window.XploroSecurity.validateUploadFile(file, { allowedTypes: AVATAR_ALLOWED_TYPES, maxSizeMB: 5 });
       if (!check.ok) {
         window.alert(check.error);
         avatarInput.value = "";
@@ -64,6 +71,7 @@
 
       avatarName.textContent = file.name;
       profilePictureFile = file;
+      avatarInput.setCustomValidity("");
       const reader = new FileReader();
       reader.onload = () => {
         profilePictureDataUrl = String(reader.result || "");
@@ -100,40 +108,39 @@
     }, 1800);
   }
 
-  // Fresh submission, or a returning applicant who hasn't confirmed the
-  // code yet — shows the code + "I've Added the Code" confirmation.
-  function renderVerificationRequired(application) {
+  // Application is pending — shows persistent verification panel that
+  // remains visible across page refreshes and logins until approved/rejected.
+  function renderPendingVerification(application) {
     card.innerHTML = `
-      <div class="apply-verify">
-        <span class="apply-verify__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M7 8h10M7 12h6M7 16h3"/></svg>
-        </span>
-        <h2 class="apply-verify__title">Instagram Verification Required</h2>
-        <p class="apply-verify__desc">To verify that you own this Instagram account, temporarily add the verification code below to your Instagram Bio.</p>
+      <div class="apply-pending-verification">
+        <div class="apply-pending-verification__content">
+          <h2 class="apply-pending-verification__title">🎉 One Final Step Before Review</h2>
+          <p class="apply-pending-verification__intro">Your application has been received successfully.</p>
+          <p class="apply-pending-verification__desc">To verify that you are the real owner of the Instagram account, please add the verification code below to your Instagram bio.</p>
 
-        <div class="apply-verify__code-box">
-          <span class="apply-verify__code">${esc(application.verification_code)}</span>
-          <button class="btn btn--glass btn--pill btn--sm apply-verify__copy" type="button" data-apply-copy-code>&#128203; Copy Code</button>
+          <div class="apply-pending-verification__code-section">
+            <div class="apply-pending-verification__code-box">
+              <span class="apply-pending-verification__code">${esc(application.verification_code)}</span>
+              <button class="btn btn--glass btn--pill btn--sm apply-pending-verification__copy" type="button" data-apply-copy-code>📋 Copy Code</button>
+            </div>
+          </div>
+
+          <div class="apply-pending-verification__actions">
+            <a class="btn btn--glass btn--pill" href="account.html">← Back to My Account</a>
+          </div>
+
+          <div class="apply-pending-verification__info">
+            <p class="apply-pending-verification__info-text">Once you've updated your Instagram bio with this code, our team will verify your profile. After successful verification, you can remove the code from your bio.</p>
+            <p class="apply-pending-verification__info-text">Your application will remain under review until verification is completed.</p>
+            <div class="apply-pending-verification__status">
+              <span class="status-pill status-pill--pending">🟡 Verification Pending</span>
+            </div>
+          </div>
         </div>
-
-        <button class="btn btn--gradient btn--pill apply-verify__confirm" type="button" data-apply-confirm-verification>&#9989; I&rsquo;ve Added the Code</button>
-        <a class="btn btn--glass btn--pill apply-blocked__back" href="account.html">Back to My Account</a>
       </div>`;
 
     const copyBtn = card.querySelector("[data-apply-copy-code]");
     copyBtn.addEventListener("click", () => copyVerificationCode(application.verification_code, copyBtn));
-
-    const confirmBtn = card.querySelector("[data-apply-confirm-verification]");
-    confirmBtn.addEventListener("click", async () => {
-      confirmBtn.disabled = true;
-      const { error } = await window.XploroApplications.submitVerification(application);
-      if (error) {
-        confirmBtn.disabled = false;
-        window.alert("Something went wrong. Please try again.");
-        return;
-      }
-      renderVerificationSubmitted();
-    });
   }
 
   // Applicant confirmed the code is in their bio — waiting on the admin's
@@ -162,10 +169,11 @@
 
   /* ------------------------------------------------------------------ */
   /* Rejected — its own message + an "Apply Again" button that reveals    */
-  /* the (empty) form right here, rather than navigating away. Submitting */
-  /* again overwrites the same row (upsert on user_id).                   */
+  /* the form pre-filled with previous application data. Submitting again */
+  /* overwrites the same row (upsert on user_id), changes status back to  */
+  /* pending, and generates a new verification code.                      */
   /* ------------------------------------------------------------------ */
-  function renderRejected() {
+  function renderRejected(application) {
     card.innerHTML = `
       <div class="apply-blocked">
         <h2 class="apply-blocked__title">Application Rejected</h2>
@@ -178,11 +186,41 @@
       card.innerHTML = "";
       card.appendChild(formView);
       formView.hidden = false;
-      form.reset();
-      avatarName.textContent = "No file chosen";
-      avatarPreview.innerHTML =
-        '<svg class="apply-avatar-upload__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>';
-      profilePictureDataUrl = "";
+
+      // Pre-fill form with previous application data
+      if (application) {
+        const fullNameInput = form.querySelector("[name='fullName']");
+        const instagramInput = form.querySelector("[name='instagram']");
+        const followersInput = form.querySelector("[name='followers']");
+        const bioInput = form.querySelector("[name='bio']");
+        const nicheSelect = form.querySelector("[name='niche']");
+
+        if (fullNameInput) fullNameInput.value = application.full_name || "";
+        if (instagramInput) instagramInput.value = application.instagram_profile_link || "";
+        if (followersInput) followersInput.value = application.instagram_followers || "";
+        if (bioInput) bioInput.value = application.short_bio || "";
+        if (nicheSelect) nicheSelect.value = application.niche || "";
+
+        // If there's a previous avatar, show it
+        if (application.avatar_url) {
+          avatarPreview.innerHTML = `<img src="${window.XploroSecurity.sanitizeUrl(application.avatar_url, { allowData: true })}" alt="" />`;
+          avatarName.textContent = "Previous profile picture loaded";
+          profilePictureDataUrl = application.avatar_url;
+          profilePictureFile = null;
+        } else {
+          avatarName.textContent = "No file chosen";
+          avatarPreview.innerHTML =
+            '<svg class="apply-avatar-upload__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>';
+          profilePictureDataUrl = "";
+        }
+      } else {
+        form.reset();
+        avatarName.textContent = "No file chosen";
+        avatarPreview.innerHTML =
+          '<svg class="apply-avatar-upload__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>';
+        profilePictureDataUrl = "";
+      }
+      avatarInput.setCustomValidity("");
     });
   }
 
@@ -289,6 +327,16 @@
   /* ------------------------------------------------------------------ */
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    // Phase 30 — profile picture is mandatory. Checked against
+    // profilePictureDataUrl (set by a fresh upload above, or by "Apply
+    // Again"'s pre-fill from a previously-uploaded photo) rather than the
+    // file input's own .files, so re-applying with the existing photo
+    // still counts as "has a profile picture" without forcing a re-upload.
+    // Uses the same setCustomValidity()+reportValidity() mechanism as the
+    // rest of this form's native validation (see confirmPassword in
+    // js/auth.js for the same pattern).
+    avatarInput.setCustomValidity(profilePictureDataUrl ? "" : "Please upload a profile picture.");
     if (!form.reportValidity()) return;
 
     const submitBtn = form.querySelector(".apply-submit");
@@ -319,10 +367,10 @@
       return;
     }
 
-    // Application submitted — instead of a plain "Pending Approval" screen,
-    // go straight into the Phase 10 Instagram ownership verification step
-    // (submitApplication() already generated a fresh verification_code).
-    renderVerificationRequired(data);
+    // Application submitted — show the persistent verification panel
+    // with the verification code (submitApplication() already generated
+    // a fresh verification_code).
+    renderPendingVerification(data);
   });
 
   /* ------------------------------------------------------------------ */
@@ -347,22 +395,21 @@
 
     if (status === "pending") {
       formView.hidden = true;
-      // Phase 10 — a "pending" application always sits in one of three
-      // Instagram ownership verification sub-states until it's finally
-      // approved/rejected.
-      if (application.verification_status === "Verified") {
-        renderVerified();
-      } else if (application.verification_status === "Verification Submitted") {
-        renderVerificationSubmitted();
-      } else {
-        renderVerificationRequired(application);
-      }
+      // Show persistent verification panel for all pending applications
+      // regardless of verification_status sub-state. Panel remains visible
+      // across page refreshes and logins until approved/rejected.
+      renderPendingVerification(application);
       return;
     }
 
     if (status === "rejected") {
       formView.hidden = true;
-      renderRejected();
+      // Attach avatar URL from profiles table for pre-filling rejected form
+      if (application && window.XploroAuth) {
+        const avatars = await window.XploroAuth.getAvatarsByUserIds([user.id]);
+        if (avatars.has(user.id)) application.avatar_url = avatars.get(user.id);
+      }
+      renderRejected(application);
       return;
     }
 
