@@ -1,0 +1,428 @@
+/* ==========================================================================
+   XPLOROO · Luxury VIP Information Sections (Phase 33)
+   vip-luxury-sections.css — Ultra-premium redesign of the five
+   informational sections on vip.html (What's Included / Do's / Don'ts /
+   Important Disclaimer / Terms & Conditions). No text, order, layout or
+   spacing changed anywhere — this file only restyles the existing
+   `.pkg-section` / `.pkg-included__*` / `.pkg-list--*` / `.vip-notes*`
+   markup (shared with every VIP package details page via
+   package-details.css) and does so entirely through `.vip-luxury`
+   descendant selectors, so nothing here ever affects those classes
+   anywhere else on the site.
+
+   Palette — Royal Purple / Cherry Magenta / Deep Indigo / Electric Blue /
+   Midnight Navy only. No yellow/gold/orange anywhere in this file.
+
+   Every "3D" effect is a plain CSS transform driven by two lightweight
+   custom properties (--rx/--ry for tilt, --mx/--my for the cursor-follow
+   light) that js/vip-luxury-cards.js updates on mousemove — no canvas, no
+   per-frame JS animation loop, no layout thrashing. The titanium border's
+   travelling light and the ambient dust/bokeh are themselves pure CSS
+   keyframe loops (transform/opacity/custom-property only).
+   Load AFTER package-details.css and utilities.css.
+   ========================================================================== */
+
+.vip-luxury {
+  --vip-purple:   #5B21B6;
+  --vip-magenta:  #C026D3;
+  --vip-indigo:   #312E81;
+  --vip-blue:     #2563EB;
+  --vip-navy:     #0F172A;
+  --vip-silver:   #C7CCD9;
+  --vip-silver-bright: #F5F7FB;
+  position: relative;
+  isolation: isolate;
+}
+
+/* -------------------------------------------------------------------------
+   Ambient backdrop — soft bokeh + tiny shimmering dust in the new palette
+   only, extremely subtle, confined to this wrapper only.
+   ------------------------------------------------------------------------- */
+.vip-luxury__ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.vip-luxury__dust {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--vip-silver-bright);
+  opacity: 0;
+  animation: vip-luxury-dust 12s ease-in-out infinite;
+}
+.vip-luxury__dust:nth-child(1) { top: 6%;  left: 8%;  animation-delay: 0s; }
+.vip-luxury__dust:nth-child(2) { top: 22%; left: 88%; animation-delay: 2.2s; }
+.vip-luxury__dust:nth-child(3) { top: 48%; left: 4%;  animation-delay: 4.4s; }
+.vip-luxury__dust:nth-child(4) { top: 65%; left: 92%; animation-delay: 1.3s; }
+.vip-luxury__dust:nth-child(5) { top: 82%; left: 14%; animation-delay: 5.6s; }
+.vip-luxury__dust:nth-child(6) { top: 36%; left: 50%; animation-delay: 3.1s; }
+
+@keyframes vip-luxury-dust {
+  0%, 100% { opacity: 0; transform: translateY(0) scale(0.8); }
+  50%      { opacity: 0.55; transform: translateY(-18px) scale(1.15); }
+}
+
+.vip-luxury__bokeh {
+  position: absolute;
+  width: 14rem;
+  height: 14rem;
+  border-radius: 50%;
+  filter: blur(64px);
+  opacity: 0.05;
+  animation: vip-luxury-bokeh 22s ease-in-out infinite alternate;
+}
+.vip-luxury__bokeh:nth-child(7) { top: -4rem;    left: -3rem;  background: var(--vip-purple); }
+.vip-luxury__bokeh:nth-child(8) { top: 40%;      right: -5rem; background: var(--vip-blue); animation-delay: 6s; }
+.vip-luxury__bokeh:nth-child(9) { bottom: -5rem; left: 30%;    background: var(--vip-magenta); animation-delay: 12s; }
+
+@keyframes vip-luxury-bokeh {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(2rem, -1.5rem) scale(1.12); }
+}
+
+/* -------------------------------------------------------------------------
+   The luxury card shell — every `.pkg-section` inside `.vip-luxury`.
+   Fill: a deep navy/indigo/purple frosted-glass gradient. Border: a
+   titanium-silver ring (see `--vip-luxury-angle` below) with a bright
+   comet of light travelling anti-clockwise around it, layered via ::after.
+   ------------------------------------------------------------------------- */
+@property --vip-luxury-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.vip-luxury .pkg-section {
+  --rx: 0deg;
+  --ry: 0deg;
+  --lift: 0px;
+  --mx: 50%;
+  --my: 50%;
+  --vip-luxury-angle: 0deg;
+  position: relative;
+  z-index: 1;
+  margin-bottom: clamp(1.75rem, 1.3rem + 1.6vw, 2.5rem);
+  padding: clamp(1.75rem, 1.3rem + 2vw, 3rem);
+  border-radius: 2rem;
+  background:
+    linear-gradient(165deg, rgba(91, 33, 182, 0.22), rgba(15, 23, 42, 0.85) 55%, rgba(37, 99, 235, 0.16)) padding-box,
+    linear-gradient(150deg, rgba(199, 204, 217, 0.55), rgba(120, 128, 150, 0.25) 45%, rgba(199, 204, 217, 0.4) 100%) border-box;
+  border: 1.5px solid transparent;
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  backdrop-filter: blur(24px) saturate(1.4);
+  box-shadow:
+    var(--shadow-xl),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0 0 1px rgba(199, 204, 217, 0.1);
+  transform-style: preserve-3d;
+  transform: perspective(1400px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--lift));
+  transition: transform 480ms var(--ease-emphasis), box-shadow 480ms var(--ease-emphasis);
+  overflow: hidden;
+}
+.vip-luxury .pkg-section:hover {
+  --lift: -8px;
+  box-shadow:
+    var(--shadow-xl),
+    0 1px 0 rgba(255, 255, 255, 0.12) inset,
+    0 30px 70px -20px rgba(37, 99, 235, 0.28),
+    0 0 0 1px rgba(199, 204, 217, 0.22);
+}
+
+/* Cursor-follow light reflection (unchanged interaction, recoloured) */
+.vip-luxury .pkg-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.16), transparent 55%);
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-standard);
+  pointer-events: none;
+}
+.vip-luxury .pkg-section:hover::before {
+  opacity: 1;
+}
+
+/* Titanium border — a bright silver comet travelling ANTI-CLOCKWISE
+   around the card, masked to just the border ring (exclude trick), always
+   slowly rotating; brightens further on hover. */
+.vip-luxury .pkg-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--vip-luxury-angle),
+    transparent 0deg,
+    transparent 260deg,
+    rgba(199, 204, 217, 0.35) 300deg,
+    var(--vip-silver-bright) 330deg,
+    rgba(199, 204, 217, 0.35) 350deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0.75;
+  animation: vip-luxury-border-travel 12s linear infinite;
+  transition: opacity var(--dur-slow) var(--ease-standard);
+  pointer-events: none;
+}
+.vip-luxury .pkg-section:hover::after {
+  opacity: 1;
+}
+
+@keyframes vip-luxury-border-travel {
+  to { --vip-luxury-angle: -360deg; }
+}
+
+/* Everything inside the card must paint above the glow/border layers */
+.vip-luxury .pkg-section > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* -------------------------------------------------------------------------
+   Section head — silver-badge icon + refined pure-white title
+   ------------------------------------------------------------------------- */
+.vip-luxury .pkg-section__head {
+  margin-bottom: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid rgba(199, 204, 217, 0.2);
+}
+.vip-luxury .pkg-section__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: clamp(1.35rem, 1.15rem + 1vw, 1.75rem);
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  text-shadow: 0 0 18px rgba(255, 255, 255, 0.25), 0 0 36px rgba(37, 99, 235, 0.2);
+}
+.vip-luxury__icon {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  font-size: 1.15rem;
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(199, 204, 217, 0.35), rgba(91, 33, 182, 0.35));
+  border: 1px solid rgba(199, 204, 217, 0.45);
+  box-shadow: 0 0 18px rgba(199, 204, 217, 0.3);
+  animation: vip-luxury-icon-float 5s ease-in-out infinite;
+}
+
+@keyframes vip-luxury-icon-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+
+/* -------------------------------------------------------------------------
+   What's Included — luxury icon-block grid
+   ------------------------------------------------------------------------- */
+.vip-luxury .pkg-included__grid {
+  gap: var(--space-5);
+}
+.vip-luxury .pkg-included__item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(199, 204, 217, 0.18);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  transition: transform 380ms var(--ease-emphasis), border-color 380ms var(--ease-standard), background-color 380ms var(--ease-standard), box-shadow 380ms var(--ease-emphasis);
+}
+.vip-luxury .pkg-included__item:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(199, 204, 217, 0.55);
+  box-shadow: 0 16px 32px -12px rgba(37, 99, 235, 0.3);
+}
+.vip-luxury .pkg-included__icon {
+  background: linear-gradient(135deg, rgba(199, 204, 217, 0.32), rgba(91, 33, 182, 0.32));
+  border: 1px solid rgba(199, 204, 217, 0.4);
+  color: #ffffff;
+  transition: transform 380ms var(--ease-emphasis), box-shadow 380ms var(--ease-emphasis);
+}
+.vip-luxury .pkg-included__item:hover .pkg-included__icon {
+  transform: scale(1.12) rotate(-6deg);
+  box-shadow: 0 0 16px rgba(199, 204, 217, 0.4);
+}
+.vip-luxury .pkg-included__label {
+  letter-spacing: 0.01em;
+  color: #ffffff;
+}
+
+/* -------------------------------------------------------------------------
+   Do's / Don'ts — each row becomes its own luxury strip. Icon tint uses
+   the approved palette (electric blue = affirmative, cherry magenta =
+   negative) instead of green/red or any gold accent.
+   ------------------------------------------------------------------------- */
+.vip-luxury .pkg-list {
+  gap: 0;
+  display: flex;
+  flex-direction: column;
+}
+.vip-luxury .pkg-list li {
+  padding: var(--space-4) var(--space-3);
+  border-radius: var(--radius-lg);
+  border-bottom: 1px solid rgba(199, 204, 217, 0.12);
+  transition: background-color 320ms var(--ease-standard), transform 320ms var(--ease-emphasis), padding-left 320ms var(--ease-emphasis);
+}
+.vip-luxury .pkg-list li:last-child {
+  border-bottom: none;
+}
+.vip-luxury .pkg-list li:hover {
+  background: rgba(255, 255, 255, 0.05);
+  padding-left: var(--space-4);
+}
+.vip-luxury .pkg-list svg {
+  flex: none;
+  padding: 5px;
+  border-radius: 50%;
+  box-sizing: content-box;
+  color: #ffffff;
+  transition: transform 320ms var(--ease-emphasis), box-shadow 320ms var(--ease-standard);
+}
+.vip-luxury .pkg-list--check svg {
+  background: rgba(37, 99, 235, 0.22);
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.35);
+}
+.vip-luxury .pkg-list--cross svg {
+  background: rgba(192, 38, 212, 0.22);
+  box-shadow: 0 0 0 1px rgba(192, 38, 212, 0.35);
+}
+.vip-luxury .pkg-list li:hover svg {
+  transform: scale(1.15);
+}
+.vip-luxury .pkg-list--check li:hover svg {
+  box-shadow: 0 0 12px rgba(37, 99, 235, 0.5);
+}
+.vip-luxury .pkg-list--cross li:hover svg {
+  box-shadow: 0 0 12px rgba(192, 38, 212, 0.5);
+}
+.vip-luxury .pkg-list li span {
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: #ffffff;
+}
+
+/* -------------------------------------------------------------------------
+   Important Disclaimer / Terms & Conditions — same luxury card treatment
+   applied to the nested `.card--glass` note boxes, plus refined silver
+   markers replacing the default disc/decimal list style.
+   ------------------------------------------------------------------------- */
+.vip-luxury .vip-notes {
+  background:
+    linear-gradient(165deg, rgba(49, 46, 129, 0.28), rgba(15, 23, 42, 0.85)) padding-box,
+    linear-gradient(150deg, rgba(199, 204, 217, 0.45), rgba(120, 128, 150, 0.22)) border-box;
+  border: 1.5px solid transparent;
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-md);
+}
+.vip-luxury .vip-notes__list {
+  padding-left: 0;
+  gap: 0;
+}
+.vip-luxury .vip-notes__list li {
+  position: relative;
+  list-style: none;
+  padding: var(--space-3) var(--space-3) var(--space-3) 2rem;
+  border-radius: var(--radius-lg);
+  color: #ffffff;
+  transition: background-color 320ms var(--ease-standard);
+}
+.vip-luxury .vip-notes__list li + li {
+  margin-top: 0;
+  border-top: 1px solid rgba(199, 204, 217, 0.14);
+}
+.vip-luxury .vip-notes__list li:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+.vip-luxury .vip-notes__list li::before {
+  content: "";
+  position: absolute;
+  left: 0.35rem;
+  top: 1.1rem;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--vip-silver-bright);
+  box-shadow: 0 0 8px 1px rgba(199, 204, 217, 0.7);
+}
+.vip-luxury .vip-notes__list--numbered {
+  counter-reset: vip-luxury-term;
+}
+.vip-luxury .vip-notes__list--numbered li::before {
+  counter-increment: vip-luxury-term;
+  content: counter(vip-luxury-term);
+  width: 1.35rem;
+  height: 1.35rem;
+  top: 0.65rem;
+  left: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.65rem;
+  font-weight: var(--fw-bold);
+  color: var(--vip-navy);
+  background: linear-gradient(135deg, var(--vip-silver-bright), var(--vip-silver));
+  box-shadow: 0 0 10px rgba(199, 204, 217, 0.5);
+}
+.vip-luxury .vip-notes__list li::marker {
+  content: none;
+}
+
+/* -------------------------------------------------------------------------
+   Mobile — same luxury feel, lighter blur/shadow cost, no ambient bokeh
+   (kept subtle dust only) to stay smooth on lower-powered devices.
+   ------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .vip-luxury .pkg-section {
+    padding: clamp(1.35rem, 1.1rem + 2vw, 1.75rem);
+    border-radius: 1.5rem;
+  }
+  .vip-luxury__bokeh {
+    display: none;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Touch / no-hover devices — keep the premium static look, drop the
+   cursor-follow interactions that don't apply without a pointer.
+   ------------------------------------------------------------------------- */
+@media (hover: none) {
+  .vip-luxury .pkg-section::before {
+    display: none;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Reduced motion — keep every card fully visible and legible, drop the
+   tilt/border-travel/glow/dust animation loops entirely.
+   ------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .vip-luxury .pkg-section {
+    transition: none;
+    transform: none;
+  }
+  .vip-luxury .pkg-section::after,
+  .vip-luxury__dust,
+  .vip-luxury__bokeh,
+  .vip-luxury__icon {
+    animation: none;
+    opacity: 0.6;
+  }
+  .vip-luxury .pkg-included__item:hover .pkg-included__icon {
+    transform: none;
+  }
+}

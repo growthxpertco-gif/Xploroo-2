@@ -5,8 +5,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://ryljttolhnvyynkfwuju.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Review and approve Xploroo Influencer applications." />
-  <title>Influencer Applications | Xploroo Admin</title>
+  <meta name="description" content="Request an exclusive Xploroo VIP booking experience." />
+  <title>VIP Booking Request | Xploroo</title>
 
   <!-- Apply the stored theme before first paint (avoids a flash of the
        wrong theme on reload). Dark is the default — this only ever adds
@@ -23,25 +23,6 @@
     })();
   </script>
 
-  <!-- Admin route guard — synchronous, runs before anything renders so this
-       page never flashes admin content for an unauthenticated visitor.
-       Mirrors js/admin-auth.js's session key/logic (see that file); kept
-       inline here only so the redirect can happen this early. -->
-  <script>
-    (function () {
-      try {
-        var raw = sessionStorage.getItem("xploroo-admin-session");
-        var parsed = raw ? JSON.parse(raw) : null;
-        var valid = parsed && parsed.token && parsed.expiresAt && new Date(parsed.expiresAt) > new Date();
-        if (!valid) {
-          window.location.replace("admin-login.html");
-        }
-      } catch (_) {
-        window.location.replace("admin-login.html");
-      }
-    })();
-  </script>
-
   <!-- Global design system (load order matters) -->
   <link rel="stylesheet" href="styles/variables.css" />
   <link rel="stylesheet" href="styles/reset.css" />
@@ -54,14 +35,12 @@
   <!-- Search overlay module (shared with every page) -->
   <link rel="stylesheet" href="styles/search-overlay.css" />
 
-  <!-- Role system — shared badge/status-pill styles -->
+  <!-- Shared status-pill styling only (Pending/Confirmed/Cancelled) -->
   <link rel="stylesheet" href="styles/role-shared.css" />
 
-  <!-- Admin module -->
-  <link rel="stylesheet" href="styles/admin.css" />
-
-  <!-- Admin — Influencer Payments module -->
-  <link rel="stylesheet" href="styles/admin-payments.css" />
+  <!-- VIP Booking Request form + summary card (Phase 32) — a completely
+       independent page/flow from booking.html and vip-package-booking.html. -->
+  <link rel="stylesheet" href="styles/vip-booking.css" />
 
   <!-- Footer module (reusable across every page) -->
   <link rel="stylesheet" href="styles/footer.css" />
@@ -99,7 +78,7 @@
         <div class="site-header__left">
           <div class="brand">
             <img class="brand__logo" src="https://ik.imagekit.io/mg0v9kccj/1000166489-removebg-previewDDF.png" alt="" />
-            <a class="brand__link" href="/" aria-label="Xploroo home"><span class="brand__name">Xploroo</span></a>
+            <a class="brand__link" href="index.html" aria-label="Xploroo home"><span class="brand__name">Xploroo</span></a>
           </div>
 
           <!-- Dark / Light toggle (switches the site-wide theme) -->
@@ -182,8 +161,7 @@
         <!-- Top bar: logo + theme toggle (left), close (right) -->
         <div class="mobile-menu__topbar">
           <div class="mobile-menu__brand-group">
-            <a class="brand" href="/" aria-label="Xploroo home">
-              
+            <a class="brand" href="index.html" aria-label="Xploroo home">
               <span class="brand__name">Xploroo</span>
             </a>
 
@@ -297,117 +275,13 @@
     </div>
 
     <!-- ============================================================= -->
-    <!-- MAIN — Admin: Influencer Applications                         -->
+    <!-- MAIN — VIP Booking Request (Phase 32, fully independent of      -->
+    <!-- booking.html / vip-package-booking.html — see js/vip-booking.js) -->
     <!-- ============================================================= -->
     <main class="main" id="main">
-      <div class="admin-page" data-admin-page>
-        <div class="admin-container">
-
-          <header class="admin-hero">
-            <div class="admin-hero__intro">
-              <h1 class="admin-hero__title">Admin Panel</h1>
-              <p class="admin-hero__subtitle">Review Influencer applications and approve influencer payouts.</p>
-            </div>
-            <button class="btn btn--glass btn--pill" type="button" data-admin-logout>Admin Logout</button>
-          </header>
-
-          <!-- Live user statistics (Supabase-backed, public.profiles) — see
-               js/admin-analytics.js. Reuses the same premium summary-card
-               recipe as the Influencer Dashboard's overview cards
-               (.dash-overview in influencer-dashboard.html), scoped here as
-               .admin-overview so this page stays self-contained. -->
-          <section class="admin-overview" aria-label="User statistics" data-admin-overview>
-            <article class="admin-overview__card admin-overview__card--users" data-overview-card="users">
-              <span class="admin-overview__emoji" aria-hidden="true">&#128101;</span>
-              <div class="admin-overview__body">
-                <p class="admin-overview__title">Total Registered Users</p>
-                <p class="admin-overview__value" data-overview-value="users">&mdash;</p>
-                <p class="admin-overview__subtitle">Live from Supabase</p>
-              </div>
-            </article>
-
-            <article class="admin-overview__card admin-overview__card--travellers" data-overview-card="travellers">
-              <span class="admin-overview__emoji" aria-hidden="true">&#129394;</span>
-              <div class="admin-overview__body">
-                <p class="admin-overview__title">Total Travellers</p>
-                <p class="admin-overview__value" data-overview-value="travellers">&mdash;</p>
-                <p class="admin-overview__subtitle">Live from Supabase</p>
-              </div>
-            </article>
-
-            <article class="admin-overview__card admin-overview__card--influencers" data-overview-card="influencers">
-              <span class="admin-overview__emoji" aria-hidden="true">&#11088;</span>
-              <div class="admin-overview__body">
-                <p class="admin-overview__title">Total Influencers</p>
-                <p class="admin-overview__value" data-overview-value="influencers">&mdash;</p>
-                <p class="admin-overview__subtitle">Approved only</p>
-              </div>
-            </article>
-
-            <article class="admin-overview__card admin-overview__card--pending" data-overview-card="pending">
-              <span class="admin-overview__emoji" aria-hidden="true">&#8987;</span>
-              <div class="admin-overview__body">
-                <p class="admin-overview__title">Pending Influencer Applications</p>
-                <p class="admin-overview__value" data-overview-value="pending">&mdash;</p>
-                <p class="admin-overview__subtitle">Awaiting review</p>
-              </div>
-            </article>
-          </section>
-
-          <div class="admin-tabs" role="tablist" aria-label="Admin sections" data-admin-tabs>
-            <button class="admin-tabs__tab" type="button" role="tab" aria-selected="true" data-admin-tab="applications">Influencer Applications</button>
-            <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="payments">Influencer Payments</button>
-            <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="bookings">Influencer Bookings</button>
-            <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="travel-bookings">Travel Bookings</button>
-            <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="vip-bookings">VIP Bookings</button>
-            <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="tickets">Support Tickets</button>
-            <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="announcements">📢 Announcements</button>
-            <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="referrals">🎁 Referral Management</button>
-            <button class="admin-tabs__tab" type="button" role="tab" aria-selected="false" data-admin-tab="vip-personalities">⭐ VIP Personalities</button>
-            <span class="admin-tabs__indicator" data-admin-tab-indicator aria-hidden="true"></span>
-          </div>
-
-          <div class="admin-panels">
-            <section class="admin-panel is-active" data-admin-panel="applications">
-              <div class="admin-list" data-admin-list></div>
-            </section>
-
-            <section class="admin-panel" data-admin-panel="payments">
-              <div data-admin-payments-root></div>
-            </section>
-
-            <section class="admin-panel" data-admin-panel="bookings">
-              <div data-admin-bookings-root></div>
-            </section>
-
-            <section class="admin-panel" data-admin-panel="travel-bookings">
-              <div data-admin-travel-bookings-root></div>
-            </section>
-
-            <!-- VIP Bookings (Phase 32) — public.vip_booking_requests, a
-                 completely independent table/flow from vip_packages/
-                 vip_package_bookings above and from travel_bookings. -->
-            <section class="admin-panel" data-admin-panel="vip-bookings">
-              <div data-admin-vip-bookings-root></div>
-            </section>
-
-            <section class="admin-panel" data-admin-panel="tickets">
-              <div data-admin-tickets-root></div>
-            </section>
-
-            <section class="admin-panel" data-admin-panel="announcements">
-              <div data-admin-announcements-root></div>
-            </section>
-
-            <section class="admin-panel" data-admin-panel="referrals">
-              <div data-admin-referrals-root></div>
-            </section>
-
-            <section class="admin-panel" data-admin-panel="vip-personalities">
-              <div data-admin-vip-personalities-root></div>
-            </section>
-          </div>
-
+      <div class="vip-booking-page">
+        <div class="vip-booking-page__container" data-vip-booking-request-container>
+          <p class="vip-booking-page__loading">Loading&hellip;</p>
         </div>
       </div>
     </main>
@@ -452,7 +326,7 @@
               </a>
             </li>
             <li>
-              <a class="footer-social__link" href="https://www.instagram.com/xploroo.in?igsh=MXBqamI0aWxvNHdqNA==" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Instagram">
+              <a class="footer-social__link" href="https://www.instagram.com/xploroo.in" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Instagram">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none"/><circle cx="12" cy="12" r="4" fill="none"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
               </a>
             </li>
@@ -526,83 +400,14 @@
   <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
   <script src="js/search-overlay.js" defer></script>
 
-  <!-- Admin authentication (temporary, frontend-only) — powers the Admin
-       Logout button below. The route guard itself runs inline in <head>.
-       Separate from the Supabase client below: this protects the admin
-       panel itself, the Supabase session belongs to whichever
-       traveler/influencer is logged into this same browser. -->
-  <script src="js/admin-auth.js" defer></script>
-
-  <!-- Supabase client (official CDN build) + shared config/auth helpers —
-       see js/supabase.js. The Influencer Applications tab (js/admin.js)
-       reads/writes the influencer_applications table through it. -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js" defer></script>
+  <!-- Supabase client + data modules this page reads from -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
   <script src="js/supabase.js" defer></script>
-
-  <!-- Influencer application state (Supabase-backed) — loaded before
-       admin-analytics.js because its Pending Influencer Applications count
-       reuses window.XploroApplications.getPendingApplications() (the same
-       call the Influencer Applications tab below makes) instead of a
-       separate query, so both always agree on what "pending" means. -->
-  <script src="js/influencer-applications.js" defer></script>
-
-  <!-- Live user statistics for the summary cards above (Supabase-backed,
-       public.profiles only — see .admin-overview) -->
-  <script src="js/admin-analytics.js" defer></script>
-
-  <!-- Influencer service bookings (Supabase-backed), used only by the
-       "Influencer Bookings" tab below -->
-  <script src="js/influencer-bookings.js" defer></script>
-  <script src="js/travel-bookings.js" defer></script>
-
-  <!-- Support tickets (Supabase-backed), used only by the "Support Tickets"
-       tab below -->
-  <script src="js/support-tickets.js" defer></script>
-
-  <!-- Earnings / Withdrawals / Notifications (Supabase-backed), used only by
-       the "Influencer Payments" tab below -->
-  <script src="js/earnings.js" defer></script>
-  <script src="js/withdrawals.js" defer></script>
   <script src="js/notifications.js" defer></script>
+  <script src="js/vip-booking-requests.js" defer></script>
 
-  <!-- Admin Broadcast Announcements (Supabase-backed), used only by the
-       "Announcements" tab below -->
-  <script src="js/announcements.js" defer></script>
-
-  <!-- Referral & Discount System (Supabase-backed) — also gives approve()
-       below the ability to auto-generate a referral code -->
-  <script src="js/referral.js" defer></script>
-
-  <!-- Admin tab switching (Influencer Applications / Influencer Payments / …) -->
-  <script src="js/admin-tabs.js" defer></script>
-
-  <!-- Admin panel behavior (list + approve/reject) -->
-  <script src="js/admin.js" defer></script>
-
-  <!-- Admin — Influencer Payments (real Supabase withdrawal approval workflow) -->
-  <script src="js/admin-withdrawals.js" defer></script>
-
-  <!-- Admin — Influencer Bookings (monitor-only, Supabase-backed) -->
-  <script src="js/admin-bookings.js" defer></script>
-
-  <!-- Admin — Travel Bookings (monitor-only, Supabase-backed) -->
-  <script src="js/admin-travel-bookings.js" defer></script>
-
-  <!-- Admin — VIP Bookings (Phase 32, monitor-only, Supabase-backed,
-       completely independent of Travel/Influencer Bookings above) -->
-  <script src="js/admin-vip-bookings.js" defer></script>
-
-  <!-- Admin — Support Tickets (Supabase-backed: open/reply/in-progress/resolve) -->
-  <script src="js/admin-support-tickets.js" defer></script>
-
-  <!-- Admin — Broadcast Announcements (Supabase-backed: send + history) -->
-  <script src="js/admin-announcements.js" defer></script>
-
-  <!-- Admin — Referral Management (Supabase-backed: settings + performance) -->
-  <script src="js/admin-referrals.js" defer></script>
-
-  <!-- Admin — VIP Personalities (Phase 23, Supabase-backed via admin-api: toggle is_vip_personality + manage vip_packages) -->
-  <script src="js/admin-vip-personalities.js" defer></script>
+  <!-- VIP Booking Request form behavior (Phase 32) -->
+  <script src="js/vip-booking.js" defer></script>
 
   <!-- Footer behavior (newsletter form) -->
   <script src="js/footer.js" defer></script>

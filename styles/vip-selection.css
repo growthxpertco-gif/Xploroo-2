@@ -1,0 +1,113 @@
+/* ==========================================================================
+   XPLOROO · VIP Personality selector (vip.html)
+   vip-selection.css — The "Select VIP Personality" dropdown + single
+   destination card + Book Now button + surprise-event note that replaced
+   the old 4-card grid on vip.html. Scoped entirely under `.vip-select`.
+
+   The destination card itself reuses the shared `.tp-card` component
+   (styles/trending-packages.css) completely unmodified for its base shell,
+   body, footer and price markup — this file only replicates the three
+   small `.trending-packages`-scoped overrides (square media crop +
+   minimal destination/duration text) under `.vip-select__card-scope`
+   instead of applying the full `.trending-packages` section class here,
+   so this page never inherits that class's own section padding.
+
+   Load AFTER trending-packages.css and utilities.css.
+   ========================================================================== */
+
+.vip-select {
+  max-width: 26rem;
+  margin: 0 auto var(--space-8);
+}
+
+.vip-select__field {
+  width: 100%;
+}
+
+/* -------------------------------------------------------------------------
+   Single destination card — same `.tp-card` visuals as Trending Packages,
+   centered instead of laid out in a multi-card carousel/grid.
+   ------------------------------------------------------------------------- */
+.vip-select__card-scope {
+  max-width: 22rem;
+  margin: 0 auto var(--space-8);
+}
+.vip-select__card-scope .tp-card__media {
+  aspect-ratio: 1 / 1;
+  display: block;
+  background: var(--color-surface-inset);
+}
+.vip-select__card-scope .tp-card__media::after {
+  display: none;
+}
+.vip-select__card-scope .tp-card__img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.vip-select__card-scope .tp-card__destination {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: var(--fw-bold);
+  color: var(--color-text-strong);
+}
+.vip-select__card-scope .tp-card__duration {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+.vip-select__book {
+  display: flex;
+  margin: 0 auto;
+  box-shadow: var(--glow-brand);
+}
+
+.vip-select__note {
+  max-width: 40rem;
+  margin: var(--space-6) auto 0;
+  text-align: center;
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}
+.vip-select__note strong {
+  display: block;
+  margin-bottom: var(--space-2);
+  color: var(--color-text-strong);
+}
+
+/* -------------------------------------------------------------------------
+   Important Disclaimer / Terms & Conditions — plain text-point lists inside
+   a premium glass card (.card--glass, utilities.css). Both the What's
+   Included grid above and the Do's/Don'ts lists reuse styles/
+   package-details.css's `.pkg-included__*` / `.pkg-list--*` classes
+   unmodified; only this plain bullet/number list style is new, since
+   package-details.css has no equivalent for a policy-style list.
+   ------------------------------------------------------------------------- */
+.vip-notes__list {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.vip-notes__list li {
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+  color: var(--color-text-muted);
+}
+.vip-notes__list:not(.vip-notes__list--numbered) {
+  list-style: disc;
+}
+.vip-notes__list--numbered {
+  list-style: decimal;
+}
+.vip-notes__list li::marker {
+  color: var(--color-text-subtle);
+}

@@ -35,8 +35,41 @@
   <!-- Search overlay module (shared with every page) -->
   <link rel="stylesheet" href="styles/search-overlay.css" />
 
-  <!-- Package listing page (shared with international-packages.html) -->
+  <!-- Package listing page (shared with international-packages.html) —
+       kept for the page head styling (.package-listing / .package-listing__*);
+       the old .pkg-grid card styles are unused now that the page shows a
+       single VIP-selected destination card instead. -->
   <link rel="stylesheet" href="styles/package-listing.css" />
+
+  <!-- Trending Packages module — reused here purely for its `.tp-card`
+       component (image + destination + duration + price), so the single
+       VIP destination card below looks identical to a Trending Packages
+       card. -->
+  <link rel="stylesheet" href="styles/trending-packages.css" />
+
+  <!-- VIP personality selector — dropdown, single destination card layout,
+       Book Now button, and surprise-event note (see js/vip-selection.js). -->
+  <link rel="stylesheet" href="styles/vip-selection.css" />
+
+  <!-- Package Details module — reused here only for its `.pkg-section` /
+       `.pkg-included__*` / `.pkg-list--*` classes, so the informational
+       sections below Book Now (What's Included / Do's / Don'ts / Disclaimer
+       / Terms) match every VIP package details page's design language
+       exactly. None of this page's own hero/gallery/tabs/layout rules
+       apply here since this page never uses that markup. -->
+  <link rel="stylesheet" href="styles/package-details.css" />
+
+  <!-- Surprise Event celebration section — premium luxury card + subtle
+       confetti/sparkle/ribbon animation, directly below the destination
+       card. Self-contained, touches nothing else on the page. -->
+  <link rel="stylesheet" href="styles/vip-celebration.css" />
+
+  <!-- Phase 33 — ultra-premium luxury redesign of the What's Included /
+       Do's / Don'ts / Important Disclaimer / Terms & Conditions sections.
+       Scoped entirely under `.vip-luxury`, overriding package-details.css's
+       shared classes only within that wrapper — every other page that
+       reuses those classes (dubai-vip-package.html etc.) is unaffected. -->
+  <link rel="stylesheet" href="styles/vip-luxury-sections.css" />
 
   <!-- Footer module (shared with the homepage) -->
   <link rel="stylesheet" href="styles/footer.css" />
@@ -282,61 +315,246 @@
             <p class="package-listing__subtitle">Exclusive travel experiences with celebrity personalities.</p>
           </header>
 
-          <div class="pkg-grid">
+          <!-- VIP personality selector — picking another VIP swaps the
+               destination card below in place; it never navigates away
+               from this page (see js/vip-selection.js). -->
+          <div class="vip-select">
+            <label class="field vip-select__field">
+              <span class="field__label">Select VIP Personality</span>
+              <select class="input select" data-vip-select>
+                <option value="salman-khan">Salman Khan</option>
+                <option value="shah-rukh-khan">Shah Rukh Khan</option>
+                <option value="virat-kohli">Virat Kohli</option>
+                <option value="ranveer-singh">Ranveer Singh</option>
+              </select>
+            </label>
+          </div>
 
-            <article class="pkg-card">
-              <a class="pkg-card__media" href="dubai-vip-package.html" aria-label="View Dubai VIP package">
-                <img class="pkg-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260707_145514.png.jpg.jpeg?updatedAt=1783417163324" alt="Dubai" />
-              </a>
-              <div class="pkg-card__body">
-                <h3 class="pkg-card__name"><a href="dubai-vip-package.html">Dubai VIP</a></h3>
-                <p class="pkg-card__destination">Luxury Desert &amp; City Experience</p>
-                <p class="pkg-card__duration">5 Days / 4 Nights</p>
-                <p class="pkg-card__price">Price on Request</p>
-                <a class="pkg-card__link" href="dubai-vip-package.html">View Package <span aria-hidden="true">&rarr;</span></a>
-              </div>
-            </article>
+          <!-- Single destination card, driven entirely by the selected VIP.
+               Clicking it opens the existing VIP package details page. -->
+          <div class="vip-select__card-scope" data-vip-card-mount></div>
 
-            <article class="pkg-card">
-              <a class="pkg-card__media" href="iceland-vip-package.html" aria-label="View Iceland VIP package">
-                <img class="pkg-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG-20260704-WA0019.jpg.jpeg?updatedAt=1783347238975" alt="Iceland" />
-              </a>
-              <div class="pkg-card__body">
-                <h3 class="pkg-card__name"><a href="iceland-vip-package.html">Iceland VIP</a></h3>
-                <p class="pkg-card__destination">Northern Lights &amp; Glacier Adventure</p>
-                <p class="pkg-card__duration">7 Days / 6 Nights</p>
-                <p class="pkg-card__price">Price on Request</p>
-                <a class="pkg-card__link" href="iceland-vip-package.html">View Package <span aria-hidden="true">&rarr;</span></a>
-              </div>
-            </article>
+          <!-- Surprise Event celebration section — the visual highlight of
+               the page. Purely decorative/static (no dependency on the
+               selected VIP), sits directly below the destination card.
+               See styles/vip-celebration.css. -->
+          <section class="vip-celebrate" aria-labelledby="vip-celebrate-title">
+            <div class="vip-celebrate__particles" aria-hidden="true">
+              <span class="vip-celebrate__particle vip-celebrate__particle--confetti"></span>
+              <span class="vip-celebrate__particle vip-celebrate__particle--confetti"></span>
+              <span class="vip-celebrate__particle vip-celebrate__particle--confetti"></span>
+              <span class="vip-celebrate__particle vip-celebrate__particle--confetti"></span>
+              <span class="vip-celebrate__particle vip-celebrate__particle--confetti"></span>
+              <span class="vip-celebrate__particle vip-celebrate__particle--ribbon"></span>
+              <span class="vip-celebrate__particle vip-celebrate__particle--ribbon"></span>
+              <span class="vip-celebrate__particle vip-celebrate__particle--ribbon"></span>
+              <span class="vip-celebrate__particle vip-celebrate__particle--sparkle"></span>
+              <span class="vip-celebrate__particle vip-celebrate__particle--sparkle"></span>
+              <span class="vip-celebrate__particle vip-celebrate__particle--sparkle"></span>
+              <span class="vip-celebrate__particle vip-celebrate__particle--sparkle"></span>
+              <span class="vip-celebrate__particle vip-celebrate__particle--confetti"></span>
+              <span class="vip-celebrate__particle vip-celebrate__particle--confetti"></span>
+              <span class="vip-celebrate__particle vip-celebrate__particle--sparkle"></span>
+              <span class="vip-celebrate__particle vip-celebrate__particle--ribbon"></span>
+            </div>
 
-            <article class="pkg-card">
-              <a class="pkg-card__media" href="singapore-vip-package.html" aria-label="View Singapore VIP package">
-                <img class="pkg-card__img" src="https://ik.imagekit.io/mg0v9kccj/file_00000000e94471fab9ac9f8acff218c0.png?updatedAt=1783417163302" alt="Singapore" />
-              </a>
-              <div class="pkg-card__body">
-                <h3 class="pkg-card__name"><a href="singapore-vip-package.html">Singapore VIP</a></h3>
-                <p class="pkg-card__destination">Modern City &amp; Asian Culture</p>
-                <p class="pkg-card__duration">4 Days / 3 Nights</p>
-                <p class="pkg-card__price">Price on Request</p>
-                <a class="pkg-card__link" href="singapore-vip-package.html">View Package <span aria-hidden="true">&rarr;</span></a>
-              </div>
-            </article>
+            <div class="vip-celebrate__card">
+              <span class="vip-celebrate__glow" aria-hidden="true"></span>
 
-            <article class="pkg-card">
-              <a class="pkg-card__media" href="japan-vip-package.html" aria-label="View Japan VIP package">
-                <img class="pkg-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG-20260706-WA0001.jpg.jpeg?updatedAt=1783347238979" alt="Japan" />
-              </a>
-              <div class="pkg-card__body">
-                <h3 class="pkg-card__name"><a href="japan-vip-package.html">Japan VIP</a></h3>
-                <p class="pkg-card__destination">Traditional &amp; Modern Japan</p>
-                <p class="pkg-card__duration">8 Days / 7 Nights</p>
-                <p class="pkg-card__price">Price on Request</p>
-                <a class="pkg-card__link" href="japan-vip-package.html">View Package <span aria-hidden="true">&rarr;</span></a>
+              <header class="vip-celebrate__head">
+                <h2 class="vip-celebrate__title" id="vip-celebrate-title">&#127881; Surprise Event Planned by Xploroo</h2>
+                <p class="vip-celebrate__subtitle">Every VIP experience is uniquely designed by Xploroo to create unforgettable memories.</p>
+              </header>
+
+              <div class="vip-celebrate__grid">
+                <div class="vip-celebrate__item">
+                  <span class="vip-celebrate__icon" aria-hidden="true">&#127919;</span>
+                  <h3 class="vip-celebrate__item-title">Destination</h3>
+                  <p class="vip-celebrate__item-desc">A surprise luxury destination personally selected by Xploroo.</p>
+                </div>
+                <div class="vip-celebrate__item">
+                  <span class="vip-celebrate__icon" aria-hidden="true">&#127976;</span>
+                  <h3 class="vip-celebrate__item-title">Luxury Stay</h3>
+                  <p class="vip-celebrate__item-desc">Premium hotels and exclusive venues carefully planned for your experience.</p>
+                </div>
+                <div class="vip-celebrate__item">
+                  <span class="vip-celebrate__icon" aria-hidden="true">&#127869;</span>
+                  <h3 class="vip-celebrate__item-title">Fine Dining</h3>
+                  <p class="vip-celebrate__item-desc">Private dining experiences designed around your selected VIP personality.</p>
+                </div>
+                <div class="vip-celebrate__item">
+                  <span class="vip-celebrate__icon" aria-hidden="true">&#127909;</span>
+                  <h3 class="vip-celebrate__item-title">Premium Memories</h3>
+                  <p class="vip-celebrate__item-desc">Professional photography and videography to capture every unforgettable moment.</p>
+                </div>
+                <div class="vip-celebrate__item">
+                  <span class="vip-celebrate__icon" aria-hidden="true">&#127873;</span>
+                  <h3 class="vip-celebrate__item-title">Exclusive Surprises</h3>
+                  <p class="vip-celebrate__item-desc">Special moments, gifts and unique experiences planned only for your booking.</p>
+                </div>
+                <div class="vip-celebrate__item">
+                  <span class="vip-celebrate__icon" aria-hidden="true">&#129309;</span>
+                  <h3 class="vip-celebrate__item-title">Dedicated Event Team</h3>
+                  <p class="vip-celebrate__item-desc">Our experienced Xploroo team manages your VIP experience from beginning to end.</p>
+                </div>
               </div>
-            </article>
+
+              <div class="vip-celebrate__quote">
+                <p class="vip-celebrate__quote-lead">&#10024; Every VIP experience is different.</p>
+                <p class="vip-celebrate__quote-desc">To keep every event truly exclusive, Xploroo personally plans the destination, luxury venue, activities and complete experience after your booking is confirmed.</p>
+                <p class="vip-celebrate__quote-desc vip-celebrate__quote-desc--emphasis">No two VIP events are ever the same.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Premium informational sections — reuse the same `.pkg-*`
+               classes (styles/package-details.css) every VIP package
+               details page uses for its own What's Included / Inclusions /
+               Exclusions lists, so the underlying markup/content matches
+               exactly. Phase 33 — wrapped in `.vip-luxury` so the ultra-
+               premium 3D-card redesign (styles/vip-luxury-sections.css +
+               js/vip-luxury-cards.js) is scoped to vip.html only and never
+               touches package-details.css's shared rules used by every VIP
+               package details page. No text, order, or content changed —
+               only decorative, aria-hidden icon spans added before each
+               heading and a subtle ambient-particle backdrop. -->
+          <div class="vip-luxury" data-vip-luxury>
+            <div class="vip-luxury__ambient" aria-hidden="true">
+              <span class="vip-luxury__dust"></span>
+              <span class="vip-luxury__dust"></span>
+              <span class="vip-luxury__dust"></span>
+              <span class="vip-luxury__dust"></span>
+              <span class="vip-luxury__dust"></span>
+              <span class="vip-luxury__dust"></span>
+              <span class="vip-luxury__bokeh"></span>
+              <span class="vip-luxury__bokeh"></span>
+              <span class="vip-luxury__bokeh"></span>
+            </div>
+
+          <section class="pkg-section" aria-labelledby="vip-included-title" data-vip-luxury-card>
+            <div class="pkg-section__head">
+              <h2 class="pkg-section__title" id="vip-included-title"><span class="vip-luxury__icon" aria-hidden="true">&#10024;</span>What&rsquo;s Included</h2>
+            </div>
+            <div class="pkg-included__grid">
+              <div class="pkg-included__item">
+                <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+                <span class="pkg-included__label">Luxury Destination planned by Xploroo</span>
+              </div>
+              <div class="pkg-included__item">
+                <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+                <span class="pkg-included__label">Premium Hotel / Resort</span>
+              </div>
+              <div class="pkg-included__item">
+                <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+                <span class="pkg-included__label">VIP Meet &amp; Greet Experience</span>
+              </div>
+              <div class="pkg-included__item">
+                <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+                <span class="pkg-included__label">Professional Photography &amp; Videography</span>
+              </div>
+              <div class="pkg-included__item">
+                <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+                <span class="pkg-included__label">Luxury Dining Experience</span>
+              </div>
+              <div class="pkg-included__item">
+                <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+                <span class="pkg-included__label">Dedicated Xploroo Event Team</span>
+              </div>
+              <div class="pkg-included__item">
+                <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+                <span class="pkg-included__label">Event Planning &amp; Coordination</span>
+              </div>
+              <div class="pkg-included__item">
+                <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+                <span class="pkg-included__label">Safety &amp; Privacy Management</span>
+              </div>
+              <div class="pkg-included__item">
+                <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+                <span class="pkg-included__label">Premium Hospitality</span>
+              </div>
+              <div class="pkg-included__item">
+                <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>
+                <span class="pkg-included__label">Personalized Surprise Experience</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="pkg-section" aria-labelledby="vip-dos-title" data-vip-luxury-card>
+            <div class="pkg-section__head">
+              <h2 class="pkg-section__title" id="vip-dos-title"><span class="vip-luxury__icon" aria-hidden="true">&#10003;</span>Do&rsquo;s</h2>
+            </div>
+            <ul class="pkg-list pkg-list--check">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Carry a valid Government ID.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Reach the venue before the reporting time.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Follow instructions provided by the Xploroo team.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Maintain respectful and professional behaviour.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Inform our team in advance regarding any special medical requirements.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Respect the privacy of all guests and VIP personalities.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Cooperate with the event crew for photography and scheduling.</span></li>
+            </ul>
+          </section>
+
+          <section class="pkg-section" aria-labelledby="vip-donts-title" data-vip-luxury-card>
+            <div class="pkg-section__head">
+              <h2 class="pkg-section__title" id="vip-donts-title"><span class="vip-luxury__icon" aria-hidden="true">&#9888;</span>Don&rsquo;ts</h2>
+            </div>
+            <ul class="pkg-list pkg-list--cross">
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Do not carry any prohibited or illegal items.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Do not request personal contact details from VIP personalities.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Do not interrupt scheduled event activities.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Do not consume illegal substances during the event.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Do not create disturbance or inappropriate behaviour.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Do not record restricted areas without permission.</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Do not transfer your booking without Xploroo approval.</span></li>
+            </ul>
+          </section>
+
+          <section class="pkg-section" aria-labelledby="vip-disclaimer-title" data-vip-luxury-card>
+            <div class="pkg-section__head">
+              <h2 class="pkg-section__title" id="vip-disclaimer-title"><span class="vip-luxury__icon" aria-hidden="true">&#128737;</span>Important Disclaimer</h2>
+            </div>
+            <div class="card card--glass card--lg vip-notes">
+              <ul class="vip-notes__list">
+                <li>Every VIP experience is professionally planned by Xploroo.</li>
+                <li>The destination, luxury venue, hotel and itinerary are finalized by Xploroo based on operational feasibility and VIP availability.</li>
+                <li>VIP personalities are subject to availability and scheduling confirmation.</li>
+                <li>Images shown are for illustration purposes only.</li>
+                <li>The final experience may vary depending on destination, weather, security requirements and event planning.</li>
+                <li>Xploroo reserves the right to modify the schedule, venue or activities if required for operational or safety reasons.</li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="pkg-section" aria-labelledby="vip-terms-title" data-vip-luxury-card>
+            <div class="pkg-section__head">
+              <h2 class="pkg-section__title" id="vip-terms-title"><span class="vip-luxury__icon" aria-hidden="true">&#128220;</span>Terms &amp; Conditions</h2>
+            </div>
+            <div class="card card--glass card--lg vip-notes">
+              <ol class="vip-notes__list vip-notes__list--numbered">
+                <li>Booking confirmation is subject to availability.</li>
+                <li>Full payment must be completed before confirmation.</li>
+                <li>Cancellation and rescheduling policies will apply.</li>
+                <li>Guests must comply with all safety instructions.</li>
+                <li>Misconduct may result in immediate cancellation without refund.</li>
+                <li>Photography, videography and promotional content may be captured during the event with prior consent.</li>
+                <li>Xploroo reserves the right to refuse participation for safety or legal reasons.</li>
+                <li>Additional terms may apply depending on the selected VIP experience.</li>
+              </ol>
+            </div>
+          </section>
 
           </div>
+          <!-- /.vip-luxury -->
+
+          <!-- Book Now — moved below every informational section (Phase 32).
+               Opens the new, completely independent vip-booking.html
+               request form (see js/vip-selection.js), never booking.html. -->
+          <button class="btn btn--gradient btn--pill vip-select__book" type="button" data-vip-book>Book Now</button>
+
+          <p class="vip-select__note">
+            <strong>Surprise Event Planned by Xploroo.</strong>
+            Xploroo will personally plan the destination, luxury venue, hotel, activities and complete VIP experience based on the selected VIP personality.
+          </p>
 
         </div>
       </section>
@@ -464,6 +682,14 @@
 
   <!-- Search overlay (shared across all pages) -->
   <script src="js/search.js" defer></script>
+
+  <!-- VIP personality selector — swaps the single destination card, no
+       page navigation on dropdown change. -->
+  <script src="js/vip-selection.js" defer></script>
+
+  <!-- Phase 33 — lightweight cursor-follow 3D tilt for the luxury
+       informational-section cards (mouse/pointer only, no-op on touch). -->
+  <script src="js/vip-luxury-cards.js" defer></script>
 
 </body>
 </html>
