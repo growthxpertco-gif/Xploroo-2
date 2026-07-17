@@ -376,6 +376,8 @@
                     class="xg-holder__image"
                     src="https://ik.imagekit.io/mg0v9kccj/ChatGPT%20Image%20Jul%2017,%202026,%2003_58_48%20PM.png"
                     alt="Xploroo Globe"
+                    fetchpriority="high"
+                    decoding="async"
                     onerror="this.classList.add('xg-holder__image--missing')"
                   />
                 </div>
@@ -561,7 +563,6 @@
   </div>
 
   <!-- Global theme toggle (light/dark) -->
-  <script src="js/theme-toggle.js" defer></script>
 
   <!-- Auth state & user context (shared by all pages) -->
   <script src="js/supabase.js" defer></script>

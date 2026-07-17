@@ -55,6 +55,7 @@
   animation: xg-aurora-drift 40s ease-in-out infinite alternate;
   mix-blend-mode: screen;
   opacity: 0.8;
+  will-change: background-position;
 }
 @keyframes xg-aurora-drift {
   0%   { background-position: 0% 30%; }
@@ -74,6 +75,7 @@
   filter: blur(110px);
   opacity: 0.22;
   animation: xg-nebula-pulse 16s ease-in-out infinite;
+  will-change: opacity, transform;
 }
 .xg-bg__nebula--a { top: -10%; left: -8%; background: var(--xg-purple); }
 .xg-bg__nebula--b { bottom: -14%; right: -10%; background: var(--xg-blue); animation-delay: 6s; }
@@ -275,6 +277,7 @@
   max-height: 92vw;
   margin-inline: auto;
   animation: xg-holder-float 9s ease-in-out infinite;
+  will-change: transform;
 }
 @media (max-width: 1024px) {
   .xg-holder { width: 500px; height: 500px; }
@@ -317,6 +320,7 @@
   opacity: 0.55;
   animation: xg-holder-breathe 6s ease-in-out infinite;
   pointer-events: none;
+  will-change: opacity, transform;
 }
 .xg-holder__glow--purple  { background: radial-gradient(circle, var(--xg-purple), transparent 68%); }
 .xg-holder__glow--magenta { background: radial-gradient(circle at 70% 30%, var(--xg-magenta), transparent 60%); animation-delay: 1.4s; opacity: 0.4; }

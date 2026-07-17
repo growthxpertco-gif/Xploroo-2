@@ -69,14 +69,15 @@
     if (!running) return;
     ctx.clearRect(0, 0, width, height);
 
+    ctx.fillStyle = "rgb(245, 247, 251)";
     for (const star of stars) {
       const twinkle = Math.sin(now * star.twinkleSpeed + star.phase) * 0.35;
-      const alpha = Math.max(0, Math.min(1, star.baseAlpha + twinkle));
+      ctx.globalAlpha = Math.max(0, Math.min(1, star.baseAlpha + twinkle));
       ctx.beginPath();
-      ctx.fillStyle = `rgba(245, 247, 251, ${alpha.toFixed(3)})`;
       ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
       ctx.fill();
     }
+    ctx.globalAlpha = 1;
 
     if (now - lastShootingStarAt > SHOOTING_STAR_INTERVAL_MS && Math.random() < 0.5) {
       spawnShootingStar();
@@ -119,8 +120,14 @@
     rafId = null;
   }
 
+  let resizeTimer = null;
+  function scheduleResize() {
+    if (resizeTimer) clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(resize, 200);
+  }
+
   resize();
-  window.addEventListener("resize", resize);
+  window.addEventListener("resize", scheduleResize, { passive: true });
 
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) stop();

@@ -18,6 +18,49 @@
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ------------------------------------------------------------------ */
+  /* Defer decorative animations (bg glow + card comet borders) until    */
+  /* the section is actually near the viewport, so they never run       */
+  /* while off-screen on initial load.                                  */
+  /* ------------------------------------------------------------------ */
+  if (!reduceMotion && "IntersectionObserver" in window) {
+    const sectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) markSectionInView();
+        });
+      },
+      { rootMargin: "200px 0px" }
+    );
+    sectionObserver.observe(section);
+
+    // Failsafe: some embedded preview/host environments report the page as
+    // `document.hidden === true` even while actively shown, which freezes
+    // IntersectionObserver callbacks and would leave the decorative
+    // animations permanently paused. Same class of issue as checkStuck()
+    // below and ensureHeroVisible() in xploroo-globe-stars.js.
+    function markSectionInView() {
+      if (section.classList.contains("xgf-in-view")) return;
+      sectionObserver.disconnect();
+      section.classList.add("xgf-in-view");
+      window.removeEventListener("scroll", checkSectionStuck);
+      document.removeEventListener("visibilitychange", checkSectionStuck);
+    }
+    function checkSectionStuck() {
+      if (section.classList.contains("xgf-in-view")) return;
+      const rect = section.getBoundingClientRect();
+      const inView = rect.top < window.innerHeight && rect.bottom > 0;
+      if (document.hidden || inView) {
+        window.setTimeout(markSectionInView, 900);
+      }
+    }
+    checkSectionStuck();
+    window.addEventListener("scroll", checkSectionStuck, { passive: true });
+    document.addEventListener("visibilitychange", checkSectionStuck);
+  } else {
+    section.classList.add("xgf-in-view");
+  }
+
+  /* ------------------------------------------------------------------ */
   /* Scroll reveal                                                       */
   /* ------------------------------------------------------------------ */
   const revealEls = Array.from(section.querySelectorAll(".xgf-reveal"));
@@ -34,6 +77,8 @@
         if (revealed) return;
         revealed = true;
         revealEls.forEach((el) => el.classList.add("is-visible"));
+        window.removeEventListener("scroll", checkStuck);
+        document.removeEventListener("visibilitychange", checkStuck);
       }
 
       const observer = new IntersectionObserver(
@@ -44,6 +89,9 @@
               observer.unobserve(entry.target);
             }
           });
+          if (revealEls.every((el) => el.classList.contains("is-visible"))) {
+            revealAll();
+          }
         },
         { threshold: 0.15, rootMargin: "0px 0px -8% 0px" }
       );

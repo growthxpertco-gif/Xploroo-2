@@ -13,6 +13,8 @@
   z-index: 1;
   padding-block: clamp(4rem, 3rem + 4vw, 7rem);
   overflow: hidden;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1200px;
 }
 
 /* Continuation of the hero's cinematic space background — lighter touch,
@@ -33,6 +35,11 @@
   filter: blur(120px);
   opacity: 0.18;
   animation: xgf-glow-pulse 18s ease-in-out infinite;
+  animation-play-state: paused;
+  will-change: opacity, transform;
+}
+.xgf-section.xgf-in-view .xgf-bg__glow {
+  animation-play-state: running;
 }
 .xgf-bg__glow--a { top: -14rem; left: -10rem; background: var(--xg-purple); }
 .xgf-bg__glow--b { bottom: -16rem; right: -12rem; background: var(--xg-blue); animation-delay: 6s; }
@@ -227,8 +234,12 @@
   mask-composite: exclude;
   opacity: 0.65;
   animation: xgf-border-travel 13s linear infinite;
+  animation-play-state: paused;
   transition: opacity var(--dur-slow) var(--ease-standard);
   pointer-events: none;
+}
+.xgf-section.xgf-in-view .xgf-card::after {
+  animation-play-state: running;
 }
 @keyframes xgf-border-travel {
   to { --xgf-card-angle: -360deg; }
