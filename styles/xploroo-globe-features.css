@@ -1,0 +1,309 @@
+/* ==========================================================================
+   XPLOROO · Xploroo Globe — Core Features Section (Phase 37)
+   xploroo-globe-features.css — Premium "Discover the Experience" feature
+   grid immediately below the hero on xplorooglobe.html. Entirely scoped
+   under `.xgf-*`, so it never touches the hero (`.xg-hero`), header, or
+   globe holder above it. Lives inside `.xg-page`, so it inherits that
+   wrapper's palette custom properties (--xg-purple etc.) rather than
+   redeclaring them — same luxury design language, same source of truth.
+   ========================================================================== */
+
+.xgf-section {
+  position: relative;
+  z-index: 1;
+  padding-block: clamp(4rem, 3rem + 4vw, 7rem);
+  overflow: hidden;
+}
+
+/* Continuation of the hero's cinematic space background — lighter touch,
+   no heavy particles, just soft ambient glow and a scattering of static
+   stars (pure CSS, no canvas, no JS cost). */
+.xgf-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.xgf-bg__glow {
+  position: absolute;
+  width: 44rem;
+  height: 44rem;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.18;
+  animation: xgf-glow-pulse 18s ease-in-out infinite;
+}
+.xgf-bg__glow--a { top: -14rem; left: -10rem; background: var(--xg-purple); }
+.xgf-bg__glow--b { bottom: -16rem; right: -12rem; background: var(--xg-blue); animation-delay: 6s; }
+@keyframes xgf-glow-pulse {
+  0%, 100% { opacity: 0.14; transform: scale(1); }
+  50%      { opacity: 0.24; transform: scale(1.06); }
+}
+.xgf-bg__stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 8% 18%, rgba(245, 247, 251, 0.55), transparent),
+    radial-gradient(1px 1px at 22% 64%, rgba(245, 247, 251, 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 38% 12%, rgba(245, 247, 251, 0.5), transparent),
+    radial-gradient(1px 1px at 54% 76%, rgba(245, 247, 251, 0.35), transparent),
+    radial-gradient(1.5px 1.5px at 68% 30%, rgba(245, 247, 251, 0.5), transparent),
+    radial-gradient(1px 1px at 79% 58%, rgba(245, 247, 251, 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 91% 14%, rgba(245, 247, 251, 0.5), transparent),
+    radial-gradient(1px 1px at 95% 82%, rgba(245, 247, 251, 0.35), transparent),
+    radial-gradient(1.5px 1.5px at 15% 90%, rgba(245, 247, 251, 0.4), transparent),
+    radial-gradient(1px 1px at 46% 46%, rgba(245, 247, 251, 0.3), transparent);
+  opacity: 0.7;
+}
+
+.xgf-container {
+  position: relative;
+  z-index: 1;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* -------------------------------------------------------------------------
+   Section header — eyebrow / heading / subtitle, scroll-revealed
+   ------------------------------------------------------------------------- */
+.xgf-header {
+  text-align: center;
+  max-width: 42rem;
+  margin: 0 auto clamp(3rem, 2.2rem + 3vw, 5rem);
+}
+.xgf-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-5);
+  padding: 0.45em 1.1em;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: #ffffff;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(199, 204, 217, 0.4);
+  box-shadow: 0 0 24px rgba(91, 33, 182, 0.35);
+}
+.xgf-title {
+  margin: 0;
+  font-size: clamp(2.25rem, 1.7rem + 2.6vw, 3.5rem);
+  line-height: 1.1;
+  letter-spacing: var(--ls-tight);
+  color: #ffffff;
+  text-shadow: 0 0 40px rgba(91, 33, 182, 0.35);
+}
+.xgf-subtitle {
+  margin: var(--space-5) 0 0;
+  font-size: var(--fs-md, var(--fs-base));
+  line-height: var(--lh-relaxed);
+  color: rgba(255, 255, 255, 0.78);
+}
+.xgf-subtitle strong {
+  display: block;
+  margin-bottom: var(--space-2);
+  font-family: var(--font-display);
+  font-weight: var(--fw-bold);
+  color: #ffffff;
+}
+
+/* Scroll-reveal primitive — fade + rise + soft blur-to-clear, the same
+   treatment applied to the heading and every card below (staggered via
+   inline --xgf-delay set by JS). Reduced-motion users see everything at
+   its final, fully visible state immediately (see the media query at the
+   bottom of this file). */
+.xgf-reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  filter: blur(6px);
+  transition:
+    opacity 820ms var(--ease-out),
+    transform 820ms var(--ease-out),
+    filter 820ms var(--ease-out);
+  transition-delay: var(--xgf-delay, 0ms);
+}
+.xgf-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* -------------------------------------------------------------------------
+   Feature grid — 3 columns x 2 rows on desktop, single column on mobile
+   ------------------------------------------------------------------------- */
+.xgf-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+}
+@media (max-width: 900px) {
+  .xgf-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .xgf-grid { grid-template-columns: 1fr; gap: var(--space-6); }
+}
+
+/* -------------------------------------------------------------------------
+   Feature card — frosted glass + titanium comet border + premium gradient
+   fill + ambient glow + 3D cursor-follow tilt (driven by
+   js/xploroo-globe-features.js writing --rx/--ry/--mx/--my) + hover sheen.
+   ------------------------------------------------------------------------- */
+@property --xgf-card-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.xgf-card {
+  --rx: 0deg;
+  --ry: 0deg;
+  --mx: 50%;
+  --my: 50%;
+  --lift: 0px;
+  --xgf-card-angle: 0deg;
+  position: relative;
+  z-index: 1;
+  padding: clamp(1.75rem, 1.4rem + 1.4vw, 2.25rem);
+  border-radius: 1.75rem;
+  background:
+    linear-gradient(165deg, rgba(91, 33, 182, 0.24), rgba(15, 23, 42, 0.88) 55%, rgba(37, 99, 235, 0.16)) padding-box,
+    linear-gradient(150deg, rgba(199, 204, 217, 0.5), rgba(120, 128, 150, 0.22) 45%, rgba(199, 204, 217, 0.38) 100%) border-box;
+  border: 1.5px solid transparent;
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  backdrop-filter: blur(20px) saturate(150%);
+  box-shadow: var(--shadow-lg), 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transform: perspective(1200px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--lift));
+  transition: transform 420ms var(--ease-emphasis), box-shadow 420ms var(--ease-emphasis);
+}
+@media (hover: hover) {
+  .xgf-card:hover {
+    --lift: -8px;
+    box-shadow: var(--shadow-xl), 0 30px 60px -18px rgba(91, 33, 182, 0.4), 0 1px 0 rgba(255, 255, 255, 0.1) inset;
+  }
+}
+
+/* Cursor-follow light reflection sweep */
+.xgf-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at var(--mx) var(--my), rgba(255, 255, 255, 0.14), transparent 55%);
+  opacity: 0;
+  transition: opacity var(--dur-slow) var(--ease-standard);
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .xgf-card:hover::before { opacity: 1; }
+}
+
+/* Titanium comet border — brightens on hover */
+.xgf-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--xgf-card-angle),
+    transparent 0deg,
+    transparent 260deg,
+    rgba(199, 204, 217, 0.35) 300deg,
+    var(--xg-silver-bright) 330deg,
+    rgba(199, 204, 217, 0.35) 350deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0.65;
+  animation: xgf-border-travel 13s linear infinite;
+  transition: opacity var(--dur-slow) var(--ease-standard);
+  pointer-events: none;
+}
+@keyframes xgf-border-travel {
+  to { --xgf-card-angle: -360deg; }
+}
+@media (hover: hover) {
+  .xgf-card:hover::after { opacity: 1; }
+}
+
+.xgf-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.xgf-card__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  margin-bottom: var(--space-5);
+  border-radius: 50%;
+  font-size: 1.5rem;
+  background: linear-gradient(135deg, rgba(199, 204, 217, 0.35), rgba(91, 33, 182, 0.35));
+  border: 1px solid rgba(199, 204, 217, 0.45);
+  box-shadow: 0 0 18px rgba(199, 204, 217, 0.25);
+  transition: transform 380ms var(--ease-emphasis), box-shadow 380ms var(--ease-emphasis);
+}
+@media (hover: hover) {
+  .xgf-card:hover .xgf-card__icon {
+    transform: scale(1.12);
+    box-shadow: 0 0 24px rgba(192, 38, 212, 0.4);
+  }
+}
+
+.xgf-card__title {
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-lg);
+  color: #ffffff;
+}
+.xgf-card__desc {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.xgf-card__badge {
+  position: absolute;
+  top: var(--space-5);
+  right: var(--space-5);
+  z-index: 2;
+  padding: 0.35em 0.85em;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--xg-navy);
+  border-radius: var(--radius-pill);
+  background: linear-gradient(120deg, var(--xg-silver-bright), var(--xg-silver));
+  box-shadow: 0 0 16px rgba(199, 204, 217, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .xgf-reveal {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+  .xgf-bg__glow,
+  .xgf-card::after {
+    animation: none;
+  }
+  .xgf-card {
+    transform: none;
+    transition: none;
+  }
+}

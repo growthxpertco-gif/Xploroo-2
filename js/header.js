@@ -143,6 +143,57 @@
   });
 
   /* ------------------------------------------------------------------ */
+  /* 2b2. Desktop nav cleanup — removes "About Us" and "Merch" from the   */
+  /* primary desktop nav and folds them (plus a few other secondary        */
+  /* pages) into a new "More" dropdown placed immediately before the       */
+  /* search icon. Runs before the dropdown-toggle wiring below so the new  */
+  /* trigger is picked up by that same generic open/close/outside-click/   */
+  /* Escape logic — no separate JS needed for it. Desktop-only: this only  */
+  /* ever touches `.main-nav__list` (hidden entirely on mobile) and        */
+  /* `.site-header__actions`; the mobile drawer's own `.mobile-menu__list` */
+  /* is a completely separate DOM subtree, untouched by any of this.      */
+  /* ------------------------------------------------------------------ */
+  (function buildDesktopMoreMenu() {
+    const desktopList = document.querySelector(".main-nav__list");
+    const actions = header.querySelector(".site-header__actions");
+    const searchBtn = actions ? actions.querySelector("[data-search]") : null;
+    if (!desktopList || !actions || !searchBtn) return;
+    if (actions.querySelector("[data-header-more-toggle]")) return; // already built
+
+    const MOVE_HREFS = ["about.html", "merch.html"];
+    const EXTRA_MORE_ITEMS = [
+      { href: "winners.html", label: "Winners" },
+      { href: "faq.html", label: "FAQ" },
+      { href: "contact.html", label: "Contact Us" },
+    ];
+
+    const moreItems = [];
+
+    MOVE_HREFS.forEach((href) => {
+      const link = desktopList.querySelector(`a[href="${href}"]`);
+      if (!link) return;
+      moreItems.push({ href, label: link.textContent.trim() });
+      const li = link.closest("li");
+      if (li) li.remove();
+    });
+
+    EXTRA_MORE_ITEMS.forEach((entry) => moreItems.push(entry));
+    if (!moreItems.length) return;
+
+    const wrapper = document.createElement("div");
+    wrapper.className = "main-nav__item--dropdown main-nav__item--more";
+    wrapper.innerHTML = `
+      <button type="button" class="icon-btn icon-btn--more main-nav__dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="header-more-menu" aria-label="More" title="More" data-dropdown-toggle data-header-more-toggle>
+        <svg class="icon-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+      </button>
+      <div class="main-nav__dropdown" id="header-more-menu">
+        ${moreItems.map((item) => `<a class="main-nav__dropdown-link" href="${item.href}">${item.label}</a>`).join("")}
+      </div>`;
+
+    actions.insertBefore(wrapper, searchBtn);
+  })();
+
+  /* ------------------------------------------------------------------ */
   /* 2c. Desktop "Packages" dropdown — click-to-toggle (hover reveal is    */
   /*     handled entirely in CSS). Closes on outside click and Escape.    */
   /*     Scoped to `.main-nav`, which is hidden on mobile, so this never   */
@@ -471,13 +522,13 @@
       else list.appendChild(li);
     }
 
-    const VIP_HREF = "vip.html";
+    const VIP_HREF = "vip-membership.html";
 
     const desktopList = document.querySelector(".main-nav__list");
     if (desktopList && !desktopList.querySelector(`a[href="${VIP_HREF}"]`)) {
       const li = document.createElement("li");
       li.className = "main-nav__item";
-      li.innerHTML = `<a class="main-nav__link" href="${VIP_HREF}">&#11088; VIP</a>`;
+      li.innerHTML = `<a class="main-nav__link" href="${VIP_HREF}">VIP</a>`;
       insertAfterHref(desktopList, "influencers.html", li);
     }
 
@@ -487,6 +538,118 @@
       li.className = "mobile-menu__item";
       li.innerHTML = `<a class="mobile-menu__link" href="${VIP_HREF}">VIP</a>`;
       insertAfterHref(mobileList, "influencers.html", li);
+    }
+  })();
+
+  /* ------------------------------------------------------------------ */
+  /* 6. Xploroo Globe nav link (Phase 36) — same runtime-injection        */
+  /* pattern as the VIP link above, positioned directly below it in both  */
+  /* the desktop and mobile nav. Links to the new interactive 3D globe    */
+  /* showcase page, xplorooglobe.html.                                    */
+  /* ------------------------------------------------------------------ */
+  (function injectGlobeNavLink() {
+    function insertAfterHref(list, afterHref, li) {
+      if (!list) return;
+      const target = Array.from(list.children).find((item) => {
+        const link = item.querySelector("a[href]");
+        return link && link.getAttribute("href") === afterHref;
+      });
+      if (target) target.insertAdjacentElement("afterend", li);
+      else list.appendChild(li);
+    }
+
+    const VIP_HREF = "vip-membership.html";
+    const GLOBE_HREF = "xplorooglobe.html";
+
+    const desktopList = document.querySelector(".main-nav__list");
+    if (desktopList && !desktopList.querySelector(`a[href="${GLOBE_HREF}"]`)) {
+      const li = document.createElement("li");
+      li.className = "main-nav__item";
+      li.innerHTML = `<a class="main-nav__link" href="${GLOBE_HREF}">Xploroo Globe</a>`;
+      insertAfterHref(desktopList, VIP_HREF, li);
+    }
+
+    const mobileList = document.querySelector(".mobile-menu__list");
+    if (mobileList && !mobileList.querySelector(`a[href="${GLOBE_HREF}"]`)) {
+      const li = document.createElement("li");
+      li.className = "mobile-menu__item";
+      li.innerHTML = `<a class="mobile-menu__link" href="${GLOBE_HREF}">Xploroo Globe</a>`;
+      insertAfterHref(mobileList, VIP_HREF, li);
+    }
+  })();
+
+  /* ------------------------------------------------------------------ */
+  /* 7. Desktop active-page indicator — dynamically detects the current   */
+  /* page from the URL (never hardcoded) and marks the matching desktop   */
+  /* nav item, the "Packages" dropdown (+ its matching child link), or    */
+  /* the "More" dropdown (+ its matching child link) as active via        */
+  /* `aria-current="page"`. Runs last, after the VIP/Globe injection      */
+  /* above, so it sees the fully-assembled desktop nav. Some pages ship   */
+  /* a stale, hardcoded `aria-current="page"` on the Packages dropdown    */
+  /* link regardless of which page is actually open — this clears any     */
+  /* such leftover markup first so exactly one item ends up active,       */
+  /* correctly, on every page. Desktop-only: only ever touches            */
+  /* `.main-nav__list` (hidden entirely on mobile) and the dropdowns      */
+  /* living in `.site-header__actions`; mobile's own (static)             */
+  /* `aria-current` markup in `.mobile-menu__list` is untouched.          */
+  /* ------------------------------------------------------------------ */
+  (function markActiveDesktopNav() {
+    const desktopList = document.querySelector(".main-nav__list");
+    if (!desktopList) return;
+
+    function normalize(pathOrHref) {
+      let s = String(pathOrHref || "").split("?")[0].split("#")[0];
+      s = s.replace(/^\/+/, "").replace(/\/+$/, "");
+      s = s.replace(/\.html$/i, "");
+      if (s === "") s = "index";
+      const parts = s.split("/");
+      return parts[parts.length - 1].toLowerCase();
+    }
+
+    const current = normalize(window.location.pathname);
+
+    // Clear any stale/hardcoded active markup before applying the real state.
+    document.querySelectorAll(
+      '.main-nav__list [aria-current="page"], .site-header__actions [aria-current="page"]'
+    ).forEach((el) => el.removeAttribute("aria-current"));
+
+    // Direct nav links (Home, Play & Win, Influencers, VIP, Xploroo Globe).
+    desktopList.querySelectorAll(":scope > li > a[href]").forEach((link) => {
+      if (normalize(link.getAttribute("href")) === current) {
+        link.setAttribute("aria-current", "page");
+      }
+    });
+
+    // "Packages" dropdown — the hub page + its two listing pages.
+    const PACKAGES_PAGES = ["packages", "international-packages", "domestic-packages"];
+    if (PACKAGES_PAGES.includes(current)) {
+      const packagesToggle = desktopList.querySelector("[data-dropdown-toggle]");
+      if (packagesToggle) {
+        packagesToggle.setAttribute("aria-current", "page");
+        const dropdown = packagesToggle.closest(".main-nav__item--dropdown");
+        if (dropdown) {
+          dropdown.querySelectorAll(".main-nav__dropdown-link[href]").forEach((link) => {
+            if (normalize(link.getAttribute("href")) === current) {
+              link.setAttribute("aria-current", "page");
+            }
+          });
+        }
+      }
+    }
+
+    // "More" dropdown — highlight the trigger + the matching item inside.
+    const moreToggle = document.querySelector("[data-header-more-toggle]");
+    if (moreToggle) {
+      const moreDropdown = moreToggle.closest(".main-nav__item--more");
+      const matchingLink = moreDropdown
+        ? Array.from(moreDropdown.querySelectorAll(".main-nav__dropdown-link[href]")).find(
+            (link) => normalize(link.getAttribute("href")) === current
+          )
+        : null;
+      if (matchingLink) {
+        matchingLink.setAttribute("aria-current", "page");
+        moreToggle.setAttribute("aria-current", "page");
+      }
     }
   })();
 })();

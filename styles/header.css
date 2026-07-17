@@ -321,6 +321,42 @@
   box-shadow: inset 3px 0 0 0 var(--violet-400, #9163f1);
 }
 
+/* ---- "More" dropdown (desktop only) — lives in `.site-header__actions`,
+   immediately before the search icon, so it needs to open right-aligned
+   under its trigger instead of the Packages dropdown's centered
+   positioning. Everything else (glass panel, item styling, fade + slide,
+   outside-click/Escape handling) is the exact same shared component. ---- */
+.main-nav__item--more .main-nav__dropdown {
+  left: auto;
+  right: 0;
+  transform: translateY(-8px);
+}
+.main-nav__item--more.is-open .main-nav__dropdown {
+  transform: translateY(0);
+}
+@media (hover: hover) {
+  .main-nav__item--more:hover .main-nav__dropdown {
+    transform: translateY(0);
+  }
+}
+
+/* ---- Active page indicator (desktop only) — reuses the existing hover
+   treatment (persistent underline for direct links/toggles, the same
+   gradient highlight for dropdown items) so it matches the current
+   design language and accent colors exactly. Applied dynamically by
+   header.js; never hardcoded per page. ---- */
+.main-nav__link[aria-current="page"] {
+  color: #fff;
+}
+.main-nav__link[aria-current="page"]::after {
+  transform: scaleX(1);
+}
+.main-nav__dropdown-link[aria-current="page"] {
+  color: #fff;
+  background: linear-gradient(90deg, rgba(124, 58, 237, 0.28), rgba(34, 211, 238, 0.16));
+  box-shadow: inset 3px 0 0 0 var(--violet-400, #9163f1);
+}
+
 /* --------------------------------------------------------------------------
    Right-side action buttons
    -------------------------------------------------------------------------- */
@@ -353,6 +389,31 @@
   box-shadow: 0 6px 18px rgba(255, 255, 255, 0.10);
 }
 .icon-btn--search:active { transform: translateY(0) scale(0.96); }
+
+/* "More" — same circular icon-button treatment as Search, just a chevron
+   instead of a magnifying glass, so it stays compact next to it. */
+.icon-btn--more {
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  padding: 0;
+}
+.icon-btn--more .icon-btn__icon {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--dur-base, 220ms) var(--ease-out, ease);
+}
+.icon-btn--more:hover,
+.icon-btn--more[aria-expanded="true"] {
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 6px 18px rgba(255, 255, 255, 0.10);
+}
+.icon-btn--more:active { transform: translateY(0) scale(0.96); }
+.icon-btn--more[aria-expanded="true"] .icon-btn__icon { transform: rotate(180deg); }
+.icon-btn--more[aria-current="page"] {
+  border-color: var(--violet-400, #9163f1);
+  box-shadow: 0 0 0 1px var(--violet-400, #9163f1), 0 6px 18px rgba(124, 58, 237, 0.25);
+}
 
 /* Shared auth pill base */
 .btn-auth {
@@ -964,6 +1025,18 @@
    -------------------------------------------------------------------------- */
 
 /* ---- TABLET & below: collapse the desktop nav into the hamburger --------- */
+/* Narrow desktop band just above the tablet breakpoint — the fluid
+   --nav-gap (clamp(1.25rem, 0.6rem + 1.6vw, 2.25rem)) is already scaling
+   up quickly here, and the new compact "More" control (added below) has
+   no free room left to land in without the header overflowing
+   horizontally. A small, targeted reduction of the nav gap only in this
+   band keeps every control at its normal, existing spacing everywhere
+   else (≥1360px, i.e. virtually every real desktop) while preventing
+   overflow here — nothing about the ≥1360px experience changes. */
+@media (min-width: 1025px) and (max-width: 1360px) {
+  .site-header { --nav-gap: 1.1rem; }
+}
+
 @media (max-width: 1024px) {
   .site-header__inner {
     grid-template-columns: auto 1fr auto;    /* logo | spacer | hamburger */
@@ -973,7 +1046,8 @@
   .main-nav,
   .btn-auth,
   .desktop-account,
-  .icon-btn--search { display: none; }
+  .icon-btn--search,
+  .main-nav__item--more { display: none; }
 
   /* The hamburger is now a top-level node; source-order control preserves the
      existing tablet look (brand stays left, hamburger stays right). */
@@ -1085,6 +1159,7 @@
 :root[data-theme="light"] .main-nav__link { color: rgba(17, 17, 23, 0.82); }
 :root[data-theme="light"] .main-nav__link:hover,
 :root[data-theme="light"] .main-nav__link:focus-visible { color: #000; }
+:root[data-theme="light"] .main-nav__link[aria-current="page"] { color: #000; }
 
 /* Search icon button */
 :root[data-theme="light"] .icon-btn { color: #17171c; }

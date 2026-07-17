@@ -71,6 +71,11 @@
        reuses those classes (dubai-vip-package.html etc.) is unaffected. -->
   <link rel="stylesheet" href="styles/vip-luxury-sections.css" />
 
+  <!-- Phase 35 — dismissible success banner shown after a simulated VIP
+       Membership activation on vip-membership.html. Self-contained under
+       `.vipm-banner`; never touches the booking flow below it. -->
+  <link rel="stylesheet" href="styles/vip-membership-banner.css" />
+
   <!-- Footer module (shared with the homepage) -->
   <link rel="stylesheet" href="styles/footer.css" />
 </head>
@@ -307,6 +312,12 @@
     <!-- MAIN                                                          -->
     <!-- ============================================================= -->
     <main class="main" id="main">
+      <!-- Phase 35 — mount point for the dismissible VIP Membership success
+           banner (js/vip-membership-banner.js). Empty/no-op unless the
+           visitor just completed the simulated activation flow on
+           vip-membership.html; otherwise renders nothing. -->
+      <div data-vipm-banner-mount></div>
+
       <section class="package-listing" aria-labelledby="vip-packages-title" data-section="package-listing">
         <div class="package-listing__container">
 
@@ -690,6 +701,10 @@
   <!-- Phase 33 — lightweight cursor-follow 3D tilt for the luxury
        informational-section cards (mouse/pointer only, no-op on touch). -->
   <script src="js/vip-luxury-cards.js" defer></script>
+
+  <!-- Phase 35 — dismissible success banner shown after a simulated VIP
+       Membership activation on vip-membership.html. -->
+  <script src="js/vip-membership-banner.js" defer></script>
 
 </body>
 </html>

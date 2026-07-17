@@ -1,0 +1,755 @@
+/* ==========================================================================
+   XPLOROO · VIP Membership Landing Page (Phase 35)
+   vip-membership.css — Standalone ultra-premium membership page
+   (vip-membership.html). UI/UX only, no payment/subscription/backend logic
+   anywhere in this file. Reuses the shared design system (variables/reset/
+   base/utilities) plus the existing header/footer styles — this file only
+   adds page-specific rules, entirely scoped under `.vipm-*` classes, so it
+   never touches any other page or component.
+
+   Palette — Royal Purple / Cherry Magenta / Deep Indigo / Electric Blue /
+   Midnight Navy only (same family as the Phase 33 VIP luxury sections on
+   vip.html), Titanium Silver borders, pure white typography. No yellow or
+   gold anywhere in this file.
+   ========================================================================== */
+
+.vipm-page {
+  --vipm-purple:  #5B21B6;
+  --vipm-magenta: #C026D3;
+  --vipm-indigo:  #312E81;
+  --vipm-blue:    #2563EB;
+  --vipm-navy:    #0F172A;
+  --vipm-silver:        #C7CCD9;
+  --vipm-silver-bright: #F5F7FB;
+  position: relative;
+}
+
+.vipm-section {
+  position: relative;
+  padding-block: var(--section-gap);
+  overflow: hidden;
+}
+.vipm-container {
+  position: relative;
+  z-index: 1;
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+.vipm-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-4);
+  padding: 0.4em 1em;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: #ffffff;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, rgba(91, 33, 182, 0.4), rgba(192, 38, 212, 0.4));
+  border: 1px solid rgba(199, 204, 217, 0.4);
+  box-shadow: 0 0 20px rgba(91, 33, 182, 0.35);
+}
+
+.vipm-title {
+  margin: 0;
+  color: #ffffff;
+  text-shadow: 0 0 30px rgba(91, 33, 182, 0.35);
+}
+.vipm-subtitle {
+  margin: var(--space-4) 0 0;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: var(--lh-relaxed);
+}
+
+/* Shared titanium-border card shell — reused by tiers, benefit cards, coin
+   cards, FAQ items and the vision panel. Same recipe as vip-luxury-sections
+   (Phase 33): conic-gradient comet travelling anti-clockwise, masked to the
+   border ring only. */
+@property --vipm-border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.vipm-card {
+  --vipm-border-angle: 0deg;
+  position: relative;
+  z-index: 1;
+  border-radius: 2rem;
+  background:
+    linear-gradient(165deg, rgba(91, 33, 182, 0.22), rgba(15, 23, 42, 0.88) 55%, rgba(37, 99, 235, 0.14)) padding-box,
+    linear-gradient(150deg, rgba(199, 204, 217, 0.5), rgba(120, 128, 150, 0.22) 45%, rgba(199, 204, 217, 0.38) 100%) border-box;
+  border: 1.5px solid transparent;
+  -webkit-backdrop-filter: blur(22px) saturate(1.4);
+  backdrop-filter: blur(22px) saturate(1.4);
+  box-shadow: var(--shadow-xl), 0 1px 0 rgba(255, 255, 255, 0.08) inset;
+  overflow: hidden;
+  transition: transform 420ms var(--ease-emphasis), box-shadow 420ms var(--ease-emphasis);
+}
+.vipm-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--vipm-border-angle),
+    transparent 0deg,
+    transparent 260deg,
+    rgba(199, 204, 217, 0.35) 300deg,
+    var(--vipm-silver-bright) 330deg,
+    rgba(199, 204, 217, 0.35) 350deg,
+    transparent 360deg
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0.7;
+  animation: vipm-border-travel 13s linear infinite;
+  pointer-events: none;
+}
+@keyframes vipm-border-travel {
+  to { --vipm-border-angle: -360deg; }
+}
+.vipm-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl), 0 30px 70px -20px rgba(37, 99, 235, 0.3), 0 1px 0 rgba(255, 255, 255, 0.12) inset;
+}
+.vipm-card:hover::after {
+  opacity: 1;
+}
+.vipm-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ambient ultra-subtle dust field, reused across sections */
+.vipm-ambient {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.vipm-ambient__bokeh {
+  position: absolute;
+  width: 18rem;
+  height: 18rem;
+  border-radius: 50%;
+  filter: blur(72px);
+  opacity: 0.16;
+  animation: vipm-bokeh 24s ease-in-out infinite alternate;
+}
+.vipm-ambient__bokeh:nth-child(1) { top: -6rem; left: -4rem; background: var(--vipm-purple); }
+.vipm-ambient__bokeh:nth-child(2) { top: 30%; right: -6rem; background: var(--vipm-blue); animation-delay: 7s; }
+.vipm-ambient__bokeh:nth-child(3) { bottom: -6rem; left: 35%; background: var(--vipm-magenta); animation-delay: 14s; }
+@keyframes vipm-bokeh {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(2.5rem, -2rem) scale(1.15); }
+}
+
+/* Premium gradient CTA button — used in hero + final CTA */
+.vipm-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 1.05em 2.4em;
+  font-family: var(--font-display);
+  font-size: var(--fs-md, var(--fs-base));
+  font-weight: var(--fw-bold);
+  color: #ffffff;
+  letter-spacing: 0.01em;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  background: linear-gradient(120deg, var(--vipm-magenta) 0%, var(--vipm-purple) 55%, var(--vipm-blue) 100%);
+  box-shadow: 0 12px 40px -8px rgba(91, 33, 182, 0.6), 0 0 0 1px rgba(199, 204, 217, 0.3);
+  transition: transform 320ms var(--ease-emphasis), box-shadow 320ms var(--ease-emphasis), opacity 220ms var(--ease-standard);
+}
+.vipm-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 20px 56px -10px rgba(192, 38, 212, 0.65), 0 0 0 1px rgba(199, 204, 217, 0.45);
+}
+.vipm-btn:active {
+  transform: translateY(-1px) scale(0.99);
+}
+.vipm-btn:disabled {
+  opacity: 0.7;
+  cursor: progress;
+  transform: none;
+}
+.vipm-btn--ghost {
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 0 1.5px rgba(199, 204, 217, 0.4) inset;
+}
+.vipm-btn--ghost:hover {
+  box-shadow: 0 0 0 1.5px rgba(199, 204, 217, 0.7) inset, 0 12px 30px -10px rgba(37, 99, 235, 0.35);
+}
+.vipm-btn__spinner {
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  animation: vipm-spin 700ms linear infinite;
+  display: none;
+}
+.vipm-btn.is-loading .vipm-btn__spinner {
+  display: inline-block;
+}
+.vipm-btn.is-loading .vipm-btn__label::after {
+  content: "Activating\2026";
+}
+.vipm-btn.is-loading .vipm-btn__label {
+  font-size: 0;
+}
+.vipm-btn.is-loading .vipm-btn__label::after {
+  font-size: var(--fs-md, var(--fs-base));
+}
+@keyframes vipm-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   SECTION 1 — HERO
+   ========================================================================== */
+.vipm-hero {
+  padding-block: clamp(4rem, 3rem + 5vw, 7rem);
+  text-align: center;
+  background: radial-gradient(circle at 50% -10%, rgba(91, 33, 182, 0.35), transparent 60%);
+}
+.vipm-hero__content {
+  max-width: 46rem;
+  margin-inline: auto;
+}
+.vipm-hero__title {
+  font-size: var(--fs-5xl);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--ls-tight);
+  background: linear-gradient(100deg, #ffffff 0%, #ffffff 40%, var(--vipm-silver-bright) 60%, #ffffff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: vipm-hero-shine 6s ease-in-out infinite;
+  background-size: 200% auto;
+}
+@keyframes vipm-hero-shine {
+  0%, 100% { background-position: 0% center; }
+  50%      { background-position: 100% center; }
+}
+.vipm-hero__subtitle {
+  margin: var(--space-5) auto 0;
+  max-width: 38rem;
+  font-size: var(--fs-md, var(--fs-base));
+  color: rgba(255, 255, 255, 0.8);
+  line-height: var(--lh-relaxed);
+}
+.vipm-hero__cta-row {
+  margin-top: var(--space-8);
+  display: flex;
+  justify-content: center;
+}
+.vipm-hero__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(2px);
+  opacity: 0.7;
+  animation: vipm-orb-float 9s ease-in-out infinite;
+}
+.vipm-hero__orb:nth-of-type(1) { top: 14%; left: 10%; width: 10px; height: 10px; background: var(--vipm-silver-bright); animation-delay: 0s; }
+.vipm-hero__orb:nth-of-type(2) { top: 26%; right: 14%; width: 6px; height: 6px; background: var(--vipm-magenta); animation-delay: 1.4s; }
+.vipm-hero__orb:nth-of-type(3) { bottom: 20%; left: 18%; width: 8px; height: 8px; background: var(--vipm-blue); animation-delay: 2.8s; }
+.vipm-hero__orb:nth-of-type(4) { bottom: 30%; right: 20%; width: 5px; height: 5px; background: var(--vipm-silver-bright); animation-delay: 4.2s; }
+@keyframes vipm-orb-float {
+  0%, 100% { transform: translateY(0); opacity: 0.4; }
+  50%      { transform: translateY(-22px); opacity: 0.9; }
+}
+
+/* ==========================================================================
+   SECTION 2 — COINS SYSTEM
+   ========================================================================== */
+.vipm-coins__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: clamp(2rem, 1.5rem + 2.5vw, 4rem);
+  align-items: center;
+}
+@media (max-width: 900px) {
+  .vipm-coins__grid { grid-template-columns: 1fr; }
+}
+
+.vipm-coin-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 20rem;
+}
+.vipm-coin {
+  position: relative;
+  width: 12rem;
+  height: 12rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(from 180deg, var(--vipm-silver-bright), var(--vipm-silver) 25%, var(--vipm-purple) 50%, var(--vipm-silver) 75%, var(--vipm-silver-bright) 100%);
+  box-shadow: 0 0 60px rgba(91, 33, 182, 0.55), 0 20px 50px -10px rgba(0, 0, 0, 0.6);
+  animation: vipm-coin-float 5s ease-in-out infinite;
+}
+.vipm-coin::before {
+  content: "";
+  position: absolute;
+  inset: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.35), rgba(15, 23, 42, 0.92) 70%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+.vipm-coin__mark {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-display);
+  font-size: var(--fs-3xl);
+  font-weight: var(--fw-black);
+  color: #ffffff;
+  text-shadow: 0 0 24px rgba(199, 204, 217, 0.7);
+}
+.vipm-coin::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.55) 48%, transparent 62%);
+  background-size: 260% 260%;
+  animation: vipm-coin-shine 4.5s ease-in-out infinite;
+  mix-blend-mode: overlay;
+}
+@keyframes vipm-coin-shine {
+  0%   { background-position: 200% 0%; }
+  55%, 100% { background-position: -60% 0%; }
+}
+@keyframes vipm-coin-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-14px) rotate(4deg); }
+}
+.vipm-coin-satellite {
+  position: absolute;
+  border-radius: 50%;
+  background: conic-gradient(from 180deg, var(--vipm-silver-bright), var(--vipm-blue) 50%, var(--vipm-silver-bright) 100%);
+  box-shadow: 0 0 24px rgba(37, 99, 235, 0.5);
+  animation: vipm-coin-float 6s ease-in-out infinite;
+}
+.vipm-coin-satellite--a { width: 3.25rem; height: 3.25rem; top: 12%; left: 6%; animation-delay: 0.6s; }
+.vipm-coin-satellite--b { width: 2.5rem; height: 2.5rem; bottom: 14%; right: 8%; animation-delay: 2.1s; }
+
+.vipm-coins__copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+.vipm-coins__rate {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  width: fit-content;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-weight: var(--fw-bold);
+  color: #ffffff;
+  background: linear-gradient(120deg, rgba(91, 33, 182, 0.4), rgba(37, 99, 235, 0.3));
+  border: 1px solid rgba(199, 204, 217, 0.4);
+  box-shadow: 0 0 24px rgba(37, 99, 235, 0.3);
+}
+.vipm-coins__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+@media (max-width: 560px) {
+  .vipm-coins__list { grid-template-columns: 1fr; }
+}
+.vipm-coin-card {
+  padding: var(--space-5);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--fs-sm);
+  color: #ffffff;
+  font-weight: var(--fw-medium);
+}
+.vipm-coin-card__icon {
+  flex: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-size: 1.05rem;
+  background: linear-gradient(135deg, rgba(199, 204, 217, 0.35), rgba(91, 33, 182, 0.35));
+  border: 1px solid rgba(199, 204, 217, 0.45);
+}
+
+/* ==========================================================================
+   SECTION 3 — MEMBERSHIP TIERS
+   ========================================================================== */
+.vipm-tiers__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.5rem, 1rem + 2vw, 2.25rem);
+  align-items: stretch;
+}
+@media (max-width: 960px) {
+  .vipm-tiers__grid { grid-template-columns: 1fr; max-width: 28rem; margin-inline: auto; }
+}
+
+.vipm-tier {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
+}
+.vipm-tier.is-selected {
+  box-shadow: var(--shadow-xl), 0 0 0 2px rgba(199, 204, 217, 0.6), 0 30px 70px -18px rgba(37, 99, 235, 0.4);
+}
+.vipm-tier--black {
+  transform: scale(1.04);
+  background:
+    linear-gradient(165deg, rgba(192, 38, 212, 0.24), rgba(15, 23, 42, 0.92) 55%, rgba(91, 33, 182, 0.22)) padding-box,
+    linear-gradient(150deg, var(--vipm-silver-bright), var(--vipm-silver) 45%, var(--vipm-silver-bright) 100%) border-box;
+  box-shadow: 0 0 70px rgba(192, 38, 212, 0.35), var(--shadow-xl);
+}
+@media (max-width: 960px) {
+  .vipm-tier--black { transform: none; }
+}
+.vipm-tier__badge {
+  align-self: flex-start;
+  margin-bottom: var(--space-4);
+  padding: 0.35em 0.9em;
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--vipm-navy);
+  border-radius: var(--radius-pill);
+  background: linear-gradient(120deg, var(--vipm-silver-bright), var(--vipm-silver));
+  box-shadow: 0 0 18px rgba(199, 204, 217, 0.5);
+}
+.vipm-tier__name {
+  margin: 0;
+  font-size: var(--fs-xl);
+  color: #ffffff;
+}
+.vipm-tier__price {
+  margin: var(--space-3) 0 0;
+  display: flex;
+  align-items: baseline;
+  gap: 0.3em;
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-black);
+  color: #ffffff;
+}
+.vipm-tier__price small {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: rgba(255, 255, 255, 0.6);
+}
+.vipm-tier__coins {
+  margin-top: var(--space-3);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: fit-content;
+  padding: 0.4em 0.9em;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(199, 204, 217, 0.35);
+}
+.vipm-tier__features {
+  margin: var(--space-6) 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex: 1;
+}
+.vipm-tier__features li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: rgba(255, 255, 255, 0.9);
+}
+.vipm-tier__features svg {
+  flex: none;
+  width: 1.05rem;
+  height: 1.05rem;
+  margin-top: 0.15em;
+  padding: 3px;
+  border-radius: 50%;
+  box-sizing: content-box;
+  color: #ffffff;
+  background: rgba(37, 99, 235, 0.28);
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.4);
+}
+.vipm-tier__features li.vipm-tier__feature--inherit {
+  color: rgba(255, 255, 255, 0.65);
+  font-style: italic;
+}
+.vipm-tier .vipm-btn {
+  margin-top: var(--space-6);
+  width: 100%;
+}
+
+/* ==========================================================================
+   SECTION 4 — BENEFITS
+   ========================================================================== */
+.vipm-benefits__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr));
+  gap: clamp(1.5rem, 1rem + 1.6vw, 2rem);
+}
+.vipm-benefit {
+  padding: clamp(1.75rem, 1.4rem + 1.2vw, 2.25rem);
+}
+.vipm-benefit__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: var(--space-4);
+  border-radius: 50%;
+  font-size: 1.3rem;
+  background: linear-gradient(135deg, rgba(199, 204, 217, 0.35), rgba(91, 33, 182, 0.35));
+  border: 1px solid rgba(199, 204, 217, 0.45);
+  box-shadow: 0 0 18px rgba(199, 204, 217, 0.3);
+  animation: vipm-icon-float 5.5s ease-in-out infinite;
+}
+@keyframes vipm-icon-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+.vipm-benefit__title {
+  margin: 0 0 var(--space-4);
+  font-size: var(--fs-lg);
+  color: #ffffff;
+}
+.vipm-benefit__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+.vipm-benefit__list li {
+  position: relative;
+  padding-left: 1.4rem;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-normal);
+  color: rgba(255, 255, 255, 0.85);
+}
+.vipm-benefit__list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.5em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--vipm-silver-bright);
+  box-shadow: 0 0 8px 1px rgba(199, 204, 217, 0.7);
+}
+
+/* ==========================================================================
+   SECTION 5 — VIP ACCESS TO THE VISION
+   ========================================================================== */
+.vipm-vision {
+  padding: clamp(2.5rem, 2rem + 2vw, 4rem);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: clamp(1.5rem, 1rem + 2vw, 3rem);
+  align-items: center;
+}
+@media (max-width: 720px) {
+  .vipm-vision { grid-template-columns: 1fr; text-align: center; }
+  .vipm-vision__avatar { margin-inline: auto; }
+}
+.vipm-vision__avatar {
+  flex: none;
+  width: 6.5rem;
+  height: 6.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-black);
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--vipm-purple), var(--vipm-magenta));
+  box-shadow: 0 0 40px rgba(192, 38, 212, 0.5), 0 0 0 3px rgba(199, 204, 217, 0.4);
+}
+.vipm-vision__title {
+  margin: 0 0 var(--space-4);
+  font-size: var(--fs-2xl);
+  color: #ffffff;
+}
+.vipm-vision__text {
+  margin: 0 0 var(--space-3);
+  font-size: var(--fs-md, var(--fs-base));
+  line-height: var(--lh-relaxed);
+  color: rgba(255, 255, 255, 0.85);
+}
+.vipm-vision__text:last-child {
+  margin-bottom: 0;
+}
+.vipm-vision__text--lead {
+  font-weight: var(--fw-semibold);
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   SECTION 6 — FAQ
+   ========================================================================== */
+.vipm-faq {
+  max-width: 48rem;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.vipm-faq-item {
+  border-radius: var(--radius-2xl);
+  background:
+    linear-gradient(165deg, rgba(49, 46, 129, 0.26), rgba(15, 23, 42, 0.9)) padding-box,
+    linear-gradient(150deg, rgba(199, 204, 217, 0.4), rgba(120, 128, 150, 0.2)) border-box;
+  border: 1.5px solid transparent;
+  overflow: hidden;
+  transition: box-shadow 320ms var(--ease-standard);
+}
+.vipm-faq-item.is-open {
+  box-shadow: 0 20px 50px -18px rgba(37, 99, 235, 0.35);
+}
+.vipm-faq-item__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-6);
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-family: var(--font-display);
+  font-size: var(--fs-md, var(--fs-base));
+  font-weight: var(--fw-bold);
+  color: #ffffff;
+  cursor: pointer;
+}
+.vipm-faq-item__icon {
+  flex: none;
+  width: 1.1rem;
+  height: 1.1rem;
+  color: var(--vipm-silver);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.vipm-faq-item.is-open .vipm-faq-item__icon {
+  transform: rotate(180deg);
+  color: #ffffff;
+}
+.vipm-faq-item__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-base) var(--ease-out);
+}
+.vipm-faq-item.is-open .vipm-faq-item__panel {
+  grid-template-rows: 1fr;
+}
+.vipm-faq-item__panel-inner {
+  overflow: hidden;
+}
+.vipm-faq-item__answer {
+  margin: 0;
+  padding: 0 var(--space-6) var(--space-5);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* ==========================================================================
+   SECTION 7 — FINAL CTA
+   ========================================================================== */
+.vipm-final {
+  text-align: center;
+  padding: clamp(3rem, 2.4rem + 3vw, 5.5rem) clamp(1.5rem, 1rem + 3vw, 4rem);
+  background:
+    radial-gradient(circle at 50% 0%, rgba(192, 38, 212, 0.28), transparent 60%),
+    linear-gradient(165deg, rgba(91, 33, 182, 0.28), rgba(15, 23, 42, 0.92) 60%, rgba(37, 99, 235, 0.18));
+}
+.vipm-final__title {
+  margin: 0 auto;
+  max-width: 34rem;
+  font-size: var(--fs-3xl);
+  color: #ffffff;
+}
+.vipm-final__subtitle {
+  margin: var(--space-4) auto 0;
+  max-width: 32rem;
+  color: rgba(255, 255, 255, 0.78);
+  line-height: var(--lh-relaxed);
+}
+.vipm-final__selected {
+  margin: var(--space-4) 0 0;
+  font-size: var(--fs-sm);
+  color: var(--vipm-silver-bright);
+}
+.vipm-final__selected strong {
+  color: #ffffff;
+}
+.vipm-final__cta-row {
+  margin-top: var(--space-7);
+  display: flex;
+  justify-content: center;
+}
+.vipm-final__note {
+  margin: var(--space-4) 0 0;
+  font-size: var(--fs-xs);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ==========================================================================
+   Reduced motion — keep everything visible and legible, drop loops
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .vipm-card,
+  .vipm-card::after,
+  .vipm-coin,
+  .vipm-coin::after,
+  .vipm-coin-satellite,
+  .vipm-hero__title,
+  .vipm-hero__orb,
+  .vipm-benefit__icon,
+  .vipm-ambient__bokeh {
+    animation: none !important;
+  }
+  .vipm-card:hover {
+    transform: none;
+  }
+}

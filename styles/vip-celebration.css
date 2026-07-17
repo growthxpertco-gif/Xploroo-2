@@ -99,43 +99,83 @@
 }
 
 /* -------------------------------------------------------------------------
-   The luxury card itself — glassmorphism + gold/purple gradient border +
-   animated glow + 3D hover lift.
+   The luxury card itself — Phase 36: premium background redesign only.
+   Deep Royal Purple / Cherry Magenta / Indigo / Midnight Blue frosted-glass
+   fill with a very slow drifting gradient, layered ambient light glows, and
+   a metallic-cool border sweep — replacing the previous gold/violet/magenta
+   treatment so this section matches the same luxury palette used by the
+   Phase 33 VIP informational cards (styles/vip-luxury-sections.css) below
+   it. Text, layout, spacing and typography are untouched; only the fill,
+   border gradient, glow blob and hover lighting change.
    ------------------------------------------------------------------------- */
+.vip-celebrate {
+  --vipc-purple:  #5B21B6;
+  --vipc-magenta: #C026D3;
+  --vipc-indigo:  #312E81;
+  --vipc-blue:    #2563EB;
+  --vipc-navy:    #0F172A;
+}
+
 .vip-celebrate__card {
   position: relative;
   z-index: 2;
   padding: clamp(1.75rem, 1.2rem + 2.4vw, 3rem);
   border-radius: 2.25rem;
   background:
-    linear-gradient(var(--glass-bg), var(--glass-bg)) padding-box,
-    linear-gradient(135deg, #f5c26b 0%, var(--violet-400) 45%, var(--magenta-500) 100%) border-box;
+    radial-gradient(120% 140% at 12% -10%, rgba(192, 38, 212, 0.24), transparent 55%) padding-box,
+    radial-gradient(120% 140% at 88% 110%, rgba(37, 99, 235, 0.22), transparent 55%) padding-box,
+    linear-gradient(165deg, rgba(91, 33, 182, 0.32) 0%, rgba(15, 23, 42, 0.92) 55%, rgba(49, 46, 129, 0.4) 100%) padding-box,
+    linear-gradient(120deg, var(--vipc-purple) 0%, var(--vipc-magenta) 35%, var(--vipc-blue) 65%, var(--vipc-indigo) 100%) border-box;
+  background-size: 100% 100%, 100% 100%, 220% 220%, 220% 220%;
+  background-position: 0% 0%, 0% 0%, 0% 50%, 0% 50%;
   border: 1.5px solid transparent;
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  box-shadow: var(--shadow-lg), 0 30px 70px -20px rgba(124, 58, 237, 0.35);
+  -webkit-backdrop-filter: blur(26px) saturate(150%);
+  backdrop-filter: blur(26px) saturate(150%);
+  box-shadow: var(--shadow-lg), 0 30px 70px -20px rgba(91, 33, 182, 0.4), 0 1px 0 rgba(255, 255, 255, 0.07) inset;
   transform: perspective(1200px) rotateX(0deg) translateY(0);
+  animation: vip-celebrate-bg-drift 26s ease-in-out infinite alternate;
   transition:
     transform var(--dur-slow) var(--ease-out),
     box-shadow var(--dur-slow) var(--ease-out);
 }
+/* Faint frosted-glass sheen sweeping the surface — reinforces the "frosted
+   glass overlay" requirement without touching the card's border/fill layers
+   above (which already own the shared border-radius clipping). */
+.vip-celebrate__card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.08) 0%, transparent 30%, transparent 70%, rgba(255, 255, 255, 0.04) 100%);
+  pointer-events: none;
+}
+.vip-celebrate__card > * {
+  position: relative;
+  z-index: 1;
+}
+@keyframes vip-celebrate-bg-drift {
+  0%   { background-position: 0% 0%, 0% 0%, 0% 50%, 0% 50%; }
+  100% { background-position: 0% 0%, 0% 0%, 100% 50%, 100% 50%; }
+}
 @media (hover: hover) {
   .vip-celebrate__card:hover {
     transform: perspective(1200px) rotateX(1.5deg) translateY(-10px);
-    box-shadow: var(--shadow-lg), 0 44px 90px -18px rgba(245, 194, 107, 0.4), 0 0 0 1px rgba(245, 194, 107, 0.25);
+    box-shadow: var(--shadow-lg), 0 44px 90px -18px rgba(192, 38, 212, 0.35), 0 0 0 1px rgba(199, 204, 217, 0.2);
   }
 }
 
-/* Soft rotating glow blob sitting just behind the card */
+/* Soft ambient light blob sitting just behind the card — very slow rotation
+   + gentle pulse so it reads as elegant lighting, not a spinning effect. */
 .vip-celebrate__glow {
   position: absolute;
   inset: -18%;
   z-index: -1;
   border-radius: inherit;
-  background: conic-gradient(from 0deg, rgba(245, 194, 107, 0.35), rgba(124, 58, 237, 0.35), rgba(236, 72, 153, 0.35), rgba(245, 194, 107, 0.35));
-  filter: blur(48px);
+  background: conic-gradient(from 0deg, rgba(91, 33, 182, 0.4), rgba(192, 38, 212, 0.38), rgba(37, 99, 235, 0.38), rgba(49, 46, 129, 0.4), rgba(91, 33, 182, 0.4));
+  filter: blur(52px);
   opacity: 0.55;
-  animation: vip-celebrate-glow-spin 14s linear infinite, vip-celebrate-glow-pulse 4.5s ease-in-out infinite;
+  animation: vip-celebrate-glow-spin 30s linear infinite, vip-celebrate-glow-pulse 7s ease-in-out infinite;
 }
 
 @keyframes vip-celebrate-glow-spin {
@@ -143,7 +183,7 @@
 }
 @keyframes vip-celebrate-glow-pulse {
   0%, 100% { opacity: 0.4; }
-  50%      { opacity: 0.7; }
+  50%      { opacity: 0.68; }
 }
 
 /* -------------------------------------------------------------------------
