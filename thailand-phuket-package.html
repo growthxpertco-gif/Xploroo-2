@@ -1,12 +1,12 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://ryljttolhnvyynkfwuju.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Phuket Island Escape — a premium 4-day island getaway with the Phi Phi Islands, James Bond Island and Patong Beach, only on Xploroo." />
-  <title>Phuket Island Escape | Xploroo Packages</title>
+  <meta name="description" content="Amazing Thailand with Xploroo Creators — 5 Days / 4 Nights across Pattaya and Bangkok with a Creator Meet &amp; Greet, live quiz, Coral Island tour and the Alcazar Show, from ₹50,500 per person." />
+  <title>Amazing Thailand with Xploroo Creators | Xploroo Packages</title>
 
   <!-- Apply the stored theme before first paint (avoids a flash of the
        wrong theme on reload). Dark is the default — this only ever adds
@@ -40,6 +40,11 @@
 
   <!-- Package pages — native Share button (top-right of the hero) -->
   <link rel="stylesheet" href="styles/package-share.css" />
+
+  <!-- Amazing Thailand with Xploroo Creators — page-only visual re-skin
+       (colors/backgrounds only; layout and interaction come entirely from
+       package-details.css above, completely untouched). -->
+  <link rel="stylesheet" href="styles/thailand-package.css" />
 
   <!-- Footer module (reusable across every page) -->
   <link rel="stylesheet" href="styles/footer.css" />
@@ -161,7 +166,7 @@
         <div class="mobile-menu__topbar">
           <div class="mobile-menu__brand-group">
             <a class="brand" href="/" aria-label="Xploroo home">
-              
+
               <span class="brand__name">Xploroo</span>
             </a>
 
@@ -275,10 +280,10 @@
     </div>
 
     <!-- ============================================================= -->
-    <!-- MAIN — Package Details (master template)                      -->
+    <!-- MAIN — Package Details (master template, Thailand skin)       -->
     <!-- ============================================================= -->
     <main class="main" id="main">
-      <div class="pkg-page" data-pkg-page>
+      <div class="pkg-page pkg-page--thailand" data-pkg-page>
 
         <!-- =========================================================
              SECTION 1 — Hero (breadcrumb, title, status row + CTA,
@@ -291,12 +296,12 @@
             <span class="pkg-breadcrumb__sep" aria-hidden="true">&rsaquo;</span>
             <a class="pkg-breadcrumb__link" href="international-packages.html">International Packages</a>
             <span class="pkg-breadcrumb__sep" aria-hidden="true">&rsaquo;</span>
-            <span class="pkg-breadcrumb__current" aria-current="page">Phuket Island Escape</span>
+            <span class="pkg-breadcrumb__current" aria-current="page">Amazing Thailand with Xploroo Creators</span>
           </nav>
 
-          <h1 class="pkg-hero__title" id="pkg-title">Phuket Island Escape</h1>
+          <h1 class="pkg-hero__title" id="pkg-title">Amazing Thailand with Xploroo Creators</h1>
 
-          <p class="pkg-hero__desc">Turquoise waters, island-hopping adventures and vibrant nightlife — a premium Phuket escape curated by Xploroo.</p>
+          <p class="pkg-hero__desc">5 Days / 4 Nights across Pattaya (3 Nights) and Bangkok (1 Night) &mdash; Coral Island by speedboat, the world-famous Alcazar Show, a Bangkok city tour, and an exclusive Xploroo Creator Meet &amp; Greet with a live quiz and prize distribution. This isn&rsquo;t just a Thailand trip &mdash; it&rsquo;s a Creator Travel Experience.</p>
 
           <div class="pkg-hero__status">
             <div class="pkg-hero__status-left">
@@ -304,7 +309,8 @@
                 <span class="pkg-badge__dot" aria-hidden="true"></span>
                 Live
               </span>
-              <span class="pkg-hero__ends">Ends: 20 Aug 2026</span>
+              <span class="pkg-badge pkg-badge--category">Creator Meet &amp; Greet</span>
+              <span class="pkg-hero__ends">Travel Dates: 03 &ndash; 07 October 2026</span>
             </div>
             <a class="pkg-cta pkg-cta--hero" href="booking.html?package=phuket">
               Book Now
@@ -318,7 +324,7 @@
                 class="pkg-gallery__hero-img"
                 data-pkg-hero-image
                 src="https://ik.imagekit.io/mg0v9kccj/file_00000000e82471fabbc1a27cd1c8b277.png?updatedAt=1783417975209"
-                alt="Phuket Island Escape — main view"
+                alt="Amazing Thailand with Xploroo Creators — main view"
               />
             </div>
 
@@ -326,35 +332,35 @@
               <button class="pkg-gallery__thumb is-active" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/file_00000000e82471fabbc1a27cd1c8b277.png?updatedAt=1783417975209" aria-label="View photo 1">
                 <img src="https://ik.imagekit.io/mg0v9kccj/file_00000000e82471fabbc1a27cd1c8b277.png?updatedAt=1783417975209" alt="" />
               </button>
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/phuket-2/1600/1000" aria-label="View photo 2">
-                <img src="https://picsum.photos/seed/phuket-2/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/thailand-2/1600/1000" aria-label="View photo 2">
+                <img src="https://picsum.photos/seed/thailand-2/240/240" alt="" />
               </button>
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/phuket-3/1600/1000" aria-label="View photo 3">
-                <img src="https://picsum.photos/seed/phuket-3/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/thailand-3/1600/1000" aria-label="View photo 3">
+                <img src="https://picsum.photos/seed/thailand-3/240/240" alt="" />
               </button>
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/phuket-4/1600/1000" aria-label="View photo 4">
-                <img src="https://picsum.photos/seed/phuket-4/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/thailand-4/1600/1000" aria-label="View photo 4">
+                <img src="https://picsum.photos/seed/thailand-4/240/240" alt="" />
               </button>
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/phuket-5/1600/1000" aria-label="View photo 5">
-                <img src="https://picsum.photos/seed/phuket-5/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/thailand-5/1600/1000" aria-label="View photo 5">
+                <img src="https://picsum.photos/seed/thailand-5/240/240" alt="" />
               </button>
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/phuket-6/1600/1000" aria-label="View photo 6">
-                <img src="https://picsum.photos/seed/phuket-6/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/thailand-6/1600/1000" aria-label="View photo 6">
+                <img src="https://picsum.photos/seed/thailand-6/240/240" alt="" />
               </button>
               <!-- Thumbnails 7-10: only shown in the mobile 10-thumbnail
                    gallery — hidden above the mobile breakpoint so the
                    desktop hero keeps its original 6-thumbnail strip. -->
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/phuket-7/1600/1000" aria-label="View photo 7">
-                <img src="https://picsum.photos/seed/phuket-7/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/thailand-7/1600/1000" aria-label="View photo 7">
+                <img src="https://picsum.photos/seed/thailand-7/240/240" alt="" />
               </button>
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/phuket-8/1600/1000" aria-label="View photo 8">
-                <img src="https://picsum.photos/seed/phuket-8/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/thailand-8/1600/1000" aria-label="View photo 8">
+                <img src="https://picsum.photos/seed/thailand-8/240/240" alt="" />
               </button>
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/phuket-9/1600/1000" aria-label="View photo 9">
-                <img src="https://picsum.photos/seed/phuket-9/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/thailand-9/1600/1000" aria-label="View photo 9">
+                <img src="https://picsum.photos/seed/thailand-9/240/240" alt="" />
               </button>
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/phuket-10/1600/1000" aria-label="View photo 10">
-                <img src="https://picsum.photos/seed/phuket-10/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/thailand-10/1600/1000" aria-label="View photo 10">
+                <img src="https://picsum.photos/seed/thailand-10/240/240" alt="" />
               </button>
             </div>
           </div>
@@ -380,7 +386,7 @@
                     </span>
                     <span>
                       <span class="pkg-info-card__label">Duration</span>
-                      <span class="pkg-info-card__value">4 Days / 3 Nights</span>
+                      <span class="pkg-info-card__value">5 Days / 4 Nights</span>
                     </span>
                   </div>
                   <div class="pkg-info-card pkg-info-card--destination">
@@ -389,7 +395,7 @@
                     </span>
                     <span>
                       <span class="pkg-info-card__label">Destination</span>
-                      <span class="pkg-info-card__value">Phuket, Thailand</span>
+                      <span class="pkg-info-card__value">Pattaya + Bangkok, Thailand</span>
                     </span>
                   </div>
                   <div class="pkg-info-card pkg-info-card--group">
@@ -398,7 +404,7 @@
                     </span>
                     <span>
                       <span class="pkg-info-card__label">Group Size</span>
-                      <span class="pkg-info-card__value">2 &ndash; 10 People</span>
+                      <span class="pkg-info-card__value">Only 50 Pax with Creator Group</span>
                     </span>
                   </div>
                   <div class="pkg-info-card pkg-info-card--trip">
@@ -407,7 +413,7 @@
                     </span>
                     <span>
                       <span class="pkg-info-card__label">Trip Type</span>
-                      <span class="pkg-info-card__value">International &middot; Beach &amp; Islands</span>
+                      <span class="pkg-info-card__value">International &middot; Creator Travel Experience</span>
                     </span>
                   </div>
                 </div>
@@ -421,13 +427,17 @@
                   <div class="pkg-overview__text">
                     <h2 id="pkg-overview-title">Package Overview</h2>
                     <p>
-                      Xploroo's Phuket Island Escape is built around the Andaman Sea's best-kept secrets — the
-                      limestone cliffs of the Phi Phi Islands, buzzing beach towns, and some of Southeast Asia's
-                      finest water adventures.
+                      Xploroo&rsquo;s Amazing Thailand package is a 5-day, 4-night journey across two of
+                      Thailand&rsquo;s most iconic cities &mdash; three nights in beach-town Pattaya and one night in
+                      buzzing Bangkok &mdash; flying return AirAsia Economy from Delhi (DEL) into Don Mueang
+                      International Airport (DMK).
                     </p>
                     <p>
-                      From speedboat island-hopping to Patong's nightlife and quiet beach mornings, every day
-                      of this trip is designed to balance adventure with relaxation.
+                      Beyond the Coral Island speedboat tour, the Alcazar Cabaret Show and a Bangkok city
+                      tour, this is a dedicated Xploroo Creator Travel Experience: an exclusive VIP Meet
+                      &amp; Greet with creators and influencers, a live travel quiz with prizes, and a
+                      professional photo &amp; video session &mdash; all for a strictly limited group of just 50
+                      travellers.
                     </p>
                   </div>
                   <aside class="pkg-highlights">
@@ -435,23 +445,65 @@
                     <ul class="pkg-highlights__list">
                       <li class="pkg-highlights__item">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                        <span>Phi Phi Islands speedboat tour</span>
+                        <span>Return AirAsia Economy Class flights, Delhi &ndash; Bangkok &ndash; Delhi</span>
                       </li>
                       <li class="pkg-highlights__item">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                        <span>Patong Beach &amp; nightlife experience</span>
+                        <span>3 Nights Pattaya + 1 Night Bangkok, with early check-in</span>
                       </li>
                       <li class="pkg-highlights__item">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                        <span>Island-hopping with snorkeling stops</span>
+                        <span>Coral Island Tour by speedboat + Alcazar Show with private transfers</span>
                       </li>
                       <li class="pkg-highlights__item">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                        <span>James Bond Island excursion</span>
+                        <span>Bangkok City Tour &mdash; Golden Buddha &amp; Mini Reclining Buddha temples</span>
                       </li>
                       <li class="pkg-highlights__item">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                        <span>Beachfront resort stay</span>
+                        <span>Xploroo Creator Meet &amp; Greet Event with Live Quiz &amp; Prize Distribution</span>
+                      </li>
+                      <li class="pkg-highlights__item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                        <span>Pictures &amp; videos with influencers, GST included</span>
+                      </li>
+                    </ul>
+                  </aside>
+                </div>
+              </section>
+
+              <!-- ===================================================
+                   SECTION — Flight & Hotel Details (page-only, reuses
+                   the .pkg-highlights component from package-details.css)
+                   =================================================== -->
+              <section data-pkg-reveal data-pkg-section="flight-hotel" aria-labelledby="pkg-flight-hotel-title">
+                <div class="pkg-section__head">
+                  <h2 class="pkg-section__title" id="pkg-flight-hotel-title">Flight &amp; Hotel Details</h2>
+                </div>
+                <div class="txp-details-grid">
+                  <aside class="pkg-highlights">
+                    <h3 class="pkg-highlights__title">Flight Details</h3>
+                    <ul class="pkg-highlights__list">
+                      <li class="pkg-highlights__item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 21 12 17l4.5 1.2L14 14l7-4-3-3-9 3-3-1.5L2.5 12 6 13.5 4 18l4-1 1 4Z"/></svg>
+                        <span><strong>03 October 2026</strong> &mdash; Delhi (DEL) &rarr; Bangkok (DMK) &middot; AirAsia &middot; Economy</span>
+                      </li>
+                      <li class="pkg-highlights__item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 21 12 17l4.5 1.2L14 14l7-4-3-3-9 3-3-1.5L2.5 12 6 13.5 4 18l4-1 1 4Z"/></svg>
+                        <span><strong>07 October 2026</strong> &mdash; Bangkok (DMK) &rarr; Delhi (DEL) &middot; AirAsia &middot; Economy</span>
+                      </li>
+                    </ul>
+                  </aside>
+                  <aside class="pkg-highlights">
+                    <h3 class="pkg-highlights__title">Hotel Details</h3>
+                    <ul class="pkg-highlights__list">
+                      <li class="pkg-highlights__item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21V8l9-5 9 5v13M3 21h18M9 21v-6h6v6"/></svg>
+                        <span><strong>Pattaya</strong> &mdash; Pattaya Loft Hotel (3&#9733;), Superior Room, 3 Nights</span>
+                      </li>
+                      <li class="pkg-highlights__item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21V8l9-5 9 5v13M3 21h18M9 21v-6h6v6"/></svg>
+                        <span><strong>Bangkok</strong> &mdash; Season Siam Hotel Bangkok (3&#9733;), Standard Room, 1 Night</span>
                       </li>
                     </ul>
                   </aside>
@@ -473,29 +525,36 @@
                     <div class="pkg-itinerary__day">
                       <span class="pkg-itinerary__badge">Day<br />1</span>
                       <div>
-                        <h4 class="pkg-itinerary__title">Arrival &amp; Patong Beach</h4>
-                        <p class="pkg-itinerary__desc">Arrive in Phuket, check into your beachfront resort, and spend the evening exploring Patong Beach's nightlife.</p>
+                        <h4 class="pkg-itinerary__title">Delhi &ndash; Bangkok &ndash; Pattaya</h4>
+                        <p class="pkg-itinerary__desc">Arrive DMK Airport ~12:00 PM with a warm welcome by the Xploroo team. Private transfer to Pattaya (~2 hours) and check-in at Pattaya Loft Hotel (3&#9733;) with early check-in. Evening free to explore Pattaya Beach, Walking Street and the local markets. Overnight at Pattaya Loft Hotel.</p>
                       </div>
                     </div>
                     <div class="pkg-itinerary__day">
                       <span class="pkg-itinerary__badge">Day<br />2</span>
                       <div>
-                        <h4 class="pkg-itinerary__title">Phi Phi Islands Tour</h4>
-                        <p class="pkg-itinerary__desc">A full-day speedboat tour to the Phi Phi Islands with snorkeling stops at Maya Bay and Pileh Lagoon.</p>
+                        <h4 class="pkg-itinerary__title">Coral Island Tour + Influencer Meet &amp; Greet</h4>
+                        <p class="pkg-itinerary__desc">Breakfast at the hotel, then a speedboat to Coral Island (Koh Larn) for crystal waters and white sand beaches &mdash; optional parasailing, banana boat, jet ski and sea walk at extra cost. Indian buffet lunch included. In the evening, the special Xploroo VIP Meet &amp; Greet with creators/influencers at the resort: photo &amp; video session with influencers, a live travel quiz to win Thailand souvenirs &amp; Xploroo vouchers, and prize distribution for winners. Overnight at Pattaya Loft Hotel.</p>
                       </div>
                     </div>
                     <div class="pkg-itinerary__day">
                       <span class="pkg-itinerary__badge">Day<br />3</span>
                       <div>
-                        <h4 class="pkg-itinerary__title">James Bond Island Excursion</h4>
-                        <p class="pkg-itinerary__desc">Explore James Bond Island and Phang Nga Bay by longtail boat, with a stop at a local fishing village.</p>
+                        <h4 class="pkg-itinerary__title">Leisure Day &amp; Alcazar Cabaret Show</h4>
+                        <p class="pkg-itinerary__desc">Breakfast at the hotel, then a free morning for shopping, spa or beach time. In the evening, the world-famous Alcazar Cabaret Show with private transfers &mdash; spectacular costumes, music &amp; dance. Overnight at Pattaya Loft Hotel.</p>
                       </div>
                     </div>
                     <div class="pkg-itinerary__day">
                       <span class="pkg-itinerary__badge">Day<br />4</span>
                       <div>
-                        <h4 class="pkg-itinerary__title">Leisure &amp; Departure</h4>
-                        <p class="pkg-itinerary__desc">A relaxed beach morning before your private transfer to the airport for your departure flight.</p>
+                        <h4 class="pkg-itinerary__title">Pattaya &ndash; Bangkok | City Tour</h4>
+                        <p class="pkg-itinerary__desc">Breakfast and check-out, then a private transfer to Bangkok with an enroute Bangkok City Tour covering the Golden Buddha Temple (Wat Traimit) and the Mini Reclining Buddha Temple. Check-in at Season Siam Hotel Bangkok (3&#9733;). Evening free for shopping at MBK, Platinum, Indra Market or Pratunam. Overnight at Season Siam Hotel Bangkok.</p>
+                      </div>
+                    </div>
+                    <div class="pkg-itinerary__day">
+                      <span class="pkg-itinerary__badge">Day<br />5</span>
+                      <div>
+                        <h4 class="pkg-itinerary__title">Bangkok &ndash; Delhi</h4>
+                        <p class="pkg-itinerary__desc">Breakfast and check-out, then a private transfer to DMK Airport for the return AirAsia flight to Delhi &mdash; taking home memories, content and creator selfies.</p>
                       </div>
                     </div>
                   </div>
@@ -503,25 +562,25 @@
 
                 <div class="pkg-tabs__panel" data-pkg-tab-panel="inclusions">
                   <ul class="pkg-list pkg-list--check">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Round-trip international flights</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>3 nights at a beachfront resort</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Daily breakfast</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Phi Phi Islands speedboat tour with snorkeling</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>James Bond Island &amp; Phang Nga Bay excursion</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>All airport &amp; excursion transfers</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>English-speaking tour guide</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>All applicable taxes</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Return AirAsia flights, Delhi &ndash; Bangkok &ndash; Delhi</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>3N Pattaya Loft Hotel (3&#9733;) + 1N Season Siam Hotel Bangkok (3&#9733;), with early check-in</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Daily breakfast + 1 Indian buffet lunch</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Coral Island speedboat tour + Alcazar Show + Bangkok City Tour</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>All private transfers as per itinerary</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Xploroo Exclusive: Creator Meet &amp; Greet + Live Quiz + Photo/Video + Prizes</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Thailand local tour insurance</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>All taxes &amp; GST included</span></li>
                   </ul>
                 </div>
 
                 <div class="pkg-tabs__panel" data-pkg-tab-panel="exclusions">
                   <ul class="pkg-list pkg-list--cross">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>International visa fees (if applicable)</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Thailand visa</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Optional water sports (parasailing, banana boat, jet ski, sea walk)</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Personal expenses &amp; tips</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Meals other than those mentioned</span></li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Travel insurance</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Lunch &amp; dinner (unless noted)</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Personal expenses &amp; shopping</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Optional water sports</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Tips &amp; gratuities</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Anything not mentioned in inclusions</span></li>
                   </ul>
                 </div>
               </section>
@@ -536,28 +595,63 @@
                 <div class="pkg-included__grid">
                   <div class="pkg-included__item">
                     <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 21 12 17l4.5 1.2L14 14l7-4-3-3-9 3-3-1.5L2.5 12 6 13.5 4 18l4-1 1 4Z"/></svg></span>
-                    <span class="pkg-included__label">Flights</span>
+                    <span class="pkg-included__label">Return Flights</span>
                   </div>
                   <div class="pkg-included__item">
                     <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21V8l9-5 9 5v13M3 21h18M9 21v-6h6v6"/></svg></span>
-                    <span class="pkg-included__label">Hotel Stay</span>
+                    <span class="pkg-included__label">3&#9733; Hotel Stay</span>
                   </div>
                   <div class="pkg-included__item">
                     <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M4 11a4 4 0 0 1 8-2 4 4 0 0 1 8 2M4 11v7h16v-7"/></svg></span>
-                    <span class="pkg-included__label">Daily Meals</span>
+                    <span class="pkg-included__label">Breakfast + Lunch</span>
                   </div>
                   <div class="pkg-included__item">
                     <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17h14M5 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm14 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM5 17V8h10l4 4v5"/></svg></span>
-                    <span class="pkg-included__label">Transfers</span>
+                    <span class="pkg-included__label">Private Transfers</span>
                   </div>
                   <div class="pkg-included__item">
                     <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span>
                     <span class="pkg-included__label">Sightseeing</span>
                   </div>
                   <div class="pkg-included__item">
-                    <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg></span>
-                    <span class="pkg-included__label">Local Guide</span>
+                    <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 20v-1.6a3.4 3.4 0 0 0-3.4-3.4H6.4A3.4 3.4 0 0 0 3 18.4V20"/><circle cx="9.7" cy="7.2" r="3.2"/><path d="M21 20v-1.6a3.4 3.4 0 0 0-2.6-3.3M14.8 4.1a3.2 3.2 0 0 1 0 6.2"/></svg></span>
+                    <span class="pkg-included__label">Creator Meet &amp; Greet</span>
                   </div>
+                </div>
+              </section>
+
+              <!-- ===================================================
+                   SECTION — Why Book With Xploroo (page-only)
+                   =================================================== -->
+              <section data-pkg-reveal data-pkg-section="why-book" aria-labelledby="pkg-why-title">
+                <div class="pkg-section__head">
+                  <h2 class="pkg-section__title" id="pkg-why-title">Why Book With Xploroo?</h2>
+                </div>
+                <p class="txp-why-statement">
+                  <strong>This isn&rsquo;t just a Thailand trip. It&rsquo;s a Creator Travel Experience.</strong>
+                  Meet creators, make content, win prizes, and travel VIP style.
+                </p>
+                <div class="pkg-included__grid">
+                  <div class="pkg-included__item">
+                    <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg></span>
+                    <span class="pkg-included__label">Meet Creators</span>
+                  </div>
+                  <div class="pkg-included__item">
+                    <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="14" height="12" rx="2"/><path d="m17 10 4-2v8l-4-2"/></svg></span>
+                    <span class="pkg-included__label">Make Content</span>
+                  </div>
+                  <div class="pkg-included__item">
+                    <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7M2 7h20v5H2z"/><path d="M12 22V7M12 7a2.5 2.5 0 1 1-2.5-2.5c1.5 0 2.5 1.5 2.5 2.5Zm0 0a2.5 2.5 0 1 0 2.5-2.5c-1.5 0-2.5 1.5-2.5 2.5Z"/></svg></span>
+                    <span class="pkg-included__label">Win Prizes</span>
+                  </div>
+                  <div class="pkg-included__item">
+                    <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 21 12 17l4.5 1.2L14 14l7-4-3-3-9 3-3-1.5L2.5 12 6 13.5 4 18l4-1 1 4Z"/></svg></span>
+                    <span class="pkg-included__label">Travel VIP Style</span>
+                  </div>
+                </div>
+                <div class="txp-limited-banner">
+                  <p class="txp-limited-banner__headline">Limited Seats</p>
+                  <p class="txp-limited-banner__sub">Only 50 Pax with Creator Group</p>
                 </div>
               </section>
 
@@ -585,6 +679,53 @@
                     </a>
                   </div>
                 </div>
+              </section>
+
+              <!-- ===================================================
+                   SECTION — Fixed Departure Pricing (page-only)
+                   =================================================== -->
+              <section data-pkg-reveal data-pkg-section="fixed-departure" aria-labelledby="pkg-fixed-departure-title">
+                <div class="pkg-section__head">
+                  <h2 class="pkg-section__title" id="pkg-fixed-departure-title">Fixed Departure Pricing</h2>
+                  <p class="pkg-section__subtitle">Additional fixed-departure batches for October 2026 &mdash; priced separately by departure city from the main package above.</p>
+                </div>
+                <p class="txp-fixed-dates">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" width="16" height="16"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                  03&ndash;07 Oct &middot; 26&ndash;30 Oct 2026
+                </p>
+                <div class="txp-price-grid">
+                  <div class="txp-price-card">
+                    <span class="txp-price-card__city">Mumbai</span>
+                    <span class="txp-price-card__amount">&#8377;44,500</span>
+                  </div>
+                  <div class="txp-price-card">
+                    <span class="txp-price-card__city">Delhi</span>
+                    <span class="txp-price-card__amount">&#8377;52,300</span>
+                  </div>
+                  <div class="txp-price-card">
+                    <span class="txp-price-card__city">Bangalore</span>
+                    <span class="txp-price-card__amount">&#8377;52,300</span>
+                  </div>
+                  <div class="txp-price-card">
+                    <span class="txp-price-card__city">Hyderabad</span>
+                    <span class="txp-price-card__amount">&#8377;58,000</span>
+                  </div>
+                  <div class="txp-price-card">
+                    <span class="txp-price-card__city">Chennai</span>
+                    <span class="txp-price-card__amount">&#8377;59,000</span>
+                  </div>
+                </div>
+                <ul class="pkg-list pkg-list--check" style="margin-top: var(--space-6);">
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Flights</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>3&#9733; Hotels</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Breakfast</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Coral Island + Lunch</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Alcazar Show</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Bangkok City Tour</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Private Transfers</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>GST Included</span></li>
+                </ul>
+                <p class="txp-price-note">Fixed departure pricing is a separate batch offering to the main ₹50,500 per-person package featured above and is based on the same Thailand itinerary &mdash; Pattaya Loft Hotel, Season Siam Hotel Bangkok, Coral Island Tour, Alcazar Show, Bangkok City Tour and private transfers.</p>
               </section>
 
               <!-- ===================================================
@@ -779,9 +920,11 @@
             <aside class="pkg-layout__aside" data-pkg-reveal aria-label="Booking summary">
               <div class="pkg-pricing" id="pkg-pricing">
                 <span class="pkg-pricing__label">Package Price</span>
-                <p class="pkg-pricing__amount">&#8377;31,999 <span>Per Person</span></p>
+                <p class="pkg-pricing__amount">&#8377;50,500 <span>Per Person</span></p>
+                <p style="margin: 0.4rem 0 0; font-size: var(--fs-xs); color: var(--color-text-muted);">Inclusive of GST</p>
                 <ul class="pkg-pricing__list">
                   <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Secure Booking</li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Creator Meet &amp; Greet Included</li>
                   <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Best Price Guaranteed</li>
                   <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>24&times;7 Support</li>
                 </ul>
@@ -798,7 +941,7 @@
     <!-- Sticky mobile booking bar (hidden until the hero scrolls past) -->
     <div class="pkg-sticky-bar" data-pkg-sticky-bar>
       <span class="pkg-sticky-bar__price">
-        <strong>&#8377;31,999</strong>
+        <strong>&#8377;50,500</strong>
         <span>Per Person</span>
       </span>
       <a class="pkg-cta" href="booking.html?package=phuket">Book Now</a>

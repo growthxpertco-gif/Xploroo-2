@@ -46,7 +46,7 @@
     singapore: { name: "Singapore Explorer",             destination: "Singapore",         duration: "4 Days / 3 Nights", price: 39999,  image: "https://picsum.photos/seed/singapore-hero/600/600" },
     jaipur:    { name: "Jaipur Heritage Trail",          destination: "Jaipur, Rajasthan", duration: "5 Days / 4 Nights", price: 21999,  image: "https://picsum.photos/seed/jaipur-hero/600/600" },
     kasol:     { name: "Kasol & Parvati Valley",         destination: "Kasol, HP",         duration: "4 Days / 3 Nights", price: 16999,  image: "https://picsum.photos/seed/kasol-hero/600/600" },
-    phuket:    { name: "Phuket Island Escape",           destination: "Phuket, Thailand",  duration: "4 Days / 3 Nights", price: 31999,  image: "https://picsum.photos/seed/phuket-hero/600/600" },
+    phuket:    { name: "Amazing Thailand with Xploroo Creators", destination: "Pattaya + Bangkok, Thailand", duration: "5 Days / 4 Nights", price: 50500, image: "https://ik.imagekit.io/mg0v9kccj/file_00000000e82471fabbc1a27cd1c8b277.png" },
     iceland:   { name: "Iceland Northern Lights Escape", destination: "Iceland",           duration: "6 Nights / 7 Days", price: 725000, image: "https://picsum.photos/seed/iceland-hero/600/600" },
     shimla:    { name: "Shimla VIP: 42 Faces, 1 Unforgettable Weekend", destination: "Shoghi, Shimla", duration: "2 Nights / 3 Days", price: 17000, image: "https://ik.imagekit.io/mg0v9kccj/IMG-20260704-WA0019.jpg.jpeg" },
     "spiritual-vip": { name: "Xploroo Spiritual VIP: Meet Ms. Gataansha Raghuwanshi", destination: "Wood Smoke Resort, Shoghi, Shimla", duration: "2 Nights / 3 Days", price: 15000, image: "https://ik.imagekit.io/mg0v9kccj/file_0000000087a471fab4fae4b1f11db7e8.png" },

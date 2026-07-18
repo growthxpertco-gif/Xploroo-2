@@ -98,11 +98,9 @@
   /* ------------------------------------------------------------------ */
   /* ------------------------------------------------------------------ */
   /* 5. Travel Quiz card → reveals/collapses the quiz selection section.  */
-  /*    Of the four "Play Now" buttons inside it, Japan/Shimla/Manali     */
-  /*    have real destinations (japan-quiz.html / shimla-quiz.html /      */
-  /*    manali-quiz.html) — see the dedicated listeners below. Xploroo    */
-  /*    stays a plain type="button" element with no href/handler, so it   */
-  /*    can never 404 until its own quiz page exists.                     */
+  /*    All four "Play Now" buttons inside it now have real destinations  */
+  /*    (japan-quiz.html / shimla-quiz.html / manali-quiz.html /          */
+  /*    xploroo-quiz.html) — see the dedicated listeners below.           */
   /* ------------------------------------------------------------------ */
   const quizTrigger = page.querySelector("[data-pw-quiz-trigger]");
   const quizSelect = page.querySelector("[data-pw-quiz-select]");
@@ -153,6 +151,17 @@
   if (manaliPlayBtn) {
     manaliPlayBtn.addEventListener("click", () => {
       window.location.href = "manali-quiz.html";
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 5e. Xploroo Quiz "Play Now" → the flagship quiz, now live alongside  */
+  /*     Japan, Shimla and Manali. All four quizzes are now live.        */
+  /* ------------------------------------------------------------------ */
+  const xplorooPlayBtn = page.querySelector('[data-pw-quiz-play="xploroo"]');
+  if (xplorooPlayBtn) {
+    xplorooPlayBtn.addEventListener("click", () => {
+      window.location.href = "xploroo-quiz.html";
     });
   }
 
