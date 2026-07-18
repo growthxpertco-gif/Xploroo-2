@@ -1,0 +1,716 @@
+/* ==========================================================================
+   XPLOROO · Japan Quiz — cinematic premium quiz game
+   japan-quiz.css — Self-contained page theme (own palette, like
+   play-win.css), scoped entirely under `.jq-*` / `.jq-page` so nothing here
+   can leak into any other page. Tokyo-at-night meets traditional Japan:
+   midnight blue, cherry blossom pink, deep crimson, electric blue, purple,
+   titanium silver, pure white. No rainbow gradients, no neon overload.
+
+   Performance notes: no continuous animation loops, no backdrop-filter
+   blur on more than one layer at a time, sakura petals are a short-lived
+   burst (a handful of elements, auto-removed), and everything decorative
+   is disabled under prefers-reduced-motion. Only one question is ever in
+   the DOM's visible flow at a time — see js/japan-quiz.js.
+   ========================================================================== */
+
+.jq-page {
+  --jq-midnight: #0a0e27;
+  --jq-midnight-deep: #05070f;
+  --jq-navy: #131a3a;
+  --jq-crimson: #b0203a;
+  --jq-crimson-bright: #e2314f;
+  --jq-pink: #f472b6;
+  --jq-pink-soft: #fbcfe8;
+  --jq-blue: #3b82f6;
+  --jq-cyan: #22d3ee;
+  --jq-violet: #8b5cf6;
+  --jq-silver: #c7ccd9;
+  --jq-silver-bright: #f5f7fb;
+  --jq-text: #f4f3fb;
+  --jq-text-muted: rgba(226, 226, 245, 0.68);
+  --jq-glass: rgba(19, 26, 58, 0.6);
+  --jq-glass-border: rgba(199, 204, 217, 0.18);
+
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 15% 0%, rgba(176, 32, 58, 0.16) 0%, transparent 55%),
+    radial-gradient(100% 70% at 90% 10%, rgba(139, 92, 246, 0.14) 0%, transparent 55%),
+    radial-gradient(90% 60% at 50% 100%, rgba(59, 130, 246, 0.12) 0%, transparent 55%),
+    linear-gradient(180deg, var(--jq-midnight-deep) 0%, var(--jq-midnight) 45%, var(--jq-navy) 100%);
+  color: var(--jq-text);
+}
+
+.jq-container {
+  position: relative;
+  z-index: 1;
+  max-width: 860px;
+  margin-inline: auto;
+  padding: clamp(2rem, 1.4rem + 3vw, 4rem) var(--container-pad) clamp(3rem, 2rem + 3vw, 5rem);
+}
+
+/* Faint static sakura silhouettes in the corners — pure CSS, no blur, no
+   animation loop, purely decorative wash so it reads as "Japan" at a glance. */
+.jq-bg-motif {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background:
+    radial-gradient(2px 2px at 10% 12%, rgba(244, 114, 182, 0.5), transparent),
+    radial-gradient(1.5px 1.5px at 22% 30%, rgba(244, 114, 182, 0.35), transparent),
+    radial-gradient(2px 2px at 82% 18%, rgba(199, 204, 217, 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 92% 40%, rgba(244, 114, 182, 0.3), transparent),
+    radial-gradient(1.5px 1.5px at 65% 8%, rgba(199, 204, 217, 0.3), transparent);
+}
+
+/* -------------------------------------------------------------------------
+   Panels — only one visible at a time (intro / quiz / result)
+   ------------------------------------------------------------------------- */
+.jq-panel {
+  display: none;
+}
+.jq-panel.is-active {
+  display: block;
+  animation: jq-panel-in 520ms var(--ease-out, cubic-bezier(0.16, 1, 0.3, 1));
+}
+@keyframes jq-panel-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* -------------------------------------------------------------------------
+   INTRO SCREEN
+   ------------------------------------------------------------------------- */
+.jq-intro {
+  text-align: center;
+  padding-block: clamp(2rem, 1.5rem + 2vw, 4rem);
+}
+.jq-intro__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: var(--space-5);
+  padding: 0.4rem 1.1rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(244, 114, 182, 0.4);
+  background: rgba(244, 114, 182, 0.1);
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--jq-pink-soft);
+}
+.jq-intro__title {
+  margin: 0;
+  font-size: clamp(2.25rem, 1.7rem + 2.6vw, 3.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  color: #ffffff;
+  background: linear-gradient(100deg, #ffffff 0%, var(--jq-pink-soft) 35%, #ffffff 55%, var(--jq-silver-bright) 75%, #ffffff 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 60px rgba(176, 32, 58, 0.35);
+}
+.jq-intro__prize {
+  margin: var(--space-4) 0 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: var(--jq-silver-bright);
+}
+.jq-intro__prize span {
+  color: var(--jq-pink);
+}
+
+.jq-intro__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  max-width: 560px;
+  margin: var(--space-8) auto 0;
+}
+.jq-intro__stat {
+  padding: var(--space-5) var(--space-3);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--jq-glass-border);
+  background: var(--jq-glass);
+}
+.jq-intro__stat-value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-extrabold);
+  color: #ffffff;
+}
+.jq-intro__stat-label {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--jq-text-muted);
+}
+
+.jq-intro__start {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: var(--space-9);
+  height: 3.5rem;
+  padding-inline: 2.5rem;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(120deg, var(--jq-crimson-bright) 0%, var(--jq-pink) 55%, var(--jq-violet) 100%);
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: var(--fs-md, var(--fs-base));
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 16px 40px -10px rgba(176, 32, 58, 0.55), 0 0 0 1px rgba(199, 204, 217, 0.25);
+  transition: transform 260ms var(--ease-out, ease), box-shadow 260ms ease, filter 200ms ease;
+}
+.jq-intro__start:hover {
+  transform: translateY(-3px);
+  filter: brightness(1.08);
+  box-shadow: 0 22px 54px -10px rgba(176, 32, 58, 0.65), 0 0 0 1px rgba(199, 204, 217, 0.4);
+}
+.jq-intro__start:active {
+  transform: translateY(-1px) scale(0.97);
+}
+
+.jq-intro__note {
+  margin-top: var(--space-4);
+  font-size: var(--fs-xs);
+  color: var(--jq-text-muted);
+}
+
+@media (max-width: 640px) {
+  .jq-intro__stats { grid-template-columns: 1fr; gap: var(--space-3); }
+}
+
+/* -------------------------------------------------------------------------
+   QUIZ HEADER — timer + progress, sticky-ish at the top of the panel
+   ------------------------------------------------------------------------- */
+.jq-quiz-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.jq-timer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.15rem;
+}
+.jq-timer__label {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--jq-text-muted);
+}
+.jq-timer__value {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  color: var(--jq-silver-bright);
+  font-variant-numeric: tabular-nums;
+}
+/* Under 5 minutes — subtle amber-crimson pulse, opacity only (cheap) */
+.jq-timer.is-urgent .jq-timer__value {
+  color: #f0a24a;
+  animation: jq-timer-pulse 1.6s ease-in-out infinite;
+}
+/* Under 1 minute — a touch faster/stronger, still restrained */
+.jq-timer.is-critical .jq-timer__value {
+  color: var(--jq-crimson-bright);
+  animation: jq-timer-pulse 0.9s ease-in-out infinite;
+}
+@keyframes jq-timer-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
+}
+
+.jq-section-badge {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--jq-pink-soft);
+  text-align: right;
+}
+
+/* -------------------------------------------------------------------------
+   PROGRESS BAR
+   ------------------------------------------------------------------------- */
+.jq-progress {
+  margin-bottom: var(--space-7);
+}
+.jq-progress__track {
+  position: relative;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+.jq-progress__fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(90deg, var(--jq-crimson-bright), var(--jq-pink), var(--jq-violet));
+  transition: width 560ms var(--ease-emphasis, cubic-bezier(0.22, 1, 0.36, 1));
+}
+.jq-progress__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.55rem;
+  font-size: var(--fs-xs);
+  color: var(--jq-text-muted);
+}
+.jq-progress__meta strong { color: var(--jq-text); font-weight: var(--fw-semibold); }
+
+/* -------------------------------------------------------------------------
+   SECTION TRANSITION OVERLAY — brief, full-panel, auto-dismisses
+   ------------------------------------------------------------------------- */
+.jq-section-intro {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  text-align: center;
+  animation: jq-section-in 420ms var(--ease-out, ease) both;
+}
+.jq-section-intro.is-active { display: flex; }
+.jq-section-intro__tag {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--jq-pink);
+}
+.jq-section-intro__title {
+  margin: var(--space-3) 0 0;
+  font-size: clamp(1.75rem, 1.4rem + 1.8vw, 2.75rem);
+  color: #ffffff;
+}
+@keyframes jq-section-in {
+  from { opacity: 0; transform: scale(0.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* -------------------------------------------------------------------------
+   QUESTION CARD
+   ------------------------------------------------------------------------- */
+.jq-question {
+  position: relative;
+}
+.jq-question__number {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wider);
+  color: var(--jq-silver);
+}
+.jq-question__number strong { color: var(--jq-text); }
+.jq-question__text {
+  margin: var(--space-3) 0 var(--space-7);
+  font-size: clamp(1.3rem, 1.1rem + 1vw, 1.7rem);
+  font-weight: var(--fw-bold);
+  line-height: 1.35;
+  color: #ffffff;
+}
+
+.jq-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.jq-option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--jq-glass-border);
+  background: var(--jq-glass);
+  color: var(--jq-text);
+  font-family: var(--font-body);
+  font-size: var(--fs-md, var(--fs-base));
+  text-align: left;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 200ms var(--ease-out, ease), border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
+}
+@media (hover: hover) {
+  .jq-option:not(:disabled):hover {
+    transform: translateX(4px);
+    border-color: rgba(199, 204, 217, 0.4);
+    box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.5);
+  }
+}
+.jq-option:focus-visible {
+  outline: 2px solid var(--jq-cyan);
+  outline-offset: 2px;
+}
+.jq-option__letter {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  border: 1px solid rgba(199, 204, 217, 0.35);
+  background: rgba(255, 255, 255, 0.04);
+  font-family: var(--font-mono);
+  font-weight: var(--fw-bold);
+  color: var(--jq-silver-bright);
+}
+.jq-option__text { flex: 1; min-width: 0; }
+.jq-option__check {
+  flex: none;
+  width: 1.35rem;
+  height: 1.35rem;
+  opacity: 0;
+  color: var(--jq-cyan);
+  transform: scale(0.6);
+  transition: opacity 200ms ease, transform 200ms var(--ease-spring, cubic-bezier(0.34, 1.56, 0.64, 1));
+}
+
+/* Selected state — locks the question, clearly marks the chosen option */
+.jq-option.is-selected {
+  border-color: var(--jq-cyan);
+  background: rgba(34, 211, 238, 0.1);
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.35), 0 0 28px rgba(34, 211, 238, 0.18);
+}
+.jq-option.is-selected .jq-option__letter {
+  border-color: var(--jq-cyan);
+  background: rgba(34, 211, 238, 0.16);
+  color: var(--jq-cyan);
+}
+.jq-option.is-selected .jq-option__check {
+  opacity: 1;
+  transform: scale(1);
+}
+.jq-options.is-locked .jq-option:not(.is-selected) {
+  opacity: 0.45;
+  cursor: default;
+}
+.jq-options.is-locked .jq-option { cursor: default; }
+
+/* -------------------------------------------------------------------------
+   Question transition variants — cycled per question so the same motion
+   doesn't repeat identically 50 times, but every variant is short,
+   transform/opacity-only and GPU-friendly.
+   ------------------------------------------------------------------------- */
+.jq-question.jq-anim-out-slide  { animation: jq-out-slide 260ms var(--ease-standard, ease) forwards; }
+.jq-question.jq-anim-in-slide   { animation: jq-in-slide 380ms var(--ease-out, ease) both; }
+.jq-question.jq-anim-out-depth  { animation: jq-out-depth 260ms var(--ease-standard, ease) forwards; }
+.jq-question.jq-anim-in-depth   { animation: jq-in-depth 380ms var(--ease-out, ease) both; }
+.jq-question.jq-anim-out-fade   { animation: jq-out-fade 220ms var(--ease-standard, ease) forwards; }
+.jq-question.jq-anim-in-fade    { animation: jq-in-fade 360ms var(--ease-out, ease) both; }
+
+@keyframes jq-out-slide { to   { opacity: 0; transform: translateX(-24px); } }
+@keyframes jq-in-slide  { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes jq-out-depth { to   { opacity: 0; transform: scale(0.96) translateY(6px); } }
+@keyframes jq-in-depth  { from { opacity: 0; transform: scale(0.97) translateY(-6px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes jq-out-fade  { to   { opacity: 0; } }
+@keyframes jq-in-fade   { from { opacity: 0; } to { opacity: 1; } }
+
+/* Soft light sweep — occasional flourish, one-shot on the question card */
+.jq-question__sweep {
+  position: absolute;
+  inset: -10% -6%;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent 40%, rgba(244, 114, 182, 0.1) 50%, transparent 60%);
+  opacity: 0;
+}
+.jq-question.jq-flourish-sweep .jq-question__sweep {
+  animation: jq-sweep 900ms var(--ease-out, ease) both;
+}
+@keyframes jq-sweep {
+  0%   { opacity: 0; transform: translateX(-30%); }
+  35%  { opacity: 1; }
+  100% { opacity: 0; transform: translateX(30%); }
+}
+
+/* -------------------------------------------------------------------------
+   Sakura petal burst — occasional flourish, a handful of short-lived
+   elements (never a continuous particle system).
+   ------------------------------------------------------------------------- */
+.jq-petals {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: visible;
+}
+.jq-petal {
+  position: absolute;
+  top: -10px;
+  font-size: 1.1rem;
+  opacity: 0;
+  animation: jq-petal-fall 1600ms ease-in forwards;
+  will-change: transform, opacity;
+}
+@keyframes jq-petal-fall {
+  0%   { opacity: 0; transform: translate(0, 0) rotate(0deg); }
+  12%  { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--jq-petal-x, 40px), 220px) rotate(220deg); }
+}
+
+/* -------------------------------------------------------------------------
+   RESULT SCREEN
+   ------------------------------------------------------------------------- */
+.jq-result {
+  position: relative;
+  text-align: center;
+}
+.jq-result__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 5.5rem;
+  height: 5.5rem;
+  margin-bottom: var(--space-5);
+  border-radius: 50%;
+  font-size: 2.25rem;
+  border: 1px solid var(--jq-glass-border);
+}
+.jq-result.is-pass .jq-result__badge {
+  background: linear-gradient(150deg, rgba(34, 211, 238, 0.22), rgba(139, 92, 246, 0.22));
+  box-shadow: 0 0 40px rgba(34, 211, 238, 0.3);
+}
+.jq-result.is-fail .jq-result__badge {
+  background: linear-gradient(150deg, rgba(176, 32, 58, 0.22), rgba(139, 92, 246, 0.16));
+}
+
+.jq-result__headline {
+  margin: 0;
+  font-size: clamp(1.75rem, 1.4rem + 1.6vw, 2.5rem);
+  color: #ffffff;
+}
+.jq-result__subhead {
+  margin: var(--space-2) 0 0;
+  font-size: var(--fs-md, var(--fs-base));
+  color: var(--jq-text-muted);
+}
+
+.jq-result__score {
+  margin: var(--space-7) 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 2.4rem + 3vw, 4.5rem);
+  font-weight: var(--fw-extrabold);
+  color: #ffffff;
+}
+.jq-result__score span {
+  font-size: 0.4em;
+  color: var(--jq-text-muted);
+  font-weight: var(--fw-medium);
+}
+
+.jq-result__stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-3);
+  max-width: 640px;
+  margin: var(--space-7) auto 0;
+}
+.jq-result__stat {
+  padding: var(--space-4) var(--space-2);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--jq-glass-border);
+  background: var(--jq-glass);
+}
+.jq-result__stat-value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  color: var(--jq-text);
+}
+.jq-result__stat-value.is-correct { color: #4ade80; }
+.jq-result__stat-value.is-incorrect { color: var(--jq-crimson-bright); }
+.jq-result__stat-label {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: var(--fs-2xs);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--jq-text-muted);
+}
+@media (max-width: 640px) {
+  .jq-result__stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+.jq-result__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+.jq-result__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 3.1rem;
+  padding-inline: 2rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-display);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 220ms ease, filter 200ms ease, box-shadow 220ms ease;
+}
+.jq-result__btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+.jq-result__btn:active { transform: translateY(0) scale(0.97); }
+.jq-result__btn--primary {
+  border: none;
+  background: linear-gradient(120deg, var(--jq-crimson-bright), var(--jq-pink), var(--jq-violet));
+  color: #ffffff;
+  box-shadow: 0 14px 34px -10px rgba(176, 32, 58, 0.5);
+}
+.jq-result__btn--ghost {
+  border: 1px solid var(--jq-glass-border);
+  background: transparent;
+  color: var(--jq-text);
+}
+.jq-result__btn--ghost:hover { border-color: rgba(199, 204, 217, 0.45); }
+
+/* -------------------------------------------------------------------------
+   Answer breakdown — collapsible, lazy-built, kept clean
+   ------------------------------------------------------------------------- */
+.jq-breakdown {
+  margin-top: var(--space-9);
+  text-align: left;
+}
+.jq-breakdown__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--jq-glass-border);
+  background: var(--jq-glass);
+  color: var(--jq-text);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  cursor: pointer;
+  transition: border-color 200ms ease, background-color 200ms ease;
+}
+.jq-breakdown__toggle:hover { border-color: rgba(199, 204, 217, 0.4); }
+.jq-breakdown__toggle svg { width: 16px; height: 16px; transition: transform 260ms ease; }
+.jq-breakdown__toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+
+.jq-breakdown__panel {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 480ms var(--ease-emphasis, ease), opacity 320ms ease;
+}
+.jq-breakdown__panel.is-open {
+  max-height: 8000px;
+  opacity: 1;
+}
+
+.jq-breakdown__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-5);
+  padding: 0;
+  list-style: none;
+}
+.jq-breakdown__row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--jq-glass-border);
+  background: rgba(255, 255, 255, 0.02);
+}
+.jq-breakdown__row.is-wrong { border-color: rgba(176, 32, 58, 0.3); }
+.jq-breakdown__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 50%;
+  font-size: 0.85rem;
+  font-weight: var(--fw-bold);
+}
+.jq-breakdown__row:not(.is-wrong) .jq-breakdown__icon { background: rgba(74, 222, 128, 0.18); color: #4ade80; }
+.jq-breakdown__row.is-wrong .jq-breakdown__icon { background: rgba(176, 32, 58, 0.2); color: var(--jq-crimson-bright); }
+.jq-breakdown__body { flex: 1; min-width: 0; }
+.jq-breakdown__q {
+  margin: 0 0 0.3rem;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--jq-text);
+}
+.jq-breakdown__ans {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--jq-text-muted);
+}
+.jq-breakdown__ans strong { color: var(--jq-text); }
+
+/* -------------------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------------------- */
+@media (max-width: 640px) {
+  .jq-quiz-head { flex-wrap: wrap; }
+  .jq-timer__value { font-size: var(--fs-xl); }
+  .jq-question__text { margin-bottom: var(--space-5); }
+  .jq-option { padding: var(--space-3) var(--space-4); font-size: var(--fs-sm); }
+  .jq-option__letter { width: 1.9rem; height: 1.9rem; font-size: var(--fs-sm); }
+}
+
+/* -------------------------------------------------------------------------
+   Reduced motion — kill every decorative animation, keep content readable
+   ------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .jq-panel.is-active,
+  .jq-section-intro,
+  .jq-question.jq-anim-out-slide,
+  .jq-question.jq-anim-in-slide,
+  .jq-question.jq-anim-out-depth,
+  .jq-question.jq-anim-in-depth,
+  .jq-question.jq-anim-out-fade,
+  .jq-question.jq-anim-in-fade,
+  .jq-question__sweep,
+  .jq-petal,
+  .jq-timer.is-urgent .jq-timer__value,
+  .jq-timer.is-critical .jq-timer__value {
+    animation: none !important;
+  }
+  .jq-progress__fill { transition: none; }
+  .jq-option { transition: none; }
+}

@@ -49,6 +49,7 @@
     phuket:    { name: "Phuket Island Escape",           destination: "Phuket, Thailand",  duration: "4 Days / 3 Nights", price: 31999,  image: "https://picsum.photos/seed/phuket-hero/600/600" },
     iceland:   { name: "Iceland Northern Lights Escape", destination: "Iceland",           duration: "6 Nights / 7 Days", price: 725000, image: "https://picsum.photos/seed/iceland-hero/600/600" },
     shimla:    { name: "Shimla VIP: 42 Faces, 1 Unforgettable Weekend", destination: "Shoghi, Shimla", duration: "2 Nights / 3 Days", price: 17000, image: "https://ik.imagekit.io/mg0v9kccj/IMG-20260704-WA0019.jpg.jpeg" },
+    "spiritual-vip": { name: "Xploroo Spiritual VIP: Meet Ms. Gataansha Raghuwanshi", destination: "Wood Smoke Resort, Shoghi, Shimla", duration: "2 Nights / 3 Days", price: 15000, image: "https://ik.imagekit.io/mg0v9kccj/file_0000000087a471fab4fae4b1f11db7e8.png" },
     japan:     { name: "Japan Cherry Blossom Trail",     destination: "Japan",             duration: "6 Days / 5 Nights", price: 99999,  image: "https://picsum.photos/seed/japan-hero/600/600" },
     italy:     { name: "Italy Classic Escape",           destination: "Italy",             duration: "6 Days / 5 Nights", price: 89999,  image: "https://picsum.photos/seed/italy-hero/600/600" },
 

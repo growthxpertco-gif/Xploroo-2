@@ -1,4 +1,4 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    XPLOROO · Search overlay module
    search-overlay.js — Opens/closes the fullscreen search overlay from the
    header's search icon, drives the three tabs (Packages / Influencers /
@@ -18,7 +18,7 @@
                        public.influencer_services. Opens influencer-profile
                        .html?username=… (falls back to ?id=…).
      • Experiences  -> public.experiences (Play & Win / quizzes / campaigns
-                       shown on travel-quizzes.html + winners.html), opens
+                       shown on play&win.html + winners.html), opens
                        each row's page_url.
 
    This file runs on every page (search is global), but most pages never

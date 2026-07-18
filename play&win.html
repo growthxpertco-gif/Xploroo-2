@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -122,7 +122,7 @@
               </div>
             </li>
             <li class="main-nav__item">
-              <a class="main-nav__link" href="travel-quizzes.html" aria-current="page">Play &amp; Win</a>
+              <a class="main-nav__link" href="play&amp;win.html" aria-current="page">Play &amp; Win</a>
             </li>
             <li class="main-nav__item">
               <a class="main-nav__link" href="influencers.html">Influencers</a>
@@ -196,7 +196,7 @@
           <ul class="mobile-menu__list" role="list">
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="index.html">Home</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="about.html">About Us</a></li>
-            <li class="mobile-menu__item"><a class="mobile-menu__link" href="travel-quizzes.html" aria-current="page">Play &amp; Win</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="play&amp;win.html" aria-current="page">Play &amp; Win</a></li>
             <li class="mobile-menu__item"><a class="mobile-menu__link" href="influencers.html">Influencers</a></li>
             <li class="mobile-menu__item mobile-menu__item--submenu">
               <button type="button" class="mobile-menu__link mobile-menu__toggle" aria-expanded="false" aria-controls="mobile-submenu-packages" data-submenu-toggle>
@@ -425,11 +425,19 @@
 
             <ul class="pw-games" data-pw-games role="list">
               <li class="pw-games__slide">
-                <article class="pw-game pw-game--quiz">
+                <article
+                  class="pw-game pw-game--quiz pw-game--live"
+                  data-pw-quiz-trigger
+                  role="button"
+                  tabindex="0"
+                  aria-expanded="false"
+                  aria-controls="pw-quiz-select"
+                  aria-label="Travel Quiz — open quiz selection"
+                >
                   <div class="pw-game__art" aria-hidden="true"><span>🧠</span></div>
                   <div class="pw-game__body">
                     <h3 class="pw-game__name">Travel Quiz</h3>
-                    <span class="pw-game__badge">Launching Soon</span>
+                    <span class="pw-game__badge pw-game__badge--live">Play Now</span>
                   </div>
                 </article>
               </li>
@@ -479,6 +487,84 @@
                 </article>
               </li>
             </ul>
+          </section>
+
+          <!-- =========================================================
+               TRAVEL QUIZ SELECTION — collapsed by default; revealed when
+               the "Travel Quiz" card above is activated (see
+               data-pw-quiz-trigger / data-pw-quiz-select in js/play-win.js).
+               Fully self-contained under `.pw-quiz-*`; the five other
+               Arcade cards and every other section are untouched.
+               ========================================================= -->
+          <section
+            class="pw-quiz-select"
+            data-pw-quiz-select
+            id="pw-quiz-select"
+            aria-labelledby="pw-quiz-select-title"
+            aria-hidden="true"
+          >
+            <div class="pw-section-head">
+              <span class="pw-section-head__eyebrow pw-section-head__eyebrow--quiz">The Travel Quiz</span>
+              <h2 class="pw-section-head__title" id="pw-quiz-select-title">Choose Your Arena</h2>
+              <p class="pw-section-head__subtitle">Four quizzes. One champion. Pick your battlefield.</p>
+            </div>
+
+            <div class="pw-quiz-grid">
+
+              <article class="pw-quiz-card pw-quiz-card--japan" data-pw-quiz-card>
+                <div class="pw-quiz-card__sweep" aria-hidden="true"></div>
+                <div class="pw-quiz-card__art" aria-hidden="true"><span>⛩️</span></div>
+                <div class="pw-quiz-card__body">
+                  <h3 class="pw-quiz-card__title">Japan Quiz</h3>
+                  <p class="pw-quiz-card__subtitle">Test how well you know the Land of the Rising Sun.</p>
+                </div>
+                <button class="pw-quiz-card__cta" type="button" data-pw-quiz-play="japan">
+                  <span>Play Now</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+              </article>
+
+              <article class="pw-quiz-card pw-quiz-card--shimla" data-pw-quiz-card>
+                <div class="pw-quiz-card__sweep" aria-hidden="true"></div>
+                <div class="pw-quiz-card__art" aria-hidden="true"><span>🏔️</span></div>
+                <div class="pw-quiz-card__body">
+                  <h3 class="pw-quiz-card__title">Shimla Quiz</h3>
+                  <p class="pw-quiz-card__subtitle">How well do you know the Queen of Hills?</p>
+                </div>
+                <button class="pw-quiz-card__cta" type="button" data-pw-quiz-play="shimla">
+                  <span>Play Now</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+              </article>
+
+              <article class="pw-quiz-card pw-quiz-card--manali" data-pw-quiz-card>
+                <div class="pw-quiz-card__sweep" aria-hidden="true"></div>
+                <div class="pw-quiz-card__art" aria-hidden="true"><span>⛰️</span></div>
+                <div class="pw-quiz-card__body">
+                  <h3 class="pw-quiz-card__title">Manali Quiz</h3>
+                  <p class="pw-quiz-card__subtitle">Put your Himalayan travel knowledge to the test.</p>
+                </div>
+                <button class="pw-quiz-card__cta" type="button" data-pw-quiz-play="manali">
+                  <span>Play Now</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+              </article>
+
+              <article class="pw-quiz-card pw-quiz-card--xploroo pw-quiz-card--flagship" data-pw-quiz-card>
+                <div class="pw-quiz-card__sweep" aria-hidden="true"></div>
+                <span class="pw-quiz-card__flagship-tag">Flagship</span>
+                <div class="pw-quiz-card__art" aria-hidden="true"><span>🧭</span></div>
+                <div class="pw-quiz-card__body">
+                  <h3 class="pw-quiz-card__title">Xploroo Quiz</h3>
+                  <p class="pw-quiz-card__subtitle">Think you know Xploroo? Prove it.</p>
+                </div>
+                <button class="pw-quiz-card__cta pw-quiz-card__cta--flagship" type="button" data-pw-quiz-play="xploroo">
+                  <span>Play Now</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </button>
+              </article>
+
+            </div>
           </section>
 
           <!-- =========================================================
@@ -602,7 +688,7 @@
             <div class="footer-links__col">
               <h3 class="footer-links__title">Explore</h3>
               <ul class="footer-links__list" role="list">
-                <li><a class="footer-links__link" href="travel-quizzes.html" aria-current="page">Play &amp; Win</a></li>
+                <li><a class="footer-links__link" href="play&amp;win.html" aria-current="page">Play &amp; Win</a></li>
                 <li><a class="footer-links__link" href="influencers.html">Influencers</a></li>
                 <li><a class="footer-links__link" href="winners.html">Winners</a></li>
                 <li><a class="footer-links__link" href="travel-stories.html">Travel Stories</a></li>

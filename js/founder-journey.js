@@ -1,8 +1,8 @@
-/* ==========================================================================
+﻿/* ==========================================================================
    XPLOROO · Founder's Journey module
    founder-journey.js — Scroll-reveal only (fade + rise) for the hero and
    each chapter card, matching the [data-pw-reveal] pattern used on
-   travel-quizzes.html. Respects prefers-reduced-motion: elements are made
+   play&win.html. Respects prefers-reduced-motion: elements are made
    visible immediately instead of observed.
    Vanilla JS, no dependencies. Loaded with `defer`.
    ========================================================================== */

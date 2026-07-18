@@ -296,6 +296,18 @@
 .tp-card__media--patagonia { --tp-c1: #4a5568; --tp-c2: #0d0f13; }
 .tp-card__media--amalfi    { --tp-c1: #d97a4d; --tp-c2: #1c0f08; }
 .tp-card__media--marrakech { --tp-c1: #c07a2e; --tp-c2: #1a0f04; }
+.tp-card__media--spiritual { --tp-c1: #4a2c8f; --tp-c2: #0d0a1a; }
+
+/* Badge overlaid on the card image (top-left) — used by the Xploroo
+   Spiritual VIP card only; every other Trending Packages card keeps its
+   minimal media (no badge). Reuses the existing `.tp-card__badge` /
+   `.tp-card__badge--luxury` styling untouched, just repositions it. */
+.tp-card__badge--overlay {
+  position: absolute;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 2;
+}
 
 /* ---- Wishlist button (top-right overlay) ----
    Glassmorphic circle + a pure stroke-only heart (never filled, in any

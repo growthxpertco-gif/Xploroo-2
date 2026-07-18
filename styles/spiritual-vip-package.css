@@ -1,0 +1,281 @@
+/* ==========================================================================
+   XPLOROO · Xploroo Spiritual VIP package page
+   spiritual-vip-package.css — Visual re-skin ONLY for spiritual-vip-package.html.
+   Every selector here is scoped under `.pkg-page--spiritual` (added only to
+   this page's `.pkg-page` wrapper), so styles/package-details.css itself is
+   never touched and every other package page (Shimla, Iceland, etc.) keeps
+   its exact original look. Structure, layout, spacing and interaction all
+   stay 100% inherited from package-details.css — only color, background and
+   a small number of page-only additions (hero secondary title/tagline, the
+   "Why This Is Different" cards, inclusion-group headings) live here.
+
+   Palette — deep purple / midnight blue / soft violet / titanium silver /
+   pure white text. Cosmic, peaceful, premium. No religious iconography.
+   ========================================================================== */
+
+.pkg-page--spiritual {
+  --spvip-purple:  #4c1d95;
+  --spvip-indigo:  #1e1b4b;
+  --spvip-violet:  #7c3aed;
+  --spvip-silver:  #c7ccd9;
+  --spvip-silver-bright: #f5f7fb;
+  --spvip-gradient: linear-gradient(135deg, #6d28d9 0%, #4c1d95 55%, #1e1b4b 100%);
+  position: relative;
+  isolation: isolate;
+}
+
+/* Ambient cosmic wash behind the whole page — soft purple/indigo nebula
+   blobs + a faint static starfield, pure CSS, no JS/canvas cost. */
+.pkg-page--spiritual::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 40% at 12% 0%, rgba(124, 58, 237, 0.16), transparent 60%),
+    radial-gradient(55% 35% at 92% 8%, rgba(76, 29, 149, 0.18), transparent 60%),
+    radial-gradient(50% 30% at 50% 100%, rgba(30, 27, 75, 0.35), transparent 60%),
+    radial-gradient(1.4px 1.4px at 8% 22%, rgba(245, 247, 251, 0.5), transparent),
+    radial-gradient(1px 1px at 24% 68%, rgba(245, 247, 251, 0.35), transparent),
+    radial-gradient(1.4px 1.4px at 42% 14%, rgba(245, 247, 251, 0.45), transparent),
+    radial-gradient(1px 1px at 58% 80%, rgba(245, 247, 251, 0.3), transparent),
+    radial-gradient(1.4px 1.4px at 71% 34%, rgba(245, 247, 251, 0.45), transparent),
+    radial-gradient(1px 1px at 88% 60%, rgba(245, 247, 251, 0.35), transparent),
+    radial-gradient(1.4px 1.4px at 95% 88%, rgba(245, 247, 251, 0.4), transparent);
+}
+
+/* -------------------------------------------------------------------------
+   Hero
+   ------------------------------------------------------------------------- */
+.pkg-page--spiritual .pkg-badge--category {
+  color: var(--spvip-silver-bright);
+  background: rgba(124, 58, 237, 0.16);
+  border-color: rgba(199, 204, 217, 0.4);
+}
+.pkg-page--spiritual .pkg-badge--live {
+  background-image: var(--spvip-gradient);
+  box-shadow: 0 0 24px rgba(124, 58, 237, 0.45);
+}
+
+.pkg-page--spiritual .pkg-hero__title {
+  background: linear-gradient(100deg, #ffffff 0%, #ffffff 35%, var(--spvip-silver-bright) 50%, #ffffff 70%, #ffffff 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 60px rgba(124, 58, 237, 0.4);
+}
+
+/* Secondary title directly under the hero title — "Meet Ms. Gataansha
+   Raghuwanshi". New element, not part of the base template. */
+.pkg-hero__secondary {
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  color: var(--spvip-silver-bright);
+}
+
+/* Hero statement — the large emotive line ("20 Souls. 1 Divine Weekend.
+   Your Answers Await."). Reuses `.pkg-hero__desc` sizing/position but
+   recolored to read as a statement, not muted body copy. */
+.pkg-page--spiritual .pkg-hero__desc {
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: var(--fw-medium);
+}
+
+/* Tagline — small italic silver line under the hero statement. */
+.pkg-hero__tagline {
+  margin-top: var(--space-2);
+  font-style: italic;
+  font-size: var(--fs-sm);
+  color: var(--spvip-silver);
+  letter-spacing: 0.01em;
+}
+
+.pkg-page--spiritual .pkg-cta {
+  background-image: var(--spvip-gradient);
+  box-shadow: 0 14px 40px -10px rgba(76, 29, 149, 0.55), 0 0 0 1px rgba(199, 204, 217, 0.25);
+}
+.pkg-page--spiritual .pkg-cta:hover {
+  box-shadow: 0 22px 56px -10px rgba(124, 58, 237, 0.6), 0 0 0 1px rgba(199, 204, 217, 0.4);
+}
+
+.pkg-page--spiritual .pkg-gallery__hero {
+  border-color: rgba(199, 204, 217, 0.35);
+}
+.pkg-page--spiritual .pkg-gallery__thumb.is-active {
+  border-color: var(--spvip-violet);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.25);
+}
+
+/* -------------------------------------------------------------------------
+   Info cards / glass surfaces — titanium-silver bordered glass instead of
+   the default violet-tinted glass, to read as premium wellness rather than
+   generic "brand purple".
+   ------------------------------------------------------------------------- */
+.pkg-page--spiritual .pkg-info-card,
+.pkg-page--spiritual .pkg-highlights,
+.pkg-page--spiritual .pkg-help {
+  border-color: rgba(199, 204, 217, 0.22);
+  background: rgba(30, 27, 75, 0.35);
+}
+.pkg-page--spiritual .pkg-info-card:hover {
+  border-color: rgba(199, 204, 217, 0.4);
+  box-shadow: 0 0 32px rgba(124, 58, 237, 0.25);
+}
+.pkg-page--spiritual .pkg-info-card__icon {
+  color: var(--spvip-silver-bright);
+  background: rgba(124, 58, 237, 0.22);
+}
+
+.pkg-page--spiritual .pkg-section__eyebrow {
+  color: var(--spvip-silver);
+}
+
+/* -------------------------------------------------------------------------
+   "WHY THIS IS DIFFERENT" — dedicated section, 3 intimate-experience cards.
+   New component, page-scoped only (spvip- prefix), no base-template class
+   name collisions.
+   ------------------------------------------------------------------------- */
+.spvip-why__intro {
+  margin: 0 0 var(--space-6);
+  max-width: 62ch;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: var(--fs-md);
+  line-height: var(--lh-relaxed);
+}
+.spvip-why__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+}
+@media (max-width: 900px) {
+  .spvip-why__grid { grid-template-columns: 1fr; }
+}
+.spvip-why__card {
+  position: relative;
+  padding: var(--space-6);
+  border-radius: var(--radius-2xl);
+  border: 1px solid rgba(199, 204, 217, 0.25);
+  background:
+    linear-gradient(165deg, rgba(124, 58, 237, 0.18), rgba(30, 27, 75, 0.55) 60%),
+    rgba(20, 20, 29, 0.4);
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  backdrop-filter: blur(var(--glass-blur));
+  transition: transform var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-standard), box-shadow var(--dur-base) var(--ease-out);
+}
+.spvip-why__card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(199, 204, 217, 0.45);
+  box-shadow: 0 20px 48px -16px rgba(76, 29, 149, 0.5);
+}
+.spvip-why__number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: var(--space-4);
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-weight: var(--fw-bold);
+  color: #fff;
+  background-image: var(--spvip-gradient);
+  box-shadow: 0 0 18px rgba(124, 58, 237, 0.45);
+}
+.spvip-why__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-lg);
+  color: #ffffff;
+}
+.spvip-why__desc {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  color: rgba(255, 255, 255, 0.78);
+}
+.spvip-why__note {
+  margin-top: var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(199, 204, 217, 0.25);
+  background: rgba(124, 58, 237, 0.1);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--fs-sm);
+  text-align: center;
+}
+
+/* -------------------------------------------------------------------------
+   Inclusions tab — grouped sub-headings (THE SPIRITUAL EXPERIENCE /
+   TRAVEL & STAY / THE VIBE / SERVICE). New element inside the existing
+   `.pkg-tabs__panel[data-pkg-tab-panel="inclusions"]`, base `.pkg-list`
+   styling is reused untouched underneath each heading.
+   ------------------------------------------------------------------------- */
+.spvip-inc-group {
+  margin-bottom: var(--space-6);
+}
+.spvip-inc-group:last-child {
+  margin-bottom: 0;
+}
+.spvip-inc-group__title {
+  margin: 0 0 var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--spvip-silver);
+}
+
+/* -------------------------------------------------------------------------
+   Tabs / itinerary / included grid / pricing — recolor active states from
+   brand magenta-violet to the deep purple/indigo palette.
+   ------------------------------------------------------------------------- */
+.pkg-page--spiritual .pkg-tabs__nav {
+  border-color: rgba(199, 204, 217, 0.22);
+  background: rgba(20, 20, 29, 0.45);
+}
+.pkg-page--spiritual .pkg-tabs__tab[aria-selected="true"] {
+  background: var(--spvip-gradient);
+  box-shadow: 0 0 24px rgba(124, 58, 237, 0.4);
+}
+
+.pkg-page--spiritual .pkg-itinerary__day {
+  border-color: rgba(199, 204, 217, 0.2);
+  background: rgba(20, 20, 29, 0.4);
+}
+.pkg-page--spiritual .pkg-itinerary__day:hover {
+  border-color: rgba(199, 204, 217, 0.4);
+}
+.pkg-page--spiritual .pkg-itinerary__badge {
+  background: var(--spvip-gradient);
+}
+
+.pkg-page--spiritual .pkg-included__item {
+  border-color: rgba(199, 204, 217, 0.2);
+  background: rgba(20, 20, 29, 0.4);
+}
+.pkg-page--spiritual .pkg-included__item:hover {
+  border-color: rgba(199, 204, 217, 0.4);
+}
+.pkg-page--spiritual .pkg-included__icon {
+  background: rgba(124, 58, 237, 0.22);
+  color: var(--spvip-silver-bright);
+}
+
+.pkg-page--spiritual .pkg-pricing {
+  background:
+    linear-gradient(var(--color-surface), var(--color-surface)) padding-box,
+    var(--spvip-gradient) border-box;
+}
+
+.pkg-page--spiritual .pkg-help__btn--call:hover {
+  border-color: var(--spvip-violet);
+  background: rgba(124, 58, 237, 0.14);
+}
+
+/* Related-package cards + sticky mobile bar CTA reuse `.pkg-cta` /
+   `.pkg-related__card` from the base template; only the CTA gradient needs
+   the page-wide override above (already applied via `.pkg-cta`). */

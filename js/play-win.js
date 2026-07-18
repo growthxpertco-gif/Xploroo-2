@@ -96,6 +96,66 @@
   /* 4. Coming Games carousel — mouse drag-to-scroll (touch keeps native  */
   /*    swipe + snap via CSS overflow scrolling).                         */
   /* ------------------------------------------------------------------ */
+  /* ------------------------------------------------------------------ */
+  /* 5. Travel Quiz card → reveals/collapses the quiz selection section.  */
+  /*    Of the four "Play Now" buttons inside it, Japan/Shimla/Manali     */
+  /*    have real destinations (japan-quiz.html / shimla-quiz.html /      */
+  /*    manali-quiz.html) — see the dedicated listeners below. Xploroo    */
+  /*    stays a plain type="button" element with no href/handler, so it   */
+  /*    can never 404 until its own quiz page exists.                     */
+  /* ------------------------------------------------------------------ */
+  const quizTrigger = page.querySelector("[data-pw-quiz-trigger]");
+  const quizSelect = page.querySelector("[data-pw-quiz-select]");
+  if (quizTrigger && quizSelect) {
+    function toggleQuizSelect() {
+      const isOpen = quizSelect.classList.toggle("is-open");
+      quizSelect.setAttribute("aria-hidden", isOpen ? "false" : "true");
+      quizTrigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+      if (isOpen) {
+        window.setTimeout(
+          () => quizSelect.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" }),
+          reduceMotion ? 0 : 90
+        );
+      }
+    }
+    quizTrigger.addEventListener("click", toggleQuizSelect);
+    quizTrigger.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      e.preventDefault();
+      toggleQuizSelect();
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 5b. Japan Quiz "Play Now" → the only quiz that's actually live.      */
+  /* ------------------------------------------------------------------ */
+  const japanPlayBtn = page.querySelector('[data-pw-quiz-play="japan"]');
+  if (japanPlayBtn) {
+    japanPlayBtn.addEventListener("click", () => {
+      window.location.href = "japan-quiz.html";
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 5c. Shimla Quiz "Play Now" → now live alongside Japan Quiz.          */
+  /* ------------------------------------------------------------------ */
+  const shimlaPlayBtn = page.querySelector('[data-pw-quiz-play="shimla"]');
+  if (shimlaPlayBtn) {
+    shimlaPlayBtn.addEventListener("click", () => {
+      window.location.href = "shimla-quiz.html";
+    });
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* 5d. Manali Quiz "Play Now" → now live alongside Japan and Shimla.    */
+  /* ------------------------------------------------------------------ */
+  const manaliPlayBtn = page.querySelector('[data-pw-quiz-play="manali"]');
+  if (manaliPlayBtn) {
+    manaliPlayBtn.addEventListener("click", () => {
+      window.location.href = "manali-quiz.html";
+    });
+  }
+
   const track = page.querySelector("[data-pw-games]");
   if (track) {
     let dragging = false;
