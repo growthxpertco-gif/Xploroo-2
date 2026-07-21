@@ -753,3 +753,31 @@
     transform: none;
   }
 }
+
+/* ==========================================================================
+   LIGHT THEME — this page's palette is entirely hardcoded (not the shared
+   variables.css tokens). Almost every card (`.vipm-card`, `.vipm-tier`,
+   `.vipm-benefit`, `.vipm-vision`, `.vipm-faq-item`, `.vipm-final`) already
+   carries its own ~90%-opaque dark navy fill, so their white text stays
+   readable in both themes untouched. The only elements that sit directly
+   on the page canvas (--color-bg, which flips to white in light theme) are
+   the hero and the bare section eyebrow/title/subtitle used above each
+   card grid — those need explicit light-theme overrides.
+   ========================================================================== */
+:root[data-theme="light"] .vipm-page {
+  --vipm-silver: #4a4460;
+  --vipm-silver-bright: #241a3d;
+}
+:root[data-theme="light"] .vipm-hero__title {
+  background: linear-gradient(100deg, #241a3d 0%, #241a3d 40%, #5B21B6 60%, #241a3d 100%);
+  text-shadow: none;
+}
+:root[data-theme="light"] .vipm-hero__subtitle { color: rgba(30, 22, 48, 0.82); }
+:root[data-theme="light"] .vipm-eyebrow {
+  color: #4c1d95;
+  background: linear-gradient(135deg, rgba(91, 33, 182, 0.16), rgba(192, 38, 212, 0.16));
+  border-color: rgba(91, 33, 182, 0.3);
+  box-shadow: none;
+}
+:root[data-theme="light"] .vipm-title { color: #1c1428; text-shadow: none; }
+:root[data-theme="light"] .vipm-subtitle { color: rgba(28, 20, 40, 0.75); }

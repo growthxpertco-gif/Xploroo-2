@@ -279,3 +279,140 @@
 /* Related-package cards + sticky mobile bar CTA reuse `.pkg-cta` /
    `.pkg-related__card` from the base template; only the CTA gradient needs
    the page-wide override above (already applied via `.pkg-cta`). */
+
+/* -------------------------------------------------------------------------
+   Two-package pricing selector (2N/3D + 3N/4D) — page-only component,
+   lives inside the existing `.pkg-pricing` sticky sidebar card. New
+   `spvip-price-*` classes only; `.pkg-pricing`, `.pkg-pricing__label` and
+   `.pkg-cta--block` all stay 100% inherited from package-details.css.
+   ------------------------------------------------------------------------- */
+.spvip-price-slots {
+  margin: 0.4rem 0 var(--space-5);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--spvip-silver);
+}
+.spvip-price-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+@media (max-width: 420px) {
+  .spvip-price-grid { grid-template-columns: 1fr; }
+}
+.spvip-price-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--space-4) var(--space-3);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(199, 204, 217, 0.25);
+  background: rgba(30, 27, 75, 0.4);
+  text-align: center;
+  transition: transform var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-standard);
+}
+.spvip-price-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(199, 204, 217, 0.45);
+}
+.spvip-price-card__duration {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--spvip-silver);
+}
+.spvip-price-card__amount {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-extrabold);
+  color: var(--color-text-strong);
+}
+.spvip-price-card__unit {
+  display: block;
+  margin: 0.1rem 0 var(--space-4);
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+.spvip-price-card .pkg-cta--block {
+  width: 100%;
+  padding: 0.6em 0.8em;
+  font-size: var(--fs-sm);
+}
+
+/* ============================================================================
+   LIGHT THEME — this page's palette is entirely hardcoded (not the shared
+   variables.css tokens), so — like header.css / package-details.css — it
+   needs its own explicit overrides when [data-theme="light"] is set on
+   <html>. The hero/body text here was authored assuming a dark canvas;
+   on the light canvas (--color-bg flips to white) it would otherwise render
+   as white-on-white. Translucent "glass" cards are nudged more opaque so
+   they keep reading as premium dark surfaces (with their existing white
+   text) instead of forcing every element to invert to dark-on-light.
+   ============================================================================ */
+:root[data-theme="light"] .pkg-page--spiritual {
+  --spvip-silver: #4a4460;
+  --spvip-silver-bright: #2a2140;
+}
+
+:root[data-theme="light"] .pkg-page--spiritual .pkg-hero__title {
+  background: linear-gradient(100deg, #2a1065 0%, #2a1065 35%, #6d28d9 50%, #2a1065 70%, #2a1065 100%);
+  background-size: 220% auto;
+  text-shadow: none;
+}
+:root[data-theme="light"] .pkg-hero__secondary { color: #2a2140; }
+:root[data-theme="light"] .pkg-page--spiritual .pkg-hero__desc { color: rgba(28, 20, 48, 0.85); }
+:root[data-theme="light"] .pkg-hero__tagline { color: #4a4460; }
+
+/* Badge / icon chips — tinted purple background stays, but the near-white
+   icon/text color needs to invert for contrast against it. */
+:root[data-theme="light"] .pkg-page--spiritual .pkg-badge--category {
+  color: #4c1d95;
+  background: rgba(124, 58, 237, 0.14);
+  border-color: rgba(76, 29, 149, 0.3);
+}
+:root[data-theme="light"] .pkg-page--spiritual .pkg-info-card__icon,
+:root[data-theme="light"] .pkg-page--spiritual .pkg-included__icon {
+  color: #ffffff;
+  background: rgba(124, 58, 237, 0.65);
+}
+
+/* Glass cards — increase opacity so they stay a readable dark surface for
+   their existing white/near-white text, rather than washing out to a faint
+   tint over a white page. */
+:root[data-theme="light"] .pkg-page--spiritual .pkg-info-card,
+:root[data-theme="light"] .pkg-page--spiritual .pkg-highlights,
+:root[data-theme="light"] .pkg-page--spiritual .pkg-help,
+:root[data-theme="light"] .pkg-page--spiritual .pkg-tabs__nav,
+:root[data-theme="light"] .pkg-page--spiritual .pkg-itinerary__day,
+:root[data-theme="light"] .pkg-page--spiritual .pkg-included__item,
+:root[data-theme="light"] .spvip-why__card,
+:root[data-theme="light"] .spvip-price-card {
+  background: rgba(30, 27, 75, 0.92);
+  /* These cards stay intentionally dark in light mode too, so any
+     descendant using the shared text tokens (which otherwise correctly
+     flip dark for the rest of the light-mode page) needs to stay light. */
+  --color-text-strong: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.7);
+  --color-text-subtle: rgba(255, 255, 255, 0.6);
+  --color-text: rgba(255, 255, 255, 0.85);
+}
+:root[data-theme="light"] .spvip-why__note {
+  background: rgba(76, 29, 149, 0.9);
+  color: #ffffff;
+}
+:root[data-theme="light"] .spvip-price-card__amount { color: #ffffff; }
+:root[data-theme="light"] .spvip-price-card__unit { color: rgba(255, 255, 255, 0.75); }
+:root[data-theme="light"] .spvip-price-slots,
+:root[data-theme="light"] .spvip-price-card__duration,
+:root[data-theme="light"] .spvip-inc-group__title,
+:root[data-theme="light"] .pkg-page--spiritual .pkg-section__eyebrow {
+  color: #4a4460;
+}
+:root[data-theme="light"] .spvip-why__intro { color: rgba(28, 20, 48, 0.85); }

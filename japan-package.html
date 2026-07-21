@@ -5,8 +5,8 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://ryljttolhnvyynkfwuju.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Japan Cherry Blossom Trail — a premium 6-day journey through Tokyo and Kyoto, only on Xploroo." />
-  <title>Japan Cherry Blossom Trail | Xploroo Packages</title>
+  <meta name="description" content="Japan Premium Golden Route 6N7D — an all-inclusive Tokyo, Mt. Fuji, Kyoto &amp; Osaka package with round-trip flights, 3-Star hotels, meals, sightseeing, transfers and an exclusive Influencer Meet &amp; Greet experience, only on Xploroo." />
+  <title>Japan Premium Golden Route 6N7D | Xploroo Packages</title>
 
   <!-- Apply the stored theme before first paint (avoids a flash of the
        wrong theme on reload). Dark is the default — this only ever adds
@@ -40,6 +40,11 @@
 
   <!-- Package pages — native Share button (top-right of the hero) -->
   <link rel="stylesheet" href="styles/package-share.css" />
+
+  <!-- Japan Premium Golden Route — page-only visual re-skin (colors/
+       backgrounds only; layout and interaction come entirely from
+       package-details.css above, completely untouched). -->
+  <link rel="stylesheet" href="styles/japan-package.css" />
 
   <!-- Footer module (reusable across every page) -->
   <link rel="stylesheet" href="styles/footer.css" />
@@ -278,7 +283,7 @@
     <!-- MAIN — Package Details (master template)                      -->
     <!-- ============================================================= -->
     <main class="main" id="main">
-      <div class="pkg-page" data-pkg-page>
+      <div class="pkg-page pkg-page--japan" data-pkg-page>
 
         <!-- =========================================================
              SECTION 1 — Hero (breadcrumb, title, status row + CTA,
@@ -291,20 +296,21 @@
             <span class="pkg-breadcrumb__sep" aria-hidden="true">&rsaquo;</span>
             <a class="pkg-breadcrumb__link" href="international-packages.html">International Packages</a>
             <span class="pkg-breadcrumb__sep" aria-hidden="true">&rsaquo;</span>
-            <span class="pkg-breadcrumb__current" aria-current="page">Japan Cherry Blossom Trail</span>
+            <span class="pkg-breadcrumb__current" aria-current="page">Japan Premium Golden Route 6N7D</span>
           </nav>
 
-          <h1 class="pkg-hero__title" id="pkg-title">Japan Cherry Blossom Trail</h1>
+          <h1 class="pkg-hero__title" id="pkg-title">Japan Premium Golden Route 6N7D</h1>
+          <p class="pkg-hero__secondary">Tokyo &ndash; Mt. Fuji &ndash; Kyoto &ndash; Osaka &middot; With Influencer Meet &amp; Greet Experience</p>
 
-          <p class="pkg-hero__desc">From neon-lit Tokyo streets to Kyoto&rsquo;s ancient temples — a premium Japanese journey curated by Xploroo.</p>
+          <p class="pkg-hero__desc">Your Complete Japan Trip &mdash; Flights + Hotels + Sightseeing. Experience Japan&rsquo;s classic Golden Route with everything included. Tokyo, Mt. Fuji, Kyoto and Osaka. This 6N7D premium package includes round-trip flights, 3-Star hotel accommodation, meals, sightseeing, transfers and exclusive influencer meet-and-greet experience. Perfect for first-time Japan travelers.</p>
 
           <div class="pkg-hero__status">
             <div class="pkg-hero__status-left">
               <span class="pkg-badge pkg-badge--live">
                 <span class="pkg-badge__dot" aria-hidden="true"></span>
-                Live
+                All-Inclusive &middot; 
               </span>
-              <span class="pkg-hero__ends">Ends: 10 Sep 2026</span>
+              <span class="pkg-hero__ends">25&ndash;31 October 2026</span>
             </div>
             <a class="pkg-cta pkg-cta--hero" href="booking.html?package=japan">
               Book Now
@@ -318,7 +324,7 @@
                 class="pkg-gallery__hero-img"
                 data-pkg-hero-image
                 src="https://ik.imagekit.io/mg0v9kccj/IMG-20260706-WA0001.jpg.jpeg"
-                alt="Japan Cherry Blossom Trail — main view"
+                alt="Japan Premium Golden Route 6N7D — main view"
               />
             </div>
 
@@ -326,35 +332,35 @@
               <button class="pkg-gallery__thumb is-active" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/IMG-20260706-WA0001.jpg.jpeg" aria-label="View photo 1">
                 <img src="https://ik.imagekit.io/mg0v9kccj/IMG-20260706-WA0001.jpg.jpeg" alt="" />
               </button>
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/japan-2/1600/1000" aria-label="View photo 2">
-                <img src="https://picsum.photos/seed/japan-2/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/pexels-markus-winkler-1430818-29753529.jpg" aria-label="View photo 2">
+                <img src="https://ik.imagekit.io/mg0v9kccj/pexels-markus-winkler-1430818-29753529.jpg" alt="" />
               </button>
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/japan-3/1600/1000" aria-label="View photo 3">
-                <img src="https://picsum.photos/seed/japan-3/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/pexels-jhon-alexis-2155496709-33782187.jpg" aria-label="View photo 3">
+                <img src="https://ik.imagekit.io/mg0v9kccj/pexels-jhon-alexis-2155496709-33782187.jpg" alt="" />
               </button>
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/japan-4/1600/1000" aria-label="View photo 4">
-                <img src="https://picsum.photos/seed/japan-4/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/pexels-james-mcclemens-2162106221-37987573.jpg" aria-label="View photo 4">
+                <img src="https://ik.imagekit.io/mg0v9kccj/pexels-james-mcclemens-2162106221-37987573.jpg" alt="" />
               </button>
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/japan-5/1600/1000" aria-label="View photo 5">
-                <img src="https://picsum.photos/seed/japan-5/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/pexels-zonghaofeng-38034352.jpg" aria-label="View photo 5">
+                <img src="https://ik.imagekit.io/mg0v9kccj/pexels-zonghaofeng-38034352.jpg" alt="" />
               </button>
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/japan-6/1600/1000" aria-label="View photo 6">
-                <img src="https://picsum.photos/seed/japan-6/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/pexels-wenchengphoto-7161190.jpg" aria-label="View photo 6">
+                <img src="https://ik.imagekit.io/mg0v9kccj/pexels-wenchengphoto-7161190.jpg" alt="" />
               </button>
               <!-- Thumbnails 7-10: only shown in the mobile 10-thumbnail
                    gallery — hidden above the mobile breakpoint so the
                    desktop hero keeps its original 6-thumbnail strip. -->
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/japan-7/1600/1000" aria-label="View photo 7">
-                <img src="https://picsum.photos/seed/japan-7/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/pexels-kai-dewitt-156919315-10974442.jpg" aria-label="View photo 7">
+                <img src="https://ik.imagekit.io/mg0v9kccj/pexels-kai-dewitt-156919315-10974442.jpg" alt="" />
               </button>
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/japan-8/1600/1000" aria-label="View photo 8">
-                <img src="https://picsum.photos/seed/japan-8/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/pexels-ver-vaeck-550494540-33425250.jpg" aria-label="View photo 8">
+                <img src="https://ik.imagekit.io/mg0v9kccj/pexels-ver-vaeck-550494540-33425250.jpg" alt="" />
               </button>
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/japan-9/1600/1000" aria-label="View photo 9">
-                <img src="https://picsum.photos/seed/japan-9/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/pexels-brian-mari-587687669-19858831.jpg" aria-label="View photo 9">
+                <img src="https://ik.imagekit.io/mg0v9kccj/pexels-brian-mari-587687669-19858831.jpg" alt="" />
               </button>
-              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://picsum.photos/seed/japan-10/1600/1000" aria-label="View photo 10">
-                <img src="https://picsum.photos/seed/japan-10/240/240" alt="" />
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/pexels-wenchengphoto-7210063.jpg" aria-label="View photo 10">
+                <img src="https://ik.imagekit.io/mg0v9kccj/pexels-wenchengphoto-7210063.jpg" alt="" />
               </button>
             </div>
           </div>
@@ -380,7 +386,7 @@
                     </span>
                     <span>
                       <span class="pkg-info-card__label">Duration</span>
-                      <span class="pkg-info-card__value">6 Days / 5 Nights</span>
+                      <span class="pkg-info-card__value">6 Nights / 7 Days</span>
                     </span>
                   </div>
                   <div class="pkg-info-card pkg-info-card--destination">
@@ -389,7 +395,7 @@
                     </span>
                     <span>
                       <span class="pkg-info-card__label">Destination</span>
-                      <span class="pkg-info-card__value">Japan</span>
+                      <span class="pkg-info-card__value">Tokyo &middot; Mt. Fuji &middot; Kyoto &middot; Osaka</span>
                     </span>
                   </div>
                   <div class="pkg-info-card pkg-info-card--group">
@@ -398,7 +404,7 @@
                     </span>
                     <span>
                       <span class="pkg-info-card__label">Group Size</span>
-                      <span class="pkg-info-card__value">2 &ndash; 10 People</span>
+                      <span class="pkg-info-card__value">Approximately 30 Passengers</span>
                     </span>
                   </div>
                   <div class="pkg-info-card pkg-info-card--trip">
@@ -406,8 +412,8 @@
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
                     </span>
                     <span>
-                      <span class="pkg-info-card__label">Trip Type</span>
-                      <span class="pkg-info-card__value">International &middot; Culture &amp; City</span>
+                      <span class="pkg-info-card__label">Package Type</span>
+                      <span class="pkg-info-card__value">All-Inclusive Japan Package &mdash; Flights Included</span>
                     </span>
                   </div>
                 </div>
@@ -421,12 +427,15 @@
                   <div class="pkg-overview__text">
                     <h2 id="pkg-overview-title">Package Overview</h2>
                     <p>
-                      Xploroo's Japan Cherry Blossom Trail threads together the country's perfect contrast — Tokyo's
-                      futuristic energy and Kyoto's timeless temples — into one effortlessly curated journey.
+                      Experience Japan&rsquo;s classic Golden Route with everything included. Tokyo, Mt. Fuji,
+                      Kyoto and Osaka. This 6N7D premium package includes round-trip flights, 3-Star hotel
+                      accommodation, meals, sightseeing, transfers and an exclusive influencer meet-and-greet
+                      experience. Perfect for first-time Japan travelers.
                     </p>
                     <p>
-                      Every bullet train, ryokan stay and guided tour is arranged end-to-end, so you can focus on
-                      the sights, the food and the culture this country is famous for.
+                      This is an <strong>All-Inclusive Japan Package</strong> &mdash; round-trip economy class
+                      flights (Delhi &harr; Tokyo) are included together with the full land package, so
+                      everything from flights to sightseeing is handled end-to-end by Xploroo.
                     </p>
                   </div>
                   <aside class="pkg-highlights">
@@ -434,26 +443,64 @@
                     <ul class="pkg-highlights__list">
                       <li class="pkg-highlights__item">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                        <span>Shibuya Crossing &amp; Tokyo city tour</span>
+                        <span>Round-trip flights Delhi &ndash; Tokyo included</span>
                       </li>
                       <li class="pkg-highlights__item">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                        <span>Mount Fuji day trip</span>
+                        <span>Golden Route &mdash; Tokyo, Mt. Fuji, Kyoto &amp; Osaka</span>
                       </li>
                       <li class="pkg-highlights__item">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                        <span>Kyoto's Fushimi Inari Shrine</span>
+                        <span>3-Star hotels, private coach &amp; English guide</span>
                       </li>
                       <li class="pkg-highlights__item">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                        <span>Traditional ryokan stay with onsen</span>
+                        <span>Daily breakfast, 3 dinners &amp; 2 lunches</span>
                       </li>
                       <li class="pkg-highlights__item">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                        <span>Bullet train (Shinkansen) experience</span>
+                        <span>India / Japan based Influencer Meet &amp; Greet arrangement</span>
                       </li>
                     </ul>
                   </aside>
+                </div>
+              </section>
+
+              <!-- ===================================================
+                   SECTION — PACKAGE HIGHLIGHTS (page-only section, 5
+                   numbered cards)
+                   =================================================== -->
+              <section data-pkg-reveal data-pkg-section="highlights" aria-labelledby="pkg-highlights-title">
+                <div class="pkg-section__head">
+                  <p class="pkg-section__eyebrow">Win Your Dream Japan Trip with Xploroo</p>
+                  <h2 class="pkg-section__title" id="pkg-highlights-title">Package Highlights</h2>
+                </div>
+                <div class="jpn-highlights__grid">
+                  <div class="jpn-highlights__card jpn-highlights__card--feature">
+                    <span class="jpn-highlights__number" aria-hidden="true">01</span>
+                    <h3 class="jpn-highlights__title">Round-Trip Flights Included</h3>
+                    <p class="jpn-highlights__desc">Round-trip flights Delhi &ndash; Tokyo included, plus explore Tokyo, Japan&rsquo;s modern capital.</p>
+                  </div>
+                  <div class="jpn-highlights__card">
+                    <span class="jpn-highlights__number" aria-hidden="true">02</span>
+                    <h3 class="jpn-highlights__title">Golden Route Covered</h3>
+                    <p class="jpn-highlights__desc">Mt. Fuji viewing area and traditional Japanese villages, Kyoto&rsquo;s temples, shrines and cultural streets, and Osaka&rsquo;s shopping, food and entertainment areas.</p>
+                  </div>
+                  <div class="jpn-highlights__card">
+                    <span class="jpn-highlights__number" aria-hidden="true">03</span>
+                    <h3 class="jpn-highlights__title">Premium Comfort</h3>
+                    <p class="jpn-highlights__desc">3-Star hotels for group comfort, with a private coach and/or bullet train throughout the journey.</p>
+                  </div>
+                  <div class="jpn-highlights__card">
+                    <span class="jpn-highlights__number" aria-hidden="true">04</span>
+                    <h3 class="jpn-highlights__title">Influencer Experience</h3>
+                    <p class="jpn-highlights__desc">India / Japan based Influencer Meet &amp; Greet arrangement, subject to final influencer availability and confirmation, plus a Gala Dinner and entertainment arrangement, subject to venue and performer availability.</p>
+                  </div>
+                  <div class="jpn-highlights__card">
+                    <span class="jpn-highlights__number" aria-hidden="true">05</span>
+                    <h3 class="jpn-highlights__title">Meals &amp; Sightseeing</h3>
+                    <p class="jpn-highlights__desc">Daily breakfast, 3 dinners and 2 lunches, plus basic sightseeing and selected entry tickets included.</p>
+                  </div>
                 </div>
               </section>
 
@@ -465,50 +512,65 @@
                   <button class="pkg-tabs__tab" type="button" role="tab" aria-selected="true" data-pkg-tab="itinerary">Itinerary</button>
                   <button class="pkg-tabs__tab" type="button" role="tab" aria-selected="false" data-pkg-tab="inclusions">Inclusions</button>
                   <button class="pkg-tabs__tab" type="button" role="tab" aria-selected="false" data-pkg-tab="exclusions">Exclusions</button>
+                  <button class="pkg-tabs__tab" type="button" role="tab" aria-selected="false" data-pkg-tab="flights">Flights</button>
+                  <button class="pkg-tabs__tab" type="button" role="tab" aria-selected="false" data-pkg-tab="visa">Visa Info</button>
                 </div>
 
                 <div class="pkg-tabs__panel" data-pkg-tab-panel="itinerary">
+                  <p style="margin: 0 0 var(--space-5); color: var(--color-text-muted);">Japan Premium Golden Route &ndash; 6N / 7D &middot; 25&ndash;31 October 2026</p>
                   <div class="pkg-itinerary">
                     <div class="pkg-itinerary__day">
                       <span class="pkg-itinerary__badge">Day<br />1</span>
                       <div>
-                        <h4 class="pkg-itinerary__title">Arrival in Tokyo</h4>
-                        <p class="pkg-itinerary__desc">Arrive in Tokyo, check into your hotel, and explore the neon streets of Shibuya and Shinjuku in the evening.</p>
+                        <h4 class="pkg-itinerary__title">Delhi &rarr; Tokyo</h4>
+                        <p class="pkg-itinerary__desc">Departure from Delhi to Tokyo by flight. Arrival at Tokyo Airport. Meet &amp; Greet by local representative. Private transfer to hotel. Check-in. Free time. Overnight in Tokyo.<br /><em>Meals: Dinner</em></p>
                       </div>
                     </div>
                     <div class="pkg-itinerary__day">
                       <span class="pkg-itinerary__badge">Day<br />2</span>
                       <div>
                         <h4 class="pkg-itinerary__title">Tokyo City Tour</h4>
-                        <p class="pkg-itinerary__desc">A guided tour of Tokyo's highlights, including Senso-ji Temple, Akihabara, and the Shibuya Crossing.</p>
+                        <p class="pkg-itinerary__desc">Breakfast. Full-day Tokyo sightseeing by private coach &mdash; Asakusa / Sensoji Temple, Tokyo Skytree photo stop, Shibuya Crossing, Harajuku / Takeshita Street. Lunch at local restaurant. Overnight in Tokyo.<br /><em>Meals: Breakfast + Lunch</em></p>
                       </div>
                     </div>
                     <div class="pkg-itinerary__day">
                       <span class="pkg-itinerary__badge">Day<br />3</span>
                       <div>
-                        <h4 class="pkg-itinerary__title">Mount Fuji Day Trip</h4>
-                        <p class="pkg-itinerary__desc">A full-day excursion to Mount Fuji and the Hakone area, with views of the iconic peak (weather permitting).</p>
+                        <h4 class="pkg-itinerary__title">Mt. Fuji / Lake Kawaguchi Tour</h4>
+                        <p class="pkg-itinerary__desc">Breakfast. Full-day excursion to Mt. Fuji area &mdash; Mt. Fuji 5th Station or viewing area (subject to weather), Lake Kawaguchi, Oshino Hakkai. Lunch included. Return to Tokyo. Overnight in Tokyo.<br /><em>Meals: Breakfast + Lunch</em></p>
                       </div>
                     </div>
                     <div class="pkg-itinerary__day">
                       <span class="pkg-itinerary__badge">Day<br />4</span>
                       <div>
-                        <h4 class="pkg-itinerary__title">Bullet Train to Kyoto</h4>
-                        <p class="pkg-itinerary__desc">Travel to Kyoto aboard the Shinkansen, then visit the iconic Fushimi Inari Shrine's endless torii gates.</p>
+                        <h4 class="pkg-itinerary__title">Tokyo &rarr; Kyoto / Osaka</h4>
+                        <p class="pkg-itinerary__desc">Breakfast. Transfer to Kyoto / Osaka area by Private Coach and/or Bullet Train, subject to final route and group size. Evening free for shopping. Overnight in Kyoto / Osaka.<br /><em>Meals: Breakfast + Dinner</em></p>
                       </div>
                     </div>
                     <div class="pkg-itinerary__day">
                       <span class="pkg-itinerary__badge">Day<br />5</span>
                       <div>
-                        <h4 class="pkg-itinerary__title">Kyoto Temples &amp; Ryokan</h4>
-                        <p class="pkg-itinerary__desc">Explore Kiyomizu-dera and Arashiyama's bamboo grove, followed by an overnight stay at a traditional ryokan with an onsen bath.</p>
+                        <h4 class="pkg-itinerary__title">Kyoto Cultural Tour</h4>
+                        <p class="pkg-itinerary__desc">Breakfast. Full-day Kyoto sightseeing &mdash; Kiyomizu Temple, Fushimi Inari Shrine, Arashiyama Bamboo Forest. Dinner at hotel. Overnight in Osaka / Kyoto.<br /><em>Meals: Breakfast + Dinner</em></p>
+                      </div>
+                    </div>
+                    <div class="pkg-itinerary__day pkg-itinerary__day--feature">
+                      <span class="pkg-itinerary__badge">Day<br />6</span>
+                      <div>
+                        <h4 class="pkg-itinerary__title">Osaka Tour + Influencer Meet &amp; Greet Event</h4>
+                        <p class="pkg-itinerary__desc">Breakfast. Osaka sightseeing &mdash; Osaka Castle photo stop, Dotonbori, Shinsaibashi. Overnight in Osaka.<br /><em>Meals: Breakfast + Dinner</em></p>
+                        <span class="jpn-event-tag">
+                          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2 9.2 8.6 2 9.3l5.5 4.8L5.8 21 12 17.2 18.2 21l-1.7-6.9L22 9.3l-7.2-.7Z"/></svg>
+                          India / Japan based Influencer Meet &amp; Greet + Gala Dinner &amp; Entertainment
+                        </span>
+                        <p class="jpn-price-note" style="margin-top: var(--space-3); text-align: left; text-transform: none; font-weight: var(--fw-medium); letter-spacing: normal;">Subject to availability and confirmation.</p>
                       </div>
                     </div>
                     <div class="pkg-itinerary__day">
-                      <span class="pkg-itinerary__badge">Day<br />6</span>
+                      <span class="pkg-itinerary__badge">Day<br />7</span>
                       <div>
-                        <h4 class="pkg-itinerary__title">Leisure &amp; Departure</h4>
-                        <p class="pkg-itinerary__desc">A free morning before your transfer to the airport for your departure flight.</p>
+                        <h4 class="pkg-itinerary__title">Tokyo &rarr; Delhi</h4>
+                        <p class="pkg-itinerary__desc">Breakfast. Check-out. Private transfer to airport. Departure flight from Tokyo to Delhi. End of services.<br /><em>Meals: Breakfast</em></p>
                       </div>
                     </div>
                   </div>
@@ -516,26 +578,62 @@
 
                 <div class="pkg-tabs__panel" data-pkg-tab-panel="inclusions">
                   <ul class="pkg-list pkg-list--check">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Round-trip international flights</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>5 nights across Tokyo &amp; Kyoto (incl. one ryokan night)</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Daily breakfast</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Shinkansen bullet train tickets (Tokyo&ndash;Kyoto)</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Mount Fuji day trip</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Kyoto temple entry tickets</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>English-speaking local guide</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>All applicable taxes</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Round-Trip Economy Class Flights &ndash; Delhi &harr; Tokyo</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>6 Nights Hotel Accommodation &ndash; Standard / 3-Star Class Hotels</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Daily Breakfast + 3 Dinners + 2 Lunches</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Private Coach and/or Bullet Train arrangement &ndash; subject to final route and group size</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Airport Arrival + Departure Transfers</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>English-Speaking Guide Throughout the Tour</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Basic Sightseeing + Selected Entry Tickets</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Japan Land Operation Support</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>India / Japan based Influencer Meet &amp; Greet arrangement &ndash; subject to final influencer availability and confirmation</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Gala Dinner + Entertainment arrangement &ndash; subject to venue and performer availability</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Travel Kit + Welcome Kit per Person</span></li>
                   </ul>
                 </div>
 
                 <div class="pkg-tabs__panel" data-pkg-tab-panel="exclusions">
                   <ul class="pkg-list pkg-list--cross">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>International visa fees (if applicable)</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Travel insurance</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Lunch &amp; dinner (unless noted)</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Personal expenses &amp; shopping</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Optional excursions</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Tips &amp; gratuities</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Japan Visa Fee</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Travel Insurance</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Lunch and Dinner Not Mentioned in Itinerary</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Personal Expenses</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Porterage</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Tips for Guide and Driver</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Additional Influencer Appearances Beyond Arrangement</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Professional Photo / Video Content Creation</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Entry Tickets Not Mentioned Under &ldquo;Selected Entry Tickets&rdquo;</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Any Item Not Specifically Mentioned in Inclusions</span></li>
                   </ul>
+                </div>
+
+                <div class="pkg-tabs__panel" data-pkg-tab-panel="flights">
+                  <p style="margin: 0 0 var(--space-4); color: var(--color-text-muted);">Flights Included &middot; Round-Trip Economy Class Flights &middot; Delhi &harr; Tokyo</p>
+                  <ul class="pkg-list pkg-list--check">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Airlines: Air India, Japan Airlines, ANA</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Direct flight duration: approximately 7 hours 45 minutes</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Baggage: As per airline policy</span></li>
+                  </ul>
+                  <p class="jpn-price-note" style="margin-top: var(--space-5);">Flight timings subject to airline availability at the time of booking.</p>
+                </div>
+
+                <div class="pkg-tabs__panel" data-pkg-tab-panel="visa">
+                  <h4 class="pkg-itinerary__title" style="margin-bottom: var(--space-3);">Japan Visa</h4>
+                  <ul class="pkg-list pkg-list--check">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Mandatory for Indian passport holders</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Process: Apply via VFS Global. Apply early.</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Visa approval and processing time are subject to the Embassy / VFS decision</span></li>
+                  </ul>
+                  <h4 class="pkg-itinerary__title" style="margin: var(--space-6) 0 var(--space-3);">Documents Required</h4>
+                  <ul class="pkg-list pkg-list--check">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Valid Passport</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Photographs</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Flight &amp; Hotel Itinerary</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Bank Statements</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>ITR</span></li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Cover Letter</span></li>
+                  </ul>
+                  <p class="jpn-price-note" style="margin-top: var(--space-5);">Visa Fee: Not included in package price. Land arrangement documents can be provided after booking confirmation. Visa rejection risk is not included in the package price.</p>
                 </div>
               </section>
 
@@ -549,35 +647,110 @@
                 <div class="pkg-included__grid">
                   <div class="pkg-included__item">
                     <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 21 12 17l4.5 1.2L14 14l7-4-3-3-9 3-3-1.5L2.5 12 6 13.5 4 18l4-1 1 4Z"/></svg></span>
-                    <span class="pkg-included__label">Flights</span>
+                    <span class="pkg-included__label">Round-Trip Flights</span>
                   </div>
                   <div class="pkg-included__item">
                     <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21V8l9-5 9 5v13M3 21h18M9 21v-6h6v6"/></svg></span>
-                    <span class="pkg-included__label">Hotel Stay</span>
+                    <span class="pkg-included__label">3-Star Hotel Stay</span>
                   </div>
                   <div class="pkg-included__item">
                     <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16M4 11a4 4 0 0 1 8-2 4 4 0 0 1 8 2M4 11v7h16v-7"/></svg></span>
-                    <span class="pkg-included__label">Daily Meals</span>
+                    <span class="pkg-included__label">Breakfast, Dinners &amp; Lunches</span>
                   </div>
                   <div class="pkg-included__item">
                     <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17h14M5 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm14 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM5 17V8h10l4 4v5"/></svg></span>
-                    <span class="pkg-included__label">Transfers</span>
+                    <span class="pkg-included__label">Private Coach / Bullet Train</span>
                   </div>
                   <div class="pkg-included__item">
                     <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span>
-                    <span class="pkg-included__label">Sightseeing</span>
+                    <span class="pkg-included__label">All Sightseeing</span>
                   </div>
                   <div class="pkg-included__item">
                     <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg></span>
-                    <span class="pkg-included__label">Local Guide</span>
+                    <span class="pkg-included__label">English-Speaking Guide</span>
+                  </div>
+                  <div class="pkg-included__item">
+                    <span class="pkg-included__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 20v-1.6a3.4 3.4 0 0 0-3.4-3.4H6.4A3.4 3.4 0 0 0 3 18.4V20"/><circle cx="9.7" cy="7.2" r="3.2"/><path d="M21 20v-1.6a3.4 3.4 0 0 0-2.6-3.3M14.8 4.1a3.2 3.2 0 0 1 0 6.2"/></svg></span>
+                    <span class="pkg-included__label">Influencer Meet &amp; Greet</span>
                   </div>
                 </div>
+              </section>
+
+              <!-- ===================================================
+                   SECTION — OPTIONAL ADD-ONS (page-only section)
+                   =================================================== -->
+              <section data-pkg-reveal data-pkg-section="addons" aria-labelledby="pkg-addons-title">
+                <div class="pkg-section__head">
+                  <p class="pkg-section__eyebrow">Not included in the &#8377;3,50,000 package price</p>
+                  <h2 class="pkg-section__title" id="pkg-addons-title">Optional Add-Ons</h2>
+                </div>
+                <div class="jpn-highlights__grid">
+                  <div class="jpn-highlights__card">
+                    <span class="jpn-highlights__number" aria-hidden="true">01</span>
+                    <h3 class="jpn-highlights__title">Additional Influencer Coordination</h3>
+                    <p class="jpn-highlights__desc">Subject to availability and fee.</p>
+                  </div>
+                  <div class="jpn-highlights__card">
+                    <span class="jpn-highlights__number" aria-hidden="true">02</span>
+                    <h3 class="jpn-highlights__title">Live Entertainment Upgrade</h3>
+                    <p class="jpn-highlights__desc">Live entertainment / live singing show upgrade, subject to venue.</p>
+                  </div>
+                  <div class="jpn-highlights__card">
+                    <span class="jpn-highlights__number" aria-hidden="true">03</span>
+                    <h3 class="jpn-highlights__title">Photo &amp; Video Content Creation</h3>
+                    <p class="jpn-highlights__desc">Professional photo and video content creation.</p>
+                  </div>
+                  <div class="jpn-highlights__card">
+                    <span class="jpn-highlights__number" aria-hidden="true">04</span>
+                    <h3 class="jpn-highlights__title">Event Setup Upgrade</h3>
+                    <p class="jpn-highlights__desc">Event backdrop, screen upgrade and stage setup.</p>
+                  </div>
+                  <div class="jpn-highlights__card">
+                    <span class="jpn-highlights__number" aria-hidden="true">05</span>
+                    <h3 class="jpn-highlights__title">Extra Sightseeing / Shopping</h3>
+                    <p class="jpn-highlights__desc">Extra sightseeing or shopping arrangement.</p>
+                  </div>
+                  <div class="jpn-highlights__card">
+                    <span class="jpn-highlights__number" aria-hidden="true">06</span>
+                    <h3 class="jpn-highlights__title">Meal Upgrade</h3>
+                    <p class="jpn-highlights__desc">Indian / Japanese / Halal meals beyond inclusions.</p>
+                  </div>
+                </div>
+              </section>
+
+              <!-- ===================================================
+                   SECTION — IMPORTANT NOTES (page-only section)
+                   =================================================== -->
+              <section data-pkg-reveal data-pkg-section="notes" aria-labelledby="pkg-notes-title">
+                <div class="pkg-section__head">
+                  <h2 class="pkg-section__title" id="pkg-notes-title">Important Notes</h2>
+                </div>
+                <ul class="pkg-list pkg-list--check">
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>This is an indicative package. Final quotation depends on date, availability, group size, venue and influencer confirmation.</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Prices displayed as fixed package rates.</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Hotel names will be confirmed after booking.</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Mt. Fuji visibility depends on weather.</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Itinerary sequence may change due to operational reasons.</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Xploroo can support Japan land arrangement, hotel, transport, guide, sightseeing, meals, event venue and optional influencer / entertainment coordination after travel date and group size are confirmed.</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Xploroo manages platform promotion, quiz, winner selection and India-side compliance.</span></li>
+                  <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Kinnichishoji Co., Ltd. is the Japan B2B DMC / Land Partner.</span></li>
+                </ul>
               </section>
 
               <!-- ===================================================
                    SECTION 7 — Need Help card
                    =================================================== -->
               <section data-pkg-reveal data-pkg-section="help" aria-label="Need help booking this package">
+                <div class="jpn-playwin">
+                  <div class="jpn-playwin__text">
+                    <h3>Play Quiz &amp; Win This Trip</h3>
+                    <p>Test your Japan knowledge for a chance to win &mdash; or skip the wait and book direct on Xploroo.</p>
+                  </div>
+                  <a class="jpn-playwin__btn" href="play&amp;win.html">
+                    Play &amp; Win
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </a>
+                </div>
                 <div class="pkg-help">
                   <div>
                     <h3 class="pkg-help__title">Need Help With This Trip?</h3>
@@ -791,14 +964,17 @@
                  ===================================================== -->
             <aside class="pkg-layout__aside" data-pkg-reveal aria-label="Booking summary">
               <div class="pkg-pricing" id="pkg-pricing">
-                <span class="pkg-pricing__label">Package Price</span>
-                <p class="pkg-pricing__amount">&#8377;99,999 <span>Per Person</span></p>
+                <span class="pkg-pricing__label">Total Package Cost</span>
+                <p class="pkg-pricing__amount">&#8377;3,50,000 <span>Per Person</span></p>
+                <p class="jpn-price-note">All-Inclusive: Round-Trip Flights + Land Package</p>
+                <p style="margin: var(--space-2) 0 0; font-size: var(--fs-xs); color: var(--color-text-muted); text-align: center;">Price is per person on twin-sharing basis.</p>
+                <p style="margin: var(--space-3) 0 0; font-size: var(--fs-xs); color: var(--color-text-muted); text-align: center; line-height: var(--lh-relaxed);">Subject to final date, hotel availability, group size, venue and influencer confirmation.</p>
                 <ul class="pkg-pricing__list">
                   <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Secure Booking</li>
                   <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Best Price Guaranteed</li>
                   <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>24&times;7 Support</li>
                 </ul>
-                <a class="pkg-cta pkg-cta--block" href="booking.html?package=japan">Book Now</a>
+                <a class="pkg-cta pkg-cta--block" href="booking.html?package=japan">Book Now on Xploroo</a>
               </div>
             </aside>
 
@@ -811,8 +987,8 @@
     <!-- Sticky mobile booking bar (hidden until the hero scrolls past) -->
     <div class="pkg-sticky-bar" data-pkg-sticky-bar>
       <span class="pkg-sticky-bar__price">
-        <strong>&#8377;99,999</strong>
-        <span>Per Person</span>
+        <strong>&#8377;3,50,000</strong>
+        <span>Per Person &middot; All-Inclusive, Twin Sharing</span>
       </span>
       <a class="pkg-cta" href="booking.html?package=japan">Book Now</a>
     </div>

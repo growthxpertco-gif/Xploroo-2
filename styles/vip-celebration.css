@@ -345,3 +345,21 @@
     transition: none;
   }
 }
+
+/* ==========================================================================
+   LIGHT THEME — `.vip-celebrate__card` keeps its own fixed dark navy/purple
+   fill in both themes (by design), but `.vip-celebrate__subtitle` and the
+   icon-grid item text use the shared `--color-text-strong` / `--color-text-
+   muted` tokens, which correctly flip near-black for the rest of the (now
+   light) page — leaving dark text on this permanently-dark card. Override
+   just those elements back to light text. `.vip-celebrate__quote` is left
+   alone: its own background also uses `--color-surface` (flips light), so
+   its dark text stays correctly paired with a light box.
+   ========================================================================== */
+:root[data-theme="light"] .vip-celebrate__subtitle,
+:root[data-theme="light"] .vip-celebrate__item-title {
+  color: #ffffff;
+}
+:root[data-theme="light"] .vip-celebrate__item-desc {
+  color: rgba(255, 255, 255, 0.7);
+}

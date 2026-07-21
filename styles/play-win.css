@@ -838,6 +838,250 @@
 }
 
 /* -------------------------------------------------------------------------
+   EXCLUSIVE FOR PAID QUIZ WINNERS — premium rewards vault. Deep midnight /
+   premium purple / cherry magenta / royal blue / titanium silver only —
+   the crown gets a subtle metallic-gold glow, nothing else does. Every
+   hover motion is desktop-only and cheap (transform/opacity); the single
+   continuous animation (the "Bigger Win" banner sweep) is one lightweight
+   transform-only loop, nothing else runs continuously.
+   ------------------------------------------------------------------------- */
+.pw-winners {
+  margin-top: clamp(3rem, 2rem + 4vw, 6rem);
+}
+
+.pw-winners__panel {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(2.25rem, 1.6rem + 3vw, 4rem) clamp(1.5rem, 1rem + 2vw, 3rem);
+  border-radius: var(--radius-2xl, 1.5rem);
+  border: 1px solid rgba(199, 204, 217, 0.22);
+  background:
+    radial-gradient(120% 90% at 10% 0%, rgba(139, 92, 246, 0.16) 0%, transparent 55%),
+    radial-gradient(110% 90% at 92% 8%, rgba(236, 72, 153, 0.12) 0%, transparent 55%),
+    radial-gradient(100% 80% at 50% 100%, rgba(59, 130, 246, 0.1) 0%, transparent 55%),
+    linear-gradient(180deg, #0a0812 0%, #0d0a17 100%);
+  box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(199, 204, 217, 0.06) inset;
+}
+.pw-winners__glow {
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  width: 70%;
+  aspect-ratio: 1;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.14) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.pw-winners__head {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  margin-bottom: clamp(2rem, 1.5rem + 2vw, 3rem);
+}
+.pw-winners__title {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  font-size: clamp(1.6rem, 1.3rem + 1.4vw, 2.5rem);
+  font-weight: var(--fw-extrabold);
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+.pw-winners__crown {
+  font-size: 0.85em;
+  filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.55));
+}
+.pw-winners__subtitle {
+  margin: var(--space-3) 0 0;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  color: var(--pw-text);
+}
+.pw-winners__lead {
+  margin: var(--space-4) 0 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--pw-text-muted);
+}
+
+.pw-winners__grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+.pw-winners__card--wide {
+  grid-column: span 4;
+}
+@media (max-width: 900px) {
+  .pw-winners__grid { grid-template-columns: repeat(2, 1fr); }
+  .pw-winners__card--wide { grid-column: span 2; }
+}
+@media (max-width: 560px) {
+  .pw-winners__grid { grid-template-columns: 1fr; }
+  .pw-winners__card--wide { grid-column: span 1; }
+}
+
+.pw-winners__card {
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-5) var(--space-4);
+  border-radius: var(--radius-xl, 1.25rem);
+  border: 1px solid rgba(199, 204, 217, 0.2);
+  background: rgba(255, 255, 255, 0.03);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-standard),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+@media (hover: hover) {
+  .pw-winners__card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(199, 204, 217, 0.55);
+    box-shadow: 0 20px 44px -18px rgba(139, 92, 246, 0.4), 0 0 0 1px rgba(199, 204, 217, 0.14);
+  }
+  .pw-winners__card:hover .pw-winners__icon {
+    transform: scale(1.1) rotate(-4deg);
+    color: var(--pw-cyan);
+  }
+  .pw-winners__card:hover .pw-winners__sweep {
+    transform: translateX(140%) skewX(-20deg);
+  }
+}
+.pw-winners__card:active {
+  transform: translateY(-2px) scale(0.99);
+}
+
+/* Soft light reflection — one-shot, hover-triggered only (no idle loop) */
+.pw-winners__sweep {
+  position: absolute;
+  inset: -20% -10%;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent 42%, rgba(255, 255, 255, 0.08) 50%, transparent 58%);
+  transform: translateX(-140%) skewX(-20deg);
+  transition: transform 650ms var(--ease-out);
+}
+
+.pw-winners__index {
+  position: relative;
+  z-index: 1;
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wider);
+  color: rgba(199, 204, 217, 0.6);
+}
+.pw-winners__icon {
+  position: relative;
+  z-index: 1;
+  display: inline-grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin: var(--space-3) 0 var(--space-4);
+  border-radius: 50%;
+  color: var(--pw-violet);
+  background: rgba(139, 92, 246, 0.14);
+  border: 1px solid rgba(199, 204, 217, 0.3);
+  transition: transform var(--dur-base) var(--ease-spring), color var(--dur-base) var(--ease-standard);
+}
+.pw-winners__icon svg {
+  width: 20px;
+  height: 20px;
+}
+.pw-winners__card-title {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 0.3rem;
+  font-size: var(--fs-base);
+  font-weight: var(--fw-bold);
+  color: var(--pw-text);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+}
+.pw-winners__card-value {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-extrabold);
+  color: #ffffff;
+}
+
+.pw-winners__banner {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  margin-top: clamp(2rem, 1.5rem + 2vw, 3rem);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-pill, 999px);
+  border: 1px solid rgba(199, 204, 217, 0.3);
+  background: linear-gradient(120deg, rgba(139, 92, 246, 0.18), rgba(236, 72, 153, 0.16), rgba(59, 130, 246, 0.18));
+  text-align: center;
+}
+.pw-winners__banner-text {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 0.95rem + 0.5vw, 1.35rem);
+  font-weight: var(--fw-extrabold);
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+.pw-winners__banner-text span {
+  color: var(--pw-cyan);
+}
+/* Single lightweight continuous sweep — transform-only, ~5.5s loop */
+.pw-winners__banner-sweep {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.14) 48%, transparent 66%);
+  transform: translateX(-120%);
+  animation: pw-winners-banner-sweep 5.5s ease-in-out infinite;
+}
+@keyframes pw-winners-banner-sweep {
+  0%   { transform: translateX(-120%); }
+  60%, 100% { transform: translateX(120%); }
+}
+
+.pw-winners__tnc {
+  position: relative;
+  z-index: 1;
+  margin: var(--space-4) 0 0;
+  text-align: center;
+  font-size: var(--fs-2xs);
+  color: var(--pw-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pw-winners__banner-sweep,
+  .pw-winners__card,
+  .pw-winners__sweep,
+  .pw-winners__icon {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* -------------------------------------------------------------------------
    REWARDS SHOWCASE — five glowing cards
    ------------------------------------------------------------------------- */
 .pw-rewards {

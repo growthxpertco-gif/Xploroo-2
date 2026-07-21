@@ -118,3 +118,18 @@
     animation: none;
   }
 }
+
+/* ==========================================================================
+   LIGHT THEME — the banner's gradient fill is only ~20-32% opaque, so on
+   the light page canvas it washes out to a pale lavender tint; its white
+   text/close-icon would then be unreadable. Layer in an opaque dark base
+   so the banner keeps reading as an intentional dark premium surface (with
+   its existing white text) in both themes, matching the site's other
+   premium cards.
+   ========================================================================== */
+:root[data-theme="light"] .vipm-banner__inner {
+  background:
+    linear-gradient(120deg, rgba(91, 33, 182, 0.32), rgba(37, 99, 235, 0.2) 55%, rgba(192, 38, 212, 0.28)) padding-box,
+    linear-gradient(165deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)) padding-box,
+    linear-gradient(120deg, var(--vipm-banner-silver), rgba(199, 204, 217, 0.4) 50%, var(--vipm-banner-silver)) border-box;
+}

@@ -568,6 +568,89 @@
           </section>
 
           <!-- =========================================================
+               EXCLUSIVE FOR PAID QUIZ WINNERS — premium rewards vault.
+               Entirely new, self-contained under `.pw-winners*`; does not
+               touch the Arcade cards, the Travel Quiz selection above it,
+               or any of the four quiz pages. Uses the same `data-pw-reveal`
+               scroll-reveal already wired up in js/play-win.js — no JS
+               changes needed for this section at all.
+               ========================================================= -->
+          <section class="pw-winners" data-pw-reveal aria-labelledby="pw-winners-title">
+            <div class="pw-winners__panel">
+              <span class="pw-winners__glow" aria-hidden="true"></span>
+
+              <div class="pw-winners__head">
+                <h2 class="pw-winners__title" id="pw-winners-title">
+                  <span class="pw-winners__crown" aria-hidden="true">👑</span>
+                  Exclusive for Paid Quiz Winners
+                  <span class="pw-winners__crown" aria-hidden="true">👑</span>
+                </h2>
+                <p class="pw-winners__subtitle">Win a trip AND unlock premium rewards!</p>
+                <p class="pw-winners__lead">Paid Quiz Winners get:</p>
+              </div>
+
+              <div class="pw-winners__grid">
+                <article class="pw-winners__card">
+                  <span class="pw-winners__sweep" aria-hidden="true"></span>
+                  <span class="pw-winners__index">01</span>
+                  <span class="pw-winners__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 4 6 4 9s-1.5 6.3-4 9c-2.5-2.7-4-6-4-9s1.5-6.3 4-9Z"/></svg>
+                  </span>
+                  <h3 class="pw-winners__card-title">Xploroo Globe Pro</h3>
+                  <p class="pw-winners__card-value">1 Year FREE</p>
+                </article>
+
+                <article class="pw-winners__card">
+                  <span class="pw-winners__sweep" aria-hidden="true"></span>
+                  <span class="pw-winners__index">02</span>
+                  <span class="pw-winners__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.5-9.5-9C.7 8.5 2 4.5 6 4.5c2.2 0 3.6 1.4 4.3 2.4.35.5 1.05.5 1.4 0 .7-1 2.1-2.4 4.3-2.4 4 0 5.3 4 3.5 7.5C16.3 16.5 12 21 12 21Z"/><path d="M8 12h2l1.2-2.2L12.8 14l1-2H16"/></svg>
+                  </span>
+                  <h3 class="pw-winners__card-title">Health Insurance</h3>
+                  <p class="pw-winners__card-value">1 Year</p>
+                </article>
+
+                <article class="pw-winners__card">
+                  <span class="pw-winners__sweep" aria-hidden="true"></span>
+                  <span class="pw-winners__index">03</span>
+                  <span class="pw-winners__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="17.5" r="3.2"/><circle cx="18.5" cy="17.5" r="3.2"/><path d="M5.5 17.5 9.5 9h5l3.5 8.5M9.5 9l1.8-3h3"/></svg>
+                  </span>
+                  <h3 class="pw-winners__card-title">Bike Insurance</h3>
+                  <p class="pw-winners__card-value">1 Year</p>
+                </article>
+
+                <article class="pw-winners__card">
+                  <span class="pw-winners__sweep" aria-hidden="true"></span>
+                  <span class="pw-winners__index">04</span>
+                  <span class="pw-winners__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.6 3 8.4 7 9.6 4-1.2 7-5 7-9.6V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+                  </span>
+                  <h3 class="pw-winners__card-title">Life Insurance Premium</h3>
+                  <p class="pw-winners__card-value">1 Year</p>
+                </article>
+
+                <article class="pw-winners__card pw-winners__card--wide">
+                  <span class="pw-winners__sweep" aria-hidden="true"></span>
+                  <span class="pw-winners__index">05</span>
+                  <span class="pw-winners__icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4V8Z"/><path d="M10 6v1.5M10 11.25v1.5M10 16.5V18"/></svg>
+                  </span>
+                  <h3 class="pw-winners__card-title">High-Value Vouchers</h3>
+                  <p class="pw-winners__card-value">Exclusive Winner Rewards</p>
+                </article>
+              </div>
+
+              <div class="pw-winners__banner">
+                <span class="pw-winners__banner-sweep" aria-hidden="true"></span>
+                <p class="pw-winners__banner-text">Bigger Win <span>=</span> Bigger Rewards 🔥</p>
+              </div>
+
+              <p class="pw-winners__tnc">*T&amp;C Apply</p>
+            </div>
+          </section>
+
+          <!-- =========================================================
                REWARDS SHOWCASE
                ========================================================= -->
           <section data-pw-reveal aria-labelledby="pw-rewards-title">
