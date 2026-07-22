@@ -1185,13 +1185,6 @@
 
           <div class="vsp-carousel" data-vsp-carousel>
 
-            <button class="vsp-arrow vsp-arrow--prev" type="button" data-vsp-prev aria-label="Previous package">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
-            </button>
-            <button class="vsp-arrow vsp-arrow--next" type="button" data-vsp-next aria-label="Next package">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
-
             <ul class="vsp-track" data-vsp-track role="list">
 
               <!-- 1. Shimla — LIVE: links to the dedicated Vlog Shoot page.
@@ -1277,6 +1270,8 @@
 
             </ul>
           </div>
+
+          <div class="vsp-dots" data-vsp-dots aria-hidden="true"></div>
 
         </div>
       </section>
@@ -1423,7 +1418,9 @@
   <!-- About Us behavior (video play trigger, marquee viewport pausing, stat count-up) -->
   <script src="js/about.js" defer></script>
 
-  <!-- Vlog Shoot Packages behavior (drag/swipe carousel + arrows, no looping) -->
+  <!-- Vlog Shoot Packages behavior (continuous auto-scroll carousel, right →
+       left, same architecture as the Influencers/Recent Winners carousels
+       + dot pagination; automatically adapts to any number of cards) -->
   <script src="js/vlog-shoot-packages.js" defer></script>
 
   <!-- Footer behavior (newsletter validation) -->

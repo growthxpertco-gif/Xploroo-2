@@ -2,14 +2,13 @@
    XPLOROO · Vlog Shoot Packages module
    vlog-shoot-packages.css — Fully original, self-contained component.
    Scoped entirely under `.vlog-shoot` / `.vsp-*` — never touches any other
-   section's classes or tokens. Structurally modeled on the (now removed)
-   Travel Stories carousel — same proven finite drag/swipe/arrow pattern —
-   but with its own premium "content creation" visual identity: glass
-   surfaces, the site's violet/magenta/cyan brand gradient, titanium-silver
-   accents, a cinematic corner-frame treatment and a small recording-style
-   badge. Cards are inert placeholders for now (no price/duration/CTA
-   content has been invented) and are built so 4, 5 or 10+ cards can be
-   added later without touching this file's layout rules.
+   section's classes or tokens. Carousel mechanics now mirror the proven
+   Influencers / Recent Winners continuous auto-scroll pattern (see
+   js/vlog-shoot-packages.js), with its own premium "content creation"
+   visual identity: glass surfaces, the site's violet/magenta/cyan brand
+   gradient, titanium-silver accents, a cinematic corner-frame treatment
+   and a small recording-style badge. Card layout widths are built so 4,
+   5, 8 or 10+ cards can be added later without touching this file.
    ========================================================================== */
 
 .vlog-shoot {
@@ -44,33 +43,53 @@
 }
 
 /* -------------------------------------------------------------------------
-   Carousel shell — identical mechanics to the site's other finite
-   drag/swipe carousels: native overflow-x + scroll-snap, no cloning.
+   Carousel — continuous auto-scroll (right → left), same proven
+   architecture as the Influencers / Recent Winners carousels (see
+   js/vlog-shoot-packages.js for the full auto-scroll/drag/clone logic):
+   `.vsp-carousel` is the VIEWPORT — fixed size, `overflow: hidden`, never
+   itself transformed. `.vsp-track` is the TRACK — the flex row of every
+   card, positioned purely via `transform: translateX()` in JS. These stay
+   two separate elements on purpose: clipping and transforming the same
+   element moves the clip boundary together with the content, so the
+   visible area can drift away from the actual cards. The JS clones
+   however many full card-sets are needed to cover the viewport width, so
+   this works correctly whether there are 3 cards or 30 — nothing here is
+   sized for a specific card count.
    ------------------------------------------------------------------------- */
 .vsp-carousel {
   position: relative;
+  overflow: hidden;
 }
 
 .vsp-track {
   display: flex;
+  flex-wrap: nowrap;
   gap: var(--space-5);
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  cursor: grab;
   margin: 0;
-  padding: 0 0 var(--space-2);
+  padding: 0;
   list-style: none;
+  cursor: grab;
+  touch-action: pan-y;
+  will-change: transform;
+  /* No explicit width: a flex container defaults to filling its parent's
+     (`.vsp-carousel`'s) width, which is what `.vsp-slide`'s percentage/
+     calc widths below need to resolve correctly against. The cloned card
+     sets then naturally overflow that box — `.vsp-carousel`'s
+     `overflow: hidden` (above) is what clips them, not this element. */
 }
-.vsp-track::-webkit-scrollbar { display: none; }
-.vsp-track.is-dragging { cursor: grabbing; scroll-snap-type: none; }
+.vsp-track.is-dragging {
+  cursor: grabbing;
+}
 
 .vsp-slide {
   flex: 0 0 auto;
   width: 82%;
-  scroll-snap-align: start;
+}
+/* Clones are visual-only duplicates for the seamless loop — never focus-
+   able or announced by assistive tech, the real cards already cover every
+   package. */
+.vsp-slide[aria-hidden="true"] {
+  pointer-events: none;
 }
 @media (min-width: 480px) {
   .vsp-slide { width: 60%; }
@@ -83,43 +102,31 @@
 }
 
 /* -------------------------------------------------------------------------
-   Arrows — desktop/tablet only (mobile relies on swipe)
+   Dot pagination — one dot per real package (never per clone)
    ------------------------------------------------------------------------- */
-.vsp-arrow {
-  display: none;
-  position: absolute;
-  top: 38%;
-  z-index: 2;
-  width: 2.875rem;
-  height: 2.875rem;
-  align-items: center;
+.vsp-dots {
+  position: relative;
+  z-index: 1;
+  display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: var(--space-5);
+}
+.vsp-dot {
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.32);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  background: var(--color-border-strong);
+  border: none;
+  padding: 0;
   cursor: pointer;
-  transition:
-    background-color var(--dur-fast) var(--ease-standard),
-    transform var(--dur-fast) var(--ease-out),
-    box-shadow var(--dur-base) var(--ease-out);
+  transition: background-color 300ms ease, transform var(--dur-fast) var(--ease-out), width var(--dur-base) var(--ease-out);
 }
-.vsp-arrow svg { width: 20px; height: 20px; }
-.vsp-arrow:hover { background: rgba(0, 0, 0, 0.75); transform: translateY(-50%) scale(1.06); box-shadow: var(--shadow-md); }
-.vsp-arrow:active { transform: translateY(-50%) scale(0.94); }
-.vsp-arrow:disabled {
-  opacity: 0;
-  pointer-events: none;
-}
-.vsp-arrow--prev { left: -1.4rem; transform: translateY(-50%); }
-.vsp-arrow--next { right: -1.4rem; transform: translateY(-50%); }
-.vsp-arrow--prev:hover { transform: translateY(-50%) scale(1.06); }
-.vsp-arrow--next:hover { transform: translateY(-50%) scale(1.06); }
-
-@media (min-width: 768px) {
-  .vsp-arrow { display: flex; }
+.vsp-dot.is-active {
+  width: 20px;
+  border-radius: var(--radius-pill);
+  background: var(--gradient-brand);
 }
 
 /* -------------------------------------------------------------------------
