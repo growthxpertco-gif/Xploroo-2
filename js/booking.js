@@ -46,13 +46,13 @@
     singapore: { name: "Singapore Explorer",             destination: "Singapore",         duration: "4 Days / 3 Nights", price: 39999,  image: "https://picsum.photos/seed/singapore-hero/600/600" },
     jaipur:    { name: "Jaipur Heritage Trail",          destination: "Jaipur, Rajasthan", duration: "5 Days / 4 Nights", price: 21999,  image: "https://picsum.photos/seed/jaipur-hero/600/600" },
     kasol:     { name: "Kasol & Parvati Valley",         destination: "Kasol, HP",         duration: "4 Days / 3 Nights", price: 16999,  image: "https://picsum.photos/seed/kasol-hero/600/600" },
-    phuket:    { name: "Amazing Thailand with Xploroo Creators", destination: "Pattaya + Bangkok, Thailand", duration: "5 Days / 4 Nights", price: 50500, image: "https://ik.imagekit.io/mg0v9kccj/file_00000000e82471fabbc1a27cd1c8b277.png" },
+    phuket:    { name: "Amazing Thailand with Xploroo Creators", destination: "Pattaya + Bangkok, Thailand", duration: "5 Days / 4 Nights", price: 50500, image: "https://ik.imagekit.io/mg0v9kccj/ChatGPT%20Image%20Jul%2021,%202026,%2004_16_22%20PM.png?updatedAt=1784630805899" },
     iceland:   { name: "Iceland Northern Lights Escape", destination: "Iceland",           duration: "6 Nights / 7 Days", price: 725000, image: "https://picsum.photos/seed/iceland-hero/600/600" },
     shimla:    { name: "Shimla VIP: 42 Faces, 1 Unforgettable Weekend", destination: "Shoghi, Shimla", duration: "2 Nights / 3 Days", price: 17000, image: "https://ik.imagekit.io/mg0v9kccj/IMG-20260704-WA0019.jpg.jpeg" },
     "spiritual-vip-2n3d": { name: "Xploroo Spiritual VIP: Meet Ms. Gataansha Raghuwanshi (2N/3D)", destination: "Wood Smoke Resort, Shoghi, Shimla", duration: "2 Nights / 3 Days", price: 10000, image: "https://ik.imagekit.io/mg0v9kccj/file_0000000087a471fab4fae4b1f11db7e8.png" },
     "spiritual-vip-3n4d": { name: "Xploroo Spiritual VIP: Meet Ms. Gataansha Raghuwanshi (3N/4D)", destination: "Wood Smoke Resort, Shoghi, Shimla", duration: "3 Nights / 4 Days", price: 12500, image: "https://ik.imagekit.io/mg0v9kccj/file_0000000087a471fab4fae4b1f11db7e8.png" },
     japan:     { name: "Japan Premium Golden Route 6N7D", destination: "Tokyo, Mt. Fuji, Kyoto & Osaka, Japan", duration: "6 Nights / 7 Days", price: 350000, image: "https://ik.imagekit.io/mg0v9kccj/IMG-20260706-WA0001.jpg.jpeg" },
-    italy:     { name: "Italy Classic Escape",           destination: "Italy",             duration: "6 Days / 5 Nights", price: 89999,  image: "https://picsum.photos/seed/italy-hero/600/600" },
+    italy:     { name: "Classic Italy Tour 6D5N",         destination: "Rome, Tuscany, Pisa, Cinque Terre & Milan, Italy", duration: "6 Days / 5 Nights", price: 275000, image: "https://ik.imagekit.io/mg0v9kccj/ChatGPT%20Image%20Jul%2022,%202026,%2004_21_42%20PM.png" },
 
     // International listing (international-packages.html)
     bali:        { name: "Bali Retreat",           destination: "Bali, Indonesia",                   duration: "6 Days / 5 Nights", price: 48999,  image: "https://picsum.photos/seed/bali-hero/600/600" },
