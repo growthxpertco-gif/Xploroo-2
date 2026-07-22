@@ -1,0 +1,864 @@
+/* ==========================================================================
+   XPLOROO · Manali Vlog Shoot Package (manalivlogshoot.html)
+   manali-vlog-shoot.css — Exact structural/behavioral copy of the approved
+   shimla-vlog-shoot.css (same layout, spacing, responsive rules, card
+   design, calculator UI) with only the color identity nudged toward a
+   cooler mountain/snow palette. Layered on top of the shared
+   package-details.css master template (hero, gallery, info cards, tabs,
+   included grid, help card, sticky bar all inherited untouched). Scoped
+   entirely under `.pkg-page--manalivlog` / `.mvs-*` so nothing here can
+   ever affect any other page (including shimla-vlog-shoot.css).
+
+   Visual direction — same premium cinematic production language as
+   Shimla, not a generic travel agency page: deep black/midnight canvas,
+   icy blue → indigo → violet brand gradient (mountains/snow/rivers),
+   titanium-silver accents, pure white typography, a filming-interface
+   REC indicator and camera-corner frame treatment.
+   ========================================================================== */
+
+.pkg-page--manalivlog {
+  --mvs-purple: #4c1d95;
+  --mvs-magenta: #0891b2;
+  --mvs-blue: #2563eb;
+  --mvs-indigo: #1e3a8a;
+  --mvs-midnight: #0b0f14;
+  --mvs-silver: #c7ccd9;
+  --mvs-silver-bright: #f5f7fb;
+  --mvs-rec: #ef4444;
+  --mvs-gradient: linear-gradient(120deg, var(--mvs-magenta) 0%, var(--mvs-blue) 55%, var(--mvs-purple) 100%);
+  position: relative;
+  isolation: isolate;
+}
+
+.pkg-page--manalivlog::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 40% at 10% 0%, rgba(8, 145, 178, 0.14), transparent 60%),
+    radial-gradient(55% 35% at 92% 8%, rgba(37, 99, 235, 0.16), transparent 60%),
+    radial-gradient(50% 30% at 50% 100%, rgba(91, 33, 182, 0.12), transparent 60%);
+}
+
+/* -------------------------------------------------------------------------
+   Hero — cinematic REC indicator + camera-corner frame around the gallery
+   ------------------------------------------------------------------------- */
+.pkg-page--manalivlog .pkg-badge--category {
+  color: var(--mvs-silver-bright);
+  background: rgba(8, 145, 178, 0.16);
+  border-color: rgba(199, 204, 217, 0.4);
+}
+.pkg-page--manalivlog .pkg-badge--live {
+  background-image: var(--mvs-gradient);
+  box-shadow: 0 0 24px rgba(8, 145, 178, 0.4);
+}
+
+.pkg-page--manalivlog .pkg-hero__title {
+  background: linear-gradient(100deg, #ffffff 0%, #ffffff 35%, var(--mvs-silver-bright) 50%, #ffffff 70%, #ffffff 100%);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 60px rgba(8, 145, 178, 0.35);
+}
+
+.pkg-hero__secondary {
+  margin: var(--space-2) 0 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  color: var(--mvs-silver-bright);
+}
+.pkg-hero__tagline {
+  margin-top: var(--space-2);
+  font-style: italic;
+  font-size: var(--fs-sm);
+  color: var(--mvs-silver);
+}
+
+.pkg-page--manalivlog .pkg-cta {
+  background-image: var(--mvs-gradient);
+  box-shadow: 0 14px 40px -10px rgba(91, 33, 182, 0.5), 0 0 0 1px rgba(199, 204, 217, 0.25);
+}
+.pkg-page--manalivlog .pkg-cta:hover {
+  box-shadow: 0 22px 56px -10px rgba(8, 145, 178, 0.55), 0 0 0 1px rgba(199, 204, 217, 0.4);
+}
+
+/* REC indicator — small pulsing dot + "REC" label, top-left of the hero
+   gallery, filming-interface detail. */
+.mvs-rec {
+  position: absolute;
+  z-index: 3;
+  top: 1rem;
+  left: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35em 0.8em;
+  border-radius: var(--radius-pill);
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  font-family: var(--font-mono, var(--font-body));
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wider);
+  color: #fff;
+}
+.mvs-rec__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--mvs-rec);
+  box-shadow: 0 0 8px 2px rgba(239, 68, 68, 0.75);
+  animation: mvs-rec-pulse 1.6s ease-in-out infinite;
+}
+@keyframes mvs-rec-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(0.85); }
+  50%      { opacity: 1; transform: scale(1.15); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mvs-rec__dot { animation: none; }
+}
+
+/* Camera-corner frame around the hero gallery image — four small
+   viewfinder-style brackets, pure CSS, always visible (not hover-only)
+   on the hero since it's the primary "you're watching a shoot" cue. */
+.pkg-page--manalivlog .pkg-gallery__hero {
+  position: relative;
+  border-color: rgba(199, 204, 217, 0.35);
+}
+.pkg-gallery__hero::after {
+  content: "";
+  position: absolute;
+  inset: 1rem;
+  z-index: 2;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(245, 247, 251, 0.85), rgba(245, 247, 251, 0.85)),
+    linear-gradient(rgba(245, 247, 251, 0.85), rgba(245, 247, 251, 0.85)),
+    linear-gradient(rgba(245, 247, 251, 0.85), rgba(245, 247, 251, 0.85)),
+    linear-gradient(rgba(245, 247, 251, 0.85), rgba(245, 247, 251, 0.85)),
+    linear-gradient(rgba(245, 247, 251, 0.85), rgba(245, 247, 251, 0.85)),
+    linear-gradient(rgba(245, 247, 251, 0.85), rgba(245, 247, 251, 0.85)),
+    linear-gradient(rgba(245, 247, 251, 0.85), rgba(245, 247, 251, 0.85)),
+    linear-gradient(rgba(245, 247, 251, 0.85), rgba(245, 247, 251, 0.85));
+  background-repeat: no-repeat;
+  background-size: 1.4px 22px, 22px 1.4px, 1.4px 22px, 22px 1.4px, 1.4px 22px, 22px 1.4px, 1.4px 22px, 22px 1.4px;
+  background-position:
+    top left, top left,
+    top right, top right,
+    bottom left, bottom left,
+    bottom right, bottom right;
+}
+.pkg-page--manalivlog .pkg-gallery__thumb.is-active {
+  border-color: var(--mvs-magenta);
+  box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.25);
+}
+
+/* -------------------------------------------------------------------------
+   Quick Package Details — 7-item responsive grid (Location / Stay /
+   Duration / Meals / Delivery / Group Type / Listing Type)
+   ------------------------------------------------------------------------- */
+.mvs-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+@media (min-width: 640px) {
+  .mvs-details-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (min-width: 1024px) {
+  .mvs-details-grid { grid-template-columns: repeat(4, 1fr); }
+}
+.mvs-detail-card {
+  padding: var(--space-4) var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(199, 204, 217, 0.22);
+  background: rgba(11, 11, 20, 0.4);
+}
+.mvs-detail-card__label {
+  display: block;
+  font-family: var(--font-mono, var(--font-body));
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-widest);
+  text-transform: uppercase;
+  color: var(--mvs-silver);
+}
+.mvs-detail-card__value {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-strong);
+  line-height: var(--lh-snug);
+}
+
+/* -------------------------------------------------------------------------
+   Package Highlights — reuse of the numbered-card pattern used across
+   other premium package pages this site.
+   ------------------------------------------------------------------------- */
+.mvs-highlights__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+}
+@media (max-width: 900px) {
+  .mvs-highlights__grid { grid-template-columns: 1fr; }
+}
+.mvs-highlights__card {
+  padding: var(--space-6);
+  border-radius: var(--radius-2xl);
+  border: 1px solid rgba(199, 204, 217, 0.25);
+  background:
+    linear-gradient(165deg, rgba(8, 145, 178, 0.16), rgba(11, 11, 20, 0.6) 60%),
+    rgba(20, 20, 29, 0.4);
+  transition: transform var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-standard);
+}
+.mvs-highlights__card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(199, 204, 217, 0.45);
+}
+.mvs-highlights__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  margin-bottom: var(--space-4);
+  border-radius: 50%;
+  color: #fff;
+  background-image: var(--mvs-gradient);
+  box-shadow: 0 0 18px rgba(8, 145, 178, 0.4);
+}
+.mvs-highlights__icon svg { width: 20px; height: 20px; }
+.mvs-highlights__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-lg);
+  color: #ffffff;
+}
+.mvs-highlights__desc {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* -------------------------------------------------------------------------
+   PRICING + PERSONS SELECTOR — the interactive booking calculator.
+   Two selectable option cards (radio semantics), a persons stepper, and
+   a live summary. Full-width section in the main content flow (not the
+   narrow static sidebar the base template's single-price aside assumes).
+   ------------------------------------------------------------------------- */
+.mvs-pricing {
+  padding: clamp(1.5rem, 1.1rem + 2vw, var(--space-8));
+  border-radius: var(--radius-3xl);
+  border: 1px solid rgba(199, 204, 217, 0.22);
+  background: rgba(11, 11, 20, 0.92);
+}
+
+.mvs-pricing__slots {
+  margin: 0 0 var(--space-5);
+  font-family: var(--font-mono, var(--font-body));
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--mvs-silver);
+  text-align: center;
+}
+
+.mvs-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+  margin-bottom: var(--space-7);
+}
+@media (max-width: 560px) {
+  .mvs-options {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+}
+
+.mvs-option {
+  position: relative;
+  display: block;
+  text-align: left;
+  cursor: pointer;
+}
+.mvs-option__input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.mvs-option__card {
+  padding: var(--space-6);
+  border-radius: var(--radius-xl);
+  border: 1.5px solid rgba(199, 204, 217, 0.3);
+  background: rgba(20, 20, 29, 0.7);
+  transition: all var(--dur-base) var(--ease-out);
+  display: flex;
+  flex-direction: column;
+}
+.mvs-option__input:checked + .mvs-option__card {
+  border-color: var(--mvs-magenta);
+  border-width: 2px;
+  box-shadow: 0 0 0 1px rgba(8, 145, 178, 0.5), 0 0 28px rgba(8, 145, 178, 0.3);
+  background: rgba(20, 20, 29, 0.85);
+  transform: translateY(-2px);
+}
+.mvs-option__input:focus-visible + .mvs-option__card {
+  outline: 2px solid var(--mvs-magenta);
+  outline-offset: 3px;
+}
+.mvs-option:hover .mvs-option__card {
+  border-color: rgba(199, 204, 217, 0.5);
+  transform: translateY(-2px);
+}
+.mvs-option__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+.mvs-option__name {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 0.9rem + 0.5vw, 1.25rem);
+  font-weight: var(--fw-bold);
+  color: #ffffff;
+  flex: 1;
+}
+.mvs-option__radio {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  border: 2px solid rgba(199, 204, 217, 0.4);
+  display: grid;
+  place-items: center;
+  transition: all var(--dur-base) var(--ease-standard);
+  background: rgba(255, 255, 255, 0.03);
+}
+.mvs-option__radio::after {
+  content: "";
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: var(--mvs-magenta);
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  box-shadow: 0 0 10px rgba(8, 145, 178, 0.6);
+}
+.mvs-option__input:checked + .mvs-option__card .mvs-option__radio {
+  border-color: var(--mvs-magenta);
+  background: rgba(8, 145, 178, 0.12);
+}
+.mvs-option__input:checked + .mvs-option__card .mvs-option__radio::after {
+  opacity: 1;
+  transform: scale(1);
+}
+.mvs-option__price {
+  margin: 0 0 var(--space-1) 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 1.75rem + 1vw, 2.5rem);
+  font-weight: var(--fw-extrabold);
+  color: #ffffff;
+  line-height: 1.1;
+}
+.mvs-option__price span {
+  display: inline;
+  margin-left: 0.5em;
+  font-family: var(--font-body);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-medium);
+  text-transform: lowercase;
+  color: var(--mvs-silver);
+  letter-spacing: var(--ls-wide);
+}
+.mvs-option__desc {
+  margin: var(--space-3) 0 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Persons selector — stepper */
+.mvs-persons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  padding: var(--space-5) var(--space-6);
+  margin-bottom: var(--space-7);
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(199, 204, 217, 0.25);
+  background: rgba(20, 20, 29, 0.6);
+}
+@media (max-width: 560px) {
+  .mvs-persons {
+    flex-direction: column;
+    align-items: stretch;
+    padding: var(--space-4) var(--space-5);
+  }
+}
+.mvs-persons__label {
+  font-family: var(--font-mono, var(--font-body));
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--mvs-silver);
+  margin-bottom: var(--space-2);
+}
+@media (min-width: 561px) {
+  .mvs-persons__label {
+    margin-bottom: 0;
+  }
+}
+.mvs-persons__sub {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: var(--fs-xs);
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: var(--fw-regular);
+  color: rgba(255, 255, 255, 0.6);
+}
+.mvs-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  flex-wrap: nowrap;
+}
+@media (max-width: 560px) {
+  .mvs-stepper {
+    justify-content: flex-start;
+  }
+}
+.mvs-stepper__btn {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  border: 1px solid rgba(199, 204, 217, 0.35);
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color var(--dur-base) var(--ease-standard), background-color var(--dur-base) var(--ease-standard);
+}
+.mvs-stepper__btn:hover:not(:disabled) {
+  border-color: var(--mvs-magenta);
+  background: rgba(8, 145, 178, 0.14);
+}
+.mvs-stepper__btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.mvs-stepper__value {
+  min-width: 3.5rem;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  color: #ffffff;
+}
+.mvs-stepper__value small {
+  display: block;
+  font-family: var(--font-body);
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-regular);
+  color: var(--mvs-silver);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wide);
+}
+
+/* Live summary */
+.mvs-summary {
+  border-radius: var(--radius-xl);
+  border: 1.5px solid transparent;
+  background:
+    linear-gradient(rgba(20, 20, 29, 0.8), rgba(20, 20, 29, 0.8)) padding-box,
+    var(--mvs-gradient) border-box;
+  padding: var(--space-6) var(--space-6);
+  margin-bottom: var(--space-6);
+}
+.mvs-summary__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: 0.65rem;
+  border-bottom: 1px solid rgba(199, 204, 217, 0.14);
+  font-size: var(--fs-sm);
+}
+.mvs-summary__row:last-of-type { border-bottom: none; }
+.mvs-summary__row-label {
+  font-family: var(--font-mono, var(--font-body));
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-semibold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--mvs-silver);
+  flex: 0 1 auto;
+}
+.mvs-summary__row-value {
+  font-weight: var(--fw-semibold);
+  color: #ffffff;
+  text-align: right;
+  flex: 0 1 auto;
+}
+.mvs-summary__total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  padding-top: var(--space-5);
+  border-top: 1.5px solid rgba(8, 145, 178, 0.3);
+}
+.mvs-summary__total-label {
+  font-family: var(--font-display);
+  font-size: var(--fs-md, var(--fs-base));
+  color: var(--mvs-silver-bright);
+  font-weight: var(--fw-semibold);
+}
+.mvs-summary__total-value {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem);
+  font-weight: var(--fw-extrabold);
+  color: #ffffff;
+  text-shadow: 0 0 24px rgba(8, 145, 178, 0.4);
+}
+.mvs-pricing__note {
+  margin: var(--space-5) 0 var(--space-6) 0;
+  font-size: var(--fs-xs);
+  color: var(--mvs-silver);
+  text-align: center;
+  line-height: var(--lh-relaxed);
+}
+.mvs-book-btn {
+  width: 100%;
+  padding: clamp(0.9rem, 0.75rem + 1vw, 1.1rem) 1.5rem;
+  border: none;
+  border-radius: var(--radius-pill);
+  background-image: var(--mvs-gradient);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: var(--fs-md, var(--fs-base));
+  font-weight: var(--fw-bold);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  box-shadow: 0 14px 40px -10px rgba(91, 33, 182, 0.55);
+  transition: transform var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out);
+}
+.mvs-book-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 22px 56px -10px rgba(8, 145, 178, 0.6);
+}
+.mvs-book-btn:active {
+  transform: translateY(0);
+}
+.mvs-book-btn svg { width: 20px; height: 20px; }
+
+/* -------------------------------------------------------------------------
+   Itinerary — Day badges recolored; per-day "SHOOT:" callout block
+   ------------------------------------------------------------------------- */
+.pkg-page--manalivlog .pkg-itinerary__day {
+  border-color: rgba(199, 204, 217, 0.2);
+  background: rgba(20, 20, 29, 0.4);
+}
+.pkg-page--manalivlog .pkg-itinerary__badge {
+  background: var(--mvs-gradient);
+}
+.mvs-shoot-block {
+  margin-top: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(8, 145, 178, 0.3);
+  background: rgba(8, 145, 178, 0.08);
+}
+.mvs-shoot-block__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0 0.35rem;
+  font-family: var(--font-mono, var(--font-body));
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--mvs-magenta);
+}
+.mvs-shoot-block p {
+  margin: 0.2rem 0 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  color: rgba(255, 255, 255, 0.82);
+}
+.mvs-shoot-block p:first-of-type { margin-top: 0; }
+
+/* -------------------------------------------------------------------------
+   Post-Production Pipeline — horizontal timeline
+   ------------------------------------------------------------------------- */
+.mvs-pipeline {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  overflow-x: auto;
+  padding-bottom: var(--space-3);
+  scrollbar-width: none;
+}
+.mvs-pipeline::-webkit-scrollbar { display: none; }
+.mvs-pipeline__step {
+  flex: 1 0 8.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-5) var(--space-3);
+  position: relative;
+}
+.mvs-pipeline__step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 2.25rem;
+  left: 55%;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(199, 204, 217, 0.4), rgba(199, 204, 217, 0.1));
+  z-index: 0;
+}
+.mvs-pipeline__icon {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: var(--space-3);
+  border-radius: 50%;
+  background: rgba(20, 20, 29, 0.85);
+  border: 1.5px solid rgba(199, 204, 217, 0.35);
+  /* Hardcoded (not the theme-flipping --mvs-silver-bright token): this
+     circle's own background stays dark in both themes on purpose, so the
+     icon glyph must stay light in both themes too. */
+  color: #f5f7fb;
+}
+.mvs-pipeline__icon svg { width: 22px; height: 22px; }
+.mvs-pipeline__step:last-child .mvs-pipeline__icon {
+  background-image: var(--mvs-gradient);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(8, 145, 178, 0.45);
+}
+.mvs-pipeline__title {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: #ffffff;
+}
+.mvs-pipeline__note {
+  margin: var(--space-6) 0 0;
+  text-align: center;
+  font-size: var(--fs-sm);
+  color: var(--mvs-silver);
+}
+.mvs-pipeline__note strong {
+  color: #ffffff;
+}
+
+/* -------------------------------------------------------------------------
+   Vlog Options — With Dialogue vs Voice-Over Only
+   ------------------------------------------------------------------------- */
+.mvs-vlog-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+}
+@media (max-width: 720px) {
+  .mvs-vlog-options { grid-template-columns: 1fr; }
+}
+.mvs-vlog-option {
+  padding: var(--space-6);
+  border-radius: var(--radius-2xl);
+  border: 1px solid rgba(199, 204, 217, 0.25);
+  background: rgba(20, 20, 29, 0.45);
+}
+.mvs-vlog-option__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-bottom: var(--space-4);
+  border-radius: 50%;
+  font-family: var(--font-mono);
+  font-weight: var(--fw-bold);
+  color: #fff;
+  background-image: var(--mvs-gradient);
+}
+.mvs-vlog-option__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-lg);
+  color: #ffffff;
+}
+.mvs-vlog-option__desc {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  color: rgba(255, 255, 255, 0.78);
+}
+
+/* -------------------------------------------------------------------------
+   Privacy / NDA trust section
+   ------------------------------------------------------------------------- */
+.mvs-privacy {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border-radius: var(--radius-2xl);
+  border: 1px solid rgba(199, 204, 217, 0.25);
+  background: linear-gradient(120deg, rgba(37, 99, 235, 0.14), rgba(91, 33, 182, 0.14));
+}
+.mvs-privacy__icon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background-image: var(--mvs-gradient);
+  color: #fff;
+}
+.mvs-privacy__icon svg { width: 24px; height: 24px; }
+.mvs-privacy__title {
+  margin: 0 0 var(--space-2);
+  font-size: var(--fs-lg);
+  color: #ffffff;
+  letter-spacing: 0.01em;
+}
+.mvs-privacy__body p {
+  margin: 0 0 0.4rem;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-relaxed);
+  color: rgba(255, 255, 255, 0.82);
+}
+.mvs-privacy__body p:last-child { margin-bottom: 0; }
+
+/* -------------------------------------------------------------------------
+   Tabs / included grid / help recolor
+   ------------------------------------------------------------------------- */
+.pkg-page--manalivlog .pkg-tabs__nav {
+  border-color: rgba(199, 204, 217, 0.22);
+  background: rgba(20, 20, 29, 0.45);
+}
+.pkg-page--manalivlog .pkg-tabs__tab[aria-selected="true"] {
+  background: var(--mvs-gradient);
+  box-shadow: 0 0 24px rgba(8, 145, 178, 0.4);
+}
+.pkg-page--manalivlog .pkg-info-card,
+.pkg-page--manalivlog .pkg-highlights,
+.pkg-page--manalivlog .pkg-help {
+  border-color: rgba(199, 204, 217, 0.22);
+  background: rgba(11, 11, 20, 0.4);
+}
+.pkg-page--manalivlog .pkg-info-card__icon {
+  color: var(--mvs-silver-bright);
+  background: rgba(8, 145, 178, 0.22);
+}
+.pkg-page--manalivlog .pkg-section__eyebrow {
+  color: var(--mvs-magenta);
+}
+.pkg-page--manalivlog .pkg-included__item {
+  border-color: rgba(199, 204, 217, 0.2);
+  background: rgba(20, 20, 29, 0.4);
+}
+.pkg-page--manalivlog .pkg-included__icon {
+  background: rgba(8, 145, 178, 0.2);
+  color: var(--mvs-silver-bright);
+}
+.pkg-page--manalivlog .pkg-help__btn--call:hover {
+  border-color: var(--mvs-blue);
+  background: rgba(37, 99, 235, 0.14);
+}
+
+/* ============================================================================
+   LIGHT THEME — page palette is hardcoded (not the shared variables.css
+   tokens), so it needs its own explicit overrides when [data-theme="light"]
+   is set on <html>. Authored for a dark canvas; several plain-text/tint
+   elements sit directly on the page canvas (--color-bg, which flips white
+   in light theme) and would otherwise be unreadable. Cards that already
+   carry their own ~90%+ opaque dark fill (pricing panel, summary, option
+   cards, pipeline icons, vlog-option cards, privacy card, highlight cards)
+   stay intentionally dark in both themes per this site's established
+   pattern — their white text needs a matching text-token override since
+   `--color-text-strong` etc. correctly flip dark for the rest of the page.
+   ========================================================================== */
+:root[data-theme="light"] .pkg-page--manalivlog {
+  --mvs-silver: #3d4a60;
+  --mvs-silver-bright: #14243d;
+}
+:root[data-theme="light"] .pkg-page--manalivlog .pkg-hero__title {
+  background: linear-gradient(100deg, #0a1f3d 0%, #0a1f3d 35%, #0891b2 50%, #0a1f3d 70%, #0a1f3d 100%);
+  background-size: 220% auto;
+  text-shadow: none;
+}
+:root[data-theme="light"] .pkg-hero__secondary { color: #14243d; }
+:root[data-theme="light"] .pkg-hero__tagline { color: #3d4a60; }
+:root[data-theme="light"] .pkg-page--manalivlog .pkg-badge--category {
+  color: #0e7490;
+  background: rgba(8, 145, 178, 0.14);
+  border-color: rgba(8, 145, 178, 0.3);
+}
+:root[data-theme="light"] .pkg-page--manalivlog .pkg-section__eyebrow { color: #0e7490; }
+
+:root[data-theme="light"] .pkg-page--manalivlog .pkg-info-card,
+:root[data-theme="light"] .pkg-page--manalivlog .pkg-highlights,
+:root[data-theme="light"] .pkg-page--manalivlog .pkg-help,
+:root[data-theme="light"] .pkg-page--manalivlog .pkg-tabs__nav,
+:root[data-theme="light"] .pkg-page--manalivlog .pkg-itinerary__day,
+:root[data-theme="light"] .pkg-page--manalivlog .pkg-included__item,
+:root[data-theme="light"] .mvs-highlights__card,
+:root[data-theme="light"] .mvs-detail-card,
+:root[data-theme="light"] .mvs-vlog-option,
+:root[data-theme="light"] .mvs-privacy {
+  background: rgba(11, 11, 20, 0.94);
+  --color-text-strong: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.7);
+  --color-text-subtle: rgba(255, 255, 255, 0.6);
+  --color-text: rgba(255, 255, 255, 0.85);
+}
+:root[data-theme="light"] .pkg-page--manalivlog .pkg-info-card__icon,
+:root[data-theme="light"] .pkg-page--manalivlog .pkg-included__icon {
+  color: #ffffff;
+  background: rgba(8, 145, 178, 0.6);
+}
+:root[data-theme="light"] .mvs-detail-card__label { color: #c7ccd9; }
+:root[data-theme="light"] .mvs-shoot-block p,
+:root[data-theme="light"] .mvs-highlights__desc,
+:root[data-theme="light"] .mvs-vlog-option__desc,
+:root[data-theme="light"] .mvs-privacy__body p { color: rgba(255, 255, 255, 0.82); }
+
+/* Pricing calculator, pipeline note and mobile sticky bar already carry
+   their own opaque/near-opaque dark fills (declared with fixed rgba
+   values, not theme tokens) so they render identically in both themes —
+   only the site-wide `.mvs-silver`/`--color-text-*` overrides above are
+   needed for the elements that share text tokens with the (now light)
+   rest of the page. */
