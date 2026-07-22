@@ -1,14 +1,16 @@
 /* ==========================================================================
    XPLOROO · Ending Soon module
    ending-soon.css — Section head + the additive pieces on top of the
-   Trending Packages card component (urgency badge, countdown row, landmark
-   watermark icon, new destination gradients).
+   Trending Packages card component (real-date urgency badge tiers, trip-
+   date row, new destination gradients). Cards themselves are built by
+   js/ending-soon.js from Trending Packages' real `data-trip-date`
+   attributes — see that file for the selection/sorting logic.
    --------------------------------------------------------------------------
    IMPORTANT: this file never redeclares `.tp-card`, `.tp-carousel`,
    `.tp-track`, `.tp-arrow` or `.tp-slide` — those are reused byte-for-byte
    from styles/trending-packages.css, which is not modified. Everything
    below is either a new class (safe to add) or a new modifier for an
-   existing component (e.g. a new `--urgency` badge color, new destination
+   existing component (e.g. the `--tier-*` badge colors, new destination
    gradient variants) that Trending Packages' markup never references, so
    its rendered output is unaffected.
    Load AFTER trending-packages.css.
@@ -160,54 +162,67 @@
 .tp-card__media--singapore   { --tp-c1: #3d7a9e; --tp-c2: #0a1620; }
 
 /* -------------------------------------------------------------------------
-   Urgency badge — "Only X Seats Left" (new modifier on the reused
-   `.tp-card__badge` component; red/amber to signal scarcity)
+   Urgency badge — real-date-driven tiers only (js/ending-soon.js computes
+   the tier from each card's actual `data-trip-date`; nothing here is a
+   fake countdown, fake seat count or discount). Deliberately no pulsing/
+   flashing animation on any tier, per the "premium, not spammy" brief —
+   urgency reads through color/border/glow alone.
    ------------------------------------------------------------------------- */
-.tp-card__badge--urgency {
+.tp-card__badge--tier-open {
+  color: var(--color-text-muted);
+  background: var(--color-surface-hover);
+  border-color: var(--color-border-strong);
+}
+.tp-card__badge--tier-limited {
+  color: #d8b4fe;
+  background: rgba(168, 85, 247, 0.14);
+  border-color: rgba(168, 85, 247, 0.4);
+}
+:root[data-theme="light"] .tp-card__badge--tier-limited {
+  color: var(--violet-700, #6d28d9);
+  background: rgba(147, 51, 234, 0.1);
+  border-color: rgba(147, 51, 234, 0.32);
+}
+.tp-card__badge--tier-soon {
+  color: #f9a8d4;
+  background: rgba(219, 39, 119, 0.16);
+  border-color: rgba(219, 39, 119, 0.42);
+}
+:root[data-theme="light"] .tp-card__badge--tier-soon {
+  color: #9d174d;
+  background: rgba(219, 39, 119, 0.12);
+  border-color: rgba(219, 39, 119, 0.32);
+}
+.tp-card__badge--tier-urgent {
   color: #ffb199;
   background: rgba(251, 90, 90, 0.16);
-  border-color: rgba(251, 90, 90, 0.45);
-  transition: color 300ms ease, background-color 300ms ease, border-color 300ms ease;
+  border-color: rgba(251, 90, 90, 0.5);
+  box-shadow: 0 0 16px rgba(251, 90, 90, 0.25);
 }
-/* Light theme: the low-opacity tint composites very pale against a white
-   card, so the pastel text needs to darken to keep reading clearly. */
-:root[data-theme="light"] .tp-card__badge--urgency {
+:root[data-theme="light"] .tp-card__badge--tier-urgent {
   color: var(--coral-600);
   background: rgba(226, 59, 59, 0.12);
-  border-color: rgba(226, 59, 59, 0.35);
-}
-/* Small pulsing dot for extra urgency, GPU-friendly (opacity + transform only) */
-.tp-card__badge--urgency::before {
-  content: "";
-  width: 6px;
-  height: 6px;
-  margin-right: 0.4rem;
-  border-radius: 50%;
-  background: var(--coral-500);
-  animation: es-dot-pulse 1.6s ease-in-out infinite;
-}
-@keyframes es-dot-pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: 0.35; transform: scale(0.72); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .tp-card__badge--urgency::before { animation: none; }
+  border-color: rgba(226, 59, 59, 0.4);
+  box-shadow: 0 0 14px rgba(226, 59, 59, 0.18);
 }
 
 /* -------------------------------------------------------------------------
-   Countdown row — new element inside the reused `.tp-card__body`
+   Real trip-date row — new element inside the reused `.tp-card__body`,
+   shown above the urgency badge so the actual departure date is always
+   visible without opening the package.
    ------------------------------------------------------------------------- */
-.tp-card__countdown {
+.tp-card__date {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  font-family: var(--font-mono, var(--font-body));
   font-size: var(--fs-xs);
   font-weight: var(--fw-semibold);
-  color: #ffb199;
-  transition: color 300ms ease;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
 }
-:root[data-theme="light"] .tp-card__countdown { color: var(--coral-600); }
-.tp-card__countdown svg { width: 14px; height: 14px; flex: none; }
+.tp-card__date svg { width: 14px; height: 14px; flex: none; }
 
 /* -------------------------------------------------------------------------
    Body rebalance — these cards no longer carry a description line under the
@@ -224,9 +239,3 @@
 .ending-soon .tp-card__badge {
   margin-bottom: 0.15rem;
 }
-
-/* Once a deadline passes, JS adds this so the card visibly reads as expired */
-.tp-card.is-ended { opacity: 0.55; }
-.tp-card.is-ended .tp-card__cta { pointer-events: none; filter: grayscale(0.6); }
-.tp-card.is-ended .tp-card__countdown { color: var(--color-text-subtle); }
-.tp-card.is-ended .tp-card__badge--urgency::before { animation: none; background: var(--color-text-subtle); }

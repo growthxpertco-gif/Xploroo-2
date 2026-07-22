@@ -489,7 +489,7 @@
 
 
               <li class="tp-slide">
-                <article class="tp-card" data-tp-card data-tp-href="iceland-package.html" aria-label="View Iceland package details">
+                <article class="tp-card" data-tp-card data-tp-href="iceland-package.html" data-trip-date="2026-10-15" data-trip-date-label="15 Oct 2026" aria-label="View Iceland package details">
                   <div class="tp-card__media tp-card__media--santorini">
                     <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG-20260704-WA0019.jpg.jpeg" alt="Iceland" />
                     <button class="tp-card__wishlist" type="button" aria-label="Save Iceland package" aria-pressed="false" data-tp-wishlist>
@@ -507,7 +507,7 @@
               </li>
 
               <li class="tp-slide">
-                <article class="tp-card" data-tp-card data-tp-href="shimla-package.html" aria-label="View Shimla package details">
+                <article class="tp-card" data-tp-card data-tp-href="shimla-package.html" data-trip-date="2026-08-15" data-trip-date-label="15 Aug 2026" aria-label="View Shimla package details">
                   <div class="tp-card__media tp-card__media--patagonia">
                     <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260721_192040.png.jpg.jpeg" alt="Shimla" />
                     <button class="tp-card__wishlist" type="button" aria-label="Save Shimla package" aria-pressed="false" data-tp-wishlist>
@@ -525,7 +525,7 @@
               </li>
 
               <li class="tp-slide">
-                <article class="tp-card" data-tp-card data-tp-href="spiritual-vip-package.html" aria-label="View Xploroo Spiritual VIP package details">
+                <article class="tp-card" data-tp-card data-tp-href="spiritual-vip-package.html" data-trip-date="2026-10-09" data-trip-date-label="9&ndash;12 Oct 2026" aria-label="View Xploroo Spiritual VIP package details">
                   <div class="tp-card__media tp-card__media--spiritual">
                     <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/file_000000005ed88207b9fa3781e2930efc.png" alt="Xploroo Spiritual VIP" />
                     
@@ -544,7 +544,7 @@
               </li>
 
               <li class="tp-slide">
-                <article class="tp-card" data-tp-card data-tp-href="thailand-phuket-package.html" aria-label="View Amazing Thailand with Xploroo Creators package details">
+                <article class="tp-card" data-tp-card data-tp-href="thailand-phuket-package.html" data-trip-date="2026-10-03" data-trip-date-label="3&ndash;7 Oct 2026" aria-label="View Amazing Thailand with Xploroo Creators package details">
                   <div class="tp-card__media tp-card__media--marrakech">
                     <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/ChatGPT%20Image%20Jul%2021,%202026,%2004_16_22%20PM.png" alt="Amazing Thailand with Xploroo Creators" />
                     
@@ -563,7 +563,7 @@
               </li>
 
               <li class="tp-slide">
-                <article class="tp-card" data-tp-card data-tp-href="japan-package.html" aria-label="View Japan Premium Golden Route package details">
+                <article class="tp-card" data-tp-card data-tp-href="japan-package.html" data-trip-date="2026-10-25" data-trip-date-label="25&ndash;31 Oct 2026" aria-label="View Japan Premium Golden Route package details">
                   <div class="tp-card__media tp-card__media--kyoto">
                     <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG-20260706-WA0001.jpg.jpeg" alt="Japan Premium Golden Route" />
                     <button class="tp-card__wishlist" type="button" aria-label="Save Japan package" aria-pressed="false" data-tp-wishlist>
@@ -582,7 +582,7 @@
               </li>
 
               <li class="tp-slide">
-                <article class="tp-card" data-tp-card data-tp-href="italy-package.html" aria-label="View Italy package details">
+                <article class="tp-card" data-tp-card data-tp-href="italy-package.html" data-trip-date="2026-10-01" data-trip-date-label="October 2026" data-trip-date-precision="month" aria-label="View Italy package details">
                   <div class="tp-card__media tp-card__media--amalfi">
                     <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/ChatGPT%20Image%20Jul%2022,%202026,%2004_21_42%20PM.png" alt="Italy" />
                     <button class="tp-card__wishlist" type="button" aria-label="Save Italy package" aria-pressed="false" data-tp-wishlist>
@@ -726,12 +726,20 @@
       <!-- =========================================================== -->
       <!-- 5. ENDING SOON                                              -->
       <!-- =========================================================== -->
-      <!-- Reuses the Trending Packages card component (.tp-card and its
-           children, .tp-carousel / .tp-track / .tp-arrow / .tp-slide) from
-           trending-packages.css completely unmodified. Only the section-head
-           chrome and the countdown / seats-left additions are new, and they
-           live entirely in styles/ending-soon.css so nothing here can affect
-           the Trending Packages section. -->
+      <!-- Computed section, not hand-authored: js/ending-soon.js reads the
+           `data-trip-date` (+ `data-trip-date-label`) attributes already on
+           the 6 Trending Packages cards above (the single source of truth —
+           see the `.tp-track[data-tp-track]` cards), keeps only the ones
+           with a real future date, sorts nearest-first, and builds up to 6
+           cards here at load time. There is deliberately no static card
+           markup below for this reason — nothing here can drift out of sync
+           with Trending Packages, and an expired trip silently drops out on
+           its own the next time this date passes. Reuses the Trending
+           Packages card component (.tp-card and its children, .tp-carousel /
+           .tp-track / .tp-arrow / .tp-slide) from trending-packages.css
+           completely unmodified; the urgency badge / date row additions live
+           entirely in styles/ending-soon.css so nothing here can affect the
+           Trending Packages section. -->
       <section class="ending-soon" aria-labelledby="ending-soon-title" data-section="ending-soon">
         <div class="ending-soon__container">
 
@@ -739,7 +747,7 @@
             <div class="ending-soon__heading">
               <p class="ending-soon__eyebrow">Limited availability</p>
               <h2 class="ending-soon__title" id="ending-soon-title">Ending Soon</h2>
-              <p class="ending-soon__subtitle">These deals are almost gone — book now before the offer expires.</p>
+              <p class="ending-soon__subtitle">The soonest upcoming departures — book now before the date arrives.</p>
             </div>
             <a class="ending-soon__viewall" href="packages.html">View all deals</a>
           </header>
@@ -753,222 +761,9 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
             </button>
 
-            <ul class="tp-track" data-es-track role="list">
-
-              <!-- 1. Jaipur -->
-              <li class="tp-slide">
-                <article class="tp-card" data-tp-card data-tp-href="jaipur-package.html" aria-label="View Jaipur package details">
-                  <div class="tp-card__media tp-card__media--jaipur">
-                    <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/file_0000000088d4720791822e192a6f27d2.png" alt="Jaipur" />
-                    <button class="tp-card__wishlist" type="button" aria-label="Save Jaipur heritage package" aria-pressed="false" data-tp-wishlist>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
-                    </button>
-                  </div>
-                  <div class="tp-card__body">
-                    <span class="tp-card__badge tp-card__badge--urgency">4 Seats Left</span>
-                    <p class="tp-card__meta">
-                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-                      <span>Jaipur, India · 4N/5D</span>
-                    </p>
-                    <p class="tp-card__countdown" data-es-countdown data-hours="30">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-                      <span data-es-countdown-text>Ends in 1 Day 6 Hours</span>
-                    </p>
-                    <div class="tp-card__footer">
-                      <span class="tp-card__price"><span class="tp-card__price-amount">₹16,999</span><span class="tp-card__price-unit">/person</span></span>
-                      <a class="tp-card__cta" href="jaipur-package.html">Book Now</a>
-                    </div>
-                  </div>
-                </article>
-              </li>
-
-              <!-- 2. Vietnam -->
-              <li class="tp-slide">
-                <article class="tp-card" data-tp-card data-tp-href="vietnam-package.html" aria-label="View Vietnam package details">
-                  <div class="tp-card__media tp-card__media--vietnam">
-                    <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/file_00000000d3407207a9c918add1719a21.png" alt="Vietnam" />
-                    <button class="tp-card__wishlist" type="button" aria-label="Save Vietnam cultural package" aria-pressed="false" data-tp-wishlist>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
-                    </button>
-                  </div>
-                  <div class="tp-card__body">
-                    <span class="tp-card__badge tp-card__badge--urgency">6 Seats Left</span>
-                    <p class="tp-card__meta">
-                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-                      <span>Vietnam, Asia · 3N/4D</span>
-                    </p>
-                    <p class="tp-card__countdown" data-es-countdown data-hours="62">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-                      <span data-es-countdown-text>Ends in 2 Days 14 Hours</span>
-                    </p>
-                    <div class="tp-card__footer">
-                      <span class="tp-card__price"><span class="tp-card__price-amount">₹23,499</span><span class="tp-card__price-unit">/person</span></span>
-                      <a class="tp-card__cta" href="vietnam-package.html">Book Now</a>
-                    </div>
-                  </div>
-                </article>
-              </li>
-
-              <!-- 3. Iceland -->
-              <li class="tp-slide">
-                <article class="tp-card" data-tp-card data-tp-href="iceland-package.html" aria-label="View Iceland package details">
-                  <div class="tp-card__media tp-card__media--dubai">
-                    <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG-20260704-WA0019.jpg.jpeg" alt="Iceland" />
-                    <button class="tp-card__wishlist" type="button" aria-label="Save Iceland Northern Lights package" aria-pressed="false" data-tp-wishlist>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
-                    </button>
-                  </div>
-                  <div class="tp-card__body">
-                    <span class="tp-card__badge tp-card__badge--urgency">12 Guests Only</span>
-                    <p class="tp-card__meta">
-                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-                      <span>Iceland &middot; 6N/7D</span>
-                    </p>
-                    <p class="tp-card__countdown" data-es-countdown data-hours="18">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-                      <span data-es-countdown-text>Ends in 18 Hours</span>
-                    </p>
-                    <div class="tp-card__footer">
-                      <span class="tp-card__price"><span class="tp-card__price-amount">₹7,25,000</span><span class="tp-card__price-unit">/person</span></span>
-                      <a class="tp-card__cta" href="iceland-package.html">Book Now</a>
-                    </div>
-                  </div>
-                </article>
-              </li>
-
-              <!-- 5. Goa -->
-              <li class="tp-slide">
-                <article class="tp-card" data-tp-card data-tp-href="goa-package.html" aria-label="View Goa package details">
-                  <div class="tp-card__media tp-card__media--goa">
-                    <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/file_00000000449c7207b7bb461b186be40d.png" alt="Goa" />
-                    <button class="tp-card__wishlist" type="button" aria-label="Save Goa beach package" aria-pressed="false" data-tp-wishlist>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
-                    </button>
-                  </div>
-                  <div class="tp-card__body">
-                    <span class="tp-card__badge tp-card__badge--urgency">3 Seats Left</span>
-                    <p class="tp-card__meta">
-                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-                      <span>Goa, India · 2N/3D</span>
-                    </p>
-                    <p class="tp-card__countdown" data-es-countdown data-hours="54">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-                      <span data-es-countdown-text>Ends in 2 Days 6 Hours</span>
-                    </p>
-                    <div class="tp-card__footer">
-                      <span class="tp-card__price"><span class="tp-card__price-amount">₹10,499</span><span class="tp-card__price-unit">/person</span></span>
-                      <a class="tp-card__cta" href="goa-package.html">Book Now</a>
-                    </div>
-                  </div>
-                </article>
-              </li>
-
-              <!-- 9. Amazing Thailand with Xploroo Creators -->
-              <li class="tp-slide">
-                <article class="tp-card" data-tp-card data-tp-href="thailand-phuket-package.html" aria-label="View Amazing Thailand with Xploroo Creators package details">
-                  <div class="tp-card__media tp-card__media--thailand">
-                    <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/ChatGPT%20Image%20Jul%2021,%202026,%2004_16_22%20PM.png?updatedAt=1784630805899" alt="Amazing Thailand with Xploroo Creators" />                    <button class="tp-card__wishlist" type="button" aria-label="Save Amazing Thailand with Xploroo Creators package" aria-pressed="false" data-tp-wishlist>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
-                    </button>
-                  </div>
-                  <div class="tp-card__body">
-                    <span class="tp-card__badge tp-card__badge--urgency">Only 50 Pax</span>
-                    <p class="tp-card__meta">
-                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-                      <span>Pattaya + Bangkok · 5D/4N</span>
-                    </p>
-                    <p class="tp-card__countdown" data-es-countdown data-hours="58">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-                      <span data-es-countdown-text>Ends in 2 Days 10 Hours</span>
-                    </p>
-                    <div class="tp-card__footer">
-                      <span class="tp-card__price"><span class="tp-card__price-amount">₹50,500</span><span class="tp-card__price-unit">/person</span></span>
-                      <a class="tp-card__cta" href="thailand-phuket-package.html">Book Now</a>
-                    </div>
-                  </div>
-                </article>
-              </li>
-
-              <!-- 10. Kasol -->
-              <li class="tp-slide">
-                <article class="tp-card" data-tp-card data-tp-href="kasol-package.html" aria-label="View Kasol package details">
-                  <div class="tp-card__media tp-card__media--kasol">
-                    <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/file_0000000087a471fab4fae4b1f11db7e8.png" alt="Kasol" />                    <button class="tp-card__wishlist" type="button" aria-label="Save Kasol hill station package" aria-pressed="false" data-tp-wishlist>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
-                    </button>
-                  </div>
-                  <div class="tp-card__body">
-                    <span class="tp-card__badge tp-card__badge--urgency">5 Seats Left</span>
-                    <p class="tp-card__meta">
-                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-                      <span>Kasol, India · 3N/4D</span>
-                    </p>
-                    <p class="tp-card__countdown" data-es-countdown data-hours="34">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-                      <span data-es-countdown-text>Ends in 1 Day 10 Hours</span>
-                    </p>
-                    <div class="tp-card__footer">
-                      <span class="tp-card__price"><span class="tp-card__price-amount">₹11,499</span><span class="tp-card__price-unit">/person</span></span>
-                      <a class="tp-card__cta" href="kasol-package.html">Book Now</a>
-                    </div>
-                  </div>
-                </article>
-              </li>
-
-              <!-- 11. Manali -->
-              <li class="tp-slide">
-                <article class="tp-card" data-tp-card data-tp-href="manali-package.html" aria-label="View Manali package details">
-                  <div class="tp-card__media tp-card__media--manali">
-                    <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/IMG_20260704_161950.jpg.jpeg?updatedAt=1783162536667" alt="Manali" />
-                    <button class="tp-card__wishlist" type="button" aria-label="Save Manali hill station package" aria-pressed="false" data-tp-wishlist>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
-                    </button>
-                  </div>
-                  <div class="tp-card__body">
-                    <span class="tp-card__badge tp-card__badge--urgency">3 Seats Left</span>
-                    <p class="tp-card__meta">
-                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-                      <span>Manali, India · 3N/4D</span>
-                    </p>
-                    <p class="tp-card__countdown" data-es-countdown data-hours="66">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-                      <span data-es-countdown-text>Ends in 2 Days 18 Hours</span>
-                    </p>
-                    <div class="tp-card__footer">
-                      <span class="tp-card__price"><span class="tp-card__price-amount">₹12,999</span><span class="tp-card__price-unit">/person</span></span>
-                      <a class="tp-card__cta" href="manali-package.html">Book Now</a>
-                    </div>
-                  </div>
-                </article>
-              </li>
-
-              <!-- 12. Singapore -->
-              <li class="tp-slide">
-                <article class="tp-card" data-tp-card data-tp-href="singapore-package.html" aria-label="View Singapore package details">
-                  <div class="tp-card__media tp-card__media--singapore">
-                    <img class="tp-card__img" src="https://ik.imagekit.io/mg0v9kccj/file_00000000e94471fab9ac9f8acff218c0.png" alt="Singapore" />                    <button class="tp-card__wishlist" type="button" aria-label="Save Singapore city package" aria-pressed="false" data-tp-wishlist>
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7-4.35-9.5-8.8C.7 8.2 2.4 4.5 5.9 4.5c2 0 3.4 1.1 4.1 2.2C10.7 5.6 12.1 4.5 14.1 4.5c3.5 0 5.2 3.7 3.4 7.2C19 16.15 12 20.5 12 20.5Z"/></svg>
-                    </button>
-                  </div>
-                  <div class="tp-card__body">
-                    <span class="tp-card__badge tp-card__badge--urgency">6 Seats Left</span>
-                    <p class="tp-card__meta">
-                      <svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
-                      <span>Singapore · 2N/3D</span>
-                    </p>
-                    <p class="tp-card__countdown" data-es-countdown data-hours="22">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-                      <span data-es-countdown-text>Ends in 1 Day 20 Hours</span>
-                    </p>
-                    <div class="tp-card__footer">
-                      <span class="tp-card__price"><span class="tp-card__price-amount">₹26,999</span><span class="tp-card__price-unit">/person</span></span>
-                      <a class="tp-card__cta" href="singapore-package.html">Book Now</a>
-                    </div>
-                  </div>
-                </article>
-              </li>
-
-            </ul>
+            <!-- Populated at load time by js/ending-soon.js from the
+                 Trending Packages cards' data-trip-date attributes. -->
+            <ul class="tp-track" data-es-track role="list"></ul>
           </div>
 
         </div>
