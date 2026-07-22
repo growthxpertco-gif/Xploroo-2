@@ -68,7 +68,7 @@
     if (days >= 8) return { tier: "soon", label: "ONLY " + days + " DAYS LEFT" };
     if (days >= 2) return { tier: "urgent", label: "DEPARTING IN " + days + " DAYS" };
     if (days === 1) return { tier: "urgent", label: "DEPARTING TOMORROW" };
-    if (days === 0) return { tier: "urgent", label: "DEPARTING TODAY" };
+    if (days === 0) return { tier: "today", label: "DEPARTING TODAY" };
     return null;
   }
 
@@ -154,14 +154,12 @@
     meta.className = "tp-card__meta";
     const metaSpan = document.createElement("span");
     metaSpan.textContent = metaText ? destination + " · " + metaText : destination;
-    meta.innerHTML =
-      '<svg class="tp-card__pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>';
+    meta.innerHTML = '<span class="tp-card__pin-emoji" aria-hidden="true">\u{1F4CD}</span>';
     meta.appendChild(metaSpan);
 
     const dateRow = document.createElement("p");
     dateRow.className = "tp-card__date";
-    dateRow.innerHTML =
-      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>';
+    dateRow.innerHTML = '<span class="tp-card__date-emoji" aria-hidden="true">\u{1F4C5}</span>';
     const dateSpan = document.createElement("span");
     dateSpan.textContent = "Departs " + entry.dateLabel;
     dateRow.appendChild(dateSpan);
