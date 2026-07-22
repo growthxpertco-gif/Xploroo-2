@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://ryljttolhnvyynkfwuju.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Shimla Vlog Shoot Package 2N3D — create your professional travel vlog at Wood Smoke Resort Shoghi with a dedicated crew, with or without influencers, and get a fully edited vlog delivered in 10 days. Only on Xploroo." />
+  <title>Shimla Vlog Shoot Package 2N3D | Xploroo</title>
+
+  <!-- Apply the stored theme before first paint (avoids a flash of the
+       wrong theme on reload). Dark is the default — this only ever adds
+       the attribute for a stored "light" preference, never for dark. -->
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem("xploroo-theme") === "light") {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      } catch (_) {
+        /* localStorage unavailable (e.g. private browsing) — stay dark */
+      }
+    })();
+  </script>
+
+  <!-- Global design system (load order matters) -->
+  <link rel="stylesheet" href="styles/variables.css" />
+  <link rel="stylesheet" href="styles/reset.css" />
+  <link rel="stylesheet" href="styles/base.css" />
+  <link rel="stylesheet" href="styles/utilities.css" />
+
+  <!-- Header module (shared with every page) -->
+  <link rel="stylesheet" href="styles/header.css" />
+
+  <!-- Search overlay module (shared with every page) -->
+  <link rel="stylesheet" href="styles/search-overlay.css" />
+
+  <!-- Package Details module — the master template for every package page -->
+  <link rel="stylesheet" href="styles/package-details.css" />
+
+  <!-- Package pages — native Share button (top-right of the hero) -->
+  <link rel="stylesheet" href="styles/package-share.css" />
+
+  <!-- Shimla Vlog Shoot Package — page-only cinematic production visual
+       identity + pricing calculator; layout/interaction structure comes
+       from package-details.css above, untouched. -->
+  <link rel="stylesheet" href="styles/shimla-vlog-shoot.css" />
+
+  <!-- Footer module (reusable across every page) -->
+  <link rel="stylesheet" href="styles/footer.css" />
+</head>
+
+<body>
+  <!-- Accessibility: skip to main content -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <div class="app-shell">
+
+    <!-- ============================================================= -->
+    <!-- 1. STICKY HEADER                                              -->
+    <!-- ============================================================= -->
+    <header class="site-header" data-header data-sticky>
+      <div class="site-header__inner">
+
+        <!-- Hamburger: hidden on desktop; far-left slot on mobile -->
+        <button
+          class="nav-toggle"
+          type="button"
+          data-nav-toggle
+          aria-label="Open menu"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+        >
+          <span class="nav-toggle__box" aria-hidden="true">
+            <span class="nav-toggle__bar"></span>
+            <span class="nav-toggle__bar"></span>
+            <span class="nav-toggle__bar"></span>
+          </span>
+        </button>
+
+        <!-- Left cluster: logo + theme toggle -->
+        <div class="site-header__left">
+          <div class="brand">
+            <img class="brand__logo" src="https://ik.imagekit.io/mg0v9kccj/1000166489-removebg-previewDDF.png" alt="" />
+            <a class="brand__link" href="/" aria-label="Xploroo home"><span class="brand__name">Xploroo</span></a>
+          </div>
+
+          <!-- Dark / Light toggle (switches the site-wide theme) -->
+          <button
+            class="theme-toggle"
+            type="button"
+            role="switch"
+            aria-checked="true"
+            aria-label="Toggle light and dark theme"
+            data-theme-toggle
+          >
+            <span class="theme-toggle__track" aria-hidden="true">
+              <span class="theme-toggle__thumb">
+                <!-- Moon (dark) -->
+                <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor"/>
+                </svg>
+                <!-- Sun (light) -->
+                <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4"/>
+                  <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+                </svg>
+              </span>
+            </span>
+          </button>
+        </div>
+
+        <!-- Center: primary navigation (stays centered on the full bar) -->
+        <nav class="main-nav" aria-label="Primary">
+          <ul class="main-nav__list" role="list">
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="index.html">Home</a>
+            </li>
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="about.html">About Us</a>
+            </li>
+            <li class="main-nav__item main-nav__item--dropdown">
+              <button type="button" class="main-nav__link main-nav__dropdown-toggle" aria-haspopup="true" aria-expanded="false" aria-controls="packages-dropdown-menu" data-dropdown-toggle>
+                <span>Packages</span>
+                <svg class="main-nav__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="main-nav__dropdown" id="packages-dropdown-menu" data-dropdown-menu>
+                <a class="main-nav__dropdown-link" href="international-packages.html">International Packages</a>
+                <a class="main-nav__dropdown-link" href="domestic-packages.html" aria-current="page">Domestic Packages</a>
+              </div>
+            </li>
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="play&amp;win.html">Play &amp; Win</a>
+            </li>
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="influencers.html">Influencers</a>
+            </li>
+            <li class="main-nav__item">
+              <a class="main-nav__link" href="merch.html">Merch</a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Right cluster: search + auth actions -->
+        <div class="site-header__actions">
+
+          <!-- Search: perfect circle, thin white border -->
+          <button class="icon-btn icon-btn--search" type="button" aria-label="Search" data-search>
+            <svg class="icon-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" fill="none"/>
+              <path d="m21 21-4.3-4.3" fill="none"/>
+            </svg>
+          </button>
+
+          <a class="btn-auth btn-auth--login" href="login.html">Log In</a>
+          <a class="btn-auth btn-auth--signup" href="signup.html">Sign Up</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Fullscreen mobile menu (overlay, controlled by the hamburger) -->
+    <div class="mobile-menu" id="mobile-menu" data-mobile-nav hidden>
+      <div class="mobile-menu__panel">
+
+        <!-- Top bar: logo + theme toggle (left), close (right) -->
+        <div class="mobile-menu__topbar">
+          <div class="mobile-menu__brand-group">
+            <a class="brand" href="/" aria-label="Xploroo home">
+              <span class="brand__name">Xploroo</span>
+            </a>
+
+            <button
+              class="theme-toggle"
+              type="button"
+              role="switch"
+              aria-checked="true"
+              aria-label="Toggle light and dark theme"
+              data-theme-toggle
+            >
+              <span class="theme-toggle__track" aria-hidden="true">
+                <span class="theme-toggle__thumb">
+                  <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor"/>
+                  </svg>
+                  <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+                  </svg>
+                </span>
+              </span>
+            </button>
+          </div>
+
+          <!-- Close: identical styling to the header icon buttons -->
+          <button class="icon-btn mobile-menu__close" type="button" aria-label="Close menu" data-menu-close>
+            <svg class="icon-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M6 6l12 12M18 6 6 18"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Primary navigation items -->
+        <nav class="mobile-menu__nav" aria-label="Mobile">
+          <ul class="mobile-menu__list" role="list">
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="index.html">Home</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="about.html">About Us</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="play&amp;win.html">Play &amp; Win</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="influencers.html">Influencers</a></li>
+            <li class="mobile-menu__item mobile-menu__item--submenu">
+              <button type="button" class="mobile-menu__link mobile-menu__toggle" aria-expanded="false" aria-controls="mobile-submenu-packages" data-submenu-toggle>
+                <span>Packages</span>
+                <svg class="mobile-menu__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+              </button>
+              <div class="mobile-submenu" id="mobile-submenu-packages" data-submenu>
+                <div class="mobile-submenu__inner">
+                  <a class="mobile-submenu__link" href="international-packages.html">International Packages</a>
+                  <a class="mobile-submenu__link" href="domestic-packages.html" aria-current="page">Domestic Packages</a>
+                </div>
+              </div>
+            </li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="winners.html">Winners</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="merch.html">Merch</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="faq.html">FAQ</a></li>
+            <li class="mobile-menu__item"><a class="mobile-menu__link" href="contact.html">Contact Us</a></li>
+          </ul>
+        </nav>
+
+        <!-- Bottom actions: Log In (left) · Sign Up (right) -->
+        <div class="mobile-menu__actions">
+          <a class="btn-auth btn-auth--login" href="login.html">Log In</a>
+          <a class="btn-auth btn-auth--signup" href="signup.html">Sign Up</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fullscreen search overlay (opened via the header search icon) -->
+    <div class="search-overlay" data-search-overlay hidden>
+      <div class="search-overlay__inner">
+        <div class="search-overlay__topbar">
+          <button class="search-overlay__close" type="button" aria-label="Close search" data-search-close>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M6 6l12 12M18 6 6 18"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="search-overlay__bar">
+          <input class="search-overlay__input" type="text" placeholder="Search..." aria-label="Search" data-search-input />
+          <span class="search-overlay__bar-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="7" fill="none"/>
+              <path d="m21 21-4.3-4.3" fill="none"/>
+            </svg>
+          </span>
+        </div>
+
+        <div class="search-overlay__tabs" role="tablist" aria-label="Search categories">
+          <button class="search-overlay__tab" type="button" role="tab" aria-selected="true" data-search-tab="packages">Packages</button>
+          <button class="search-overlay__tab" type="button" role="tab" aria-selected="false" data-search-tab="influencers">Influencers</button>
+          <button class="search-overlay__tab" type="button" role="tab" aria-selected="false" data-search-tab="meetgreet">Meet &amp; Greet</button>
+          <span class="search-overlay__tab-indicator" data-search-tab-indicator aria-hidden="true"></span>
+        </div>
+
+        <div class="search-overlay__panels">
+          <div class="search-overlay__panel" data-search-panel="packages">
+            <ul class="search-overlay__list" data-search-list></ul>
+            <p class="search-overlay__empty" data-search-empty>No packages found.</p>
+          </div>
+          <div class="search-overlay__panel" data-search-panel="influencers">
+            <ul class="search-overlay__list" data-search-list></ul>
+            <p class="search-overlay__empty" data-search-empty>No influencers found.</p>
+          </div>
+          <div class="search-overlay__panel" data-search-panel="meetgreet">
+            <ul class="search-overlay__list" data-search-list></ul>
+            <p class="search-overlay__empty" data-search-empty>No events found.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- MAIN — Shimla Vlog Shoot Package                              -->
+    <!-- ============================================================= -->
+    <main class="main" id="main">
+      <div class="pkg-page pkg-page--shimlavlog" data-pkg-page>
+
+        <!-- =========================================================
+             HERO
+             ========================================================= -->
+        <section class="pkg-hero pkg-container" data-pkg-hero data-pkg-reveal aria-labelledby="pkg-title">
+
+          <nav class="pkg-breadcrumb" aria-label="Breadcrumb">
+            <a class="pkg-breadcrumb__link" href="index.html">Home</a>
+            <span class="pkg-breadcrumb__sep" aria-hidden="true">&rsaquo;</span>
+            <a class="pkg-breadcrumb__link" href="domestic-packages.html">Domestic Packages</a>
+            <span class="pkg-breadcrumb__sep" aria-hidden="true">&rsaquo;</span>
+            <span class="pkg-breadcrumb__current" aria-current="page">Shimla Vlog Shoot Package</span>
+          </nav>
+
+          <h1 class="pkg-hero__title" id="pkg-title">Shimla Vlog Shoot Package</h1>
+          <p class="pkg-hero__secondary">2N / 3D &middot; Wood Smoke Resort Shoghi &middot; With Professional Crew</p>
+
+          <p class="pkg-hero__desc">Shoot Your Travel Vlog in Shimla &ndash; 2N3D With Professional Crew.</p>
+          <p class="pkg-hero__tagline">Wood Smoke Resort Shoghi | Vlog Delivered in 10 Days</p>
+
+          <div class="pkg-hero__status">
+            <div class="pkg-hero__status-left">
+              <span class="pkg-badge pkg-badge--live">
+                <span class="pkg-badge__dot" aria-hidden="true"></span>
+                2N / 3D
+              </span>
+              <span class="pkg-hero__ends">Vlog Delivered in 10 Days</span>
+            </div>
+            <a class="pkg-cta pkg-cta--hero" href="#pricing" data-svs-scroll-to-pricing>
+              Book Now
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
+          </div>
+
+          <div class="pkg-gallery">
+            <div class="pkg-gallery__hero">
+              <span class="svs-rec" aria-hidden="true"><span class="svs-rec__dot"></span>REC</span>
+              <img
+                class="pkg-gallery__hero-img"
+                data-pkg-hero-image
+                src="https://ik.imagekit.io/mg0v9kccj/pexels-samsilitongajr-737586.jpg"
+                alt="Shimla Vlog Shoot Package — main view"
+              />
+            </div>
+
+            <div class="pkg-gallery__thumbs" role="list">
+              <button class="pkg-gallery__thumb is-active" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/pexels-samsilitongajr-737586.jpg" aria-label="View photo 1">
+                <img src="https://ik.imagekit.io/mg0v9kccj/pexels-samsilitongajr-737586.jpg" alt="" />
+              </button>
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/pexels-strangr-5166303.jpg" aria-label="View photo 2">
+                <img src="https://ik.imagekit.io/mg0v9kccj/pexels-strangr-5166303.jpg" alt="" />
+              </button>
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/pexels-mfdg-34250.jpg" aria-label="View photo 3">
+                <img src="https://ik.imagekit.io/mg0v9kccj/pexels-mfdg-34250.jpg" alt="" />
+              </button>
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/pexels-qhung999-27362136.jpg" aria-label="View photo 4">
+                <img src="https://ik.imagekit.io/mg0v9kccj/pexels-qhung999-27362136.jpg" alt="" />
+              </button>
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/pexels-strangr-5166305%20(1).jpg" aria-label="View photo 5">
+                <img src="https://ik.imagekit.io/mg0v9kccj/pexels-strangr-5166305%20(1).jpg" alt="" />
+              </button>
+              <button class="pkg-gallery__thumb" type="button" role="listitem" data-pkg-thumb="https://ik.imagekit.io/mg0v9kccj/pexels-nikolaeva-nastia-3312562-25655451.jpg" aria-label="View photo 6">
+                <img src="https://ik.imagekit.io/mg0v9kccj/pexels-nikolaeva-nastia-3312562-25655451.jpg" alt="" />
+              </button>
+            </div>
+          </div>
+
+        </section>
+
+        <div class="pkg-container">
+
+          <!-- ===================================================
+               Quick Package Details
+               =================================================== -->
+          <section data-pkg-reveal data-pkg-section="details" aria-label="Package details" style="margin-bottom: var(--space-8);">
+            <div class="svs-details-grid">
+              <div class="svs-detail-card">
+                <span class="svs-detail-card__label">Location</span>
+                <span class="svs-detail-card__value">Shimla &amp; Shoghi, Himachal Pradesh</span>
+              </div>
+              <div class="svs-detail-card">
+                <span class="svs-detail-card__label">Stay</span>
+                <span class="svs-detail-card__value">Wood Smoke Resort Shoghi</span>
+              </div>
+              <div class="svs-detail-card">
+                <span class="svs-detail-card__label">Duration</span>
+                <span class="svs-detail-card__value">2 Nights / 3 Days</span>
+              </div>
+              <div class="svs-detail-card">
+                <span class="svs-detail-card__label">Meals</span>
+                <span class="svs-detail-card__value">Daily Breakfast Included</span>
+              </div>
+              <div class="svs-detail-card">
+                <span class="svs-detail-card__label">Delivery</span>
+                <span class="svs-detail-card__value">Final Vlog Delivered Within 10 Days After Tour</span>
+              </div>
+              <div class="svs-detail-card">
+                <span class="svs-detail-card__label">Group Type</span>
+                <span class="svs-detail-card__value">Solo / Couple / Family / Small Group</span>
+              </div>
+              <div class="svs-detail-card">
+                <span class="svs-detail-card__label">Listing Type</span>
+                <span class="svs-detail-card__value">Direct Booking + Brand Collaboration</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===================================================
+               Package Overview
+               =================================================== -->
+          <section data-pkg-reveal data-pkg-section="overview" aria-labelledby="pkg-overview-title" style="margin-bottom: var(--space-8);">
+            <h2 id="pkg-overview-title" style="margin: 0 0 var(--space-4);">Package Overview</h2>
+            <p style="max-width: 68ch; color: var(--color-text-muted); line-height: var(--lh-relaxed);">
+              Create your professional travel vlog in Shimla with our 2N3D package. Stay at Wood Smoke
+              Resort Shoghi, shoot with dedicated crew, and get a fully edited vlog delivered in 10 days.
+              Choose with influencers or without. Option for dialogue shoot or voice-over only. Privacy
+              maintained throughout.
+            </p>
+          </section>
+
+          <!-- ===================================================
+               Package Highlights
+               =================================================== -->
+          <section data-pkg-reveal data-pkg-section="highlights" aria-labelledby="pkg-highlights-title" style="margin-bottom: var(--space-8);">
+            <div class="pkg-section__head">
+              <p class="pkg-section__eyebrow">Travel + Production + Creator Experience</p>
+              <h2 class="pkg-section__title" id="pkg-highlights-title">Package Highlights</h2>
+            </div>
+            <div class="svs-highlights__grid">
+              <div class="svs-highlights__card">
+                <span class="svs-highlights__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V8l9-5 9 5v13M3 21h18M9 21v-6h6v6"/></svg></span>
+                <h3 class="svs-highlights__title">Wood Smoke Resort Shoghi</h3>
+                <p class="svs-highlights__desc">Nature view, premium resort.</p>
+              </div>
+              <div class="svs-highlights__card">
+                <span class="svs-highlights__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7 16 12l7 5V7Z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></span>
+                <h3 class="svs-highlights__title">Professional Shooting Crew Included</h3>
+                <p class="svs-highlights__desc">Cameraman, director, editor.</p>
+              </div>
+              <div class="svs-highlights__card">
+                <span class="svs-highlights__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17h14M5 17a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm14 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM5 17V8h10l4 4v5"/></svg></span>
+                <h3 class="svs-highlights__title">Cab + Sightseeing + Stay</h3>
+                <p class="svs-highlights__desc">All included in the package.</p>
+              </div>
+              <div class="svs-highlights__card">
+                <span class="svs-highlights__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a4 4 0 0 0-4 4v6a4 4 0 0 0 8 0V5a4 4 0 0 0-4-4Z"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4M8 22h8"/></svg></span>
+                <h3 class="svs-highlights__title">2 Vlog Options</h3>
+                <p class="svs-highlights__desc">With Dialogue / Voice-Over Only.</p>
+              </div>
+              <div class="svs-highlights__card">
+                <span class="svs-highlights__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>
+                <h3 class="svs-highlights__title">Final Edited Vlog Delivered in 10 Days</h3>
+                <p class="svs-highlights__desc">Fully edited, ready to publish.</p>
+              </div>
+              <div class="svs-highlights__card">
+                <span class="svs-highlights__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5l-8-3Z"/></svg></span>
+                <h3 class="svs-highlights__title">Privacy Maintained</h3>
+                <p class="svs-highlights__desc">During the entire trip.</p>
+              </div>
+              <div class="svs-highlights__card">
+                <span class="svs-highlights__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 20v-1.6a3.4 3.4 0 0 0-3.4-3.4H6.4A3.4 3.4 0 0 0 3 18.4V20"/><circle cx="9.7" cy="7.2" r="3.2"/><path d="M21 20v-1.6a3.4 3.4 0 0 0-2.6-3.3M14.8 4.1a3.2 3.2 0 0 1 0 6.2"/></svg></span>
+                <h3 class="svs-highlights__title">Professional Crew &amp; Influencers</h3>
+                <p class="svs-highlights__desc">Experienced in travel content.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===================================================
+               PRICING + PERSONS SELECTOR
+               =================================================== -->
+          <section id="pricing" data-pkg-reveal data-pkg-section="pricing" aria-labelledby="pkg-pricing-title" style="margin-bottom: var(--space-8);">
+            <div class="pkg-section__head">
+              <h2 class="pkg-section__title" id="pkg-pricing-title">Choose Your Package</h2>
+            </div>
+
+            <div class="svs-pricing" data-svs-calculator>
+              <p class="svs-pricing__slots">Base Package Price</p>
+
+              <div class="svs-options" role="radiogroup" aria-label="With or without influencers">
+                <label class="svs-option">
+                  <input class="svs-option__input" type="radio" name="svs-option" value="with" checked data-svs-option="27000" data-svs-name="With Influencers" />
+                  <span class="svs-option__card">
+                    <span class="svs-option__top">
+                      <span class="svs-option__name">With Influencers</span>
+                      <span class="svs-option__radio" aria-hidden="true"></span>
+                    </span>
+                    <p class="svs-option__price">&#8377;27,000 <span>per person</span></p>
+                    <p class="svs-option__desc">Includes professional influencers for on-camera presence.</p>
+                  </span>
+                </label>
+
+                <label class="svs-option">
+                  <input class="svs-option__input" type="radio" name="svs-option" value="without" data-svs-option="21000" data-svs-name="Without Influencers" />
+                  <span class="svs-option__card">
+                    <span class="svs-option__top">
+                      <span class="svs-option__name">Without Influencers</span>
+                      <span class="svs-option__radio" aria-hidden="true"></span>
+                    </span>
+                    <p class="svs-option__price">&#8377;21,000 <span>per person</span></p>
+                    <p class="svs-option__desc">For brands/creators who want only crew + self-shoot.</p>
+                  </span>
+                </label>
+              </div>
+
+              <div class="svs-persons">
+                <span class="svs-persons__label">
+                  Number of Persons
+                  <span class="svs-persons__sub">Solo, couple or family &mdash; ₹10,000 per extra person</span>
+                </span>
+                <div class="svs-stepper">
+                  <button class="svs-stepper__btn" type="button" data-svs-persons-dec aria-label="Decrease number of persons">&minus;</button>
+                  <span class="svs-stepper__value"><span data-svs-persons-value>1</span><small>Person(s)</small></span>
+                  <button class="svs-stepper__btn" type="button" data-svs-persons-inc aria-label="Increase number of persons">+</button>
+                </div>
+              </div>
+
+              <div class="svs-summary">
+                <div class="svs-summary__row">
+                  <span class="svs-summary__row-label">Selected Package</span>
+                  <span class="svs-summary__row-value" data-svs-summary-package>With Influencers</span>
+                </div>
+                <div class="svs-summary__row">
+                  <span class="svs-summary__row-label">Base Price</span>
+                  <span class="svs-summary__row-value" data-svs-summary-base>&#8377;27,000</span>
+                </div>
+                <div class="svs-summary__row" data-svs-summary-extra-row hidden>
+                  <span class="svs-summary__row-label">Additional Persons</span>
+                  <span class="svs-summary__row-value" data-svs-summary-extra>0</span>
+                </div>
+                <div class="svs-summary__total">
+                  <span class="svs-summary__total-label">Total</span>
+                  <span class="svs-summary__total-value" data-svs-summary-total>&#8377;27,000</span>
+                </div>
+              </div>
+
+              <p class="svs-pricing__note">Price on twin sharing basis. Subject to date and availability.</p>
+
+              <button class="svs-book-btn" type="button" data-svs-book>
+                Book This Vlog Shoot
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </button>
+            </div>
+          </section>
+
+          <!-- ===================================================
+               Tabs (Itinerary / Inclusions / Exclusions / Important Notes)
+               =================================================== -->
+          <section data-pkg-reveal data-pkg-section="tabs" aria-label="Itinerary, inclusions, exclusions and important notes" style="margin-bottom: var(--space-8);">
+            <div class="pkg-tabs__nav" role="tablist" aria-label="Package details tabs">
+              <button class="pkg-tabs__tab" type="button" role="tab" aria-selected="true" data-pkg-tab="itinerary">Itinerary</button>
+              <button class="pkg-tabs__tab" type="button" role="tab" aria-selected="false" data-pkg-tab="inclusions">Inclusions</button>
+              <button class="pkg-tabs__tab" type="button" role="tab" aria-selected="false" data-pkg-tab="exclusions">Exclusions</button>
+              <button class="pkg-tabs__tab" type="button" role="tab" aria-selected="false" data-pkg-tab="notes">Important Notes</button>
+            </div>
+
+            <div class="pkg-tabs__panel" data-pkg-tab-panel="itinerary">
+              <p style="margin: 0 0 var(--space-5); color: var(--color-text-muted);">Shimla Vlog Shoot &ndash; Day-by-Day Itinerary with Shoot Plan</p>
+              <div class="pkg-itinerary">
+                <div class="pkg-itinerary__day">
+                  <span class="pkg-itinerary__badge">Day<br />1</span>
+                  <div>
+                    <h4 class="pkg-itinerary__title">Arrival Shimla | Resort Shoot</h4>
+                    <p class="pkg-itinerary__desc">Arrival at Shimla. Transfer to Wood Smoke Resort Shoghi. Check-in. Evening free for leisure and candid shots in resort premises.<br /><em>Meals: Breakfast &middot; Overnight at Wood Smoke Resort Shoghi</em></p>
+                    <div class="svs-shoot-block">
+                      <p class="svs-shoot-block__label">Shoot</p>
+                      <p>Resort property tour, room tour, breakfast setup, nature B-roll.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="pkg-itinerary__day">
+                  <span class="pkg-itinerary__badge">Day<br />2</span>
+                  <div>
+                    <h4 class="pkg-itinerary__title">Shimla Sightseeing + Vlog Shoot</h4>
+                    <p class="pkg-itinerary__desc">Breakfast. Full-day sightseeing with dedicated cab and crew. Evening return to resort. Bonfire/room shots if required.<br /><em>Meals: Breakfast &middot; Overnight at Wood Smoke Resort Shoghi</em></p>
+                    <div class="svs-shoot-block">
+                      <p class="svs-shoot-block__label">Shoot Locations</p>
+                      <p>Mall Road, The Ridge, Christ Church, Lakkar Bazaar, Kufri.</p>
+                      <p class="svs-shoot-block__label" style="margin-top: var(--space-3);">Shoot</p>
+                      <p>Walking shots, dialogue pieces to camera, vox pops, B-roll of markets &amp; hills.</p>
+                      <p class="svs-shoot-block__label" style="margin-top: var(--space-3);">Shoot Options</p>
+                      <p><strong>With Dialogue</strong> &ndash; scripted/hosted pieces with influencers/creator, <strong>or</strong> <strong>Voice-Over Only</strong> &ndash; cinematic shots with no on-camera talking.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="pkg-itinerary__day">
+                  <span class="pkg-itinerary__badge">Day<br />3</span>
+                  <div>
+                    <h4 class="pkg-itinerary__title">Nature Shoot + Departure</h4>
+                    <p class="pkg-itinerary__desc">Breakfast. Checkout. Transfer to Shimla for final pickup shots if needed. Drop at Shimla. End of shoot services.<br /><em>Meals: Breakfast</em></p>
+                    <div class="svs-shoot-block">
+                      <p class="svs-shoot-block__label">Shoot</p>
+                      <p>Morning shoot at resort &ndash; drone shots, nature, breakfast montage.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pkg-tabs__panel" data-pkg-tab-panel="inclusions">
+              <ul class="pkg-list pkg-list--check">
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>2 Nights Stay at Wood Smoke Resort Shoghi &ndash; Deluxe Room</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Daily Breakfast</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Private Cab for All Sightseeing and Transfers</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Professional Shooting Crew: 1 Cameraman + 1 Director/Coordinator</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>With Influencers Option: 1&ndash;2 Professional Influencers for On-Camera Presence</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Basic Lighting and Audio Equipment</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>All Sightseeing Permits and Entry Fees for Crew</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Video Editing</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Color Grading</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Sound Design</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Final Vlog Delivery Within 10 Days</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>1 Main Vlog &ndash; 3 to 5 Minutes</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Privacy and NDA Maintained During Trip</span></li>
+              </ul>
+            </div>
+
+            <div class="pkg-tabs__panel" data-pkg-tab-panel="exclusions">
+              <ul class="pkg-list pkg-list--cross">
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Lunch and Dinner</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Train / Flight / Bus to Reach Shimla</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Personal Expenses</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Shopping</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Activities Not Mentioned</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Additional Vlog Versions Beyond 1 Main Edit</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Extra Shooting Days Beyond 2N3D</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Drone Permit Fees if Required by Authorities</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Professional Makeup</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Costumes</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Props</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Rush Delivery in Less Than 10 Days</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg><span>Any Item Not Mentioned in Inclusions</span></li>
+              </ul>
+            </div>
+
+            <div class="pkg-tabs__panel" data-pkg-tab-panel="notes">
+              <ul class="pkg-list pkg-list--check">
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Privacy will be maintained during the entire trip. No public disclosure without consent.</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Crew and influencers are professional and experienced in travel content.</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Final vlog script/outline to be shared 3 days prior to trip.</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Weather conditions may affect shoot locations. Alternate locations will be planned.</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Wood Smoke Resort Shoghi subject to availability.</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>Similar 3-Star/4-Star resort can be offered if Wood Smoke Resort is unavailable.</span></li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg><span>100% advance required to confirm booking.</span></li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ===================================================
+               Post-Production Journey
+               =================================================== -->
+          <section data-pkg-reveal data-pkg-section="pipeline" aria-labelledby="pkg-pipeline-title" style="margin-bottom: var(--space-8);">
+            <div class="pkg-section__head">
+              <p class="pkg-section__eyebrow">From Raw Footage to Final Vlog</p>
+              <h2 class="pkg-section__title" id="pkg-pipeline-title">Post-Production Journey</h2>
+            </div>
+            <div class="svs-pipeline">
+              <div class="svs-pipeline__step">
+                <span class="svs-pipeline__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m22 8-6 4 6 4V8Z"/></svg></span>
+                <h3 class="svs-pipeline__title">Raw Footage Review</h3>
+              </div>
+              <div class="svs-pipeline__step">
+                <span class="svs-pipeline__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg></span>
+                <h3 class="svs-pipeline__title">Edit</h3>
+              </div>
+              <div class="svs-pipeline__step">
+                <span class="svs-pipeline__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><circle cx="19" cy="17" r="3"/><circle cx="6" cy="12" r="3"/></svg></span>
+                <h3 class="svs-pipeline__title">Color Grade</h3>
+              </div>
+              <div class="svs-pipeline__step">
+                <span class="svs-pipeline__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg></span>
+                <h3 class="svs-pipeline__title">Sound Mix</h3>
+              </div>
+              <div class="svs-pipeline__step">
+                <span class="svs-pipeline__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg></span>
+                <h3 class="svs-pipeline__title">Final Delivery</h3>
+              </div>
+            </div>
+            <p class="svs-pipeline__note">Final vlog delivered within <strong>10 days</strong> &mdash; 1 main vlog, 3&ndash;5 minutes.</p>
+          </section>
+
+          <!-- ===================================================
+               Vlog Options
+               =================================================== -->
+          <section data-pkg-reveal data-pkg-section="vlog-options" aria-labelledby="pkg-vlog-options-title" style="margin-bottom: var(--space-8);">
+            <div class="pkg-section__head">
+              <h2 class="pkg-section__title" id="pkg-vlog-options-title">Vlog Options</h2>
+            </div>
+            <div class="svs-vlog-options">
+              <div class="svs-vlog-option">
+                <span class="svs-vlog-option__num" aria-hidden="true">01</span>
+                <h3 class="svs-vlog-option__title">With Dialogue</h3>
+                <p class="svs-vlog-option__desc">Hosted vlog with script, on-camera speaking and interactions. Influencers can be included for better engagement.</p>
+              </div>
+              <div class="svs-vlog-option">
+                <span class="svs-vlog-option__num" aria-hidden="true">02</span>
+                <h3 class="svs-vlog-option__title">Voice-Over Only</h3>
+                <p class="svs-vlog-option__desc">Cinematic travel film style. No on-camera talking. Voice-over added in post-production.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===================================================
+               Privacy / NDA
+               =================================================== -->
+          <section data-pkg-reveal data-pkg-section="privacy" aria-label="Privacy and NDA" style="margin-bottom: var(--space-8);">
+            <div class="svs-privacy">
+              <span class="svs-privacy__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.5 8.5 8 11 4.5-2.5 8-6 8-11V5l-8-3Z"/></svg>
+              </span>
+              <div class="svs-privacy__body">
+                <h3 class="svs-privacy__title">Privacy Maintained Throughout</h3>
+                <p>Privacy will be maintained during the entire trip.</p>
+                <p>No public disclosure without consent.</p>
+                <p>NDA maintained during trip.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ===================================================
+               Need Help card
+               =================================================== -->
+          <section data-pkg-reveal data-pkg-section="help" aria-label="Need help booking this package">
+            <div class="pkg-help">
+              <div>
+                <h3 class="pkg-help__title">Need Help With This Vlog Shoot?</h3>
+                <p class="pkg-help__subtitle">Our team can answer any questions about crew, dates or shoot options.</p>
+              </div>
+              <div class="pkg-help__actions">
+                <a class="pkg-help__btn pkg-help__btn--whatsapp" href="https://wa.me/918988204344" target="_blank" rel="noopener">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5.1-1.3A10 10 0 1 0 12 2Zm0 2a8 8 0 0 1 6.9 12.1l-.3.5.9 3.2-3.3-.9-.5.3A8 8 0 1 1 12 4Zm-3.3 4.2c-.2 0-.5 0-.7.3-.3.3-1 1-1 2.3 0 1.4 1 2.7 1.1 2.9.1.2 2 3.1 4.9 4.2 2.4 1 2.9.8 3.4.7.5 0 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.1-.3-.2-.6-.4-.3-.1-1.7-.9-2-1-.2-.1-.4-.1-.6.1-.2.3-.6.9-.8 1-.1.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.2-.5.1-.2 0-.4 0-.5-.1-.1-.6-1.6-.9-2.1-.2-.5-.4-.4-.6-.4Z"/></svg>
+                  WhatsApp
+                </a>
+                <a class="pkg-help__btn pkg-help__btn--call" href="tel:+918988204344">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .8 2.9a2 2 0 0 1-.4 2.2L8.1 10.2a16 16 0 0 0 6 6l1.4-1.4a2 2 0 0 1 2.2-.4c.9.4 1.9.7 2.9.8a2 2 0 0 1 1.7 2Z"/></svg>
+                  Call Us
+                </a>
+                <a class="pkg-help__btn pkg-help__btn--email" href="mailto:support@xploroo.com">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+                  Email
+                </a>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+    </main>
+
+    <!-- Sticky mobile booking bar (hidden until the hero scrolls past) -->
+    <div class="pkg-sticky-bar" data-pkg-sticky-bar>
+      <span class="pkg-sticky-bar__price">
+        <strong data-svs-sticky-total>&#8377;27,000</strong>
+        <span>Total &middot; Tap to Configure</span>
+      </span>
+      <a class="pkg-cta" href="#pricing" data-svs-scroll-to-pricing>Book Now</a>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- FOOTER                                                        -->
+    <!-- ============================================================= -->
+    <footer class="site-footer" data-footer>
+      <div class="site-footer__panel">
+        <div class="site-footer__container">
+
+          <!-- Brand -->
+          <div class="brand footer-brand">
+            <img class="brand__logo" src="https://ik.imagekit.io/mg0v9kccj/1000166489-removebg-previewDDF.png" alt="" />
+            <a class="brand__link" href="index.html" aria-label="Xploroo home"><span class="brand__name">Xploroo</span></a>
+          </div>
+
+          <!-- Newsletter -->
+          <div class="footer-newsletter">
+            <h2 class="footer-newsletter__title">Join the Xploroo Travel Community</h2>
+            <form class="footer-newsletter__form" data-newsletter-form action="#" method="post" novalidate>
+              <label class="sr-only" for="footer-newsletter-email">Email address</label>
+              <input
+                class="footer-newsletter__input"
+                id="footer-newsletter-email"
+                type="email"
+                name="email"
+                autocomplete="email"
+                placeholder="Email Address"
+                required
+              />
+              <button class="btn btn--gradient btn--pill footer-newsletter__submit" type="submit">Subscribe</button>
+            </form>
+            <p class="footer-newsletter__message" data-newsletter-message role="status" aria-live="polite"></p>
+          </div>
+
+          <!-- Social icons -->
+          <ul class="footer-social" role="list" aria-label="Xploroo on social media">
+            <li>
+              <a class="footer-social__link" href="https://www.facebook.com/share/1BcpUhZbZ2/e/1BcpUhZbZ2/" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Facebook">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.25-1.5 1.55-1.5H16.7V3.7C16.15 3.6 15.15 3.5 14 3.5c-2.4 0-4 1.45-4 4.1v2.3H7.3v3.1H10V21h3.5Z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a class="footer-social__link" href="https://www.instagram.com/xploroo.in" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none"/><circle cx="12" cy="12" r="4" fill="none"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg>
+              </a>
+            </li>
+            <li>
+              <a class="footer-social__link" href="https://wa.me/918988204344" target="_blank" rel="noopener noreferrer" aria-label="Xploroo on WhatsApp">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2Zm5.87 14.03c-.25.7-1.45 1.34-2 1.42-.51.08-1.15.11-1.86-.12-.43-.14-.98-.32-1.69-.63-2.97-1.28-4.91-4.28-5.06-4.48-.15-.2-1.21-1.61-1.21-3.07 0-1.46.77-2.18 1.04-2.48.27-.3.59-.37.79-.37.2 0 .39 0 .56.01.18.01.42-.07.66.5.25.6.84 2.07.91 2.22.07.15.12.33.02.53-.09.2-.14.32-.28.49-.14.17-.29.38-.42.51-.14.14-.28.29-.12.57.15.28.68 1.12 1.46 1.82 1 .9 1.85 1.18 2.13 1.31.28.14.44.12.6-.07.17-.2.7-.82.89-1.1.19-.28.37-.23.63-.14.25.09 1.6.76 1.87.9.28.14.46.21.53.33.07.12.07.68-.18 1.37Z"/></svg>
+              </a>
+            </li>
+            <li>
+              <a class="footer-social__link" href="tel:+918988204344" aria-label="Call Xploroo">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.4c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8Z"/></svg>
+              </a>
+            </li>
+          </ul>
+
+          <!-- Link columns -->
+          <nav class="footer-links" aria-label="Footer">
+            <div class="footer-links__col">
+              <h3 class="footer-links__title">About</h3>
+              <ul class="footer-links__list" role="list">
+                <li><a class="footer-links__link" href="about.html">About Us</a></li>
+                <li><a class="footer-links__link" href="how-it-works.html">How It Works</a></li>
+                <li><a class="footer-links__link" href="our-team.html">Our Team</a></li>
+                <li><a class="footer-links__link" href="faq.html">FAQs</a></li>
+                <li><a class="footer-links__link" href="contact.html">Contact Us</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-links__col">
+              <h3 class="footer-links__title">Packages</h3>
+              <ul class="footer-links__list" role="list">
+                <li><a class="footer-links__link" href="domestic-packages.html">Domestic Packages</a></li>
+                <li><a class="footer-links__link" href="international-packages.html">International Packages</a></li>
+                <li><a class="footer-links__link" href="honeymoon-packages.html">Honeymoon Packages</a></li>
+                <li><a class="footer-links__link" href="adventure-trips.html">Adventure Trips</a></li>
+                <li><a class="footer-links__link" href="luxury-holidays.html">Luxury Holidays</a></li>
+              </ul>
+            </div>
+
+            <div class="footer-links__col">
+              <h3 class="footer-links__title">Explore</h3>
+              <ul class="footer-links__list" role="list">
+                <li><a class="footer-links__link" href="play&amp;win.html">Play &amp; Win</a></li>
+                <li><a class="footer-links__link" href="influencers.html">Influencers</a></li>
+                <li><a class="footer-links__link" href="winners.html">Winners</a></li>
+                <li><a class="footer-links__link" href="travel-stories.html">Travel Stories</a></li>
+                <li><a class="footer-links__link" href="privacy-policy.html">Privacy Policy</a></li>
+              </ul>
+            </div>
+          </nav>
+
+          <!-- Bottom bar -->
+          <div class="footer-bottom">
+            <p class="footer-bottom__copyright">&copy; <time datetime="2026">2026</time> Xploroo. All Rights Reserved.</p>
+            <ul class="footer-bottom__legal" role="list">
+              <li><a href="privacy-policy.html">Privacy Policy</a></li>
+              <li><a href="terms-conditions.html">Terms &amp; Conditions</a></li>
+              <li><a href="refund-policy.html">Refund Policy</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- Header behavior (sticky blur, mobile menu, theme toggle) -->
+  <script src="js/header.js" defer></script>
+
+  <!-- Search overlay behavior (open/close, tabs, per-tab filtering) -->
+  <script src="js/search-overlay.js" defer></script>
+
+  <!-- Package Details behavior — master template script (tabs, gallery, sticky bar, reveal) -->
+  <script src="js/package-details.js" defer></script>
+
+  <!-- Package pages — native Share button (dynamic title/desc/URL) -->
+  <script src="js/package-share.js" defer></script>
+
+  <!-- Shimla Vlog Shoot — pricing calculator (with/without influencers × persons) -->
+  <script src="js/shimla-vlog-shoot.js" defer></script>
+
+  <!-- Footer behavior (newsletter form) -->
+  <script src="js/footer.js" defer></script>
+</body>
+</html>

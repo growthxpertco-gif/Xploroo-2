@@ -1,0 +1,308 @@
+/* ==========================================================================
+   XPLOROO · Vlog Shoot Packages module
+   vlog-shoot-packages.css — Fully original, self-contained component.
+   Scoped entirely under `.vlog-shoot` / `.vsp-*` — never touches any other
+   section's classes or tokens. Structurally modeled on the (now removed)
+   Travel Stories carousel — same proven finite drag/swipe/arrow pattern —
+   but with its own premium "content creation" visual identity: glass
+   surfaces, the site's violet/magenta/cyan brand gradient, titanium-silver
+   accents, a cinematic corner-frame treatment and a small recording-style
+   badge. Cards are inert placeholders for now (no price/duration/CTA
+   content has been invented) and are built so 4, 5 or 10+ cards can be
+   added later without touching this file's layout rules.
+   ========================================================================== */
+
+.vlog-shoot {
+  position: relative;
+  padding-block: var(--home-section-gap);
+}
+
+.vlog-shoot__container {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--container-pad);
+}
+
+/* -------------------------------------------------------------------------
+   Section head — centered on mobile, left-aligned on desktop
+   ------------------------------------------------------------------------- */
+.vlog-shoot__head {
+  text-align: center;
+  margin-bottom: var(--space-8);
+}
+.vlog-shoot__title {
+  margin: 0;
+  font-size: var(--fs-3xl);
+}
+.vlog-shoot__subtitle {
+  margin: var(--space-2) 0 0;
+  font-size: var(--fs-md, var(--fs-base));
+  color: var(--color-text-muted);
+}
+@media (min-width: 768px) {
+  .vlog-shoot__head { text-align: left; }
+}
+
+/* -------------------------------------------------------------------------
+   Carousel shell — identical mechanics to the site's other finite
+   drag/swipe carousels: native overflow-x + scroll-snap, no cloning.
+   ------------------------------------------------------------------------- */
+.vsp-carousel {
+  position: relative;
+}
+
+.vsp-track {
+  display: flex;
+  gap: var(--space-5);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  cursor: grab;
+  margin: 0;
+  padding: 0 0 var(--space-2);
+  list-style: none;
+}
+.vsp-track::-webkit-scrollbar { display: none; }
+.vsp-track.is-dragging { cursor: grabbing; scroll-snap-type: none; }
+
+.vsp-slide {
+  flex: 0 0 auto;
+  width: 82%;
+  scroll-snap-align: start;
+}
+@media (min-width: 480px) {
+  .vsp-slide { width: 60%; }
+}
+@media (min-width: 768px) {
+  .vsp-slide { width: calc((100% - 2 * var(--space-5)) / 3); }
+}
+@media (min-width: 1024px) {
+  .vsp-slide { width: calc((100% - 3 * var(--space-5)) / 4); }
+}
+
+/* -------------------------------------------------------------------------
+   Arrows — desktop/tablet only (mobile relies on swipe)
+   ------------------------------------------------------------------------- */
+.vsp-arrow {
+  display: none;
+  position: absolute;
+  top: 38%;
+  z-index: 2;
+  width: 2.875rem;
+  height: 2.875rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+  transition:
+    background-color var(--dur-fast) var(--ease-standard),
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+.vsp-arrow svg { width: 20px; height: 20px; }
+.vsp-arrow:hover { background: rgba(0, 0, 0, 0.75); transform: translateY(-50%) scale(1.06); box-shadow: var(--shadow-md); }
+.vsp-arrow:active { transform: translateY(-50%) scale(0.94); }
+.vsp-arrow:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+.vsp-arrow--prev { left: -1.4rem; transform: translateY(-50%); }
+.vsp-arrow--next { right: -1.4rem; transform: translateY(-50%); }
+.vsp-arrow--prev:hover { transform: translateY(-50%) scale(1.06); }
+.vsp-arrow--next:hover { transform: translateY(-50%) scale(1.06); }
+
+@media (min-width: 768px) {
+  .vsp-arrow { display: flex; }
+}
+
+/* -------------------------------------------------------------------------
+   Card — premium glass surface, brand-gradient border glow on hover,
+   cinematic corner-frame + recording badge for the "content creation"
+   identity. Cards without a real page yet (Manali, Goa) stay inert; the
+   Shimla card wraps its content in `.vsp-card__link` once its page exists
+   (see vlog-shoot-packages.js for the shared drag/swipe behavior, which
+   is unaffected either way).
+   ------------------------------------------------------------------------- */
+.vsp-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--surface-panel);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition:
+    transform var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out),
+    border-color var(--dur-base) var(--ease-standard),
+    background-color 300ms ease;
+  will-change: transform;
+}
+.vsp-card__link {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+@media (hover: hover) {
+  .vsp-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(199, 204, 217, 0.45);
+    box-shadow: var(--shadow-lg), var(--glow-soft);
+  }
+}
+@media (hover: none) {
+  .vsp-card:active { transform: scale(0.98); }
+}
+
+/* Destination image holder — clearly replaceable: swap the `src` on
+   `.vsp-card__img` in index.html when real shoot-location photos are
+   ready. Neutral inset background shows through until then, so a slow
+   or missing image never looks broken. */
+.vsp-card__media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--color-surface-inset);
+}
+.vsp-card__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transition: transform var(--dur-slow) var(--ease-out);
+}
+@media (hover: hover) {
+  .vsp-card:hover .vsp-card__img { transform: scale(1.12); }
+}
+
+/* Cinematic corner-frame — subtle viewfinder-style brackets over the
+   image, pure CSS (four small border-only corners), reinforcing "this is
+   being shot" without any cheap camera clip-art. */
+.vsp-card__frame {
+  position: absolute;
+  inset: 0.85rem;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-base) var(--ease-out);
+}
+@media (hover: hover) {
+  .vsp-card:hover .vsp-card__frame { opacity: 1; }
+}
+.vsp-card__frame::before,
+.vsp-card__frame::after,
+.vsp-card__frame span::before,
+.vsp-card__frame span::after {
+  content: "";
+  position: absolute;
+  width: 1.1rem;
+  height: 1.1rem;
+  border: 1.5px solid rgba(245, 247, 251, 0.85);
+}
+.vsp-card__frame::before { top: 0; left: 0; border-right: none; border-bottom: none; }
+.vsp-card__frame::after { top: 0; right: 0; border-left: none; border-bottom: none; }
+.vsp-card__frame span::before { bottom: 0; left: 0; border-right: none; border-top: none; }
+.vsp-card__frame span::after { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+/* Recording-style badge — small pulsing dot + "VLOG SHOOT" label,
+   top-left over the image, same glass-pill treatment used elsewhere on
+   the site (e.g. Trending Packages badges). */
+.vsp-card__badge {
+  position: absolute;
+  z-index: 2;
+  top: 1rem;
+  left: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: 1.625rem;
+  padding-inline: 0.65rem 0.8rem;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-mono, var(--font-body));
+  font-size: var(--fs-2xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.vsp-card__badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--magenta-500);
+  box-shadow: 0 0 6px 1px rgba(236, 72, 153, 0.7);
+  animation: vsp-rec-pulse 2s ease-in-out infinite;
+}
+@keyframes vsp-rec-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(0.85); }
+  50%      { opacity: 1; transform: scale(1.15); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vsp-card__badge-dot { animation: none; }
+}
+
+.vsp-card__body {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 1.1rem 1.25rem 1.25rem;
+}
+
+.vsp-card__heading {
+  min-width: 0;
+}
+.vsp-card__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: var(--fw-bold);
+  color: var(--color-text-strong);
+}
+.vsp-card__label {
+  margin: 0.2rem 0 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
+}
+
+/* Subtle CTA/arrow area — decorative only for this phase (no link, no
+   "Book Now"); a small circular chevron hinting "more to come here". */
+.vsp-card__cta {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  color: var(--color-text-strong);
+  background: var(--color-surface-hover);
+  border: 1px solid var(--color-border);
+  transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-base) var(--ease-standard), background-image var(--dur-base) var(--ease-standard);
+}
+.vsp-card__cta svg { width: 18px; height: 18px; }
+@media (hover: hover) {
+  .vsp-card:hover .vsp-card__cta {
+    transform: translateX(3px);
+    border-color: transparent;
+    background-image: var(--gradient-brand-vivid);
+    color: #fff;
+  }
+}
