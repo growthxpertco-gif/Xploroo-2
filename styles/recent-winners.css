@@ -62,36 +62,52 @@
 }
 
 /* -------------------------------------------------------------------------
-   Carousel — one main card, next card peeks ~15-20% from the right
+   Carousel — continuous auto-scroll (right → left), same architecture as
+   the Influencers carousel (see js/recent-winners.js / js/influencers.js):
+   `.rw-carousel` is the VIEWPORT — fixed size, `overflow: hidden`, never
+   itself transformed. `.rw-track` is the TRACK — the flex row of every
+   card, positioned purely via `transform: translateX()` in JS. These stay
+   two separate elements on purpose: clipping and transforming the same
+   element moves the clip boundary together with the content, so the
+   visible area can drift away from the actual cards.
    ------------------------------------------------------------------------- */
 .rw-carousel {
   position: relative;
   z-index: 1;
+  overflow: hidden;
 }
 
 .rw-track {
   display: flex;
+  flex-wrap: nowrap;
   gap: var(--space-4);
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: var(--space-5);
   padding-inline: var(--space-5);
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
+  will-change: transform;
+  /* No explicit width: a flex container defaults to filling its parent's
+     (`.rw-carousel`'s) width, which is what `.rw-slide`'s percentage
+     widths below need to resolve correctly against. The cloned cards
+     then naturally overflow that box — `.rw-carousel`'s `overflow: hidden`
+     (above) is what clips them, not this element. */
 }
-.rw-track::-webkit-scrollbar { display: none; }
+.rw-track.is-dragging {
+  cursor: grabbing;
+}
 
 .rw-slide {
   flex: 0 0 auto;
   width: 82%;
-  scroll-snap-align: start;
+}
+/* Clones are visual-only duplicates for the seamless loop — never focus-
+   able or announced by assistive tech, the real cards already cover every
+   winner. */
+.rw-slide[aria-hidden="true"] {
+  pointer-events: none;
 }
 @media (min-width: 480px) {
   .rw-slide { width: 62%; }
 }
 @media (min-width: 768px) {
-  .rw-track { gap: var(--space-5); scroll-padding-inline: var(--space-6); padding-inline: var(--space-6); }
+  .rw-track { gap: var(--space-5); padding-inline: var(--space-6); }
   .rw-slide { width: 38%; }
 }
 @media (min-width: 1024px) {
