@@ -71,36 +71,49 @@
 
 /* -------------------------------------------------------------------------
    Carousel — one main card, next card peeks ~15-20% from the right
+
+   `.inf-carousel` is the VIEWPORT: fixed size, `overflow: hidden`, never
+   moves/transforms. `.inf-track` is the TRACK: the flex row of every card,
+   positioned purely via `transform: translateX()` in JS. These must stay
+   two separate elements — clipping and transforming the same element
+   moves the clip boundary together with the content as one rigid unit,
+   so whichever cards happen to fit inside it stay "visible" wherever
+   that box drifts to, while the actual on-screen carousel area silently
+   goes blank. See js/influencers.js for the auto-scroll/drag logic.
    ------------------------------------------------------------------------- */
 .inf-carousel {
   position: relative;
   z-index: 1;
+  overflow: hidden;
 }
 
 .inf-track {
   display: flex;
+  flex-wrap: nowrap;
   gap: var(--space-4);
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: var(--space-5);
   padding-inline: var(--space-5);
   cursor: grab;
-  -webkit-overflow-scrolling: touch;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
+  touch-action: pan-y;
+  will-change: transform;
+  /* No explicit width: a flex container defaults to filling its parent's
+     (`.inf-carousel`'s) width, which is exactly what `.inf-slide`'s
+     percentage widths below need to resolve correctly against. The 12
+     cards then naturally overflow that box — `.inf-carousel`'s
+     `overflow: hidden` (above) is what clips them, not this element. */
 }
-.inf-track::-webkit-scrollbar { display: none; }
 .inf-track.is-dragging {
   cursor: grabbing;
-  scroll-snap-type: none; /* don't fight the drag with snap mid-gesture */
-  scroll-behavior: auto;
 }
 
 .inf-slide {
   flex: 0 0 auto;
   width: 82%;
-  scroll-snap-align: start;
+}
+/* Visual-only clones (duplicated by JS for the seamless loop) must never
+   be reachable by keyboard or announced by assistive tech — the real,
+   original cards already cover all six influencers. */
+.inf-slide[aria-hidden="true"] {
+  pointer-events: none;
 }
 @media (min-width: 480px) {
   .inf-slide { width: 62%; }
